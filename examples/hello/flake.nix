@@ -1,11 +1,11 @@
 {
-  # inputs.std.url = "git+ssh://git@github.com/on-nix/std?ref=main";
+  # inputs.std.url = "github.com:divnix/std?ref=main";
   inputs.std.url = "../..";
 
   outputs = { std, ... } @ inputs:
-    std.project {
+    std.grow {
       inherit inputs;
-      outputsFrom = ./src;
+      cellsFrom = ./src;
       systems = [
         {
           build = "x86_64-unknown-linux-gnu";
