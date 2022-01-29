@@ -1,7 +1,7 @@
 # One CLI to format the code tree - https://github.com/numtide/treefmt
 
 [formatter.nix]
-command = "nixpkgs-fmt"
+command = "alejandra"
 includes = ["*.nix"]
 
 [formatter.prettier]

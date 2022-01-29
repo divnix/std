@@ -9,7 +9,7 @@ inputs.nixpkgs.devshell.mkShell
         # formatters
         shfmt
         nodePackages.prettier
-        nixpkgs-fmt
+        alejandra
       ];
 
       commands = [

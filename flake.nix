@@ -7,8 +7,10 @@
   inputs.devshell.url = "github:numtide/devshell";
   inputs.treefmt.url = "github:numtide/treefmt";
   inputs.treefmt.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.alejandra.url = "github:kamadorueda/alejandra";
+  inputs.alejandra.inputs.nixpkgs.follows = "nixpkgs";
 
-  outputs = { nixpkgs, devshell, treefmt, ... } @ inputs:
+  outputs = { nixpkgs, devshell, treefmt, alejandra, ... } @ inputs:
     let
 
       # organelleName is constructed from the singleton name if defined, else form the plural
@@ -430,6 +432,7 @@
       nixpkgsOverlays = [
         devshell.overlay
         (super: self: { treefmt = treefmt.defaultPackage.${self.system}; })
+        (super: self: { alejandra = alejandra.defaultPackage.${self.system}; })
       ];
       systems = [{
         build = "x86_64-unknown-linux-gnu"; # GNU/Linux 64 bits
