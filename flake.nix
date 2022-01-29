@@ -232,8 +232,7 @@
             organelles = [
               (
                 runnables
-                  rec
-                    {
+                  rec {
                     o = "devShell";
                     m = o + "s";
                   }

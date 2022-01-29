@@ -2,8 +2,7 @@
 , ...
 }:
 inputs.nixpkgs.stdenv.mkDerivation
-  rec
-    {
+  rec {
     pname = "hello";
     version = "2.10";
     src =
