@@ -128,7 +128,7 @@
                     let
                       baseSuffix = if suffix == "" then "" else "-${ suffix }";
                       systemSuffix =
-                        if system.build.system == system.host.system then "" else "-${ system.host.config }";
+                        if system.build.config == system.host.config then "" else "-${ system.host.config }";
                     in
                     {
                       name = "${ cell }${ baseSuffix }${ systemSuffix }";
