@@ -5,6 +5,7 @@ inputs.nixpkgs.stdenv.mkDerivation
   rec {
     pname = "hello";
     version = "2.10";
+    doCheck = true;
     src =
       inputs.nixpkgs.fetchurl
         {
