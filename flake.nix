@@ -47,8 +47,7 @@
           , cellsFrom
           , organelles ? [
               {
-                o = "function";
-                m = "functions";
+                m = "library";
                 clade = "functions";
               }
               {

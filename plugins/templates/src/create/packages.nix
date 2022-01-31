@@ -3,7 +3,7 @@
 }:
 {
   testDefault =
-    inputs.self.functions.${ system.build.system }.create
+    inputs.self.library.${ system.build.system }.create-build
       {
         name = "default";
         placeholders = {
