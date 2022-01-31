@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# SPDX-FileCopyrightText: 2022 David Arnold <dgx.arnold@gmail.com>
+# SPDX-FileCopyrightText: 2022 Kevin Amado <kamadorueda@gmail.com>
+#
+# SPDX-License-Identifier: Unlicense
+
 if git rev-parse --verify HEAD >/dev/null 2>&1; then
   against=HEAD
 else
