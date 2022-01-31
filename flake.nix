@@ -210,29 +210,30 @@
           (builtins.removeAttrs inputs.nixpkgs.lib.systems.examples [ "amd64-netbsd" ]);
     in
       { inherit runnables installables functions systems grow; }
-      // (
-        grow
-          {
-            inherit inputs;
-            as-nix-cli-epiphyte = false;
-            cellsFrom = ./cells;
-            organelles = [
-              (
-                runnables
-                  rec {
-                    o = "devShell";
-                    m = o + "s";
-                  }
-              )
-            ];
-            systems = [
-              {
-                build = "x86_64-unknown-linux-gnu";
-                # GNU/Linux 64 bits
-                host = "x86_64-unknown-linux-gnu";
-                # GNU/Linux 64 bits
-              }
-            ];
-          }
-      );
+        // (
+          grow
+            {
+              inherit inputs;
+              # as-nix-cli-epiphyte = false;
+              cellsFrom = ./cells;
+              organelles = [
+                (
+                  runnables
+                    {
+                      o = "devShell";
+                      m = "devShells";
+                    }
+                )
+                (runnables { o = "cli"; })
+              ];
+              systems = [
+                {
+                  build = "x86_64-unknown-linux-gnu";
+                  # GNU/Linux 64 bits
+                  host = "x86_64-unknown-linux-gnu";
+                  # GNU/Linux 64 bits
+                }
+              ];
+            }
+        );
 }
