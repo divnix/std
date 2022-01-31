@@ -15,9 +15,9 @@
           builtins.toFile
             "src"
             ''
-            bool: @bool@
-            int: @int@
-            str: @str@
+              bool: @bool@
+              int: @int@
+              str: @str@
             '';
       };
 }

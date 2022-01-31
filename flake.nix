@@ -8,13 +8,7 @@
   inputs.alejandra.url = "github:kamadorueda/alejandra";
   inputs.alejandra.inputs.nixpkgs.follows = "nixpkgs";
   outputs =
-    { nixpkgs
-    , devshell
-    , treefmt
-    , alejandra
-    , ...
-    }
-    @ inputs:
+    inputs:
     let
       validate = import ./validators.nix { inherit inputs organelleName organellePaths; };
       # organelleName is constructed from the singleton name if defined, else form the plural
@@ -24,15 +18,29 @@
         cellsFrom:
         cell:
         organelle:
-        (if organelle ? o then { onePath = "${ cellsFrom }/${ cell }/${ organelle.o }.nix"; } else { })
-          // (if organelle ? m then { manyPath = "${ cellsFrom }/${ cell }/${ organelle.m }.nix"; } else { });
+        (
+          if
+            organelle ? o
+          then
+            { onePath = "${ cellsFrom }/${ cell }/${ organelle.o }.nix"; }
+          else
+            { }
+        )
+          // (
+            if
+              organelle ? m
+            then
+              { manyPath = "${ cellsFrom }/${ cell }/${ organelle.m }.nix"; }
+            else
+              { }
+          );
       runnables = attrs: validate.Organelle (attrs // { clade = "runnables"; });
       installables = attrs: validate.Organelle (attrs // { clade = "installables"; });
       functions = attrs: validate.Organelle (attrs // { clade = "functions"; });
       grow =
         let
           defaultSystems =
-            nixpkgs.lib.attrsets.cartesianProductOfSets
+            inputs.nixpkgs.lib.attrsets.cartesianProductOfSets
               {
                 build = [
                   "x86_64-apple-darwin"
@@ -64,8 +72,6 @@
             # if true, export installables _also_ as packages and runnables _also_ as apps
           , as-nix-cli-epiphyte ? true
           , nixpkgsConfig ? { }
-          , nixpkgsOverlays ? [ ]
-          , nixpkgsCrossOverlays ? [ ]
           , systems ? defaultSystems
           , debug ? false
           }:
@@ -73,9 +79,10 @@
             # Validations ...
             organelles' = builtins.map validate.Organelle organelles;
             systems' = builtins.map validate.System systems;
-            cells' = nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom organelles') (builtins.readDir cellsFrom);
+            cells' =
+              inputs.nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom organelles') (builtins.readDir cellsFrom);
             # Set of all std-injected outputs in the project flake
-            theirself = builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { } stdOutputs;
+            theirself = builtins.foldl' inputs.nixpkgs.lib.attrsets.recursiveUpdate { } stdOutputs;
             # List of all flake outputs injected by std
             stdOutputs = builtins.concatLists (builtins.map stdOutputsFor systems');
             stdOutputsFor =
@@ -101,7 +108,7 @@
                       // {
                         nixpkgs =
                           import
-                            nixpkgs
+                            inputs.nixpkgs
                             {
                               config =
                                 {
@@ -110,24 +117,33 @@
                                   android_sdk.accept_license = true;
                                 }
                                   // nixpkgsConfig;
-                              crossOverlays = nixpkgsCrossOverlays;
                               crossSystem = system.host;
                               localSystem = system.build;
-                              overlays = nixpkgsOverlays;
                             };
-                        nixpkgsSrc = nixpkgs;
+                        nixpkgsSrc = inputs.nixpkgs;
                         self = theirself;
                       };
                 };
                 applySuffixes =
-                  nixpkgs.lib.attrsets.mapAttrs'
+                  inputs.nixpkgs.lib.attrsets.mapAttrs'
                     (
                       suffix:
                       output:
                       let
-                        baseSuffix = if suffix == "" then "" else "-${ suffix }";
+                        baseSuffix =
+                          if
+                            suffix == ""
+                          then
+                            ""
+                          else
+                            "-${ suffix }";
                         systemSuffix =
-                          if system.build.config == system.host.config then "" else "-${ system.host.config }";
+                          if
+                            system.build.config == system.host.config
+                          then
+                            ""
+                          else
+                            "-${ system.host.config }";
                       in
                         {
                           name = "${ cell }${ baseSuffix }${ systemSuffix }";
@@ -171,7 +187,7 @@
                         else
                           { };
                     in
-                      nixpkgs.lib.attrsets.recursiveUpdate old output
+                      inputs.nixpkgs.lib.attrsets.recursiveUpdate old output
                   )
                   { }
                   organelles';
@@ -207,19 +223,19 @@
           in
             theirself;
       systems =
-        nixpkgs.lib.attrsets.mapAttrs'
+        inputs.nixpkgs.lib.attrsets.mapAttrs'
           (
             example:
             config:
             let
-              fullConfig = nixpkgs.lib.systems.elaborate config;
+              fullConfig = inputs.nixpkgs.lib.systems.elaborate config;
             in
               {
                 name = fullConfig.config;
                 value = fullConfig;
               }
           )
-          (builtins.removeAttrs nixpkgs.lib.systems.examples [ "amd64-netbsd" ]);
+          (builtins.removeAttrs inputs.nixpkgs.lib.systems.examples [ "amd64-netbsd" ]);
     in
       { inherit runnables installables functions systems grow; }
         // (
@@ -236,11 +252,6 @@
                       m = o + "s";
                     }
                 )
-              ];
-              nixpkgsOverlays = [
-                devshell.overlay
-                (super: self: { treefmt = treefmt.defaultPackage.${ self.system }; })
-                (super: self: { alejandra = alejandra.defaultPackage.${ self.system }; })
               ];
               systems = [
                 {

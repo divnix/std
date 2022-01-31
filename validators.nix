@@ -28,10 +28,10 @@ in
             ''
 
 
-            The following system has invalid key(s):
-            Keys: '${ builtins.attrNames systemPair }'
+              The following system has invalid key(s):
+              Keys: '${ builtins.attrNames systemPair }'
 
-            Valid keys are: 'build' & 'host'
+              Valid keys are: 'build' & 'host'
             ''
         else
           if
@@ -41,10 +41,10 @@ in
               ''
 
 
-              The following system lacks a key:
-              Keys: '${ builtins.attrNames systemPair }'
+                The following system lacks a key:
+                Keys: '${ builtins.attrNames systemPair }'
 
-              Required keys are: 'build' & 'host'
+                Required keys are: 'build' & 'host'
               ''
           else
             if
@@ -54,10 +54,10 @@ in
                 ''
 
 
-                System build value '${ systemPair.build }' is not valid.
-                Please pick one from the following:
+                  System build value '${ systemPair.build }' is not valid.
+                  Please pick one from the following:
 
-                ${ builtins.concatStringsSep "\n" (builtins.attrNames inputs.self.systems) }
+                  ${ builtins.concatStringsSep "\n" (builtins.attrNames inputs.self.systems) }
 
                 ''
             else
@@ -68,10 +68,10 @@ in
                   ''
 
 
-                  System build value '${ systemPair.host }' is not valid.
-                  Please pick one from the following:
+                    System build value '${ systemPair.host }' is not valid.
+                    Please pick one from the following:
 
-                  ${ builtins.concatStringsSep "\n" (builtins.attrNames inputs.self.systems) }
+                    ${ builtins.concatStringsSep "\n" (builtins.attrNames inputs.self.systems) }
 
                   ''
               else
@@ -105,12 +105,12 @@ in
             ''
 
 
-            Everything under ''${cellsFrom}/* is considered a Cell
+              Everything under ''${cellsFrom}/* is considered a Cell
 
-            Cells are directories by convention and therefore
-            only directories are allowed at ''${cellsFrom}/*
+              Cells are directories by convention and therefore
+              only directories are allowed at ''${cellsFrom}/*
 
-            Please remove ${ "'" }''${cellsFrom}/${ cell }' and don't forget to add the change to version control.
+              Please remove ${ "'" }''${cellsFrom}/${ cell }' and don't forget to add the change to version control.
 
             ''
         else
@@ -121,14 +121,14 @@ in
               ''
 
 
-              For Cell '${ cell }' to be useful
-              it needs to provide at least one Organelle
+                For Cell '${ cell }' to be useful
+                it needs to provide at least one Organelle
 
-              In this project, the Organelles of a Cell can be
-              ${ builtins.concatStringsSep ", " (builtins.map organelleName organelles) }
+                In this project, the Organelles of a Cell can be
+                ${ builtins.concatStringsSep ", " (builtins.map organelleName organelles) }
 
 
-              ${
+                ${
                 builtins.concatStringsSep
                   "\n\n"
                   (
@@ -142,19 +142,22 @@ in
                             then
                               "one or more outputs"
                             else
-                              if (organelle ? o) then "the single output" else "outputs";
-                          title =
-                            "To generate ${ numerator } for Organelle '${ organelleName organelle }', please create:\n";
-                          list =
-                            "${
-                              builtins.concatStringsSep
-                                " or\n"
-                                (
-                                  builtins.map
-                                    (p: "  - ${ prefixWithCellsFrom p }")
-                                    (organellePathsList cellsFrom cell organelle)
-                                )
-                            }";
+                              if
+                                (organelle ? o)
+                              then
+                                "the single output"
+                              else
+                                "outputs";
+                          title = "To generate ${ numerator } for Organelle '${ organelleName organelle }', please create:\n";
+                          list = "${
+                            builtins.concatStringsSep
+                              " or\n"
+                              (
+                                builtins.map
+                                  (p: "  - ${ prefixWithCellsFrom p }")
+                                  (organellePathsList cellsFrom cell organelle)
+                              )
+                          }";
                         in
                           title + list
                       )
@@ -162,7 +165,7 @@ in
                   )
               }
 
-              Please create at least one of the previous files and don't forget to add them to version control.
+                Please create at least one of the previous files and don't forget to add them to version control.
               ''
           else
             if
@@ -172,10 +175,10 @@ in
                 ''
 
 
-                Cell Organelles can inject eiter a singleton output or an attribute set of outputs into the project flake, not both.
-                Hence, please use only one of the following files:
+                  Cell Organelles can inject eiter a singleton output or an attribute set of outputs into the project flake, not both.
+                  Hence, please use only one of the following files:
 
-                ${
+                  ${
                   builtins.concatStringsSep
                     "\n\n"
                     (
@@ -196,7 +199,7 @@ in
                     )
                 }
 
-                Please remove either one and don't forget to add the changes to version control.
+                  Please remove either one and don't forget to add the changes to version control.
 
                 ''
             else
@@ -210,11 +213,11 @@ in
           ''
 
 
-          An Organelle must either have a "one" or "many" name or both.
-          Please define in your organelles:
-            - either { o = "one-name"; }
-            - or { m = "many-name"; }
-            - or both
+            An Organelle must either have a "one" or "many" name or both.
+            Please define in your organelles:
+              - either { o = "one-name"; }
+              - or { m = "many-name"; }
+              - or both
 
           ''
       else
@@ -225,13 +228,13 @@ in
             ''
 
 
-            An Organelle must be of one of the following clades:
-              - runnables
-              - installables
-              - functions
+              An Organelle must be of one of the following clades:
+                - runnables
+                - installables
+                - functions
 
-            Please define in your organelle ${ organelleName organelle }:
-            { clade = "<clade>"; }
+              Please define in your organelle ${ organelleName organelle }:
+              { clade = "<clade>"; }
 
             ''
         else
@@ -252,10 +255,10 @@ in
             ''
 
 
-            The following file does contain an attribute set:
-              - ${ prefixWithCellsFrom onePath }
+              The following file does contain an attribute set:
+                - ${ prefixWithCellsFrom onePath }
 
-            ${
+              ${
               if
                 manyPath != null
               then
@@ -272,10 +275,10 @@ in
               ''
 
 
-              The following file of Clade 'functions' doesn't contain a function:
-                - ${ prefixWithCellsFrom onePath }
+                The following file of Clade 'functions' doesn't contain a function:
+                  - ${ prefixWithCellsFrom onePath }
 
-              But single output organelles of Clade 'function' must resolve to a single function.
+                But single output organelles of Clade 'function' must resolve to a single function.
               ''
           else
             imported;
@@ -295,10 +298,10 @@ in
             ''
 
 
-            The following file doesn't contain an attribute set:
-              - ${ prefixWithCellsFrom manyPath }
+              The following file doesn't contain an attribute set:
+                - ${ prefixWithCellsFrom manyPath }
 
-            ${
+              ${
               if
                 onePath != null
               then
