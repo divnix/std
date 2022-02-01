@@ -227,7 +227,7 @@
                   }
               )
               (runnables { o = "cli"; })
-              (functions { o = "devshellProfiles"; })
+              (functions { m = "devshellProfiles"; })
             ];
             systems = [
               {
