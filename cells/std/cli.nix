@@ -30,6 +30,6 @@ nixpkgs.stdenv.mkDerivation
     propagatedBuildInputs = [ nixpkgs.git ];
     buildPhase = ''
       mkdir -p $out/bin
-      csc -o $out/bin/std -static "$src/cli.scm"
+      csc -o $out/bin/std -static "$src/main.scm"
     '';
   }
