@@ -18,6 +18,7 @@
         (chicken port)
         (chicken process)
         (chicken process-context)
+        (chicken pathname)
         (chicken string)
         (matchable)
         (shell)
@@ -174,7 +175,7 @@ USAGE
   (or std--cell-root
       (begin
         (set! std--cell-root
-              (get-environment-variable "CELL_ROOT"))
+              (normalize-pathname (get-environment-variable "CELL_ROOT")))
         std--cell-root)))
 
 ;; determine the current path relative to the cell root
