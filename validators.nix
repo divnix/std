@@ -31,7 +31,7 @@ in
 
 
             The following system has invalid key(s):
-            Keys: '${ builtins.attrNames systemPair }'
+            Keys: '${builtins.attrNames systemPair}'
 
             Valid keys are: 'build' & 'host'
           ''
@@ -42,7 +42,7 @@ in
 
 
             The following system lacks a key:
-            Keys: '${ builtins.attrNames systemPair }'
+            Keys: '${builtins.attrNames systemPair}'
 
             Required keys are: 'build' & 'host'
           ''
@@ -52,10 +52,10 @@ in
           ''
 
 
-            System build value '${ systemPair.build }' is not valid.
+            System build value '${systemPair.build}' is not valid.
             Please pick one from the following:
 
-            ${ builtins.concatStringsSep "\n" (builtins.attrNames inputs.self.systems) }
+            ${builtins.concatStringsSep "\n" (builtins.attrNames inputs.self.systems)}
 
           ''
       else if !hostValueIsValid
@@ -64,10 +64,10 @@ in
           ''
 
 
-            System build value '${ systemPair.host }' is not valid.
+            System build value '${systemPair.host}' is not valid.
             Please pick one from the following:
 
-            ${ builtins.concatStringsSep "\n" (builtins.attrNames inputs.self.systems) }
+            ${builtins.concatStringsSep "\n" (builtins.attrNames inputs.self.systems)}
 
           ''
       else
@@ -102,7 +102,7 @@ in
             Cells are directories by convention and therefore
             only directories are allowed at ''${cellsFrom}/*
 
-            Please remove ${ "'" }''${cellsFrom}/${ cell }' and don't forget to add the change to version control.
+            Please remove ${"'"}''${cellsFrom}/${cell}' and don't forget to add the change to version control.
 
           ''
       else if !atLeastOneOrganelle
@@ -111,11 +111,11 @@ in
           ''
 
 
-            For Cell '${ cell }' to be useful
+            For Cell '${cell}' to be useful
             it needs to provide at least one Organelle
 
             In this project, the Organelles of a Cell can be
-            ${ builtins.concatStringsSep ", " (builtins.map organelleName organelles) }
+            ${builtins.concatStringsSep ", " (builtins.map organelleName organelles)}
 
 
             ${
@@ -132,13 +132,13 @@ in
                         else if (organelle ? o)
                         then "the single output"
                         else "outputs";
-                      title = "To generate ${ numerator } for Organelle '${ organelleName organelle }', please create:\n";
+                      title = "To generate ${numerator} for Organelle '${organelleName organelle}', please create:\n";
                       list = "${
                         builtins.concatStringsSep
                           " or\n"
                           (
                             builtins.map
-                              (p: "  - ${ prefixWithCellsFrom p }")
+                              (p: "  - ${prefixWithCellsFrom p}")
                               (organellePathsList cellsFrom cell organelle)
                           )
                       }";
@@ -172,7 +172,7 @@ in
                         " or\n"
                         (
                           builtins.map
-                            (p: "  - ${ prefixWithCellsFrom p }")
+                            (p: "  - ${prefixWithCellsFrom p}")
                             (organellePathsList cellsFrom cell organelle)
                         )
                     )
@@ -211,7 +211,7 @@ in
             - installables
             - functions
 
-          Please define in your organelle ${ organelleName organelle }:
+          Please define in your organelle ${organelleName organelle}:
           { clade = "<clade>"; }
 
         ''
@@ -229,12 +229,12 @@ in
 
 
             The following file does contain an attribute set:
-              - ${ prefixWithCellsFrom onePath }
+              - ${prefixWithCellsFrom onePath}
 
             ${
             if manyPath != null
             then
-              "If you need several outputs, rename to:\n  - ${ prefixWithCellsFrom manyPath }\n\nOtherwise, it must contain only a single output."
+              "If you need several outputs, rename to:\n  - ${prefixWithCellsFrom manyPath}\n\nOtherwise, it must contain only a single output."
             else "But it must contain only a single output."
           }
           ''
@@ -245,7 +245,7 @@ in
 
 
             The following file of Clade 'functions' doesn't contain a function:
-              - ${ prefixWithCellsFrom onePath }
+              - ${prefixWithCellsFrom onePath}
 
             But single output organelles of Clade 'function' must resolve to a single function.
           ''
@@ -263,12 +263,12 @@ in
 
 
             The following file doesn't contain an attribute set:
-              - ${ prefixWithCellsFrom manyPath }
+              - ${prefixWithCellsFrom manyPath}
 
             ${
             if onePath != null
             then
-              "If you only need one single output, consider renaming to:\n  - ${ prefixWithCellsFrom onePath }\n\nOtherwise, it must contain an attribute set of outputs."
+              "If you only need one single output, consider renaming to:\n  - ${prefixWithCellsFrom onePath}\n\nOtherwise, it must contain an attribute set of outputs."
             else "But it must contain an attribute set of outputs."
           }
           ''

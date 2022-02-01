@@ -38,7 +38,7 @@ nixpkgs.devshell.mkShell
           category = "legal";
         }
       ];
-      imports = [ "${ extraModulesPath }/git/hooks.nix" ];
+      imports = [ "${extraModulesPath}/git/hooks.nix" ];
       git.hooks = {
         enable = true;
         pre-commit.text = builtins.readFile ./devShell/pre-commit.sh;
