@@ -22,12 +22,12 @@
         cellsFrom: cell: organelle:
         (
           if organelle ? o
-          then { onePath = "${ cellsFrom }/${ cell }/${ organelle.o }.nix"; }
+          then { onePath = "${cellsFrom}/${cell}/${organelle.o}.nix"; }
           else { }
         )
         // (
           if organelle ? m
-          then { manyPath = "${ cellsFrom }/${ cell }/${ organelle.m }.nix"; }
+          then { manyPath = "${cellsFrom}/${cell}/${organelle.m}.nix"; }
           else { }
         );
       runnables = attrs: validate.Organelle (attrs // { clade = "runnables"; });
@@ -127,14 +127,14 @@
                         baseSuffix =
                           if suffix == ""
                           then ""
-                          else "-${ suffix }";
+                          else "-${suffix}";
                         systemSuffix =
                           if system.build.config == system.host.config
                           then ""
-                          else "-${ system.host.config }";
+                          else "-${system.host.config}";
                       in
                         {
-                          name = "${ cell }${ baseSuffix }${ systemSuffix }";
+                          name = "${cell}${baseSuffix}${systemSuffix}";
                           value = output;
                         }
                     );
@@ -148,7 +148,7 @@
                         if res != { }
                         then
                           (
-                            { "${ organelleName organelle }".${ system.build.system } = applySuffixes res; }
+                            { "${organelleName organelle}".${ system.build.system } = applySuffixes res; }
                             // (
                               if
                                 (organelle.clade == "installables" || organelle.clade == "runnables")
@@ -190,7 +190,7 @@
                 name = drv.meta.mainProgram or drv.pname or drv.name;
               in
                 {
-                  program = "${ drv }/bin/${ name }";
+                  program = "${drv}/bin/${name}";
                   type = "app";
                 };
           in
@@ -210,30 +210,30 @@
           (builtins.removeAttrs inputs.nixpkgs.lib.systems.examples [ "amd64-netbsd" ]);
     in
       { inherit runnables installables functions systems grow; }
-        // (
-          grow
-            {
-              inherit inputs;
-              # as-nix-cli-epiphyte = false;
-              cellsFrom = ./cells;
-              organelles = [
-                (
-                  runnables
-                    {
-                      o = "devShell";
-                      m = "devShells";
-                    }
-                )
-                (runnables { o = "cli"; })
-              ];
-              systems = [
-                {
-                  build = "x86_64-unknown-linux-gnu";
-                  # GNU/Linux 64 bits
-                  host = "x86_64-unknown-linux-gnu";
-                  # GNU/Linux 64 bits
-                }
-              ];
-            }
-        );
+      // (
+        grow
+          {
+            inherit inputs;
+            # as-nix-cli-epiphyte = false;
+            cellsFrom = ./cells;
+            organelles = [
+              (
+                runnables
+                  {
+                    o = "devShell";
+                    m = "devShells";
+                  }
+              )
+              (runnables { o = "cli"; })
+            ];
+            systems = [
+              {
+                build = "x86_64-unknown-linux-gnu";
+                # GNU/Linux 64 bits
+                host = "x86_64-unknown-linux-gnu";
+                # GNU/Linux 64 bits
+              }
+            ];
+          }
+      );
 }
