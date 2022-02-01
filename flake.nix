@@ -2,7 +2,6 @@
 # SPDX-FileCopyrightText: 2022 Kevin Amado <kamadorueda@gmail.com>
 #
 # SPDX-License-Identifier: Unlicense
-
 {
   description = "The Nix Flakes framework for perfectionists with deadlines";
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
@@ -20,25 +19,17 @@
       organelleName = organelle: organelle.m or organelle.o;
       # organellePaths are constructed from the specified organelles
       organellePaths =
-        cellsFrom:
-        cell:
-        organelle:
+        cellsFrom: cell: organelle:
         (
-          if
-            organelle ? o
-          then
-            { onePath = "${ cellsFrom }/${ cell }/${ organelle.o }.nix"; }
-          else
-            { }
+          if organelle ? o
+          then { onePath = "${ cellsFrom }/${ cell }/${ organelle.o }.nix"; }
+          else { }
         )
-          // (
-            if
-              organelle ? m
-            then
-              { manyPath = "${ cellsFrom }/${ cell }/${ organelle.m }.nix"; }
-            else
-              { }
-          );
+        // (
+          if organelle ? m
+          then { manyPath = "${ cellsFrom }/${ cell }/${ organelle.m }.nix"; }
+          else { }
+        );
       runnables = attrs: validate.Organelle (attrs // { clade = "runnables"; });
       installables = attrs: validate.Organelle (attrs // { clade = "installables"; });
       functions = attrs: validate.Organelle (attrs // { clade = "functions"; });
@@ -103,52 +94,44 @@
                 cells';
             # Load a cell, return the flake outputs injected by std
             loadCell =
-              system:
-              cell:
+              system: cell:
               let
                 cellArgs = {
                   inherit system;
                   inputs =
                     inputs
-                      // {
-                        nixpkgs =
-                          import
-                            inputs.nixpkgs
-                            {
-                              config =
-                                {
-                                  allowUnfree = true;
-                                  allowUnsupportedSystem = true;
-                                  android_sdk.accept_license = true;
-                                }
-                                  // nixpkgsConfig;
-                              crossSystem = system.host;
-                              localSystem = system.build;
-                            };
-                        nixpkgsSrc = inputs.nixpkgs;
-                        self = theirself;
-                      };
+                    // {
+                      nixpkgs =
+                        import
+                          inputs.nixpkgs
+                          {
+                            config =
+                              {
+                                allowUnfree = true;
+                                allowUnsupportedSystem = true;
+                                android_sdk.accept_license = true;
+                              }
+                              // nixpkgsConfig;
+                            crossSystem = system.host;
+                            localSystem = system.build;
+                          };
+                      nixpkgsSrc = inputs.nixpkgs;
+                      self = theirself;
+                    };
                 };
                 applySuffixes =
                   inputs.nixpkgs.lib.attrsets.mapAttrs'
                     (
-                      suffix:
-                      output:
+                      suffix: output:
                       let
                         baseSuffix =
-                          if
-                            suffix == ""
-                          then
-                            ""
-                          else
-                            "-${ suffix }";
+                          if suffix == ""
+                          then ""
+                          else "-${ suffix }";
                         systemSuffix =
-                          if
-                            system.build.config == system.host.config
-                          then
-                            ""
-                          else
-                            "-${ system.host.config }";
+                          if system.build.config == system.host.config
+                          then ""
+                          else "-${ system.host.config }";
                       in
                         {
                           name = "${ cell }${ baseSuffix }${ systemSuffix }";
@@ -158,39 +141,32 @@
               in
                 builtins.foldl'
                   (
-                    old:
-                    organelle:
+                    old: organelle:
                     let
                       res = loadCellOrganelle cell organelle cellArgs;
                       output =
-                        if
-                          res != { }
+                        if res != { }
                         then
                           (
                             { "${ organelleName organelle }".${ system.build.system } = applySuffixes res; }
-                              // (
-                                if
-                                  (organelle.clade == "installables" || organelle.clade == "runnables")
-                                    && as-nix-cli-epiphyte
-                                then
-                                  { packages.${ system.build.system } = applySuffixes res; }
-                                else
-                                  { }
-                              )
-                              // (
-                                if
-                                  organelle.clade == "runnables" && as-nix-cli-epiphyte
-                                then
-                                  {
-                                    apps.${ system.build.system } =
-                                      builtins.mapAttrs (_: toFlakeApp) (applySuffixes res);
-                                  }
-                                else
-                                  { }
-                              )
+                            // (
+                              if
+                                (organelle.clade == "installables" || organelle.clade == "runnables")
+                                && as-nix-cli-epiphyte
+                              then { packages.${ system.build.system } = applySuffixes res; }
+                              else { }
+                            )
+                            // (
+                              if organelle.clade == "runnables" && as-nix-cli-epiphyte
+                              then
+                                {
+                                  apps.${ system.build.system } =
+                                    builtins.mapAttrs (_: toFlakeApp) (applySuffixes res);
+                                }
+                              else { }
+                            )
                           )
-                        else
-                          { };
+                        else { };
                     in
                       inputs.nixpkgs.lib.attrsets.recursiveUpdate old output
                   )
@@ -198,24 +174,16 @@
                   organelles';
             # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
             loadCellOrganelle =
-              cell:
-              organelle:
-              cellArgs:
+              cell: organelle: cellArgs:
               let
                 onePath = (organellePaths cellsFrom cell organelle).onePath or null;
                 manyPath = (organellePaths cellsFrom cell organelle).manyPath or null;
               in
-                if
-                  onePath != null && builtins.pathExists onePath
-                then
-                  { "" = validate.OnePathImport organelle cellsFrom cell (import onePath cellArgs); }
-                else
-                  if
-                    manyPath != null && builtins.pathExists manyPath
-                  then
-                    validate.ManyPathImport organelle cellsFrom cell (import manyPath cellArgs)
-                  else
-                    { };
+                if onePath != null && builtins.pathExists onePath
+                then { "" = validate.OnePathImport organelle cellsFrom cell (import onePath cellArgs); }
+                else if manyPath != null && builtins.pathExists manyPath
+                then validate.ManyPathImport organelle cellsFrom cell (import manyPath cellArgs)
+                else { };
             toFlakeApp =
               drv:
               let
@@ -230,8 +198,7 @@
       systems =
         inputs.nixpkgs.lib.attrsets.mapAttrs'
           (
-            example:
-            config:
+            example: config:
             let
               fullConfig = inputs.nixpkgs.lib.systems.elaborate config;
             in
@@ -243,29 +210,29 @@
           (builtins.removeAttrs inputs.nixpkgs.lib.systems.examples [ "amd64-netbsd" ]);
     in
       { inherit runnables installables functions systems grow; }
-        // (
-          grow
-            {
-              inherit inputs;
-              as-nix-cli-epiphyte = false;
-              cellsFrom = ./cells;
-              organelles = [
-                (
-                  runnables
-                    rec {
-                      o = "devShell";
-                      m = o + "s";
-                    }
-                )
-              ];
-              systems = [
-                {
-                  build = "x86_64-unknown-linux-gnu";
-                  # GNU/Linux 64 bits
-                  host = "x86_64-unknown-linux-gnu";
-                  # GNU/Linux 64 bits
-                }
-              ];
-            }
-        );
+      // (
+        grow
+          {
+            inherit inputs;
+            as-nix-cli-epiphyte = false;
+            cellsFrom = ./cells;
+            organelles = [
+              (
+                runnables
+                  rec {
+                    o = "devShell";
+                    m = o + "s";
+                  }
+              )
+            ];
+            systems = [
+              {
+                build = "x86_64-unknown-linux-gnu";
+                # GNU/Linux 64 bits
+                host = "x86_64-unknown-linux-gnu";
+                # GNU/Linux 64 bits
+              }
+            ];
+          }
+      );
 }
