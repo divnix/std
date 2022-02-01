@@ -117,7 +117,6 @@
                             crossSystem = system.host;
                             localSystem = system.build;
                           };
-                      nixpkgsSrc = nixpkgs;
                       self = theirself;
                     };
                 };
