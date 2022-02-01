@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2022 David Arnold <dgx.arnold@gmail.com>
+SPDX-FileCopyrightText: 2022 The Standard Authors
 SPDX-FileCopyrightText: 2022 Kevin Amado <kamadorueda@gmail.com>
 
 SPDX-License-Identifier: Unlicense
