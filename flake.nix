@@ -16,6 +16,7 @@
   outputs =
     inputs:
     let
+      nixpkgs = inputs.nixpkgs;
       validate = import ./validators.nix { inherit inputs organelleName organellePaths; };
       # organelleName is constructed from the singleton name if defined, else form the plural
       organelleName = organelle: organelle.m or organelle.o;
@@ -38,7 +39,7 @@
       grow =
         let
           defaultSystems =
-            inputs.nixpkgs.lib.attrsets.cartesianProductOfSets
+            nixpkgs.lib.attrsets.cartesianProductOfSets
               {
                 build = [
                   "x86_64-apple-darwin"
@@ -77,10 +78,9 @@
             # Validations ...
             organelles' = builtins.map validate.Organelle organelles;
             systems' = builtins.map validate.System systems;
-            cells' =
-              inputs.nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom organelles') (builtins.readDir cellsFrom);
+            cells' = nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom organelles') (builtins.readDir cellsFrom);
             # Set of all std-injected outputs in the project flake
-            theirself = builtins.foldl' inputs.nixpkgs.lib.attrsets.recursiveUpdate { } stdOutputs;
+            theirself = builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { } stdOutputs;
             # List of all flake outputs injected by std
             stdOutputs = builtins.concatLists (builtins.map stdOutputsFor systems');
             stdOutputsFor =
@@ -105,7 +105,7 @@
                     // {
                       nixpkgs =
                         import
-                          inputs.nixpkgs
+                          nixpkgs
                           {
                             config =
                               {
@@ -117,12 +117,12 @@
                             crossSystem = system.host;
                             localSystem = system.build;
                           };
-                      nixpkgsSrc = inputs.nixpkgs;
+                      nixpkgsSrc = nixpkgs;
                       self = theirself;
                     };
                 };
                 applySuffixes =
-                  inputs.nixpkgs.lib.attrsets.mapAttrs'
+                  nixpkgs.lib.attrsets.mapAttrs'
                     (
                       suffix: output:
                       let
@@ -170,7 +170,7 @@
                           )
                         else { };
                     in
-                      inputs.nixpkgs.lib.attrsets.recursiveUpdate old output
+                      nixpkgs.lib.attrsets.recursiveUpdate old output
                   )
                   { }
                   organelles';
@@ -198,18 +198,18 @@
           in
             theirself;
       systems =
-        inputs.nixpkgs.lib.attrsets.mapAttrs'
+        nixpkgs.lib.attrsets.mapAttrs'
           (
             example: config:
             let
-              fullConfig = inputs.nixpkgs.lib.systems.elaborate config;
+              fullConfig = nixpkgs.lib.systems.elaborate config;
             in
               {
                 name = fullConfig.config;
                 value = fullConfig;
               }
           )
-          (builtins.removeAttrs inputs.nixpkgs.lib.systems.examples [ "amd64-netbsd" ]);
+          (builtins.removeAttrs nixpkgs.lib.systems.examples [ "amd64-netbsd" ]);
     in
       { inherit runnables installables functions systems grow; }
       // (
