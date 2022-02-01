@@ -255,7 +255,7 @@ USAGE
 (define (execute-show t)
   (let ((url (nix-url-for t)))
     (printf "[std] showing nix derivation of target ~A~%" t)
-    (process-execute "nix" (list "edit" url))))
+    (process-execute "nix" (list "edit" "--option" "warn-dirty" "false" url))))
 
 (define (show args)
   (match args
