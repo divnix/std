@@ -222,17 +222,18 @@
                 runnables
                   {
                     o = "devShell";
+                    # the effective output name for nix to discover
                     m = "devShells";
                   }
               )
               (runnables { o = "cli"; })
+              (functions { o = "devshellProfiles"; })
             ];
             systems = [
               {
+                # GNU/Linux 64 bits
                 build = "x86_64-unknown-linux-gnu";
-                # GNU/Linux 64 bits
                 host = "x86_64-unknown-linux-gnu";
-                # GNU/Linux 64 bits
               }
             ];
           }
