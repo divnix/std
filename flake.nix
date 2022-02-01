@@ -7,10 +7,12 @@
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs.devshell.url = "github:numtide/devshell";
+  inputs.devshell.inputs.nixpkgs.follows = "nixpkgs";
   inputs.treefmt.url = "github:numtide/treefmt";
   inputs.treefmt.inputs.nixpkgs.follows = "nixpkgs";
   inputs.alejandra.url = "github:kamadorueda/alejandra";
   inputs.alejandra.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.alejandra.inputs.treefmt.url = "github:divnix/blank";
   outputs =
     inputs:
     let
