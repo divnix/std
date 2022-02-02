@@ -17,25 +17,29 @@
     inputs:
     let
       nixpkgs = inputs.nixpkgs;
-      validate = import ./validators.nix { inherit inputs organelleName organellePaths; };
-      # organelleName is constructed from the singleton name if defined, else form the plural
-      organelleName = organelle: organelle.m or organelle.o;
-      # organellePaths are constructed from the specified organelles
-      organellePaths =
-        cellsFrom: cell: organelle:
-        (
-          if organelle ? o
-          then { onePath = "${cellsFrom}/${cell}/${organelle.o}.nix"; }
-          else { }
-        )
-        // (
-          if organelle ? m
-          then { manyPath = "${cellsFrom}/${cell}/${organelle.m}.nix"; }
-          else { }
-        );
-      runnables = attrs: validate.Organelle (attrs // { clade = "runnables"; });
-      installables = attrs: validate.Organelle (attrs // { clade = "installables"; });
-      functions = attrs: validate.Organelle (attrs // { clade = "functions"; });
+      validate = import ./validators.nix { inherit nixpkgs systems organellePath; };
+      organellePath = cellsFrom: cell: organelle: "${cellsFrom}/${cell}/${organelle.name}.nix";
+      runnables =
+        name:
+        validate.Organelle
+          {
+            inherit name;
+            clade = "runnables";
+          };
+      installables =
+        name:
+        validate.Organelle
+          {
+            inherit name;
+            clade = "installables";
+          };
+      functions =
+        name:
+        validate.Organelle
+          {
+            inherit name;
+            clade = "functions";
+          };
       grow =
         let
           defaultSystems =
@@ -47,24 +51,22 @@
                   "aarch64-apple-darwin"
                   "aarch64-unknown-linux-gnu"
                 ];
-                host = builtins.attrNames inputs.self.systems;
+                host = builtins.attrNames systems;
               };
         in
           { inputs
           , cellsFrom
           , organelles ? [
               {
-                m = "library";
+                name = "library";
                 clade = "functions";
               }
               {
-                o = "app";
-                m = "apps";
+                name = "apps";
                 clade = "runnables";
               }
               {
-                o = "package";
-                m = "packages";
+                name = "packages";
                 clade = "installables";
               }
             ]
@@ -149,21 +151,19 @@
                         if res != { }
                         then
                           (
-                            { "${organelleName organelle}".${ system.build.system } = applySuffixes res; }
+                            { "${organelle.name}".${system.build.system} = applySuffixes res; }
                             // (
                               if
                                 (organelle.clade == "installables" || organelle.clade == "runnables")
                                 && as-nix-cli-epiphyte
-                              then { packages.${ system.build.system } = applySuffixes res; }
+                              then { packages.${system.build.system} = applySuffixes res; }
                               else { }
                             )
                             // (
                               if organelle.clade == "runnables" && as-nix-cli-epiphyte
-                              then
-                                {
-                                  apps.${ system.build.system } =
-                                    builtins.mapAttrs (_: toFlakeApp) (applySuffixes res);
-                                }
+                              then {
+                                apps.${system.build.system} = builtins.mapAttrs (_: toFlakeApp) (applySuffixes res);
+                              }
                               else { }
                             )
                           )
@@ -177,13 +177,10 @@
             loadCellOrganelle =
               cell: organelle: cellArgs:
               let
-                onePath = (organellePaths cellsFrom cell organelle).onePath or null;
-                manyPath = (organellePaths cellsFrom cell organelle).manyPath or null;
+                path = organellePath cellsFrom cell organelle;
               in
-                if onePath != null && builtins.pathExists onePath
-                then { "" = validate.OnePathImport organelle cellsFrom cell (import onePath cellArgs); }
-                else if manyPath != null && builtins.pathExists manyPath
-                then validate.ManyPathImport organelle cellsFrom cell (import manyPath cellArgs)
+                if builtins.pathExists path
+                then validate.ManyPathImport organelle cellsFrom cell (import path cellArgs)
                 else { };
             toFlakeApp =
               drv:
@@ -217,18 +214,7 @@
             inherit inputs;
             # as-nix-cli-epiphyte = false;
             cellsFrom = ./cells;
-            organelles = [
-              (
-                runnables
-                  {
-                    o = "devShell";
-                    # the effective output name for nix to discover
-                    m = "devShells";
-                  }
-              )
-              (runnables { o = "cli"; })
-              (functions { m = "devshellProfiles"; })
-            ];
+            organelles = [ (runnables "devShells") (runnables "cli") (functions "devshellProfiles") ];
             systems = [
               {
                 # GNU/Linux 64 bits

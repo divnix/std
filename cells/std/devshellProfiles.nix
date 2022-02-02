@@ -2,7 +2,7 @@
 , system
 }:
 let
-  std = inputs.self.cli.${ system.host.system }.std;
+  std = inputs.self.cli.${system.host.system}.std;
   nixpkgs = inputs.nixpkgs;
 in
 {

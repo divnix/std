@@ -7,7 +7,7 @@
 }:
 {
   testDefault =
-    inputs.self.library.${ system.build.system }.create-build
+    inputs.self.library.${system.build.system}.create-build
       {
         name = "default";
         placeholders = {
