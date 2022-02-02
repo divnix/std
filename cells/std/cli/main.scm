@@ -31,7 +31,7 @@ target:
   A target is an absolute or relative path to an organelle of types
   'runnables' & 'installables', that optionally specifies an
   attribute if the organelle is not a singleton output.
-  
+
   run only available on organelles of type 'runnables'
 
   For example:
@@ -151,7 +151,10 @@ USAGE
            [_ `(error . ,(format "unexpected ~s while parsing ~s target" (car tokens) mode))])))
 
 (define (parse-target target)
-  (parse-tokens (read-target target)))
+  (let ((target-str (normalize-pathname target))) ; transforms: // -> /
+    (parse-tokens (read-target (if (substring=? "/" target-str)
+                                   (conc "/" target-str) ; so we put it back in the begining
+                                   target-str)))))
 
 ;; turn relative targets into absolute targets based on the current
 ;; directory
@@ -225,7 +228,7 @@ USAGE
 (define (execute-build t)
   (let ((url (nix-url-for t)))
     (printf "[std] building target ~A~%" t)
-    (process-execute "nix" 
+    (process-execute "nix"
                      (list "build" "--option" "warn-dirty" "false" url "--show-trace"))))
 
 (define (build args)
@@ -233,7 +236,7 @@ USAGE
          [() (print "not yet implemented")]
 
          ;; single argument should be a target spec
-         [(arg) (execute-build 
+         [(arg) (execute-build
                  (guarantee-success (parse-target arg)))]
 
          [other (print "not yet implemented")]))
