@@ -12,41 +12,39 @@ let
   stdProfile = inputs.self.devshellProfiles.${system.host.system}.std;
 in
 {
-  "" =
-    nixpkgs.devshell.mkShell
-      (
-        { extraModulesPath
-        , pkgs
-        , ...
-        }:
+  "" = nixpkgs.devshell.mkShell (
+    { extraModulesPath
+    , pkgs
+    , ...
+    }:
+    {
+      name = "Standard";
+      cellsFrom = "./cells";
+      packages = [
+        # formatters
+        alejandra
+        nixpkgs.shfmt
+        nixpkgs.nodePackages.prettier
+      ];
+      commands = [
         {
-          name = "Standard";
-          cellsFrom = "./cells";
-          packages = [
-            # formatters
-            alejandra
-            nixpkgs.shfmt
-            nixpkgs.nodePackages.prettier
-          ];
-          commands = [
-            {
-              package = nixpkgs.treefmt;
-              category = "formatters";
-            }
-            {
-              package = nixpkgs.editorconfig-checker;
-              category = "formatters";
-            }
-            {
-              package = nixpkgs.reuse;
-              category = "legal";
-            }
-          ];
-          imports = [ "${extraModulesPath}/git/hooks.nix" stdProfile ];
-          git.hooks = {
-            enable = true;
-            pre-commit.text = builtins.readFile ./devShells/pre-commit.sh;
-          };
+          package = nixpkgs.treefmt;
+          category = "formatters";
         }
-      );
+        {
+          package = nixpkgs.editorconfig-checker;
+          category = "formatters";
+        }
+        {
+          package = nixpkgs.reuse;
+          category = "legal";
+        }
+      ];
+      imports = [ "${extraModulesPath}/git/hooks.nix" stdProfile ];
+      git.hooks = {
+        enable = true;
+        pre-commit.text = builtins.readFile ./devShells/pre-commit.sh;
+      };
+    }
+  );
 }
