@@ -277,6 +277,8 @@ If you'd like to see some examples
 of what a [Standard][std] project looks like,
 take a look at the following:
 
+- [Bitte Cells][bitte-cells]
+
 :construction: Work in progress, would like to help us extend this section?
 
 ## Contributions
@@ -298,9 +300,10 @@ menu
 
 ---
 
+[bitte-cells]: https://github.com/input-output-hk/bitte-cells
 [cross_compiler]: https://en.wikipedia.org/wiki/Cross_compiler
 [hydra]: https://github.com/NixOS/hydra
-[nix]: https://nixos.org/manual/nix/unstable
 [nix_drv]: https://nixos.org/manual/nix/unstable/expressions/derivations.html
 [nix_flakes]: https://nixos.wiki/wiki/Flakes
+[nix]: https://nixos.org/manual/nix/unstable
 [std]: https://github.com/divnix/std
