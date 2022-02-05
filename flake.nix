@@ -194,8 +194,14 @@
           value = fullConfig;
         }
     ) (builtins.removeAttrs nixpkgs.lib.systems.examples [ "amd64-netbsd" ]);
+    growOn = args: soil: nixpkgs.lib.recursiveUpdate (
+      soil
+      // {
+        __functor = self: soil': growOn args (nixpkgs.lib.recursiveUpdate soil' self);
+      }
+    ) (grow args);
   in
-    { inherit runnables installables functions systems grow; }
+    { inherit runnables installables functions systems grow growOn; }
     // (
       grow {
         inherit inputs;
