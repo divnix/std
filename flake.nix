@@ -194,14 +194,37 @@
           value = fullConfig;
         }
     ) (builtins.removeAttrs nixpkgs.lib.systems.examples [ "amd64-netbsd" ]);
-    growOn = args: soil: nixpkgs.lib.recursiveUpdate (
+    growOn = args: soil: nixpkgs.lib.attrsets.recursiveUpdate (
       soil
       // {
         __functor = self: soil': growOn args (nixpkgs.lib.recursiveUpdate soil' self);
       }
     ) (grow args);
+    harvest = cell: outputs: let
+      nonEmpty = nixpkgs.lib.attrsets.filterAttrs (_: v: v != { });
+      systemList = nixpkgs.lib.lists.unique (nixpkgs.lib.attrsets.mapAttrsToList (_: s: s.system) systems);
+      maybeOrganelles = o: nonEmpty (nixpkgs.lib.attrsets.filterAttrs (_: builtins.isAttrs) o);
+      systemOk = o: nonEmpty (
+        builtins.mapAttrs (
+          _: nixpkgs.lib.attrsets.filterAttrs (n: _: builtins.elem n systemList)
+        )
+        o
+      );
+      cellOk = cell: o: nonEmpty (
+        builtins.mapAttrs (
+          _: g: nonEmpty (
+            builtins.mapAttrs (
+              _: nixpkgs.lib.attrsets.filterAttrs (n: _: nixpkgs.lib.strings.hasPrefix cell n)
+            )
+            g
+          )
+        )
+        o
+      );
+    in
+      cellOk cell (systemOk (maybeOrganelles outputs));
   in
-    { inherit runnables installables functions systems grow growOn; }
+    { inherit runnables installables functions systems grow growOn harvest; }
     // (
       grow {
         inherit inputs;
