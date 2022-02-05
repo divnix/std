@@ -45,7 +45,6 @@ in
                   only directories are allowed at ''${cellsFrom}/*
 
                   Please remove ${"'"}''${cellsFrom}/${cell}' and don't forget to add the change to version control.
-        ca
       ''
     else if !atLeastOneOrganelle
     then

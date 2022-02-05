@@ -22,7 +22,7 @@ in
       nixpkgs.stdenv.mkDerivation {
         name = "std";
         meta.description = "nix shortcut for projects that conform to Standard";
-        src = ./cli;
+        src = ./.;
         dontInstall = true;
         nativeBuildInputs = [ nixpkgs.chicken ];
         buildInputs =

@@ -43,7 +43,7 @@ in
       imports = [ "${extraModulesPath}/git/hooks.nix" stdProfile ];
       git.hooks = {
         enable = true;
-        pre-commit.text = builtins.readFile ./devShells/pre-commit.sh;
+        pre-commit.text = builtins.readFile ./pre-commit.sh;
       };
     }
   );
