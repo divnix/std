@@ -19,9 +19,9 @@
     nixpkgs = inputs.nixpkgs;
     validate = import ./validators.nix {
       inherit (inputs) yants nixpkgs;
-      inherit systems organellePath;
+      inherit systems organelleFilePath;
     };
-    organellePath = cellsFrom: cell: organelle: "${cellsFrom}/${cell}/${organelle.name}.nix";
+    organelleFilePath = cellsFrom: cell: organelle: "${cellsFrom}/${cell}/${organelle.name}.nix";
     runnables = name: {
       inherit name;
       clade = "runnables";
@@ -170,11 +170,11 @@
             organelles';
           # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
           loadCellOrganelle = cell: organelle: cellArgs: let
-            path = organellePath cellsFrom cell organelle;
+            filePath = organelleFilePath cellsFrom cell organelle;
           in
-            if builtins.pathExists path
+            if builtins.pathExists filePath
             then
-              validate.ManyPathImport organelle cellsFrom cell (import path cellArgs)
+              validate.ManyPathImport organelle cellsFrom cell (import filePath cellArgs)
             else { };
           toFlakeApp = drv: let
             name = drv.meta.mainProgram or drv.pname or drv.name;

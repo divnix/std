@@ -5,7 +5,7 @@
 { nixpkgs
 , yants
 , systems
-, organellePath
+, organelleFilePath
 }:
 let
   availableSystems = systems;
@@ -26,7 +26,7 @@ in
       }
     );
   Cell = cellsFrom: organelles: cell: type: let
-    atLeastOneOrganelle = builtins.any builtins.pathExists (builtins.map (o: organellePath cellsFrom cell o) organelles);
+    atLeastOneOrganelle = builtins.any builtins.pathExists (builtins.map (o: organelleFilePath cellsFrom cell o) organelles);
   in
     if type != "directory"
     then
@@ -58,11 +58,11 @@ in
           builtins.map (
             organelle: let
               title = "To generate output for Organelle '${organelle.name}', please create:\n";
-              path = "  - ${
-                prefixWithCellsFrom (organellePath cellsFrom cell organelle)
+              filePath = "  - ${
+                prefixWithCellsFrom (organelleFilePath cellsFrom cell organelle)
               }";
             in
-              title + path
+              title + filePath
           )
           organelles
         )
@@ -80,7 +80,7 @@ in
       }
     );
   ManyPathImport = organelle: cellsFrom: cell: imported: let
-    path = organellePath cellsFrom cell organelle;
+    filePath = organelleFilePath cellsFrom cell organelle;
   in
     if !builtins.isAttrs imported || nixpkgs.lib.isDerivation imported
     then
@@ -88,7 +88,7 @@ in
 
 
         The following file doesn't contain an attribute set:
-          - ${prefixWithCellsFrom path}
+          - ${prefixWithCellsFrom filePath}
 
         But it must contain an attribute set of outputs.
       ''
