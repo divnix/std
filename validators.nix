@@ -4,12 +4,10 @@
 # SPDX-License-Identifier: Unlicense
 { nixpkgs
 , yants
-, systems
-, organelleFilePath
-, organelleDirPath
+, systems'
+, organellePath
 }:
 let
-  availableSystems = systems;
   prefixWithCellsFrom = path: builtins.concatStringsSep "/" (
     [ "\${cellsFrom}" ]
     ++ (nixpkgs.lib.lists.drop 4 (nixpkgs.lib.splitString "/" path))
@@ -20,17 +18,16 @@ in
     with yants "std" "grow" "attrs";
     list (
       struct "system" {
-        build = restrict "available system" (s: builtins.hasAttr s availableSystems)
-        string;
-        host = restrict "available system" (s: builtins.hasAttr s availableSystems)
-        string;
+        build = restrict "available system" (s: builtins.hasAttr s systems') string;
+        host = restrict "available system" (s: builtins.hasAttr s systems') string;
       }
     );
   Cell = cellsFrom: organelles: cell: type: let
-    filePath = o: organelleFilePath cellsFrom cell o;
-    dirPath = o: organelleDirPath cellsFrom cell o;
+    path = o: organellePath cellsFrom cell o;
     atLeastOneOrganelle = builtins.any (x: x) (
-      builtins.map (o: builtins.pathExists (filePath o) || builtins.pathExists (dirPath o))
+      builtins.map (
+        o: builtins.pathExists (path o).file || builtins.pathExists (path o).dir
+      )
       organelles
     );
   in
@@ -39,12 +36,12 @@ in
       abort ''
 
 
-                  Everything under ''${cellsFrom}/* is considered a Cell
+        Everything under ''${cellsFrom}/* is considered a Cell
 
-                  Cells are directories by convention and therefore
-                  only directories are allowed at ''${cellsFrom}/*
+        Cells are directories by convention and therefore
+        only directories are allowed at ''${cellsFrom}/*
 
-                  Please remove ${"'"}''${cellsFrom}/${cell}' and don't forget to add the change to version control.
+        Please remove ${"'"}''${cellsFrom}/${cell}' and don't forget to add the change to version control.
       ''
     else if !atLeastOneOrganelle
     then
@@ -63,7 +60,7 @@ in
           builtins.map (
             organelle: let
               title = "To generate output for Organelle '${organelle.name}', please create:\n";
-              paths = "  - ${prefixWithCellsFrom (filePath organelle)}; or\n  - ${prefixWithCellsFrom (dirPath organelle)}";
+              paths = "  - ${prefixWithCellsFrom (path organelle).fil}; or\n  - ${prefixWithCellsFrom (path organelle).dir}";
             in
               title + paths
           )
@@ -82,23 +79,15 @@ in
         clade = enum "clades" [ "runnables" "installables" "functions" ];
       }
     );
-  ManyPathImport = organelle: cellsFrom: cell: imported: let
-    filePath = organelleFilePath cellsFrom cell organelle;
-    dirPath = organelleDirPath cellsFrom cell organelle;
-    file =
-      if builtins.pathExists filePath
-      then filePath
-      else dirPath;
+  Import = clade: file: let
+    file' = prefixWithCellsFrom file;
   in
-    if !builtins.isAttrs imported || nixpkgs.lib.isDerivation imported
-    then
-      abort ''
-
-
-        The following file doesn't contain an attribute set:
-          - ${prefixWithCellsFrom file}
-
-        But it must contain an attribute set of outputs.
-      ''
-    else imported;
+    with yants "std" "import" clade file';
+    # unfortunately eval during check can cause infinite recursions
+    # if clade == "runnables" || clade == "installables"
+    # then attrs drv
+    # else if clade == "functions"
+    # then attrs function
+    # else throw "unreachable";
+    attrs any;
 }

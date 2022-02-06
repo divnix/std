@@ -15,14 +15,16 @@
   inputs.alejandra.url = "github:kamadorueda/alejandra";
   inputs.alejandra.inputs.nixpkgs.follows = "nixpkgs";
   inputs.alejandra.inputs.treefmt.url = "github:divnix/blank";
-  outputs = inputs: let
-    nixpkgs = inputs.nixpkgs;
+  outputs = inputs': let
+    nixpkgs = inputs'.nixpkgs;
     validate = import ./validators.nix {
-      inherit (inputs) yants nixpkgs;
-      inherit systems organelleFilePath organelleDirPath;
+      inherit (inputs') yants nixpkgs;
+      inherit systems' organellePath;
     };
-    organelleFilePath = cellsFrom: cell: organelle: "${cellsFrom}/${cell}/${organelle.name}.nix";
-    organelleDirPath = cellsFrom: cell: organelle: "${cellsFrom}/${cell}/${organelle.name}/default.nix";
+    organellePath = cellsFrom: cell: organelle: {
+      file = "${cellsFrom}/${cell}/${organelle.name}.nix";
+      dir = "${cellsFrom}/${cell}/${organelle.name}/default.nix";
+    };
     runnables = name: {
       inherit name;
       clade = "runnables";
@@ -44,7 +46,7 @@
             "aarch64-apple-darwin"
             "aarch64-unknown-linux-gnu"
           ];
-          host = builtins.attrNames systems;
+          host = builtins.attrNames systems';
         };
       in
         { inputs
@@ -71,26 +73,26 @@
         }:
         let
           # Validations ...
-          organelles' = validate.Organelles organelles;
-          systems' = builtins.map (
+          Organelles = validate.Organelles organelles;
+          Systems = builtins.map (
             s: {
-              build = inputs.self.systems.${s.build};
-              host = inputs.self.systems.${s.host};
+              build = systems'.${s.build};
+              host = systems'.${s.host};
             }
           ) (validate.Systems systems);
-          cells' = nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom organelles') (builtins.readDir cellsFrom);
+          Cells = nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom Organelles) (builtins.readDir cellsFrom);
           # Set of all std-injected outputs in the project flake
           theirself = builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { }
           stdOutputs;
           # List of all flake outputs injected by std
-          stdOutputs = builtins.concatLists (builtins.map stdOutputsFor systems');
+          stdOutputs = builtins.concatLists (builtins.map stdOutputsFor Systems);
           stdOutputsFor = system: builtins.map (
             loadCell {
               build = system.build;
               host = system.host;
             }
           )
-          cells';
+          Cells;
           # Load a cell, return the flake outputs injected by std
           loadCell = system: cell: let
             cellArgs = {
@@ -168,18 +170,17 @@
               in
                 nixpkgs.lib.attrsets.recursiveUpdate old output
             ) { }
-            organelles';
+            Organelles;
           # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
           loadCellOrganelle = cell: organelle: cellArgs: let
-            filePath = organelleFilePath cellsFrom cell organelle;
-            dirPath = organelleDirPath cellsFrom cell organelle;
+            path = organellePath cellsFrom cell organelle;
           in
-            if builtins.pathExists filePath
+            if builtins.pathExists path.file
             then
-              validate.ManyPathImport organelle cellsFrom cell (import filePath cellArgs)
-            else if builtins.pathExists dirPath
+              validate.Import organelle.clade path.file (import path.file cellArgs)
+            else if builtins.pathExists path.dir
             then
-              validate.ManyPathImport organelle cellsFrom cell (import dirPath cellArgs)
+              validate.Import organelle.clade path.dir (import path.dir cellArgs)
             else { };
           toFlakeApp = drv: let
             name = drv.meta.mainProgram or drv.pname or drv.name;
@@ -190,7 +191,7 @@
             };
         in
           theirself;
-    systems = nixpkgs.lib.attrsets.mapAttrs' (
+    systems' = nixpkgs.lib.attrsets.mapAttrs' (
       example: config: let
         fullConfig = nixpkgs.lib.systems.elaborate config;
       in
@@ -207,7 +208,7 @@
     ) (grow args);
     harvest = cell: outputs: let
       nonEmpty = nixpkgs.lib.attrsets.filterAttrs (_: v: v != { });
-      systemList = nixpkgs.lib.lists.unique (nixpkgs.lib.attrsets.mapAttrsToList (_: s: s.system) systems);
+      systemList = nixpkgs.lib.lists.unique (nixpkgs.lib.attrsets.mapAttrsToList (_: s: s.system) systems');
       maybeOrganelles = o: nonEmpty (nixpkgs.lib.attrsets.filterAttrs (_: builtins.isAttrs) o);
       systemOk = o: nonEmpty (
         builtins.mapAttrs (
@@ -229,10 +230,13 @@
     in
       cellOk cell (systemOk (maybeOrganelles outputs));
   in
-    { inherit runnables installables functions systems grow growOn harvest; }
+    {
+      inherit runnables installables functions grow growOn harvest;
+      systems = systems';
+    }
     // (
       grow {
-        inherit inputs;
+        inputs = inputs';
         # as-nix-cli-epiphyte = false;
         cellsFrom = ./cells;
         organelles = [
