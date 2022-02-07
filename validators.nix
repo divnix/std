@@ -18,8 +18,10 @@ in
     with yants "std" "grow" "attrs";
     list (
       struct "system" {
-        build = restrict "available system" (s: builtins.hasAttr s systems') string;
-        host = restrict "available system" (s: builtins.hasAttr s systems') string;
+        build =
+          restrict "available system" (s: builtins.hasAttr s systems') string;
+        host =
+          restrict "available system" (s: builtins.hasAttr s systems') string;
       }
     );
   Cell = cellsFrom: organelles: cell: type: let

@@ -75,8 +75,8 @@
           ) (validate.Systems systems);
           Cells = nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom Organelles) (builtins.readDir cellsFrom);
           # Set of all std-injected outputs in the project flake
-          theirself = builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { }
-          stdOutputs;
+          theirself =
+            builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { } stdOutputs;
           # List of all flake outputs injected by std
           stdOutputs = builtins.concatLists (builtins.map stdOutputsFor Systems);
           stdOutputsFor = system: builtins.map (
@@ -133,7 +133,8 @@
                   then
                     (
                       {
-                        "${organelle.name}".${system.build.system} = applySuffixes res;
+                        "${organelle.name}".${system.build.system} =
+                          applySuffixes res;
                       }
                       // (
                         if
@@ -145,7 +146,8 @@
                           && as-nix-cli-epiphyte
                         then
                           {
-                            packages.${system.build.system} = applySuffixes res;
+                            packages.${system.build.system} =
+                              applySuffixes res;
                           }
                         else { }
                       )
