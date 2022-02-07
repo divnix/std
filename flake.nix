@@ -112,6 +112,7 @@
                     localSystem = system.build;
                   };
                   self = theirself;
+                  inherit (inputs.self) sourceInfo;
                 };
             };
             applySuffixes = nixpkgs.lib.attrsets.mapAttrs' (
