@@ -294,7 +294,7 @@ direnv allow
 ### Without `direnv`
 
 ```console
-nix develop .#std -c $SHELL
+nix develop ./devshell#__default -c $SHELL
 menu
 ```
 

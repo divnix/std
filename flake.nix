@@ -8,13 +8,6 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs.yants.url = "github:divnix/yants";
   inputs.yants.inputs.nixpkgs.follows = "nixpkgs";
-  inputs.devshell.url = "github:numtide/devshell";
-  inputs.devshell.inputs.nixpkgs.follows = "nixpkgs";
-  inputs.treefmt.url = "github:numtide/treefmt";
-  inputs.treefmt.inputs.nixpkgs.follows = "nixpkgs";
-  inputs.alejandra.url = "github:kamadorueda/alejandra";
-  inputs.alejandra.inputs.nixpkgs.follows = "nixpkgs";
-  inputs.alejandra.inputs.treefmt.url = "github:divnix/blank";
   outputs = inputs': let
     nixpkgs = inputs'.nixpkgs;
     validate = import ./validators.nix {
