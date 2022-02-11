@@ -50,6 +50,11 @@ we eliminate most boilerplate;
 zero-config workflows...
 everything Just Works™.
 
+**DevOps Professionals,`nix`-loving**
+
+[Standard][std] standard doesn't just throw more options at you.
+It gives you and your team something much more valuable: _guidance_.
+
 ## How it's organized
 
 [Standard][std] places all the code in a directory of your choice.
