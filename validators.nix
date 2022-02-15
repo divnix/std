@@ -62,7 +62,7 @@ in
           builtins.map (
             organelle: let
               title = "To generate output for Organelle '${organelle.name}', please create:\n";
-              paths = "  - ${prefixWithCellsFrom (path organelle).fil}; or\n  - ${prefixWithCellsFrom (path organelle).dir}";
+              paths = "  - ${prefixWithCellsFrom (path organelle).file}; or\n  - ${prefixWithCellsFrom (path organelle).dir}";
             in
               title + paths
           )
