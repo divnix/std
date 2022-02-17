@@ -65,8 +65,7 @@ Related code is grouped into **Cells**
 that can be composed together
 to form any functionality you can imagine.
 
-A Cell provides functionality through **Organelles** of **Clade** (clade | klād |
-noun *Biology* a group of organisms believed to have evolved from a common ancestor, according to the principles of cladistics: the great ape and human clade.):
+A Cell provides functionality through **Organelles** of **Clade**:
 
 - Runnables
 - Installables
