@@ -170,13 +170,14 @@
           # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
           loadCellOrganelle = cell: organelle: cellArgs: let
             path = organellePath cellsFrom cell organelle;
+            importedFile = validate.MigrationNecesary path.file (import path.file);
+            importedDir = validate.MigrationNecesary path.dir (import path.dir);
           in
             if builtins.pathExists path.file
-            then
-              validate.Import organelle.clade path.file (import path.file cellArgs)
+            then validate.Import organelle.clade path.file (importedFile cellArgs)
             else if builtins.pathExists path.dir
             then
-              validate.Import organelle.clade path.dir (import path.dir cellArgs)
+              validate.Import organelle.clade path.dir (importedDir cellArgs)
             else { };
           toFlakeApp = drv: let
             name = drv.meta.mainProgram or drv.pname or drv.name;

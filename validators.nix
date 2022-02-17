@@ -81,6 +81,14 @@ in
         clade = enum "clades" [ "runnables" "installables" "functions" ];
       }
     );
+  MigrationNecesary = file: let
+    file' = prefixWithCellsFrom file;
+  in
+    with yants "std" "import" file';
+    functionWithArgs {
+      inputs = false;
+      system = false;
+    };
   Import = clade: file: let
     file' = prefixWithCellsFrom file;
   in
