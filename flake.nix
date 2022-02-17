@@ -237,8 +237,8 @@
         # as-nix-cli-epiphyte = false;
         cellsFrom = ./cells;
         organelles = [
-          (runnables "devShells")
           (runnables "cli")
+          (runnables "lib")
           (functions "devshellProfiles")
         ];
         systems = [
