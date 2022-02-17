@@ -15,9 +15,19 @@ in
         ''
       );
       inputs';
-    makes =
-      import (inputsChecked.makes + /src/args/agnostic.nix) { inherit (system'.host) system; }
-      // { inputs = inputsChecked; };
+    makes = nixpkgs.lib.fix (
+      nixpkgs.lib.extends (
+        _: _: {
+          inputs = inputsChecked;
+          __nixpkgs__ = nixpkgs;
+          __nixpkgsSrc__ = nixpkgs.path;
+        }
+      )
+      (
+        import (inputsChecked.makes + /src/args/agnostic.nix) { inherit (system'.host) system; }
+      )
+      .__unfix__
+    );
   in
     nixpkgs.lib.customisation.callPackageWith makes;
 }
