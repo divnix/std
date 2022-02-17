@@ -18,6 +18,7 @@ in
     makes = nixpkgs.lib.fix (
       nixpkgs.lib.extends (
         _: _: {
+          inherit (system'.host) system;
           inputs = inputsChecked;
           __nixpkgs__ = nixpkgs;
           __nixpkgsSrc__ = nixpkgs.path;
