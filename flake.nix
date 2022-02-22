@@ -133,8 +133,9 @@
                   then
                     (
                       {
-                        "${organelle.name}".${system.build.system} =
-                          applySuffixes res;
+                        "${organelle.name}".${system.build.system} = (
+                          builtins.mapAttrs (toStdTypedOutput cell organelle) (applySuffixes res)
+                        );
                       }
                       // (
                         if
@@ -179,6 +180,22 @@
             then
               validate.Import organelle.clade path.dir (importedDir cellArgs)
             else { };
+          toStdTypedOutput = cell: organelle: name: output: let
+            stdMeta = {
+              __std_name =
+                output.meta.mainProgram or output.pname or output.name or name;
+              __std_description =
+                output.meta.description or output.description or "n/a";
+              __std_cell = cell;
+              __std_clade = organelle.clade;
+              __std_organelle = organelle.name;
+            };
+          in
+            (
+              if organelle.clade == "functions"
+              then stdMeta // { __functor = _: output; }
+              else output // stdMeta
+            );
           toFlakeApp = drv: let
             name = drv.meta.mainProgram or drv.pname or drv.name;
           in
