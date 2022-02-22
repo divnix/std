@@ -132,36 +132,54 @@
                   if res != { }
                   then
                     (
-                      {
-                        "${organelle.name}".${system.build.system} = (
+                      let
+                        res' = (
                           builtins.mapAttrs (toStdTypedOutput cell organelle) (applySuffixes res)
                         );
-                      }
-                      // (
-                        if
-                          (
-                            organelle.clade
-                            == "installables"
-                            || organelle.clade == "runnables"
-                          )
+                      in
+                        {
+                          "${organelle.name}".${system.build.system} = res';
+                          # parseable index of targets for tooling
+                          __std.${system.build.system}.${cell}.${organelle.name} =
+                            builtins.mapAttrs (
+                              _: v: {
+                                inherit
+                                  (v)
+                                  __std_name
+                                  __std_description
+                                  __std_cell
+                                  __std_clade
+                                  __std_organelle
+                                  ;
+                              }
+                            )
+                            res';
+                        }
+                        // (
+                          if
+                            (
+                              organelle.clade
+                              == "installables"
+                              || organelle.clade == "runnables"
+                            )
+                            && as-nix-cli-epiphyte
+                          then
+                            {
+                              packages.${system.build.system} =
+                                applySuffixes res;
+                            }
+                          else { }
+                        )
+                        // (
+                          if organelle.clade
+                          == "runnables"
                           && as-nix-cli-epiphyte
-                        then
-                          {
-                            packages.${system.build.system} =
-                              applySuffixes res;
-                          }
-                        else { }
-                      )
-                      // (
-                        if organelle.clade
-                        == "runnables"
-                        && as-nix-cli-epiphyte
-                        then
-                          {
-                            apps.${system.build.system} = builtins.mapAttrs (_: toFlakeApp) (applySuffixes res);
-                          }
-                        else { }
-                      )
+                          then
+                            {
+                              apps.${system.build.system} = builtins.mapAttrs (_: toFlakeApp) (applySuffixes res);
+                            }
+                          else { }
+                        )
                     )
                   else { };
               in
