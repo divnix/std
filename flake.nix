@@ -255,7 +255,7 @@
         cellsFrom = ./cells;
         organelles = [
           (runnables "cli")
-          (runnables "lib")
+          (functions "lib")
           (functions "devshellProfiles")
         ];
         systems = [
