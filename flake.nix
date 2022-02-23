@@ -30,6 +30,10 @@
       inherit name;
       clade = "functions";
     };
+    data = name: {
+      inherit name;
+      clade = "data";
+    };
     grow =
       let
         defaultSystems = nixpkgs.lib.attrsets.cartesianProductOfSets {
@@ -212,6 +216,8 @@
             (
               if organelle.clade == "functions"
               then stdMeta // { __functor = _: output; }
+              else if organelle.clade == "data"
+              then stdMeta // { __data = output; }
               else output // stdMeta
             );
           toFlakeApp = drv: let
@@ -263,7 +269,7 @@
       cellOk cell (systemOk (maybeOrganelles outputs));
   in
     {
-      inherit runnables installables functions grow growOn harvest;
+      inherit runnables installables functions data grow growOn harvest;
       systems = systems';
     }
     // (

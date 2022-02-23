@@ -78,7 +78,7 @@ in
     list (
       struct "organelle" {
         name = string;
-        clade = enum "clades" [ "runnables" "installables" "functions" ];
+        clade = enum "clades" [ "runnables" "installables" "functions" "data" ];
       }
     );
   MigrationNecesary = file: let
