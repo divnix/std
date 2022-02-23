@@ -140,6 +140,10 @@
                         res' = (
                           builtins.mapAttrs (toStdTypedOutput cell organelle) (applySuffixes res)
                         );
+                        res_ = (
+                          builtins.mapAttrs (toStdTypedOutput cell organelle)
+                          res
+                        );
                       in
                         {
                           "${organelle.name}".${system.build.system} = res';
@@ -157,7 +161,7 @@
                                   ;
                               }
                             )
-                            res';
+                            res_;
                         }
                         // (
                           if
