@@ -20,7 +20,11 @@
         (chicken process-context)
         (chicken pathname)
         (chicken string)
+        (chicken pretty-print)
+        (srfi-13)
+        (fmt)
         (matchable)
+        (medea)
         (shell)
         (only (chicken io) read-string))
 
@@ -42,6 +46,7 @@ target:
     bar:baz           - relative target to a multi-output organelle
 
 commands:
+  ls    - show list of all outputs
   run   - run a target (only for 'runnables')
   build - build a target
   shell - enter a shell with the target's build dependencies
@@ -139,7 +144,7 @@ USAGE
            [('normal . ((? string? component) . rest))
             (begin (target-components-set!
                     acc (append (target-components acc) (list component)))
-                   (parse-tokens rest 'normal acc ))]
+                   (parse-tokens rest 'normal acc))]
 
            ;; nothing more to parse and not in a weird state, all done, yay!
            [('normal . ()) acc]
@@ -192,10 +197,15 @@ USAGE
   (string-translate* str '(("\"" . "\\\"")
                            ("${" . "\\${"))))
 
+
+;; get current system
+(define (current-system)
+    (capture "nix eval --raw --impure --expr builtins.currentSystem"))
+
 ;; create a nix path to build the attribute at the specified target
 (define (nix-url-for target)
   (let ((parts (normalised-components (normalise-target target)))
-        (system (capture "nix eval --raw --impure --expr builtins.currentSystem")))
+        (system (current-system)))
     (match parts
            [(cell organelle attr) (conc ".#" organelle "." system "." cell "-" attr)]
            [(cell organelle) (conc ".#" organelle "." system "." cell)])))
@@ -209,6 +219,51 @@ USAGE
   (match value
          [('error . message) (std-error message)]
          [_ value]))
+
+(define (execute-ls)
+  (let ((cmd (conc "nix eval --json --option warn-dirty false .#__std." (current-system))))
+    (read-json (capture ,cmd))))
+
+(define (ls args)
+  (match args
+         [() (ls-no-args)]
+         [other (print "not yet implemented")]))
+
+(define (ls-no-args)
+  (let* ((result (execute-ls))
+         (lines (car (map ls-level-1 result)))
+         (formatted-parts (map ls-format-parts lines))
+         (pre (string-join (map car formatted-parts) "\n"))
+         (mid (string-join (map cadr formatted-parts) "\n"))
+         (end (string-join (map caddr formatted-parts) "\n")))
+    (fmt #t (tabular (dsp pre) " " (dsp mid) " - " (dsp end)))))
+
+(define (ls-format-parts l)
+  (match l
+         [(cell organelle clade description)
+          (list
+            (sprintf "//~A/~A" cell organelle)
+            (sprintf "(~A)" clade)
+            description)]
+         [(cell organelle name clade description)
+          (list
+            (sprintf "//~A/~A:~A" cell organelle name)
+            (sprintf "(~A)" clade)
+            description)]))
+
+(define (ls-level-1 l) (map ls-level-2 (cdr l)))
+(define (ls-level-2 l) (car (map ls-level-3 (cdr l))))
+(define (ls-level-3 l)
+  (let*
+    ((name (car l))
+     (value (cdr l))
+     (cell (alist-ref '__std_cell value))
+     (clade (alist-ref '__std_clade value))
+     (description (alist-ref '__std_description value))
+     (organelle (alist-ref '__std_organelle value)))
+    (if (equal? name '||)
+      (list cell organelle clade description)
+      (list cell organelle name clade description))))
 
 (define (execute-run t args)
   (let ((url (nix-url-for t)))
@@ -270,6 +325,7 @@ USAGE
 (define (main args)
   (match args
          [() (print usage)]
+         [("ls" . _)    (ls    (cdr args))]
          [("run" . _)   (run   (cdr args))]
          [("build" . _) (build (cdr args))]
          [("shell" . _) (shell (cdr args))]
@@ -278,4 +334,3 @@ USAGE
                        (print usage))]))
 
 (main (command-line-arguments))
-
