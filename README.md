@@ -70,6 +70,7 @@ A Cell provides functionality through **Organelles** of **Clade**:
 - Runnables
 - Installables
 - Functions
+- Data
 
 The built-in default **Organelles** are:
 
