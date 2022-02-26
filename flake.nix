@@ -138,15 +138,13 @@
                     (
                       let
                         res' = (
-                          builtins.mapAttrs (toStdTypedOutput cell organelle) (applySuffixes res)
-                        );
-                        res_ = (
                           builtins.mapAttrs (toStdTypedOutput cell organelle)
                           res
                         );
                       in
                         {
-                          "${organelle.name}".${system.build.system} = res';
+                          "${organelle.name}".${system.build.system} =
+                            applySuffixes res;
                           # parseable index of targets for tooling
                           __std.${system.build.system}.${cell}.${organelle.name} =
                             builtins.mapAttrs (
@@ -161,7 +159,7 @@
                                   ;
                               }
                             )
-                            res_;
+                            res';
                         }
                         // (
                           if
