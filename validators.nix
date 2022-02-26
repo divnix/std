@@ -88,6 +88,7 @@ in
     functionWithArgs {
       inputs = false;
       system = false;
+      cell = false;
     };
   Import = clade: file: let
     file' = prefixWithCellsFrom file;

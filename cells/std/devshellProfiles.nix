@@ -1,8 +1,9 @@
 { inputs
 , system
+, cell
 }:
 let
-  std = inputs.self.cli.${system.host.system}.std;
+  std = cell.cli."";
   nixpkgs = inputs.nixpkgs;
 in
 {

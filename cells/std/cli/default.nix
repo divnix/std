@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2022 Kevin Amado <kamadorueda@gmail.com>
 { inputs
 , system
+, cell
 }:
 let
   nixpkgs = inputs.nixpkgs;

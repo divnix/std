@@ -1,5 +1,6 @@
 { inputs
 , system
+, cell
 }:
 let
   nixpkgs = inputs.nixpkgs;

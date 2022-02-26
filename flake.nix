@@ -79,7 +79,7 @@
           ) (validate.Systems systems);
           Cells = nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom Organelles) (builtins.readDir cellsFrom);
           # Set of all std-injected outputs in the project flake
-          theirself =
+          stdOutput =
             builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { } stdOutputs;
           # List of all flake outputs injected by std
           stdOutputs = builtins.concatLists (builtins.map stdOutputsFor Systems);
@@ -108,8 +108,8 @@
                     crossSystem = system.host;
                     localSystem = system.build;
                   };
-                  self = theirself;
-                  inherit (inputs.self) sourceInfo;
+                  self = inputs.self.sourceInfo;
+                  cells = stdOutput;
                 };
             };
             applySuffixes = nixpkgs.lib.attrsets.mapAttrs' (
@@ -128,70 +128,79 @@
                   value = output;
                 }
             );
-          in
-            builtins.foldl' (
-              old: organelle: let
-                res = loadCellOrganelle cell organelle cellArgs;
-                output =
-                  if res != { }
-                  then
-                    (
-                      let
-                        res' = (
-                          builtins.mapAttrs (toStdTypedOutput cell organelle)
-                          res
-                        );
-                      in
-                        {
-                          "${organelle.name}".${system.build.system} =
-                            applySuffixes res;
-                          # parseable index of targets for tooling
-                          __std.${system.build.system}.${cell}.${organelle.name} =
-                            builtins.mapAttrs (
-                              _: v: {
-                                inherit
-                                  (v)
-                                  __std_name
-                                  __std_description
-                                  __std_cell
-                                  __std_clade
-                                  __std_organelle
-                                  ;
-                              }
-                            )
-                            res';
-                        }
-                        // (
-                          if
-                            (
-                              organelle.clade
-                              == "installables"
-                              || organelle.clade == "runnables"
-                            )
-                            && as-nix-cli-epiphyte
-                          then
-                            {
-                              packages.${system.build.system} =
-                                applySuffixes res;
-                            }
-                          else { }
-                        )
-                        // (
-                          if organelle.clade
-                          == "runnables"
-                          && as-nix-cli-epiphyte
-                          then
-                            {
-                              apps.${system.build.system} = builtins.mapAttrs (_: toFlakeApp) (applySuffixes res);
-                            }
-                          else { }
-                        )
-                    )
-                  else { };
+            organelles' = nixpkgs.lib.lists.groupBy (x: x.name) Organelles;
+            res =
+              let
+                op = acc: organelle: let
+                  output = {
+                    ${organelle.name} = loadCellOrganelle cell organelle (cellArgs // { cell = res; });
+                  };
+                in
+                  nixpkgs.lib.attrsets.recursiveUpdate acc output;
               in
-                nixpkgs.lib.attrsets.recursiveUpdate old output
-            ) { }
-            Organelles;
+                builtins.foldl' op { } Organelles;
+            # Postprocess the result of the cell loading
+            postprocessedOutput =
+              nixpkgs.lib.attrsets.mapAttrsToList (
+                organelleName: output: {
+                  ${organelleName}.${system.build.system} =
+                    applySuffixes output;
+                }
+              )
+              res;
+            postprocessedStdMeta =
+              nixpkgs.lib.attrsets.mapAttrsToList (
+                organelleName: output: let
+                  organelle = builtins.head organelles'.${organelleName};
+                in
+                  {
+                    # parseable index of targets for tooling
+                    __std.${system.build.system}.${cell}.${organelleName} = builtins.mapAttrs (
+                      _: v: {
+                        inherit
+                          (v)
+                          __std_name
+                          __std_description
+                          __std_cell
+                          __std_clade
+                          __std_organelle
+                          ;
+                      }
+                    ) (
+                      builtins.mapAttrs (toStdTypedOutput cell organelle)
+                      output
+                    );
+                  }
+              )
+              res;
+            postprocessedCliEpiphyte =
+              nixpkgs.lib.attrsets.mapAttrsToList (
+                organelleName: output: let
+                  organelle = builtins.head organelles'.${organelleName};
+                  isInstallable = organelle.clade == "installables";
+                  isRunnable = organelle.clade == "runnables";
+                in
+                  if isRunnable
+                  then
+                    {
+                      packages.${system.build.system} = applySuffixes output;
+                      apps.${system.build.system} = builtins.mapAttrs (_: toFlakeApp) (applySuffixes output);
+                    }
+                  else if isInstallable
+                  then
+                    { packages.${system.build.system} = applySuffixes output; }
+                  else { }
+              )
+              res;
+          in
+            builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { } (
+              postprocessedOutput
+              ++ postprocessedStdMeta
+              ++ (
+                nixpkgs.lib.optionals as-nix-cli-epiphyte
+                postprocessedCliEpiphyte
+              )
+            );
           # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
           loadCellOrganelle = cell: organelle: cellArgs: let
             path = organellePath cellsFrom cell organelle;
@@ -230,7 +239,7 @@
               type = "app";
             };
         in
-          theirself;
+          stdOutput;
     systems' = nixpkgs.lib.attrsets.mapAttrs' (
       example: config: let
         fullConfig = nixpkgs.lib.systems.elaborate config;
