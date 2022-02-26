@@ -3,11 +3,11 @@
 , cell
 }:
 let
-  std = cell.cli."";
+  std = cell.cli.default;
   nixpkgs = inputs.nixpkgs;
 in
 {
-  "" =
+  default =
     { config
     , ...
     }:

@@ -113,11 +113,11 @@
                 };
             };
             applySuffixes = nixpkgs.lib.attrsets.mapAttrs' (
-              suffix: output: let
+              target: output: let
                 baseSuffix =
-                  if suffix == ""
+                  if target == "default"
                   then ""
-                  else "-${suffix}";
+                  else "-${target}";
                 systemSuffix =
                   if system.build.config == system.host.config
                   then ""

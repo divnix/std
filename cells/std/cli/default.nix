@@ -8,7 +8,7 @@ let
   nixpkgs = inputs.nixpkgs;
 in
 {
-  "" =
+  default =
     let
       inherit (nixpkgs.chickenPackages) chickenEggs;
       shell = nixpkgs.eggDerivation {
