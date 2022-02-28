@@ -14,9 +14,9 @@
       inherit (inputs') yants nixpkgs;
       inherit organellePath;
     };
-    organellePath = cellsFrom: cell: organelle: {
-      file = "${cellsFrom}/${cell}/${organelle.name}.nix";
-      dir = "${cellsFrom}/${cell}/${organelle.name}/default.nix";
+    organellePath = cellsFrom: cellName: organelle: {
+      file = "${cellsFrom}/${cellName}/${organelle.name}.nix";
+      dir = "${cellsFrom}/${cellName}/${organelle.name}/default.nix";
     };
     runnables = name: {
       inherit name;
@@ -77,7 +77,7 @@
         # List of all flake outputs injected by std in the outputs and inputs.cells format
         stdOutputsFor = system: builtins.map (loadCell system) Cells;
         # Load a cell, return the flake outputs injected by std
-        loadCell = system: cell: let
+        loadCell = system: cellName: let
           cellArgs = {
             inputs =
               (deSystemize system inputs)
@@ -104,7 +104,7 @@
                 else "-${target}";
             in
               {
-                name = "${cell}${baseSuffix}";
+                name = "${cellName}${baseSuffix}";
                 value = output;
               }
           );
@@ -113,7 +113,7 @@
             let
               op = acc: organelle: let
                 output = {
-                  ${organelle.name} = loadCellOrganelle cell organelle (cellArgs // { cell = res; });
+                  ${organelle.name} = loadCellOrganelle cellName organelle (cellArgs // { cell = res; });
                 };
               in
                 nixpkgs.lib.attrsets.recursiveUpdate acc output;
@@ -122,7 +122,7 @@
           # Postprocess the result of the cell loading
           postprocessedOutput =
             nixpkgs.lib.attrsets.mapAttrsToList (
-              organelleName: output: { ${system}.${cell}.${organelleName} = output; }
+              organelleName: output: { ${system}.${cellName}.${organelleName} = output; }
             )
             res;
           postprocessedStdMeta =
@@ -132,8 +132,9 @@
               in
                 {
                   # parseable index of targets for tooling
-                  __std.${system}.${cell}.${organelleName} =
-                    builtins.mapAttrs (toStdTypedOutput cell organelle) output;
+                  __std.${system}.${cellName}.${organelleName} =
+                    builtins.mapAttrs (toStdTypedOutput cellName organelle)
+                    output;
                 }
             )
             res;
@@ -165,8 +166,8 @@
             )
           );
         # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
-        loadCellOrganelle = cell: organelle: cellArgs: let
-          path = organellePath cellsFrom cell organelle;
+        loadCellOrganelle = cellName: organelle: cellArgs: let
+          path = organellePath cellsFrom cellName organelle;
           importedFile = validate.MigrationNecesary path.file (import path.file);
           importedDir = validate.MigrationNecesary path.dir (import path.dir);
         in
@@ -175,13 +176,13 @@
           else if builtins.pathExists path.dir
           then validate.Import organelle.clade path.dir (importedDir cellArgs)
           else { };
-        toStdTypedOutput = cell: organelle: name: output: let
+        toStdTypedOutput = cellName: organelle: name: output: let
           stdMeta = {
             __std_name =
               output.meta.mainProgram or output.pname or output.name or name;
             __std_description =
               output.meta.description or output.description or "n/a";
-            __std_cell = cell;
+            __std_cell = cellName;
             __std_clade = organelle.clade;
             __std_organelle = organelle.name;
           };
@@ -202,7 +203,7 @@
         __functor = self: soil': growOn args (nixpkgs.lib.recursiveUpdate soil' self);
       }
     ) (grow args);
-    harvest = cell: outputs: let
+    harvest = cellName: outputs: let
       nonEmpty = nixpkgs.lib.attrsets.filterAttrs (_: v: v != { });
       systemList = nixpkgs.lib.systems.doubles.all;
       maybeOrganelles = o: nonEmpty (nixpkgs.lib.attrsets.filterAttrs (_: builtins.isAttrs) o);
@@ -212,11 +213,11 @@
         )
         o
       );
-      cellOk = cell: o: nonEmpty (
+      cellOk = cellName: o: nonEmpty (
         builtins.mapAttrs (
           _: g: nonEmpty (
             builtins.mapAttrs (
-              _: nixpkgs.lib.attrsets.filterAttrs (n: _: nixpkgs.lib.strings.hasPrefix cell n)
+              _: nixpkgs.lib.attrsets.filterAttrs (n: _: nixpkgs.lib.strings.hasPrefix cellName n)
             )
             g
           )
@@ -224,7 +225,7 @@
         o
       );
     in
-      cellOk cell (systemOk (maybeOrganelles outputs));
+      cellOk cellName (systemOk (maybeOrganelles outputs));
   in
     {
       inherit
