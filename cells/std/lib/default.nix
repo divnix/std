@@ -1,5 +1,4 @@
 { inputs
-, system
 , cell
 }:
 let

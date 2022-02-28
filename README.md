@@ -138,7 +138,7 @@ the inputs of your project.
 
         ```nix
         { inputs
-        , ...
+        , cell
         }:
         inputs.nixpkgs.stdenv.mkDerivation rec {
           pname = "hello";
@@ -158,124 +158,6 @@ Hello, world!
 You see? from nothing
 to running your first application
 in just a few seconds :sparkles:
-
-#### Cross compiling
-
-[Cross compilation][cross_compiler] is a first class citizen in [Standard][std].
-
-To the previous example,
-let's add what systems
-we would like to perform the builds on
-and which systems are going to run (host) our application:
-
-```diff
-{
-  inputs.std.url = "github:divnix/std";
-
-  outputs = { std, ... } @ inputs:
-    std.grow {
-      inherit inputs;
-      cellsFrom = ./cells;
-+      systems = [
-+        {
-+          build = "x86_64-unknown-linux-gnu";  # GNU/Linux 64 bits
-+          host = "i686-w64-mingw32";  # Windows 32 bits
-+        }
-+      ];
-    };
-}
-```
-
-You see, we are currently on Linux:
-
-```bash
-$ uname -ms
-Linux x86_64
-```
-
-And we can build `hello` for Windows:
-
-```bash
-$ nix build /my/project#hello-i686-w64-mingw32
-```
-
-The result is indeed a Windows executable:
-
-```bash
-$ file ./result/bin/hello.exe
-PE32 executable (console) Intel 80386 (stripped to external PDB), for MS Windows
-```
-
-Let's emulate Windows on Linux with `wine`:
-
-```bash
-$ wine ./result/bin/hello.exe
-Hello, world!
-```
-
-May systems are supported :sparkles:
-
-<!--
-Update with:
-
-echo -e $(nix-instantiate --eval --expr '
-  let std = builtins.getFlake "'$PWD'";
-  in builtins.concatStringsSep ",\n> " (builtins.attrNames std.systems)
-')
--->
-
-> <sub>
-> aarch64-apple-darwin,
-> aarch64-apple-ios,
-> aarch64-none-elf,
-> aarch64-unknown-linux-android,
-> aarch64-unknown-linux-gnu,
-> aarch64-unknown-linux-musl,
-> aarch64_be-none-elf,
-> arm-none-eabi,
-> arm-none-eabihf,
-> armv5tel-unknown-linux-gnueabi,
-> armv6l-unknown-linux-gnueabihf,
-> armv6l-unknown-linux-musleabihf,
-> armv7a-apple-ios,
-> armv7a-unknown-linux-androideabi,
-> armv7l-unknown-linux-gnueabihf,
-> avr,
-> i686-apple-ios,
-> i686-elf,
-> i686-unknown-linux-gnu,
-> i686-unknown-linux-musl,
-> i686-w64-mingw32,
-> js-unknown-ghcjs,
-> m68k-unknown-linux-gnu,
-> mipsel-unknown-linux-gnu,
-> mipsel-unknown-linux-uclibc,
-> mmix-unknown-mmixware,
-> msp430-elf,
-> or1k-elf,
-> powerpc-none-eabi,
-> powerpc64-unknown-linux-gnu,
-> powerpc64-unknown-linux-musl,
-> powerpc64le-unknown-linux-gnu,
-> powerpc64le-unknown-linux-musl,
-> powerpcle-none-eabi,
-> riscv32-none-elf,
-> riscv32-unknown-linux-gnu,
-> riscv64-none-elf,
-> riscv64-unknown-linux-gnu,
-> s390-unknown-linux-gnu,
-> s390x-unknown-linux-gnu,
-> vc4-elf,
-> wasm32-unknown-wasi,
-> x86_64-apple-darwin,
-> x86_64-apple-ios,
-> x86_64-elf,
-> x86_64-unknown-linux-gnu,
-> x86_64-unknown-linux-musl,
-> x86_64-unknown-netbsd,
-> x86_64-unknown-redox,
-> x86_64-w64-mingw32
-> </sub>
 
 ## Examples
 

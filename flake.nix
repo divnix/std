@@ -12,7 +12,7 @@
     nixpkgs = inputs'.nixpkgs;
     validate = import ./validators.nix {
       inherit (inputs') yants nixpkgs;
-      inherit systems' organellePath;
+      inherit organellePath;
     };
     organellePath = cellsFrom: cell: organelle: {
       file = "${cellsFrom}/${cell}/${organelle.name}.nix";
@@ -35,220 +35,183 @@
       clade = "data";
     };
     grow =
+      { inputs
+      , cellsFrom
+      , organelles ? [
+          (functions "library")
+          (runnables "apps")
+          (installables "packages")
+        ]
+        # if true, export installables _also_ as packages and runnables _also_ as apps
+      , as-nix-cli-epiphyte ? true
+      , nixpkgsConfig ? { }
+      , systems ? (
+          nixpkgs.lib.systems.supported.tier1
+          ++ nixpkgs.lib.systems.supported.tier2
+        )
+      , debug ? false
+      }:
       let
-        defaultSystems = nixpkgs.lib.attrsets.cartesianProductOfSets {
-          build = [
-            "x86_64-apple-darwin"
-            "x86_64-unknown-linux-gnu"
-            "aarch64-apple-darwin"
-            "aarch64-unknown-linux-gnu"
-          ];
-          host = builtins.attrNames systems';
-        };
-      in
-        { inputs
-        , cellsFrom
-        , organelles ? [
-            {
-              name = "library";
-              clade = "functions";
-            }
-            {
-              name = "apps";
-              clade = "runnables";
-            }
-            {
-              name = "packages";
-              clade = "installables";
-            }
-          ]
-          # if true, export installables _also_ as packages and runnables _also_ as apps
-        , as-nix-cli-epiphyte ? true
-        , nixpkgsConfig ? { }
-        , systems ? defaultSystems
-        , debug ? false
-        }:
-        let
-          # Validations ...
-          Organelles = validate.Organelles organelles;
-          Systems = builtins.map (
-            s: {
-              build = systems'.${s.build};
-              host = systems'.${s.host};
-            }
-          ) (validate.Systems systems);
-          Cells = nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom Organelles) (builtins.readDir cellsFrom);
-          # Set of all std-injected outputs in the project flake
-          stdOutput =
-            builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { } stdOutputs;
-          # List of all flake outputs injected by std
-          stdOutputs = builtins.concatLists (builtins.map stdOutputsFor Systems);
-          stdOutputsFor = system: builtins.map (
-            loadCell {
-              build = system.build;
-              host = system.host;
-            }
-          )
-          Cells;
-          # Load a cell, return the flake outputs injected by std
-          loadCell = system: cell: let
-            cellArgs = {
-              inherit system;
-              inputs =
+        # Validations ...
+        Organelles = validate.Organelles organelles;
+        Systems = validate.Systems systems;
+        Cells = nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom Organelles) (builtins.readDir cellsFrom);
+        # Set of all std-injected outputs in the project flake
+        stdOutput =
+          builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { } stdOutputs;
+        # List of all flake outputs injected by std
+        stdOutputs = builtins.concatLists (builtins.map stdOutputsFor Systems);
+        stdOutputsFor = system: builtins.map (loadCell system) Cells;
+        # Load a cell, return the flake outputs injected by std
+        loadCell = system: cell: let
+          cellArgs = {
+            inputs =
+              (
+                builtins.mapAttrs (
+                  # _ consumes input's name
+                  _: builtins.mapAttrs (
+                    # _ consumes input's output's name
+                    # s -> maybe systems
+                    _: s: if builtins.hasAttr "${system}" s
+                    then (s // s.${system})
+                    else s
+                  )
+                )
                 inputs
-                // {
-                  nixpkgs = import nixpkgs {
-                    config =
-                      {
-                        allowUnfree = true;
-                        allowUnsupportedSystem = true;
-                        android_sdk.accept_license = true;
-                      }
-                      // nixpkgsConfig;
-                    crossSystem = system.host;
-                    localSystem = system.build;
-                  };
-                  self = inputs.self.sourceInfo;
-                  cells = stdOutput;
+              )
+              // {
+                nixpkgs = import nixpkgs {
+                  localSystem = system;
+                  config =
+                    {
+                      allowUnfree = true;
+                      allowUnsupportedSystem = true;
+                      android_sdk.accept_license = true;
+                    }
+                    // nixpkgsConfig;
                 };
-            };
-            applySuffixes = nixpkgs.lib.attrsets.mapAttrs' (
-              target: output: let
-                baseSuffix =
-                  if target == "default"
-                  then ""
-                  else "-${target}";
-                systemSuffix =
-                  if system.build.config == system.host.config
-                  then ""
-                  else "-${system.host.config}";
+                self = inputs.self.sourceInfo;
+                cells = stdOutput;
+              };
+          };
+          applySuffixes = nixpkgs.lib.attrsets.mapAttrs' (
+            target: output: let
+              baseSuffix =
+                if target == "default"
+                then ""
+                else "-${target}";
+            in
+              {
+                name = "${cell}${baseSuffix}";
+                value = output;
+              }
+          );
+          organelles' = nixpkgs.lib.lists.groupBy (x: x.name) Organelles;
+          res =
+            let
+              op = acc: organelle: let
+                output = {
+                  ${organelle.name} = loadCellOrganelle cell organelle (cellArgs // { cell = res; });
+                };
+              in
+                nixpkgs.lib.attrsets.recursiveUpdate acc output;
+            in
+              builtins.foldl' op { } Organelles;
+          # Postprocess the result of the cell loading
+          postprocessedOutput =
+            nixpkgs.lib.attrsets.mapAttrsToList (
+              organelleName: output: { ${organelleName}.${system} = applySuffixes output; }
+            )
+            res;
+          postprocessedStdMeta =
+            nixpkgs.lib.attrsets.mapAttrsToList (
+              organelleName: output: let
+                organelle = builtins.head organelles'.${organelleName};
               in
                 {
-                  name = "${cell}${baseSuffix}${systemSuffix}";
-                  value = output;
-                }
-            );
-            organelles' = nixpkgs.lib.lists.groupBy (x: x.name) Organelles;
-            res =
-              let
-                op = acc: organelle: let
-                  output = {
-                    ${organelle.name} = loadCellOrganelle cell organelle (cellArgs // { cell = res; });
-                  };
-                in
-                  nixpkgs.lib.attrsets.recursiveUpdate acc output;
-              in
-                builtins.foldl' op { } Organelles;
-            # Postprocess the result of the cell loading
-            postprocessedOutput =
-              nixpkgs.lib.attrsets.mapAttrsToList (
-                organelleName: output: {
-                  ${organelleName}.${system.build.system} =
-                    applySuffixes output;
-                }
-              )
-              res;
-            postprocessedStdMeta =
-              nixpkgs.lib.attrsets.mapAttrsToList (
-                organelleName: output: let
-                  organelle = builtins.head organelles'.${organelleName};
-                in
-                  {
-                    # parseable index of targets for tooling
-                    __std.${system.build.system}.${cell}.${organelleName} = builtins.mapAttrs (
-                      _: v: {
-                        inherit
-                          (v)
-                          __std_name
-                          __std_description
-                          __std_cell
-                          __std_clade
-                          __std_organelle
-                          ;
-                      }
-                    ) (
-                      builtins.mapAttrs (toStdTypedOutput cell organelle)
-                      output
-                    );
-                  }
-              )
-              res;
-            postprocessedCliEpiphyte =
-              nixpkgs.lib.attrsets.mapAttrsToList (
-                organelleName: output: let
-                  organelle = builtins.head organelles'.${organelleName};
-                  isInstallable = organelle.clade == "installables";
-                  isRunnable = organelle.clade == "runnables";
-                in
-                  if isRunnable
-                  then
-                    {
-                      packages.${system.build.system} = applySuffixes output;
-                      apps.${system.build.system} = builtins.mapAttrs (_: toFlakeApp) (applySuffixes output);
+                  # parseable index of targets for tooling
+                  __std.${system}.${cell}.${organelleName} = builtins.mapAttrs (
+                    _: v: {
+                      inherit
+                        (v)
+                        __std_name
+                        __std_description
+                        __std_cell
+                        __std_clade
+                        __std_organelle
+                        ;
                     }
-                  else if isInstallable
-                  then
-                    { packages.${system.build.system} = applySuffixes output; }
-                  else { }
-              )
-              res;
-          in
-            builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { } (
-              postprocessedOutput
-              ++ postprocessedStdMeta
-              ++ (
-                nixpkgs.lib.optionals as-nix-cli-epiphyte
-                postprocessedCliEpiphyte
-              )
-            );
-          # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
-          loadCellOrganelle = cell: organelle: cellArgs: let
-            path = organellePath cellsFrom cell organelle;
-            importedFile = validate.MigrationNecesary path.file (import path.file);
-            importedDir = validate.MigrationNecesary path.dir (import path.dir);
-          in
-            if builtins.pathExists path.file
-            then validate.Import organelle.clade path.file (importedFile cellArgs)
-            else if builtins.pathExists path.dir
-            then
-              validate.Import organelle.clade path.dir (importedDir cellArgs)
-            else { };
-          toStdTypedOutput = cell: organelle: name: output: let
-            stdMeta = {
-              __std_name =
-                output.meta.mainProgram or output.pname or output.name or name;
-              __std_description =
-                output.meta.description or output.description or "n/a";
-              __std_cell = cell;
-              __std_clade = organelle.clade;
-              __std_organelle = organelle.name;
-            };
-          in
-            (
-              if organelle.clade == "functions"
-              then stdMeta // { __functor = _: output; }
-              else if organelle.clade == "data"
-              then stdMeta // { __data = output; }
-              else output // stdMeta
-            );
-          toFlakeApp = drv: let
-            name = drv.meta.mainProgram or drv.pname or drv.name;
-          in
-            {
-              program = "${drv}/bin/${name}";
-              type = "app";
-            };
+                  ) (
+                    builtins.mapAttrs (toStdTypedOutput cell organelle) output
+                  );
+                }
+            )
+            res;
+          postprocessedCliEpiphyte =
+            nixpkgs.lib.attrsets.mapAttrsToList (
+              organelleName: output: let
+                organelle = builtins.head organelles'.${organelleName};
+                isInstallable = organelle.clade == "installables";
+                isRunnable = organelle.clade == "runnables";
+              in
+                if isRunnable
+                then
+                  {
+                    packages.${system} = applySuffixes output;
+                    apps.${system} = builtins.mapAttrs (_: toFlakeApp) (applySuffixes output);
+                  }
+                else if isInstallable
+                then { packages.${system} = applySuffixes output; }
+                else { }
+            )
+            res;
         in
-          stdOutput;
-    systems' = nixpkgs.lib.attrsets.mapAttrs' (
-      example: config: let
-        fullConfig = nixpkgs.lib.systems.elaborate config;
+          builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { } (
+            postprocessedOutput
+            ++ postprocessedStdMeta
+            ++ (
+              nixpkgs.lib.optionals as-nix-cli-epiphyte
+              postprocessedCliEpiphyte
+            )
+          );
+        # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
+        loadCellOrganelle = cell: organelle: cellArgs: let
+          path = organellePath cellsFrom cell organelle;
+          importedFile = validate.MigrationNecesary path.file (import path.file);
+          importedDir = validate.MigrationNecesary path.dir (import path.dir);
+        in
+          if builtins.pathExists path.file
+          then validate.Import organelle.clade path.file (importedFile cellArgs)
+          else if builtins.pathExists path.dir
+          then validate.Import organelle.clade path.dir (importedDir cellArgs)
+          else { };
+        toStdTypedOutput = cell: organelle: name: output: let
+          stdMeta = {
+            __std_name =
+              output.meta.mainProgram or output.pname or output.name or name;
+            __std_description =
+              output.meta.description or output.description or "n/a";
+            __std_cell = cell;
+            __std_clade = organelle.clade;
+            __std_organelle = organelle.name;
+          };
+        in
+          (
+            if organelle.clade == "functions"
+            then stdMeta // { __functor = _: output; }
+            else if organelle.clade == "data"
+            then stdMeta // { __data = output; }
+            else output // stdMeta
+          );
+        toFlakeApp = drv: let
+          name = drv.meta.mainProgram or drv.pname or drv.name;
+        in
+          {
+            program = "${drv}/bin/${name}";
+            type = "app";
+          };
       in
-        {
-          name = fullConfig.config;
-          value = fullConfig;
-        }
-    ) (builtins.removeAttrs nixpkgs.lib.systems.examples [ "amd64-netbsd" ]);
+        stdOutput;
     growOn = args: soil: nixpkgs.lib.attrsets.recursiveUpdate (
       soil
       // {
@@ -257,7 +220,7 @@
     ) (grow args);
     harvest = cell: outputs: let
       nonEmpty = nixpkgs.lib.attrsets.filterAttrs (_: v: v != { });
-      systemList = nixpkgs.lib.lists.unique (nixpkgs.lib.attrsets.mapAttrsToList (_: s: s.system) systems');
+      systemList = nixpkgs.lib.systems.doubles.all;
       maybeOrganelles = o: nonEmpty (nixpkgs.lib.attrsets.filterAttrs (_: builtins.isAttrs) o);
       systemOk = o: nonEmpty (
         builtins.mapAttrs (
@@ -281,7 +244,7 @@
   in
     {
       inherit runnables installables functions data grow growOn harvest;
-      systems = systems';
+      systems = nixpkgs.lib.systems.doubles;
     }
     // (
       grow {
@@ -293,13 +256,7 @@
           (functions "lib")
           (functions "devshellProfiles")
         ];
-        systems = [
-          {
-            # GNU/Linux 64 bits
-            build = "x86_64-unknown-linux-gnu";
-            host = "x86_64-unknown-linux-gnu";
-          }
-        ];
+        systems = [ "x86_64-linux" ];
       }
     );
 }

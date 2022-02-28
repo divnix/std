@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: Unlicense
 { nixpkgs
 , yants
-, systems'
 , organellePath
 }:
 let
@@ -16,14 +15,7 @@ in
 {
   Systems =
     with yants "std" "grow" "attrs";
-    list (
-      struct "system" {
-        build =
-          restrict "available system" (s: builtins.hasAttr s systems') string;
-        host =
-          restrict "available system" (s: builtins.hasAttr s systems') string;
-      }
-    );
+    list (enum "system" nixpkgs.lib.systems.doubles.all);
   Cell = cellsFrom: organelles: cell: type: let
     path = o: organellePath cellsFrom cell o;
     atLeastOneOrganelle = builtins.any (x: x) (
@@ -87,7 +79,6 @@ in
     with yants "std" "import" file';
     functionWithArgs {
       inputs = false;
-      system = false;
       cell = false;
     };
   Import = clade: file: let
