@@ -37,13 +37,13 @@
     deSystemize = system: builtins.mapAttrs (
       # _ consumes input's name
       # s -> maybe systems
-      _: s: if builtins.hasAttr "${system}" s
+      _: s: if builtins.isAttrs s && builtins.hasAttr "${system}" s
       then s // s.${system}
       else
         builtins.mapAttrs (
           # _ consumes input's output's name
           # s -> maybe systems
-          _: s: if builtins.hasAttr "${system}" s
+          _: s: if builtins.isAttrs s && builtins.hasAttr "${system}" s
           then (s // s.${system})
           else s
         )
@@ -93,57 +93,80 @@
                     // nixpkgsConfig;
                 };
                 self = inputs.self.sourceInfo;
-                cells = stdOutput // stdOutput.${system};
+                cells = (deSystemize system stdOutput);
               };
           };
-          applySuffixes = nixpkgs.lib.attrsets.mapAttrs' (
-            target: output: let
-              baseSuffix =
-                if target == "default"
-                then ""
-                else "-${target}";
-            in
-              {
-                name = "${cellName}${baseSuffix}";
-                value = output;
-              }
-          );
-          organelles' = nixpkgs.lib.lists.groupBy (x: x.name) Organelles;
-          res =
+          # current cell
+          cell =
             let
               op = acc: organelle: let
                 output = {
-                  ${organelle.name} = loadCellOrganelle cellName organelle (cellArgs // { cell = res; });
+                  ${organelle.name} = loadOrganelle organelle (cellArgs // { inherit cell; });
                 };
               in
                 nixpkgs.lib.attrsets.recursiveUpdate acc output;
             in
               builtins.foldl' op { } Organelles;
+          # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
+          loadOrganelle = organelle: args: let
+            path = organellePath cellsFrom cellName organelle;
+            importedFile = validate.MigrationNecesary path.file (import path.file);
+            importedDir = validate.MigrationNecesary path.dir (import path.dir);
+          in
+            if builtins.pathExists path.file
+            then validate.Import organelle.clade path.file (importedFile args)
+            else if builtins.pathExists path.dir
+            then validate.Import organelle.clade path.dir (importedDir args)
+            else { };
           # Postprocess the result of the cell loading
+          organelles' = nixpkgs.lib.lists.groupBy (x: x.name) Organelles;
           postprocessedOutput =
-            nixpkgs.lib.attrsets.mapAttrsToList (
-              organelleName: output: { ${system}.${cellName}.${organelleName} = output; }
-            )
-            res;
-          postprocessedStdMeta =
             nixpkgs.lib.attrsets.mapAttrsToList (
               organelleName: output: let
                 organelle = builtins.head organelles'.${organelleName};
+                toStdTypedOutput = name: output: {
+                  __std_name =
+                    output.meta.mainProgram or output.pname or output.name or name;
+                  __std_description =
+                    output.meta.description or output.description or "n/a";
+                  __std_cell = cellName;
+                  __std_clade = organelle.clade;
+                  __std_organelle = organelle.name;
+                };
               in
                 {
+                  ${system}.${cellName}.${organelleName} = output;
                   # parseable index of targets for tooling
                   __std.${system}.${cellName}.${organelleName} =
-                    builtins.mapAttrs (toStdTypedOutput cellName organelle)
-                    output;
+                    builtins.mapAttrs toStdTypedOutput output;
                 }
             )
-            res;
+            cell;
           postprocessedCliEpiphyte =
             nixpkgs.lib.attrsets.mapAttrsToList (
               organelleName: output: let
                 organelle = builtins.head organelles'.${organelleName};
                 isInstallable = organelle.clade == "installables";
                 isRunnable = organelle.clade == "runnables";
+                applySuffixes = nixpkgs.lib.attrsets.mapAttrs' (
+                  target: output: let
+                    baseSuffix =
+                      if target == "default"
+                      then ""
+                      else "-${target}";
+                  in
+                    {
+                      name = "${cellName}${baseSuffix}";
+                      value = output;
+                    }
+                );
+                toFlakeApp = drv: let
+                  name = drv.meta.mainProgram or drv.pname or drv.name;
+                in
+                  {
+                    program = "${drv}/bin/${name}";
+                    type = "app";
+                  };
               in
                 if isRunnable
                 then
@@ -155,46 +178,15 @@
                 then { packages.${system} = applySuffixes output; }
                 else { }
             )
-            res;
+            cell;
         in
           accumulate (
             postprocessedOutput
-            ++ postprocessedStdMeta
             ++ (
               nixpkgs.lib.optionals as-nix-cli-epiphyte
               postprocessedCliEpiphyte
             )
           );
-        # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
-        loadCellOrganelle = cellName: organelle: cellArgs: let
-          path = organellePath cellsFrom cellName organelle;
-          importedFile = validate.MigrationNecesary path.file (import path.file);
-          importedDir = validate.MigrationNecesary path.dir (import path.dir);
-        in
-          if builtins.pathExists path.file
-          then validate.Import organelle.clade path.file (importedFile cellArgs)
-          else if builtins.pathExists path.dir
-          then validate.Import organelle.clade path.dir (importedDir cellArgs)
-          else { };
-        toStdTypedOutput = cellName: organelle: name: output: let
-          stdMeta = {
-            __std_name =
-              output.meta.mainProgram or output.pname or output.name or name;
-            __std_description =
-              output.meta.description or output.description or "n/a";
-            __std_cell = cellName;
-            __std_clade = organelle.clade;
-            __std_organelle = organelle.name;
-          };
-        in
-          stdMeta;
-        toFlakeApp = drv: let
-          name = drv.meta.mainProgram or drv.pname or drv.name;
-        in
-          {
-            program = "${drv}/bin/${name}";
-            type = "app";
-          };
       in
         stdOutput;
     growOn = args: soil: nixpkgs.lib.attrsets.recursiveUpdate (
