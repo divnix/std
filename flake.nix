@@ -100,11 +100,14 @@
           cell =
             let
               op = acc: organelle: let
-                output = {
-                  ${organelle.name} = loadOrganelle organelle (cellArgs // { inherit cell; });
-                };
+                res = loadOrganelle organelle (cellArgs // { inherit cell; });
               in
-                nixpkgs.lib.attrsets.recursiveUpdate acc output;
+                acc
+                // (
+                  if res == { }
+                  then { }
+                  else { ${organelle.name} = res; }
+                );
             in
               builtins.foldl' op { } Organelles;
           # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
