@@ -56,44 +56,46 @@
         Organelles = validate.Organelles organelles;
         Systems = validate.Systems systems;
         Cells = nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom Organelles) (builtins.readDir cellsFrom);
-        # Set of all std-injected outputs in the project flake
-        stdOutput =
-          builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { } stdOutputs;
-        # List of all flake outputs injected by std
-        stdOutputs = builtins.concatLists (builtins.map stdOutputsFor Systems);
-        stdOutputsFor = system: builtins.map (loadCell system) Cells;
+        # Set of all std-injected outputs in the project flake in the outpts and inputs.cells format
+        accumulate = builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { };
+        stdOutput = accumulate (builtins.concatLists (builtins.map stdOutputsFor Systems));
+        inputsCells = accumulate (builtins.concatLists (builtins.map inputsCellsFor Systems));
+        # List of all flake outputs injected by std in the outputs and inputs.cells format
+        stdOutputsFor = system: builtins.map (c: (loadCell system c).stdOutput) Cells;
+        inputsCellsFor = system: builtins.map (c: (loadCell system c).inputsCells) Cells;
         # Load a cell, return the flake outputs injected by std
         loadCell = system: cell: let
-          cellArgs = {
-            inputs =
-              (
-                builtins.mapAttrs (
-                  # _ consumes input's name
-                  _: builtins.mapAttrs (
-                    # _ consumes input's output's name
-                    # s -> maybe systems
-                    _: s: if builtins.hasAttr "${system}" s
-                    then (s // s.${system})
-                    else s
-                  )
+          cellArgs =
+            let
+              deSystemize = builtins.mapAttrs (
+                # _ consumes input's name
+                _: builtins.mapAttrs (
+                  # _ consumes input's output's name
+                  # s -> maybe systems
+                  _: s: if builtins.hasAttr "${system}" s
+                  then (s // s.${system})
+                  else s
                 )
-                inputs
-              )
-              // {
-                nixpkgs = import nixpkgs {
-                  localSystem = system;
-                  config =
-                    {
-                      allowUnfree = true;
-                      allowUnsupportedSystem = true;
-                      android_sdk.accept_license = true;
-                    }
-                    // nixpkgsConfig;
-                };
-                self = inputs.self.sourceInfo;
-                cells = stdOutput;
+              );
+            in
+              {
+                inputs =
+                  (deSystemize inputs)
+                  // {
+                    nixpkgs = import nixpkgs {
+                      localSystem = system;
+                      config =
+                        {
+                          allowUnfree = true;
+                          allowUnsupportedSystem = true;
+                          android_sdk.accept_license = true;
+                        }
+                        // nixpkgsConfig;
+                    };
+                    self = inputs.self.sourceInfo;
+                    cells = deSystemize inputsCells;
+                  };
               };
-          };
           applySuffixes = nixpkgs.lib.attrsets.mapAttrs' (
             target: output: let
               baseSuffix =
@@ -118,6 +120,11 @@
             in
               builtins.foldl' op { } Organelles;
           # Postprocess the result of the cell loading
+          postprocessedInputsCells =
+            nixpkgs.lib.attrsets.mapAttrsToList (
+              organelleName: output: { ${cell}.${organelleName}.${system} = output; }
+            )
+            res;
           postprocessedOutput =
             nixpkgs.lib.attrsets.mapAttrsToList (
               organelleName: output: { ${organelleName}.${system} = applySuffixes output; }
@@ -166,14 +173,17 @@
             )
             res;
         in
-          builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { } (
-            postprocessedOutput
-            ++ postprocessedStdMeta
-            ++ (
-              nixpkgs.lib.optionals as-nix-cli-epiphyte
-              postprocessedCliEpiphyte
-            )
-          );
+          {
+            stdOutput = accumulate (
+              postprocessedOutput
+              ++ postprocessedStdMeta
+              ++ (
+                nixpkgs.lib.optionals as-nix-cli-epiphyte
+                postprocessedCliEpiphyte
+              )
+            );
+            inputsCells = accumulate postprocessedInputsCells;
+          };
         # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
         loadCellOrganelle = cell: organelle: cellArgs: let
           path = organellePath cellsFrom cell organelle;
