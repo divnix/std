@@ -92,7 +92,9 @@
                     }
                     // nixpkgsConfig;
                 };
-                self = inputs.self.sourceInfo;
+                self =
+                  inputs.self.sourceInfo
+                  // { rev = inputs.self.sourceInfo.rev or "not-a-commit"; };
                 cells = (deSystemize system stdOutput);
               };
           };
