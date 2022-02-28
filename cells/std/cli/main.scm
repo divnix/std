@@ -261,7 +261,7 @@ USAGE
      (clade (alist-ref '__std_clade value))
      (description (alist-ref '__std_description value))
      (organelle (alist-ref '__std_organelle value)))
-    (if (equal? name '||)
+    (if (equal? name 'default)
       (list cell organelle clade description)
       (list cell organelle name clade description))))
 

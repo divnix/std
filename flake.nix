@@ -132,22 +132,16 @@
               in
                 {
                   # parseable index of targets for tooling
-                  __std.${system}.${cell}.${organelleName} = nixpkgs.lib.attrsets.mapAttrs' (
-                    k: v: {
-                      name =
-                        if k == "default"
-                        then ""
-                        else k;
-                      value = {
-                        inherit
-                          (v)
-                          __std_name
-                          __std_description
-                          __std_cell
-                          __std_clade
-                          __std_organelle
-                          ;
-                      };
+                  __std.${system}.${cell}.${organelleName} = builtins.mapAttrs (
+                    _: v: {
+                      inherit
+                        (v)
+                        __std_name
+                        __std_description
+                        __std_cell
+                        __std_clade
+                        __std_organelle
+                        ;
                     }
                   ) (
                     builtins.mapAttrs (toStdTypedOutput cell organelle) output
