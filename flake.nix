@@ -132,20 +132,8 @@
               in
                 {
                   # parseable index of targets for tooling
-                  __std.${system}.${cell}.${organelleName} = builtins.mapAttrs (
-                    _: v: {
-                      inherit
-                        (v)
-                        __std_name
-                        __std_description
-                        __std_cell
-                        __std_clade
-                        __std_organelle
-                        ;
-                    }
-                  ) (
-                    builtins.mapAttrs (toStdTypedOutput cell organelle) output
-                  );
+                  __std.${system}.${cell}.${organelleName} =
+                    builtins.mapAttrs (toStdTypedOutput cell organelle) output;
                 }
             )
             res;
@@ -198,13 +186,7 @@
             __std_organelle = organelle.name;
           };
         in
-          (
-            if organelle.clade == "functions"
-            then stdMeta // { __functor = _: output; }
-            else if organelle.clade == "data"
-            then stdMeta // { __data = output; }
-            else output // stdMeta
-          );
+          stdMeta;
         toFlakeApp = drv: let
           name = drv.meta.mainProgram or drv.pname or drv.name;
         in
