@@ -182,7 +182,7 @@ direnv allow
 ### Without `direnv`
 
 ```console
-nix develop ./devshell#__default -c $SHELL
+nix develop ./devshell -c $SHELL
 menu
 ```
 

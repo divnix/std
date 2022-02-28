@@ -19,7 +19,7 @@
         ;
     in
       {
-        devShells.__default = devshell.legacyPackages.mkShell (
+        devShells.default = devshell.legacyPackages.mkShell (
           { extraModulesPath
           , pkgs
           , ...
