@@ -144,6 +144,21 @@
         "type": "github"
       }
     },
+    "main": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_3",
+        "yants": "yants"
+      },
+      "locked": {
+        "narHash": "sha256-TLqwH9SFzW4SxVwa7onL05/MlVQCeGSxSR7iO7X9ir8=",
+        "path": "../.",
+        "type": "path"
+      },
+      "original": {
+        "path": "../.",
+        "type": "path"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1643472818,
@@ -178,11 +193,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1643653624,
-        "narHash": "sha256-+8hLMsQrZ2rkvcEtEId6HMe8GPxVb5ga+Vh1fdsqJDU=",
+        "lastModified": 1645937171,
+        "narHash": "sha256-n9f9GZBNMe8UMhcgmmaXNObkH01jjgp7INMrUgBgcy4=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "a529f0c125a78343b145a8eb2b915b0295e4f459",
+        "rev": "22dc22f8cedc58fcb11afe1acb08e9999e78be9c",
         "type": "github"
       },
       "original": {
@@ -194,11 +209,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1645623357,
-        "narHash": "sha256-vAaI91QFn/kY/uMiebW+kG2mPmxirMSJWYtkqkBKdDc=",
+        "lastModified": 1643653624,
+        "narHash": "sha256-+8hLMsQrZ2rkvcEtEId6HMe8GPxVb5ga+Vh1fdsqJDU=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "9222ae36b208d1c6b55d88e10aa68f969b5b5244",
+        "rev": "a529f0c125a78343b145a8eb2b915b0295e4f459",
         "type": "github"
       },
       "original": {
@@ -229,8 +244,8 @@
         "alejandra": "alejandra",
         "devshell": "devshell",
         "flake-utils": "flake-utils_2",
-        "nixpkgs": "nixpkgs_3",
-        "std": "std",
+        "main": "main",
+        "nixpkgs": "nixpkgs_4",
         "treefmt": "treefmt_2"
       }
     },
@@ -248,21 +263,6 @@
         "owner": "rust-analyzer",
         "repo": "rust-analyzer",
         "type": "github"
-      }
-    },
-    "std": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_4",
-        "yants": "yants"
-      },
-      "locked": {
-        "narHash": "sha256-P7ckE/2u+7KNZno8EzXiGUwivd1mmgAJYm8X+5XvN+4=",
-        "path": "../.",
-        "type": "path"
-      },
-      "original": {
-        "path": "../.",
-        "type": "path"
       }
     },
     "treefmt": {
@@ -302,7 +302,7 @@
     "yants": {
       "inputs": {
         "nixpkgs": [
-          "std",
+          "main",
           "nixpkgs"
         ]
       },

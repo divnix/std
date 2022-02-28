@@ -207,8 +207,8 @@ USAGE
   (let ((parts (normalised-components (normalise-target target)))
         (system (current-system)))
     (match parts
-           [(cell organelle attr) (conc ".#" organelle "." system "." cell "-" attr)]
-           [(cell organelle) (conc ".#" organelle "." system "." cell)])))
+           [(cell organelle attr) (conc ".#" system "." cell "." organelle "." attr)]
+           [(cell organelle) (conc ".#" system "." cell "." organelle ".default")])))
 
 ;; exit and complain at the user if something went wrong
 (define (std-error message)

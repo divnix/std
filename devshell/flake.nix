@@ -6,17 +6,20 @@
   inputs.alejandra.url = "github:kamadorueda/alejandra";
   inputs.alejandra.inputs.treefmt.url = "github:divnix/blank";
   inputs.flake-utils.url = "github:numtide/flake-utils";
-  inputs.std.url = "path:../.";
+  inputs.main.url = "path:../.";
   outputs = inputs: inputs.flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ] (
     system: let
-      stdProfiles = inputs.std.devshellProfiles.${system};
-      devshell = inputs.devshell.legacyPackages.${system};
-      nixpkgs = inputs.nixpkgs.legacyPackages.${system};
-      alejandra = inputs.alejandra.defaultPackage.${system};
-      treefmt = inputs.treefmt.defaultPackage.${system};
+      inherit
+        (inputs.main.deSystemize system inputs)
+        main
+        devshell
+        nixpkgs
+        alejandra
+        treefmt
+        ;
     in
       {
-        devShells.__default = devshell.mkShell (
+        devShells.__default = devshell.legacyPackages.mkShell (
           { extraModulesPath
           , pkgs
           , ...
@@ -26,25 +29,28 @@
             cellsFrom = "./cells";
             packages = [
               # formatters
-              alejandra
-              nixpkgs.shfmt
-              nixpkgs.nodePackages.prettier
+              alejandra.defaultPackage
+              nixpkgs.legacyPackages.shfmt
+              nixpkgs.legacyPackages.nodePackages.prettier
             ];
             commands = [
               {
-                package = nixpkgs.treefmt;
+                package = nixpkgs.legacyPackages.treefmt;
                 category = "formatters";
               }
               {
-                package = nixpkgs.editorconfig-checker;
+                package = nixpkgs.legacyPackages.editorconfig-checker;
                 category = "formatters";
               }
               {
-                package = nixpkgs.reuse;
+                package = nixpkgs.legacyPackages.reuse;
                 category = "legal";
               }
             ];
-            imports = [ "${extraModulesPath}/git/hooks.nix" stdProfiles.std ];
+            imports = [
+              "${extraModulesPath}/git/hooks.nix"
+              main.std.devshellProfiles.default
+            ];
             git.hooks = {
               enable = true;
               pre-commit.text = builtins.readFile ./pre-commit.sh;

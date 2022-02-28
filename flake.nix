@@ -34,6 +34,21 @@
       inherit name;
       clade = "data";
     };
+    deSystemize = system: builtins.mapAttrs (
+      # _ consumes input's name
+      # s -> maybe systems
+      _: s: if builtins.hasAttr "${system}" s
+      then s // s.${system}
+      else
+        builtins.mapAttrs (
+          # _ consumes input's output's name
+          # s -> maybe systems
+          _: s: if builtins.hasAttr "${system}" s
+          then (s // s.${system})
+          else s
+        )
+        s
+    );
     grow =
       { inputs
       , cellsFrom
@@ -59,43 +74,28 @@
         # Set of all std-injected outputs in the project flake in the outpts and inputs.cells format
         accumulate = builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate { };
         stdOutput = accumulate (builtins.concatLists (builtins.map stdOutputsFor Systems));
-        inputsCells = accumulate (builtins.concatLists (builtins.map inputsCellsFor Systems));
         # List of all flake outputs injected by std in the outputs and inputs.cells format
-        stdOutputsFor = system: builtins.map (c: (loadCell system c).stdOutput) Cells;
-        inputsCellsFor = system: builtins.map (c: (loadCell system c).inputsCells) Cells;
+        stdOutputsFor = system: builtins.map (loadCell system) Cells;
         # Load a cell, return the flake outputs injected by std
         loadCell = system: cell: let
-          cellArgs =
-            let
-              deSystemize = builtins.mapAttrs (
-                # _ consumes input's name
-                _: builtins.mapAttrs (
-                  # _ consumes input's output's name
-                  # s -> maybe systems
-                  _: s: if builtins.hasAttr "${system}" s
-                  then (s // s.${system})
-                  else s
-                )
-              );
-            in
-              {
-                inputs =
-                  (deSystemize inputs)
-                  // {
-                    nixpkgs = import nixpkgs {
-                      localSystem = system;
-                      config =
-                        {
-                          allowUnfree = true;
-                          allowUnsupportedSystem = true;
-                          android_sdk.accept_license = true;
-                        }
-                        // nixpkgsConfig;
-                    };
-                    self = inputs.self.sourceInfo;
-                    cells = deSystemize inputsCells;
-                  };
+          cellArgs = {
+            inputs =
+              (deSystemize system inputs)
+              // {
+                nixpkgs = import nixpkgs {
+                  localSystem = system;
+                  config =
+                    {
+                      allowUnfree = true;
+                      allowUnsupportedSystem = true;
+                      android_sdk.accept_license = true;
+                    }
+                    // nixpkgsConfig;
+                };
+                self = inputs.self.sourceInfo;
+                cells = stdOutput // stdOutput.${system};
               };
+          };
           applySuffixes = nixpkgs.lib.attrsets.mapAttrs' (
             target: output: let
               baseSuffix =
@@ -120,14 +120,9 @@
             in
               builtins.foldl' op { } Organelles;
           # Postprocess the result of the cell loading
-          postprocessedInputsCells =
-            nixpkgs.lib.attrsets.mapAttrsToList (
-              organelleName: output: { ${cell}.${organelleName}.${system} = output; }
-            )
-            res;
           postprocessedOutput =
             nixpkgs.lib.attrsets.mapAttrsToList (
-              organelleName: output: { ${organelleName}.${system} = applySuffixes output; }
+              organelleName: output: { ${system}.${cell}.${organelleName} = output; }
             )
             res;
           postprocessedStdMeta =
@@ -179,17 +174,14 @@
             )
             res;
         in
-          {
-            stdOutput = accumulate (
-              postprocessedOutput
-              ++ postprocessedStdMeta
-              ++ (
-                nixpkgs.lib.optionals as-nix-cli-epiphyte
-                postprocessedCliEpiphyte
-              )
-            );
-            inputsCells = accumulate postprocessedInputsCells;
-          };
+          accumulate (
+            postprocessedOutput
+            ++ postprocessedStdMeta
+            ++ (
+              nixpkgs.lib.optionals as-nix-cli-epiphyte
+              postprocessedCliEpiphyte
+            )
+          );
         # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
         loadCellOrganelle = cell: organelle: cellArgs: let
           path = organellePath cellsFrom cell organelle;
@@ -259,7 +251,16 @@
       cellOk cell (systemOk (maybeOrganelles outputs));
   in
     {
-      inherit runnables installables functions data grow growOn harvest;
+      inherit
+        runnables
+        installables
+        functions
+        data
+        grow
+        growOn
+        harvest
+        deSystemize
+        ;
       systems = nixpkgs.lib.systems.doubles;
     }
     // (
