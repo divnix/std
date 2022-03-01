@@ -71,6 +71,27 @@
       , debug ? false
       }:
       let
+        _debug = s: attrs: let
+          traceString = builtins.trace s;
+          traceAttrs = nixpkgs.lib.traceSeqN 1 attrs;
+          alsoTraceAttrPath =
+            let
+              path = nixpkgs.lib.attrsets.attrByPath debug null attrs;
+            in
+              (builtins.trace "path: ${builtins.concatStringsSep ''.'' debug}") (nixpkgs.lib.traceSeqN 1 path);
+          debugIsAttrPath =
+            builtins.typeOf debug
+            == "list"
+            && nixpkgs.lib.attrsets.hasAttrByPath debug attrs;
+        in
+          if debug == false
+          then attrs
+          else
+            traceString traceAttrs (
+              if debugIsAttrPath
+              then alsoTraceAttrPath attrs
+              else attrs
+            );
         # Validations ...
         Organelles = validate.Organelles organelles;
         Systems = validate.Systems systems;
@@ -83,7 +104,7 @@
         # Load a cell, return the flake outputs injected by std
         loadCell = system: cellName: let
           cellArgs = {
-            inputs =
+            inputs = _debug "inputs on ${system}" (
               (deSystemize system inputs)
               // {
                 nixpkgs = import nixpkgs {
