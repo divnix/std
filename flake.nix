@@ -34,21 +34,25 @@
       inherit name;
       clade = "data";
     };
-    deSystemize = system: builtins.mapAttrs (
-      # _ consumes input's name
-      # s -> maybe systems
-      _: s: if builtins.isAttrs s && builtins.hasAttr "${system}" s
-      then s // s.${system}
-      else
-        builtins.mapAttrs (
-          # _ consumes input's output's name
-          # s -> maybe systems
-          _: s: if builtins.isAttrs s && builtins.hasAttr "${system}" s
-          then (s // s.${system})
-          else s
-        )
-        s
-    );
+    deSystemize = system: s: if builtins.isAttrs s && builtins.hasAttr "${system}" s
+    then s // s.${system}
+    else
+      builtins.mapAttrs (
+        # _ consumes input's name
+        # s -> maybe systems
+        _: s: if builtins.isAttrs s && builtins.hasAttr "${system}" s
+        then s // s.${system}
+        else
+          builtins.mapAttrs (
+            # _ consumes input's output's name
+            # s -> maybe systems
+            _: s: if builtins.isAttrs s && builtins.hasAttr "${system}" s
+            then (s // s.${system})
+            else s
+          )
+          s
+      )
+      s;
     grow =
       { inputs
       , cellsFrom
@@ -95,14 +99,16 @@
                 self =
                   inputs.self.sourceInfo
                   // { rev = inputs.self.sourceInfo.rev or "not-a-commit"; };
-                cells = (deSystemize system stdOutput);
-              };
+                cells = deSystemize system (nixpkgs.lib.filterAttrs (k: v: k != "__std") stdOutput);
+              }
+            );
           };
           # current cell
           cell =
             let
               op = acc: organelle: let
-                res = loadOrganelle organelle (cellArgs // { inherit cell; });
+                args = cellArgs // { inherit cell; };
+                res = loadOrganelle organelle args;
               in
                 acc
                 // (
