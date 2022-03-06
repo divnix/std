@@ -117,9 +117,10 @@
                     }
                     // nixpkgsConfig;
                 };
-                self =
-                  inputs.self.sourceInfo
-                  // { rev = inputs.self.sourceInfo.rev or "not-a-commit"; };
+                self = {
+                  sourceInfo = inputs.self.sourceInfo // { rev = inputs.self.sourceInfo.rev or "not-a-commit"; };
+                  packages = inputs.self.packages.${system};
+                };
                 cells = deSystemize system (nixpkgs.lib.filterAttrs (k: v: k != "__std") stdOutput);
               }
             );
