@@ -52,7 +52,7 @@ everything Just Works™.
 
 **DevOps Professionals,`nix`-loving**
 
-[Standard][std] standard doesn't just throw more options at you.
+[Standard][std] doesn't just throw more options at you.
 It gives you and your team something much more valuable: _guidance_.
 
 ## How it's organized
