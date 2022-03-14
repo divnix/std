@@ -2,28 +2,27 @@
  This file is copied from https://github.com/input-output-hk/nix-inclusive/blob/master/inclusive.nix
  with friendly permission of Michael Fellinger, the original author.
  */
-{ nixpkgs }:
-let
+{nixpkgs}: let
   inherit (nixpkgs) lib;
   # NOTE: find a way to handle duplicates better, atm they may override each
   # other without warning
-  mkInclusive = allowedPaths: lib.foldl' (
-    sum: allowed: if (lib.pathIsDirectory allowed)
-    then
-      {
-        tree = lib.recursiveUpdate sum.tree (lib.setAttrByPath (pathToParts allowed) true);
-        prefixes = sum.prefixes ++ [ (toString allowed) ];
-      }
-    else
-      {
-        tree = lib.recursiveUpdate sum.tree (lib.setAttrByPath (pathToParts allowed) false);
-        prefixes = sum.prefixes;
-      }
-  ) {
-    tree = { };
-    prefixes = [ ];
-  }
-  allowedPaths;
+  mkInclusive = allowedPaths:
+    lib.foldl' (
+      sum: allowed:
+        if (lib.pathIsDirectory allowed)
+        then {
+          tree = lib.recursiveUpdate sum.tree (lib.setAttrByPath (pathToParts allowed) true);
+          prefixes = sum.prefixes ++ [(toString allowed)];
+        }
+        else {
+          tree = lib.recursiveUpdate sum.tree (lib.setAttrByPath (pathToParts allowed) false);
+          prefixes = sum.prefixes;
+        }
+    ) {
+      tree = {};
+      prefixes = [];
+    }
+    allowedPaths;
   pathToParts = path: (builtins.tail (lib.splitString "/" (toString path)));
   # Require that every path specified does exist.
   #
@@ -46,10 +45,11 @@ let
   requireAllPathsExist = paths: let
     validation =
       builtins.map (
-        path: builtins.path {
-          name = "verify";
-          path = path;
-        }
+        path:
+          builtins.path {
+            name = "verify";
+            path = path;
+          }
       )
       paths;
   in
@@ -71,4 +71,4 @@ let
       filter = filter;
     };
 in
-incl
+  incl

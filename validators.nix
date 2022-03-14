@@ -2,19 +2,18 @@
 # SPDX-FileCopyrightText: 2022 Kevin Amado <kamadorueda@gmail.com>
 #
 # SPDX-License-Identifier: Unlicense
-{ nixpkgs
-, yants
-, organellePath
-}:
-let
-  prefixWithCellsFrom = path: builtins.concatStringsSep "/" (
-    [ "\${cellsFrom}" ]
-    ++ (nixpkgs.lib.lists.drop 4 (nixpkgs.lib.splitString "/" path))
-  );
-in
 {
-  Systems =
-    with yants "std" "grow" "attrs";
+  nixpkgs,
+  yants,
+  organellePath,
+}: let
+  prefixWithCellsFrom = path:
+    builtins.concatStringsSep "/" (
+      ["\${cellsFrom}"]
+      ++ (nixpkgs.lib.lists.drop 4 (nixpkgs.lib.splitString "/" path))
+    );
+in {
+  Systems = with yants "std" "grow" "attrs";
     list (enum "system" nixpkgs.lib.systems.doubles.all);
   Cell = cellsFrom: organelles: cell: type: let
     path = o: organellePath cellsFrom cell o;
@@ -50,37 +49,36 @@ in
 
 
         ${
-        builtins.concatStringsSep "\n\n" (
-          builtins.map (
-            organelle: let
-              title = "To generate output for Organelle '${organelle.name}', please create:\n";
-              paths = "  - ${prefixWithCellsFrom (path organelle).file}; or\n  - ${prefixWithCellsFrom (path organelle).dir}";
-            in
-              title + paths
+          builtins.concatStringsSep "\n\n" (
+            builtins.map (
+              organelle: let
+                title = "To generate output for Organelle '${organelle.name}', please create:\n";
+                paths = "  - ${prefixWithCellsFrom (path organelle).file}; or\n  - ${prefixWithCellsFrom (path organelle).dir}";
+              in
+                title + paths
+            )
+            organelles
           )
-          organelles
-        )
-      }
+        }
 
         Please create at least one of the previous files and don't forget to add them to version control.
       ''
     else cell;
-  Organelles =
-    with yants "std" "grow" "attrs";
+  Organelles = with yants "std" "grow" "attrs";
     list (
       struct "organelle" {
         name = string;
-        clade = enum "clades" [ "runnables" "installables" "functions" "data" ];
+        clade = enum "clades" ["runnables" "installables" "functions" "data"];
       }
     );
   MigrationNecesary = file: let
     file' = prefixWithCellsFrom file;
   in
     with yants "std" "import" file';
-    functionWithArgs {
-      inputs = false;
-      cell = false;
-    };
+      functionWithArgs {
+        inputs = false;
+        cell = false;
+      };
   Import = clade: file: let
     file' = prefixWithCellsFrom file;
   in
@@ -91,5 +89,5 @@ in
     # else if clade == "functions"
     # then attrs function
     # else throw "unreachable";
-    attrs any;
+      attrs any;
 }
