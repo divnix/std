@@ -1,7 +1,7 @@
-/*
- This file is copied from https://github.com/input-output-hk/nix-inclusive/blob/master/inclusive.nix
- with friendly permission of Michael Fellinger, the original author.
- */
+# SPDX-FileCopyrightText: 2022 The Standard Authors
+# SPDX-FileCopyrightText: 2022 Michael Fellinger <https://manveru.dev/>
+#
+# SPDX-License-Identifier: MIT
 {nixpkgs}: let
   inherit (nixpkgs) lib;
   # NOTE: find a way to handle duplicates better, atm they may override each
