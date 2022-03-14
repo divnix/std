@@ -14,6 +14,7 @@
       inherit (inputs') yants nixpkgs;
       inherit organellePath;
     };
+    incl = import ./incl.nix { inherit nixpkgs; };
     organellePath = cellsFrom: cellName: organelle: {
       file = "${cellsFrom}/${cellName}/${organelle.name}.nix";
       dir = "${cellsFrom}/${cellName}/${organelle.name}/default.nix";
@@ -261,6 +262,7 @@
         growOn
         harvest
         deSystemize
+        incl
         ;
       systems = nixpkgs.lib.systems.doubles;
     }
