@@ -4,26 +4,31 @@
 # SPDX-License-Identifier: MIT
 {nixpkgs}: let
   inherit (nixpkgs) lib;
+
   # NOTE: find a way to handle duplicates better, atm they may override each
   # other without warning
-  mkInclusive = allowedPaths:
+  mkInclusive = verifiedPaths:
     lib.foldl' (
-      sum: allowed:
-        if (lib.pathIsDirectory allowed)
+      sum: verified: let
+        verified' = builtins.unsafeDiscardStringContext verified;
+      in
+        if (lib.pathIsDirectory verified')
         then {
-          tree = lib.recursiveUpdate sum.tree (lib.setAttrByPath (pathToParts allowed) true);
-          prefixes = sum.prefixes ++ [(toString allowed)];
+          tree = lib.recursiveUpdate sum.tree (lib.setAttrByPath (pathToParts verified') true);
+          prefixes = sum.prefixes ++ [verified'];
         }
         else {
-          tree = lib.recursiveUpdate sum.tree (lib.setAttrByPath (pathToParts allowed) false);
+          tree = lib.recursiveUpdate sum.tree (lib.setAttrByPath (pathToParts verified') false);
           prefixes = sum.prefixes;
         }
     ) {
       tree = {};
       prefixes = [];
     }
-    allowedPaths;
+    verifiedPaths;
+
   pathToParts = path: (builtins.tail (lib.splitString "/" (toString path)));
+
   # Require that every path specified does exist.
   #
   # By default, Nix won't complain if you refer to a missing file
@@ -54,12 +59,14 @@
       paths;
   in
     builtins.deepSeq validation paths;
+
   isIncluded = patterns: name: type: let
     parts = pathToParts name;
     matchesTree = lib.hasAttrByPath parts patterns.tree;
     matchesPrefix = lib.any (pre: lib.hasPrefix pre name) patterns.prefixes;
   in
     matchesTree || matchesPrefix;
+
   incl = root: allowedPaths: let
     verifiedPaths = requireAllPathsExist allowedPaths;
     patterns = mkInclusive verifiedPaths;
