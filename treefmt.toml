@@ -9,6 +9,12 @@
 command = "alejandra"
 includes = ["*.nix"]
 
+
+[formatter.go]
+command = "gofmt"
+options = ["-w"]
+includes = ["*.go"]
+
 [formatter.prettier]
 command = "prettier"
 options = ["--write"]

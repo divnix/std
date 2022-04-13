@@ -36,6 +36,23 @@
                 package = nixpkgs.legacyPackages.reuse;
                 category = "legal";
               }
+              {
+                package = nixpkgs.legacyPackages.delve;
+                category = "cli-dev";
+                name = "dlv";
+              }
+              {
+                package = nixpkgs.legacyPackages.go;
+                category = "cli-dev";
+              }
+              {
+                package = nixpkgs.legacyPackages.gotools;
+                category = "cli-dev";
+              }
+              {
+                package = nixpkgs.legacyPackages.gopls;
+                category = "cli-dev";
+              }
             ];
             imports = [
               "${extraModulesPath}/git/hooks.nix"
