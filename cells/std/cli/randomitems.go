@@ -112,12 +112,23 @@ func (r *randomItemGenerator) next() item {
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
 
+	var (
+		actionsGenerator randomActionGenerator
+	)
+	// Make actions
+	const numItems = 3
+	items := make([]action, numItems)
+	for i := 0; i < numItems; i++ {
+		items[i] = actionsGenerator.next()
+	}
+
 	i := item{
 		name:        r.names[r.nameIndex],
 		organelle:   r.organelles[r.organelleIndex],
 		cell:        r.cells[r.cellIndex],
 		clade:       r.clades[r.cladeIndex],
 		description: r.descs[r.descIndex],
+		actions:     items,
 	}
 
 	r.nameIndex++
@@ -146,4 +157,117 @@ func (r *randomItemGenerator) next() item {
 	}
 
 	return i
+}
+
+type randomActionGenerator struct {
+	actionNames        []string
+	actionNameIndex    int
+	actionCommands     [][]string
+	actionCommandIndex int
+	actionDescs        []string
+	actionDescIndex    int
+	mtx                *sync.Mutex
+	shuffle            *sync.Once
+}
+
+func (r *randomActionGenerator) reset() {
+	r.mtx = &sync.Mutex{}
+	r.shuffle = &sync.Once{}
+	r.actionNames = []string{
+		"build",
+		"run",
+		"deploy",
+		"serve",
+		"validate",
+		"test",
+	}
+	r.actionCommands = [][]string{
+		[]string{"nix", "run", ".#f.r.a.g.m.e.n.t"},
+		[]string{"nix", "build", ".#fragment", "&&", "nomad", "result/job"},
+		[]string{"cat", "./cow"},
+		[]string{"cowsay", "hi"},
+		[]string{"fastlane", "run", "..."},
+		[]string{"go", "build", "."},
+	}
+	r.actionDescs = []string{
+		"A little weird",
+		"Bold flavor",
+		"Can’t get enough",
+		"Delectable",
+		"Expensive",
+		"Expired",
+		"Exquisite",
+		"Fresh",
+		"Gimme",
+		"In season",
+		"Kind of spicy",
+		"Looks fresh",
+		"Looks good to me",
+		"Maybe not",
+		"My favorite",
+		"Oh my",
+		"On sale",
+		"Organic",
+		"Questionable",
+		"Really fresh",
+		"Refreshing",
+		"Salty",
+		"Scrumptious",
+		"Delectable",
+		"Slightly sweet",
+		"Smells great",
+		"Tasty",
+		"Too ripe",
+		"At last",
+		"What?",
+		"Wow",
+		"Yum",
+		"Maybe",
+		"Sure, why not?",
+	}
+
+	r.shuffle.Do(func() {
+		shufStrings := func(x []string) {
+			rand.Shuffle(len(x), func(i, j int) { x[i], x[j] = x[j], x[i] })
+		}
+		shufLists := func(x [][]string) {
+			rand.Shuffle(len(x), func(i, j int) { x[i], x[j] = x[j], x[i] })
+		}
+		shufStrings(r.actionNames)
+		shufLists(r.actionCommands)
+		shufStrings(r.actionDescs)
+	})
+
+}
+
+func (r *randomActionGenerator) next() action {
+	if r.mtx == nil {
+		r.reset()
+	}
+
+	r.mtx.Lock()
+	defer r.mtx.Unlock()
+
+	a := action{
+		name:        r.actionNames[r.actionNameIndex],
+		command:     r.actionCommands[r.actionCommandIndex],
+		description: r.actionDescs[r.actionDescIndex],
+	}
+
+	r.actionNameIndex++
+	if r.actionNameIndex >= len(r.actionNames) {
+		r.actionNameIndex = 0
+	}
+
+	r.actionCommandIndex++
+	if r.actionCommandIndex >= len(r.actionCommands) {
+		r.actionCommandIndex = 0
+	}
+
+	r.actionDescIndex++
+	if r.actionDescIndex >= len(r.actionDescs) {
+		r.actionDescIndex = 0
+	}
+
+	return a
 }
