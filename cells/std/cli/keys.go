@@ -8,6 +8,7 @@ import (
 type AppKeyMap struct {
 	toggleFocus key.Binding
 	forceQuit   key.Binding
+	toggleHelp  key.Binding
 }
 
 func NewAppKeyMap() *AppKeyMap {
@@ -16,6 +17,12 @@ func NewAppKeyMap() *AppKeyMap {
 		toggleFocus: key.NewBinding(
 			key.WithKeys("tab"),
 			key.WithHelp("⇥", "toggle focus"),
+		),
+
+		// Toggle help.
+		toggleHelp: key.NewBinding(
+			key.WithKeys("?"),
+			key.WithHelp("?", "toggle help"),
 		),
 
 		// Quitting.
