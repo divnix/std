@@ -123,12 +123,12 @@ func (r *randomItemGenerator) next() item {
 	}
 
 	i := item{
-		name:        r.names[r.nameIndex],
-		organelle:   r.organelles[r.organelleIndex],
-		cell:        r.cells[r.cellIndex],
-		clade:       r.clades[r.cladeIndex],
-		description: r.descs[r.descIndex],
-		actions:     items,
+		StdName:        r.names[r.nameIndex],
+		StdOrganelle:   r.organelles[r.organelleIndex],
+		StdCell:        r.cells[r.cellIndex],
+		StdClade:       r.clades[r.cladeIndex],
+		StdDescription: r.descs[r.descIndex],
+		actions:        items,
 	}
 
 	r.nameIndex++
@@ -182,12 +182,12 @@ func (r *randomActionGenerator) reset() {
 		"test",
 	}
 	r.actionCommands = [][]string{
-		[]string{"nix", "run", ".#f.r.a.g.m.e.n.t"},
-		[]string{"nix", "build", ".#fragment", "&&", "nomad", "result/job"},
-		[]string{"cat", "./cow"},
-		[]string{"cowsay", "hi"},
-		[]string{"fastlane", "run", "..."},
-		[]string{"go", "build", "."},
+		{"nix", "run", ".#f.r.a.g.m.e.n.t"},
+		{"nix", "build", ".#fragment", "&&", "nomad", "result/job"},
+		{"cat", "./cow"},
+		{"cowsay", "hi"},
+		{"fastlane", "run", "..."},
+		{"go", "build", "."},
 	}
 	r.actionDescs = []string{
 		"A little weird",
@@ -249,9 +249,9 @@ func (r *randomActionGenerator) next() action {
 	defer r.mtx.Unlock()
 
 	a := action{
-		name:        r.actionNames[r.actionNameIndex],
-		command:     r.actionCommands[r.actionCommandIndex],
-		description: r.actionDescs[r.actionDescIndex],
+		ActionName:        r.actionNames[r.actionNameIndex],
+		ActionCommand:     r.actionCommands[r.actionCommandIndex],
+		ActionDescription: r.actionDescs[r.actionDescIndex],
 	}
 
 	r.actionNameIndex++

@@ -58,20 +58,21 @@ func InitialTarget() *TargetModel {
 	}
 	targetList.SetShowHelp(false)
 	targetList.SetFilteringEnabled(true)
-	targetList.StartSpinner()
 
 	return &TargetModel{targetList}
 }
 
 type item struct {
-	name        string `json:"__std_name"`
-	organelle   string `json:"__std_organelle"`
-	cell        string `json:"__std_cell"`
-	clade       string `json:"__std_clade"`
-	description string `json:"__std_description"`
-	actions     []action
+	StdName        string `json:"__std_name"`
+	StdOrganelle   string `json:"__std_organelle"`
+	StdCell        string `json:"__std_cell"`
+	StdClade       string `json:"__std_clade"`
+	StdDescription string `json:"__std_description"`
+	actions        []action
 }
 
-func (i item) Title() string       { return fmt.Sprintf(targetTemplate, i.cell, i.organelle, i.name) }
-func (i item) Description() string { return i.description }
+func (i item) Title() string {
+	return fmt.Sprintf(targetTemplate, i.StdCell, i.StdOrganelle, i.StdName)
+}
+func (i item) Description() string { return i.StdDescription }
 func (i item) FilterValue() string { return i.Title() }

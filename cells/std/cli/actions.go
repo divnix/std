@@ -49,7 +49,7 @@ func NewAction(i item) *ActionModel {
 		items[j] = i.actions[j]
 	}
 	actionList := list.New(items, list.NewDefaultDelegate(), 0, 32)
-	actionList.Title = fmt.Sprintf("Actions for %s", i.clade)
+	actionList.Title = fmt.Sprintf("Actions for %s", i.StdClade)
 	actionList.KeyMap = DefaultListKeyMap()
 	actionList.AdditionalShortHelpKeys = func() []key.Binding {
 		return []key.Binding{
@@ -70,11 +70,11 @@ func NewAction(i item) *ActionModel {
 }
 
 type action struct {
-	name        string   `json:"__action_name"`
-	command     []string `json:"__action_command"`
-	description string   `json:"__action_description"`
+	ActionName        string   `json:"__action_name"`
+	ActionCommand     []string `json:"__action_command"`
+	ActionDescription string   `json:"__action_description"`
 }
 
-func (a action) Title() string       { return a.name }
-func (a action) Description() string { return a.description }
+func (a action) Title() string       { return a.ActionName }
+func (a action) Description() string { return a.ActionDescription }
 func (a action) FilterValue() string { return a.Title() }
