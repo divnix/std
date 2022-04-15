@@ -23,14 +23,7 @@ type TargetModel struct {
 func (m *TargetModel) Init() tea.Cmd { return nil }
 func (m *TargetModel) Update(msg tea.Msg) (*TargetModel, tea.Cmd) {
 	var cmd tea.Cmd
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.String() {
-		}
-		m.List, cmd = m.List.Update(msg)
-		return m, cmd
-	case tea.WindowSizeMsg:
-	}
+	m.List, cmd = m.List.Update(msg)
 	return m, cmd
 }
 func (m *TargetModel) View() string {

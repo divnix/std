@@ -93,7 +93,11 @@ func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// This will also call our delegate's update function.
 	if m.Focus == Left {
 		m.Target, cmd = m.Target.Update(msg)
-		m.Action = NewAction(m.Target.List.SelectedItem().(item))
+		if m.Target.List.SelectedItem() != nil {
+			m.Action = NewAction(m.Target.List.SelectedItem().(item))
+		} else {
+			m.Action = &ActionModel{}
+		}
 		cmds = append(cmds, cmd)
 	} else {
 		m.Action, cmd = m.Action.Update(msg)
