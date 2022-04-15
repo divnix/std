@@ -28,12 +28,12 @@ func DefaultListKeyMap() list.KeyMap {
 	return list.KeyMap{
 		// Browsing.
 		CursorUp: key.NewBinding(
-			key.WithKeys("up"),
-			key.WithHelp("↑", "up"),
+			key.WithKeys("k", "up"),
+			key.WithHelp("k/↑", "up"),
 		),
 		CursorDown: key.NewBinding(
-			key.WithKeys("down"),
-			key.WithHelp("↓", "down"),
+			key.WithKeys("j", "down"),
+			key.WithHelp("j/↓", "down"),
 		),
 		PrevPage: key.NewBinding(
 			key.WithKeys("pgup"),
