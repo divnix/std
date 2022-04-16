@@ -6,36 +6,23 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
-)
-
-var (
-	ActionStyle = lipgloss.NewStyle().
-		Width(30).Height(32).
-		BorderStyle(lipgloss.NormalBorder()).
-		BorderForeground(lipgloss.Color("63"))
 )
 
 type ActionModel struct {
-	List list.Model
+	List   list.Model
+	Width  int
+	Height int
 }
 
 func (m *ActionModel) Init() tea.Cmd { return nil }
 
 func (m *ActionModel) Update(msg tea.Msg) (*ActionModel, tea.Cmd) {
 	var cmd tea.Cmd
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.String() {
-		}
-		m.List, cmd = m.List.Update(msg)
-		return m, cmd
-	case tea.WindowSizeMsg:
-	}
+	m.List, cmd = m.List.Update(msg)
 	return m, cmd
 }
 func (m *ActionModel) View() string {
-	return ActionStyle.Render(m.List.View())
+	return m.List.View()
 }
 
 func NewAction(i item) *ActionModel {
@@ -66,7 +53,9 @@ func NewAction(i item) *ActionModel {
 	actionList.SetShowStatusBar(false)
 	actionList.SetFilteringEnabled(false)
 
-	return &ActionModel{actionList}
+	return &ActionModel{
+		List: actionList,
+	}
 }
 
 type action struct {

@@ -6,18 +6,14 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 )
 
 const targetTemplate = "//%s/%s:%s"
 
-var TargetStyle = lipgloss.NewStyle().
-	Height(32).Width(60).
-	BorderStyle(lipgloss.NormalBorder()).
-	BorderForeground(lipgloss.Color("63"))
-
 type TargetModel struct {
-	List list.Model
+	List   list.Model
+	Width  int
+	Height int
 }
 
 func (m *TargetModel) Init() tea.Cmd { return nil }
@@ -27,7 +23,7 @@ func (m *TargetModel) Update(msg tea.Msg) (*TargetModel, tea.Cmd) {
 	return m, cmd
 }
 func (m *TargetModel) View() string {
-	return TargetStyle.Render(m.List.View())
+	return m.List.View()
 }
 
 func InitialTarget() *TargetModel {
@@ -58,8 +54,9 @@ func InitialTarget() *TargetModel {
 	}
 	targetList.SetShowHelp(false)
 	targetList.SetFilteringEnabled(true)
+	targetList.StartSpinner()
 
-	return &TargetModel{targetList}
+	return &TargetModel{List: targetList}
 }
 
 type item struct {

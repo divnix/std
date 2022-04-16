@@ -35,14 +35,22 @@ var (
 			BorderForeground(lipgloss.Color("63")).
 			Padding(1, 2)
 
-	TitleStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#FFFDF5")).
-			Background(lipgloss.Color("#25A065")).
-			Padding(0, 1)
+	TargetStyle = lipgloss.NewStyle().
+			BorderStyle(lipgloss.NormalBorder()).
+			BorderForeground(lipgloss.Color("63"))
 
-	StatusMessageStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.AdaptiveColor{Light: "#04B575", Dark: "#04B575"}).
-				Render
+	ActionStyle = lipgloss.NewStyle().
+			BorderStyle(lipgloss.NormalBorder()).
+			BorderForeground(lipgloss.Color("63"))
+
+	// TitleStyle = lipgloss.NewStyle().
+	// 		Foreground(lipgloss.Color("#FFFDF5")).
+	// 		Background(lipgloss.Color("#25A065")).
+	// 		Padding(0, 1)
+
+	// StatusMessageStyle = lipgloss.NewStyle().
+	// 			Foreground(lipgloss.AdaptiveColor{Light: "#04B575", Dark: "#04B575"}).
+	// 			Render
 )
 
 type AppModel struct {
@@ -95,19 +103,34 @@ func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.Width = msg.Width
 		m.Height = msg.Height
-		m.Target.List.SetHeight(msg.Height - 10)
-		m.Target.List.SetWidth(msg.Width / 2)
-		m.Action.List.SetHeight(msg.Height - 10)
-		m.Action.List.SetWidth(msg.Width / 2)
+		m.Target.Height = msg.Height - 10
+		m.Target.Width = msg.Width*2/3 - 10
+		m.Action.Height = msg.Height - 10
+		m.Action.Width = msg.Width*1/3 - 10
+		m.Target.List.SetHeight(m.Target.Height)
+		m.Target.List.SetWidth(m.Target.Width)
+		m.Action.List.SetHeight(m.Action.Height)
+		m.Action.List.SetWidth(m.Action.Width)
+		return m, nil
 	}
 
 	// This will also call our delegate's update function.
 	if m.Focus == Left {
 		m.Target, cmd = m.Target.Update(msg)
 		if m.Target.List.SelectedItem() != nil {
-			m.Action = NewAction(m.Target.List.SelectedItem().(item))
+			var (
+				target   = m.Target.List.SelectedItem().(item)
+				numItems = cap(target.actions)
+			)
+			// Make list of actions
+			items := make([]list.Item, numItems)
+			for j := 0; j < numItems; j++ {
+				items[j] = target.actions[j]
+			}
+			m.Action.List.Title = fmt.Sprintf("Actions for %s", target.StdClade)
+			m.Action.List.SetItems(items)
 		} else {
-			m.Action = &ActionModel{}
+			m.Action.List.SetItems([]list.Item{})
 		}
 		cmds = append(cmds, cmd)
 	} else {
@@ -138,7 +161,11 @@ func (m *AppModel) View() string {
 		AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
 			lipgloss.JoinVertical(
 				lipgloss.Center,
-				lipgloss.JoinHorizontal(lipgloss.Left, m.Target.View(), m.Action.View()),
+				lipgloss.JoinHorizontal(
+					lipgloss.Left,
+					TargetStyle.Width(m.Target.Width).Height(m.Target.Height).Render(m.Target.View()),
+					ActionStyle.Width(m.Action.Width).Height(m.Action.Height).Render(m.Action.View()),
+				),
 				help,
 			)),
 	)

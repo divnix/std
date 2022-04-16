@@ -15,7 +15,7 @@ func NewAppKeyMap() *AppKeyMap {
 	return &AppKeyMap{
 		// Swiching focus.
 		toggleFocus: key.NewBinding(
-			key.WithKeys("tab"),
+			key.WithKeys("tab", "shift+tab"),
 			key.WithHelp("⇥", "toggle focus"),
 		),
 

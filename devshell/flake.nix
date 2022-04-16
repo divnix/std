@@ -53,6 +53,10 @@
                 package = nixpkgs.legacyPackages.gopls;
                 category = "cli-dev";
               }
+              {
+                package = nixpkgs.legacyPackages.golangci-lint;
+                category = "cli-dev";
+              }
             ];
             imports = [
               "${extraModulesPath}/git/hooks.nix"
