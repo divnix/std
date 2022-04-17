@@ -18,8 +18,8 @@ var (
 	home         = key.NewBinding(key.WithKeys("home"), key.WithHelp("home", "go to start"))
 	end          = key.NewBinding(key.WithKeys("end"), key.WithHelp("end", "go to end"))
 	search       = key.NewBinding(key.WithKeys("/"), key.WithHelp("/", "filter"))
-	showHelp     = key.NewBinding(key.WithKeys("?"), key.WithHelp("?", "help"))
-	closeHelp    = key.NewBinding(key.WithKeys("?", "esc"), key.WithHelp("?", "close help"))
+	showReadme   = key.NewBinding(key.WithKeys("?"), key.WithHelp("?", "readme"))
+	closeReadme  = key.NewBinding(key.WithKeys("?", "esc"), key.WithHelp("?", "close readme"))
 	quit         = key.NewBinding(key.WithKeys("q"), key.WithHelp("q", "quit"))
 	forceQuit    = key.NewBinding(key.WithKeys("ctrl+c"))
 	toggleFocus  = key.NewBinding(key.WithKeys("tab", "shift+tab"), key.WithHelp("⇥", "toggle focus"))
@@ -27,7 +27,7 @@ var (
 
 type AppKeyMap struct {
 	ToggleFocus key.Binding
-	ShowHelp    key.Binding
+	ShowReadme  key.Binding
 	Quit        key.Binding
 	ForceQuit   key.Binding
 }
@@ -35,22 +35,20 @@ type AppKeyMap struct {
 func NewAppKeyMap() *AppKeyMap {
 	return &AppKeyMap{
 		ToggleFocus: toggleFocus,
-		ShowHelp:    showHelp,
+		ShowReadme:  showReadme,
 		ForceQuit:   forceQuit,
 		Quit:        quit,
 	}
 }
 
-type HelpKeyMap struct {
+type ReadmeKeyMap struct {
 	viewport.KeyMap
-	ShowHelp  key.Binding
-	CloseHelp key.Binding
+	CloseReadme key.Binding
 }
 
-func NewHelpKeyMap() *HelpKeyMap {
-	m := &HelpKeyMap{
-		ShowHelp:  showHelp,
-		CloseHelp: closeHelp,
+func NewReadmeKeyMap() *ReadmeKeyMap {
+	m := &ReadmeKeyMap{
+		CloseReadme: closeReadme,
 	}
 	m.PageDown = pageUp
 	m.PageUp = pageDown

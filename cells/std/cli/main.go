@@ -44,7 +44,7 @@ var (
 			BorderStyle(lipgloss.NormalBorder()).
 			BorderForeground(lipgloss.Color("63"))
 
-	HelpStyle = lipgloss.NewStyle().
+	ReadmeStyle = lipgloss.NewStyle().
 			BorderStyle(lipgloss.NormalBorder()).
 			BorderForeground(lipgloss.AdaptiveColor{Light: "63", Dark: "63"})
 
@@ -63,7 +63,7 @@ var (
 type AppModel struct {
 	Target *TargetModel
 	Action *ActionModel
-	Help   *HelpModel
+	Readme *ReadmeModel
 	Keys   *AppKeyMap
 	Legend help.Model
 	Focus
@@ -99,17 +99,16 @@ func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		switch {
 		// toggle the help
-		case key.Matches(msg, m.Keys.ShowHelp):
-			// set here to ignore if unselected
-			if !m.Help.Active {
-				m.Help.Active = true
-				cmd = m.Help.RenderMarkdown()
+		case key.Matches(msg, m.Keys.ShowReadme):
+			if !m.Readme.Active {
+				m.Readme.Active = true
+				cmd = m.Readme.RenderMarkdown()
 				return m, cmd
 			}
 		// toggle the focus
 		case key.Matches(msg, m.Keys.ToggleFocus):
 			// Don't toggle the focus if we're showing the help.
-			if m.Help.Active {
+			if m.Readme.Active {
 				break
 			}
 			if m.Focus == Left {
@@ -134,22 +133,22 @@ func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Action.Height = msg.Height - 10
 		m.Action.Width = msg.Width*1/3 - 10
 		m.Action, _ = m.Action.Update(msg)
-		// size Help
-		m.Help.Height = msg.Height - 10
-		m.Help.Width = msg.Width - 20
-		m.Help, _ = m.Help.Update(msg)
+		// size Readme
+		m.Readme.Height = msg.Height - 10
+		m.Readme.Width = msg.Width - 20
+		m.Readme, _ = m.Readme.Update(msg)
 		return m, nil
 	}
 	// route all other messages according to state
-	if m.Help.Active {
-		m.Help, cmd = m.Help.Update(msg)
+	if m.Readme.Active {
+		m.Readme, cmd = m.Readme.Update(msg)
 		cmds = append(cmds, cmd)
 	} else if m.Focus == Left {
 		m.Target, cmd = m.Target.Update(msg)
 		cmds = append(cmds, cmd)
 		if m.Target.SelectedItem() != nil {
 			var target = m.Target.SelectedItem()
-			m.Help.SetTarget(target)
+			m.Readme.SetTarget(target)
 			m.Action.SetTarget(target)
 		} else {
 			m.Action.List.SetItems([]list.Item{})
@@ -163,12 +162,12 @@ func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *AppModel) View() string {
-	if m.Help.Active {
+	if m.Readme.Active {
 		return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center,
 			AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
 				lipgloss.JoinVertical(
 					lipgloss.Center,
-					HelpStyle.Render(m.Help.View()),
+					ReadmeStyle.Render(m.Readme.View()),
 					LegendStyle.Render(m.Legend.View(m)),
 				)),
 		)
@@ -189,8 +188,8 @@ func (m *AppModel) View() string {
 }
 
 func (m *AppModel) ShortHelp() []key.Binding {
-	if m.Help.Active {
-		return append(m.Help.ShortHelp(), []key.Binding{
+	if m.Readme.Active {
+		return append(m.Readme.ShortHelp(), []key.Binding{
 			m.Keys.Quit,
 		}...)
 	}
@@ -200,14 +199,14 @@ func (m *AppModel) ShortHelp() []key.Binding {
 		} else {
 			return append(m.Target.ShortHelp(), []key.Binding{
 				m.Keys.ToggleFocus,
-				m.Keys.ShowHelp,
+				m.Keys.ShowReadme,
 				m.Keys.Quit,
 			}...)
 		}
 	} else {
 		return append(m.Action.ShortHelp(), []key.Binding{
 			m.Keys.ToggleFocus,
-			m.Keys.ShowHelp,
+			m.Keys.ShowReadme,
 			m.Keys.Quit,
 		}...)
 	}
@@ -226,7 +225,7 @@ func InitialPage() *AppModel {
 		Action: action,
 		Keys:   NewAppKeyMap(),
 		Focus:  Left,
-		Help:   NewHelp(),
+		Readme: NewReadme(),
 		Legend: help.New(),
 	}
 }

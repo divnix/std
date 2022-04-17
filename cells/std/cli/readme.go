@@ -31,7 +31,7 @@ To create one, simply drop a file in:
 `
 )
 
-type HelpModel struct {
+type ReadmeModel struct {
 	Target           *item
 	TargetHelp       markdown.Bubble
 	CellHelp         markdown.Bubble
@@ -42,12 +42,12 @@ type HelpModel struct {
 	Active           bool
 	Width            int
 	Height           int
-	KeyMap           *HelpKeyMap
+	KeyMap           *ReadmeKeyMap
 	Help             help.Model
 	// Focus
 }
 
-func (m *HelpModel) SetTarget(t *item) {
+func (m *ReadmeModel) SetTarget(t *item) {
 	m.Target = t
 	m.HasTargetHelp = t.StdReadme != ""
 	m.HasCellHelp = false
@@ -81,7 +81,7 @@ func (m *HelpModel) SetTarget(t *item) {
 	}
 }
 
-func NewHelp() *HelpModel {
+func NewReadme() *ReadmeModel {
 	var (
 		th = markdown.New(false, true, lipgloss.AdaptiveColor{})
 		ch = markdown.New(false, true, lipgloss.AdaptiveColor{})
@@ -90,19 +90,19 @@ func NewHelp() *HelpModel {
 	th.Viewport.KeyMap = ViewportKeyMap()
 	ch.Viewport.KeyMap = ViewportKeyMap()
 	oh.Viewport.KeyMap = ViewportKeyMap()
-	return &HelpModel{
+	return &ReadmeModel{
 		TargetHelp:    th,
 		CellHelp:      ch,
 		OrganelleHelp: oh,
 		Help:          help.New(),
-		KeyMap:        NewHelpKeyMap(),
+		KeyMap:        NewReadmeKeyMap(),
 	}
 }
-func (m *HelpModel) Init() tea.Cmd {
+func (m *ReadmeModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m *HelpModel) RenderMarkdown() tea.Cmd {
+func (m *ReadmeModel) RenderMarkdown() tea.Cmd {
 	var (
 		cmds []tea.Cmd
 		cmd  tea.Cmd
@@ -123,7 +123,7 @@ func (m *HelpModel) RenderMarkdown() tea.Cmd {
 	return tea.Batch(cmds...)
 }
 
-func (m *HelpModel) Update(msg tea.Msg) (*HelpModel, tea.Cmd) {
+func (m *ReadmeModel) Update(msg tea.Msg) (*ReadmeModel, tea.Cmd) {
 	var (
 		cmd tea.Cmd
 	)
@@ -132,7 +132,7 @@ func (m *HelpModel) Update(msg tea.Msg) (*HelpModel, tea.Cmd) {
 		switch {
 		// activate and deactivate help
 		// ShowHelp shadows CloseHelp in case of the toggle key '?'
-		case key.Matches(msg, m.KeyMap.CloseHelp):
+		case key.Matches(msg, m.KeyMap.CloseReadme):
 			m.Active = false
 			m.TargetHelp.SetIsActive(false)
 			return m, nil
@@ -144,22 +144,22 @@ func (m *HelpModel) Update(msg tea.Msg) (*HelpModel, tea.Cmd) {
 	return m, cmd
 }
 
-func (m *HelpModel) View() string {
+func (m *ReadmeModel) View() string {
 	return m.TargetHelp.View()
 }
 
-func (m *HelpModel) ShortHelp() []key.Binding {
+func (m *ReadmeModel) ShortHelp() []key.Binding {
 	kb := []key.Binding{
 		m.KeyMap.Up,
 		m.KeyMap.Down,
 		m.KeyMap.HalfPageUp,
 		m.KeyMap.HalfPageDown,
-		m.KeyMap.CloseHelp,
+		m.KeyMap.CloseReadme,
 	}
 	return kb
 }
 
-func (m *HelpModel) FullHelp() [][]key.Binding {
+func (m *ReadmeModel) FullHelp() [][]key.Binding {
 	kb := [][]key.Binding{{}}
 	return kb
 }
