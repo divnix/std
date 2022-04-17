@@ -9,20 +9,22 @@ import (
 const spacebar = " "
 
 var (
-	cursorUp     = key.NewBinding(key.WithKeys("k", "up"), key.WithHelp("k/↑", "up"))
-	cursorDown   = key.NewBinding(key.WithKeys("j", "down"), key.WithHelp("j/↓", "down"))
-	halfPageUp   = key.NewBinding(key.WithKeys("left"), key.WithHelp("←", "½ back"))
-	halfPageDown = key.NewBinding(key.WithKeys("right"), key.WithHelp("→", "½ forward"))
-	pageUp       = key.NewBinding(key.WithKeys("pgup"), key.WithHelp("pgup", "1 back"))
-	pageDown     = key.NewBinding(key.WithKeys("pgdown", spacebar), key.WithHelp("pgdn", "1 forward"))
-	home         = key.NewBinding(key.WithKeys("home"), key.WithHelp("home", "go to start"))
-	end          = key.NewBinding(key.WithKeys("end"), key.WithHelp("end", "go to end"))
-	search       = key.NewBinding(key.WithKeys("/"), key.WithHelp("/", "filter"))
-	showReadme   = key.NewBinding(key.WithKeys("?"), key.WithHelp("?", "readme"))
-	closeReadme  = key.NewBinding(key.WithKeys("?", "esc"), key.WithHelp("?", "close readme"))
-	quit         = key.NewBinding(key.WithKeys("q"), key.WithHelp("q", "quit"))
-	forceQuit    = key.NewBinding(key.WithKeys("ctrl+c"))
-	toggleFocus  = key.NewBinding(key.WithKeys("tab", "shift+tab"), key.WithHelp("⇥", "toggle focus"))
+	cursorUp        = key.NewBinding(key.WithKeys("k", "up"), key.WithHelp("k/↑", "up"))
+	cursorDown      = key.NewBinding(key.WithKeys("j", "down"), key.WithHelp("j/↓", "down"))
+	halfPageUp      = key.NewBinding(key.WithKeys("left"), key.WithHelp("←", "½ back"))
+	halfPageDown    = key.NewBinding(key.WithKeys("right"), key.WithHelp("→", "½ forward"))
+	pageUp          = key.NewBinding(key.WithKeys("pgup"), key.WithHelp("pgup", "1 back"))
+	pageDown        = key.NewBinding(key.WithKeys("pgdown", spacebar), key.WithHelp("pgdn", "1 forward"))
+	home            = key.NewBinding(key.WithKeys("home"), key.WithHelp("home", "go to start"))
+	end             = key.NewBinding(key.WithKeys("end"), key.WithHelp("end", "go to end"))
+	search          = key.NewBinding(key.WithKeys("/"), key.WithHelp("/", "filter"))
+	showReadme      = key.NewBinding(key.WithKeys("?"), key.WithHelp("?", "readme"))
+	closeReadme     = key.NewBinding(key.WithKeys("?", "esc"), key.WithHelp("?", "close readme"))
+	quit            = key.NewBinding(key.WithKeys("q"), key.WithHelp("q", "quit"))
+	forceQuit       = key.NewBinding(key.WithKeys("ctrl+c"))
+	toggleFocus     = key.NewBinding(key.WithKeys("tab", "shift+tab"), key.WithHelp("⇥", "toggle focus"))
+	cycleTab        = key.NewBinding(key.WithKeys("tab"), key.WithHelp("⇥", "cycle tabs"))
+	reverseCycleTab = key.NewBinding(key.WithKeys("shift+tab"))
 )
 
 type AppKeyMap struct {
@@ -43,12 +45,16 @@ func NewAppKeyMap() *AppKeyMap {
 
 type ReadmeKeyMap struct {
 	viewport.KeyMap
-	CloseReadme key.Binding
+	CloseReadme     key.Binding
+	CycleTab        key.Binding
+	ReverseCycleTab key.Binding
 }
 
 func NewReadmeKeyMap() *ReadmeKeyMap {
 	m := &ReadmeKeyMap{
-		CloseReadme: closeReadme,
+		CloseReadme:     closeReadme,
+		CycleTab:        cycleTab,
+		ReverseCycleTab: reverseCycleTab,
 	}
 	m.PageDown = pageUp
 	m.PageUp = pageDown

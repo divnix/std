@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
@@ -27,8 +28,47 @@ To create one, simply drop a file in:
 
 To create one, simply drop a file in:
 
-  ${cellsFrom}/%s/%s/Reame.md
+  ${cellsFrom}/%s/%s/Readme.md
 `
+)
+
+var (
+
+	// Tabs.
+
+	activeTabBorder = lipgloss.Border{
+		Top:         "─",
+		Bottom:      " ",
+		Left:        "│",
+		Right:       "│",
+		TopLeft:     "╭",
+		TopRight:    "╮",
+		BottomLeft:  "┘",
+		BottomRight: "└",
+	}
+
+	tabBorder = lipgloss.Border{
+		Top:         "─",
+		Bottom:      "─",
+		Left:        "│",
+		Right:       "│",
+		TopLeft:     "╭",
+		TopRight:    "╮",
+		BottomLeft:  "┴",
+		BottomRight: "┴",
+	}
+
+	tab = lipgloss.NewStyle().
+		Border(tabBorder, true).
+		BorderForeground(Highlight).
+		Padding(0, 1)
+
+	activeTab = tab.Copy().Border(activeTabBorder, true)
+
+	tabGap = tab.Copy().
+		BorderTop(false).
+		BorderLeft(false).
+		BorderRight(false)
 )
 
 type ReadmeModel struct {
@@ -45,6 +85,16 @@ type ReadmeModel struct {
 	KeyMap           *ReadmeKeyMap
 	Help             help.Model
 	// Focus
+}
+
+type renderCellMarkdownMsg struct {
+	msg tea.Msg
+}
+type renderOrganelleMarkdownMsg struct {
+	msg tea.Msg
+}
+type renderTargetMarkdownMsg struct {
+	msg tea.Msg
 }
 
 func (m *ReadmeModel) SetTarget(t *item) {
@@ -108,16 +158,24 @@ func (m *ReadmeModel) RenderMarkdown() tea.Cmd {
 		cmd  tea.Cmd
 	)
 	m.TargetHelp.SetIsActive(true)
-	if m.HasTargetHelp {
-		cmd = m.TargetHelp.SetFileName(m.Target.StdReadme)
-		cmds = append(cmds, cmd)
-	}
 	if m.HasCellHelp {
-		cmd = m.CellHelp.SetFileName(m.Target.StdReadme)
+		cmd = func() tea.Msg {
+			// TODO: get actual cell-readme
+			return renderCellMarkdownMsg{m.CellHelp.SetFileName(m.Target.StdReadme)()}
+		}
 		cmds = append(cmds, cmd)
 	}
 	if m.HasOrganelleHelp {
-		cmd = m.OrganelleHelp.SetFileName(m.Target.StdReadme)
+		cmd = func() tea.Msg {
+			// TODO: get actual organelle-readme
+			return renderOrganelleMarkdownMsg{m.OrganelleHelp.SetFileName(m.Target.StdReadme)()}
+		}
+		cmds = append(cmds, cmd)
+	}
+	if m.HasTargetHelp {
+		cmd = func() tea.Msg {
+			return renderTargetMarkdownMsg{m.TargetHelp.SetFileName(m.Target.StdReadme)()}
+		}
 		cmds = append(cmds, cmd)
 	}
 	return tea.Batch(cmds...)
@@ -134,18 +192,89 @@ func (m *ReadmeModel) Update(msg tea.Msg) (*ReadmeModel, tea.Cmd) {
 		// ShowHelp shadows CloseHelp in case of the toggle key '?'
 		case key.Matches(msg, m.KeyMap.CloseReadme):
 			m.Active = false
+			m.CellHelp.SetIsActive(false)
+			m.OrganelleHelp.SetIsActive(false)
 			m.TargetHelp.SetIsActive(false)
+			return m, nil
+		case key.Matches(msg, m.KeyMap.CycleTab):
+			if m.TargetHelp.Active {
+				m.TargetHelp.SetIsActive(false)
+				m.CellHelp.SetIsActive(true)
+			} else if m.CellHelp.Active {
+				m.CellHelp.SetIsActive(false)
+				m.OrganelleHelp.SetIsActive(true)
+			} else if m.OrganelleHelp.Active {
+				m.OrganelleHelp.SetIsActive(false)
+				m.TargetHelp.SetIsActive(true)
+			}
+			return m, nil
+		case key.Matches(msg, m.KeyMap.ReverseCycleTab):
+			if m.TargetHelp.Active {
+				m.TargetHelp.SetIsActive(false)
+				m.OrganelleHelp.SetIsActive(true)
+			} else if m.CellHelp.Active {
+				m.CellHelp.SetIsActive(false)
+				m.TargetHelp.SetIsActive(true)
+			} else if m.OrganelleHelp.Active {
+				m.OrganelleHelp.SetIsActive(false)
+				m.CellHelp.SetIsActive(true)
+			}
 			return m, nil
 		}
 	case tea.WindowSizeMsg:
+		m.CellHelp.SetSize(m.Width, m.Height)
+		m.OrganelleHelp.SetSize(m.Width, m.Height)
 		m.TargetHelp.SetSize(m.Width, m.Height)
+	case renderCellMarkdownMsg:
+		m.CellHelp, cmd = m.CellHelp.Update(msg.msg)
+		return m, cmd
+	case renderOrganelleMarkdownMsg:
+		m.OrganelleHelp, cmd = m.OrganelleHelp.Update(msg.msg)
+		return m, cmd
+	case renderTargetMarkdownMsg:
+		m.TargetHelp, cmd = m.TargetHelp.Update(msg.msg)
+		return m, cmd
 	}
-	m.TargetHelp, cmd = m.TargetHelp.Update(msg)
+	if m.TargetHelp.Active {
+		m.TargetHelp, cmd = m.TargetHelp.Update(msg)
+	} else if m.CellHelp.Active {
+		m.CellHelp, cmd = m.CellHelp.Update(msg)
+	} else if m.OrganelleHelp.Active {
+		m.OrganelleHelp, cmd = m.OrganelleHelp.Update(msg)
+	}
 	return m, cmd
 }
 
 func (m *ReadmeModel) View() string {
-	return m.TargetHelp.View()
+	// Tabs
+	var (
+		tabs    []string
+		content string
+	)
+	if m.CellHelp.Active {
+		tabs = append(tabs, activeTab.Render(fmt.Sprintf("Cell: %s", m.Target.StdCell)))
+		content = m.CellHelp.View()
+	} else {
+		tabs = append(tabs, tab.Render(fmt.Sprintf("Cell: %s", m.Target.StdCell)))
+	}
+	if m.OrganelleHelp.Active {
+		tabs = append(tabs, activeTab.Render(fmt.Sprintf("Organelle: %s", m.Target.StdOrganelle)))
+		content = m.OrganelleHelp.View()
+	} else {
+		tabs = append(tabs, tab.Render(fmt.Sprintf("Organelle: %s", m.Target.StdOrganelle)))
+	}
+	if m.TargetHelp.Active {
+		tabs = append(tabs, activeTab.Render(fmt.Sprintf("Target: %s", m.Target.StdName)))
+		content = m.TargetHelp.View()
+	} else {
+		tabs = append(tabs, tab.Render(fmt.Sprintf("Target: %s", m.Target.StdName)))
+	}
+
+	row := lipgloss.JoinHorizontal(lipgloss.Top, tabs...)
+	gap := tabGap.Render(strings.Repeat(" ", max(0, m.Width-lipgloss.Width(row)-2)))
+	row = lipgloss.JoinHorizontal(lipgloss.Bottom, row, gap)
+
+	return lipgloss.JoinVertical(lipgloss.Top, row, content)
 }
 
 func (m *ReadmeModel) ShortHelp() []key.Binding {
@@ -154,6 +283,7 @@ func (m *ReadmeModel) ShortHelp() []key.Binding {
 		m.KeyMap.Down,
 		m.KeyMap.HalfPageUp,
 		m.KeyMap.HalfPageDown,
+		m.KeyMap.CycleTab,
 		m.KeyMap.CloseReadme,
 	}
 	return kb
@@ -162,4 +292,10 @@ func (m *ReadmeModel) ShortHelp() []key.Binding {
 func (m *ReadmeModel) FullHelp() [][]key.Binding {
 	kb := [][]key.Binding{{}}
 	return kb
+}
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }

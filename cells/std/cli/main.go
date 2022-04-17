@@ -32,21 +32,20 @@ func (s Focus) String() string {
 }
 
 var (
-	AppStyle = lipgloss.NewStyle().
-			BorderForeground(lipgloss.Color("63")).
-			Padding(1, 2)
+	Highlight = lipgloss.AdaptiveColor{Light: "#874BFD", Dark: "#7D56F4"}
+	AppStyle  = lipgloss.NewStyle().Padding(1, 2)
 
 	TargetStyle = lipgloss.NewStyle().
 			BorderStyle(lipgloss.NormalBorder()).
-			BorderForeground(lipgloss.Color("63"))
+			BorderForeground(Highlight)
 
 	ActionStyle = lipgloss.NewStyle().
 			BorderStyle(lipgloss.NormalBorder()).
-			BorderForeground(lipgloss.Color("63"))
+			BorderForeground(Highlight)
 
 	ReadmeStyle = lipgloss.NewStyle().
-			BorderStyle(lipgloss.NormalBorder()).
-			BorderForeground(lipgloss.AdaptiveColor{Light: "63", Dark: "63"})
+		// BorderStyle(lipgloss.NormalBorder()).
+		BorderForeground(Highlight)
 
 	LegendStyle = lipgloss.NewStyle().Padding(1, 0, 0, 2)
 
@@ -135,7 +134,7 @@ func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Action, _ = m.Action.Update(msg)
 		// size Readme
 		m.Readme.Height = msg.Height - 10
-		m.Readme.Width = msg.Width - 20
+		m.Readme.Width = msg.Width - 10
 		m.Readme, _ = m.Readme.Update(msg)
 		return m, nil
 	}
