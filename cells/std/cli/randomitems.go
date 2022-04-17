@@ -16,6 +16,8 @@ type randomItemGenerator struct {
 	cladeIndex     int
 	descs          []string
 	descIndex      int
+	readmes        []string
+	readmeIndex    int
 	mtx            *sync.Mutex
 	shuffle        *sync.Once
 }
@@ -92,6 +94,12 @@ func (r *randomItemGenerator) reset() {
 		"Sure, why not?",
 	}
 
+	r.readmes = []string{
+		"./random-readme-1.md",
+		"./random-readme-2.md",
+		"",
+	}
+
 	r.shuffle.Do(func() {
 		shuf := func(x []string) {
 			rand.Shuffle(len(x), func(i, j int) { x[i], x[j] = x[j], x[i] })
@@ -101,6 +109,7 @@ func (r *randomItemGenerator) reset() {
 		shuf(r.organelles)
 		shuf(r.clades)
 		shuf(r.descs)
+		shuf(r.readmes)
 	})
 }
 
@@ -128,6 +137,7 @@ func (r *randomItemGenerator) next() item {
 		StdCell:        r.cells[r.cellIndex],
 		StdClade:       r.clades[r.cladeIndex],
 		StdDescription: r.descs[r.descIndex],
+		StdReadme:      r.readmes[r.readmeIndex],
 		actions:        items,
 	}
 
@@ -154,6 +164,11 @@ func (r *randomItemGenerator) next() item {
 	r.descIndex++
 	if r.descIndex >= len(r.descs) {
 		r.descIndex = 0
+	}
+
+	r.readmeIndex++
+	if r.readmeIndex >= len(r.readmes) {
+		r.readmeIndex = 0
 	}
 
 	return i

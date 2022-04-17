@@ -3,71 +3,81 @@ package main
 import (
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
+	"github.com/charmbracelet/bubbles/viewport"
+)
+
+const spacebar = " "
+
+var (
+	cursorUp     = key.NewBinding(key.WithKeys("k", "up"), key.WithHelp("k/↑", "up"))
+	cursorDown   = key.NewBinding(key.WithKeys("j", "down"), key.WithHelp("j/↓", "down"))
+	halfPageUp   = key.NewBinding(key.WithKeys("left"), key.WithHelp("←", "½ back"))
+	halfPageDown = key.NewBinding(key.WithKeys("right"), key.WithHelp("→", "½ forward"))
+	pageUp       = key.NewBinding(key.WithKeys("pgup"), key.WithHelp("pgup", "1 back"))
+	pageDown     = key.NewBinding(key.WithKeys("pgdown", spacebar), key.WithHelp("pgdn", "1 forward"))
+	home         = key.NewBinding(key.WithKeys("home"), key.WithHelp("home", "go to start"))
+	end          = key.NewBinding(key.WithKeys("end"), key.WithHelp("end", "go to end"))
+	search       = key.NewBinding(key.WithKeys("/"), key.WithHelp("/", "filter"))
+	showHelp     = key.NewBinding(key.WithKeys("?"), key.WithHelp("?", "help"))
+	closeHelp    = key.NewBinding(key.WithKeys("?", "esc"), key.WithHelp("?", "close help"))
+	quit         = key.NewBinding(key.WithKeys("q"), key.WithHelp("q", "quit"))
+	forceQuit    = key.NewBinding(key.WithKeys("ctrl+c"))
+	toggleFocus  = key.NewBinding(key.WithKeys("tab", "shift+tab"), key.WithHelp("⇥", "toggle focus"))
 )
 
 type AppKeyMap struct {
-	toggleFocus key.Binding
-	forceQuit   key.Binding
-	toggleHelp  key.Binding
+	ToggleFocus key.Binding
+	ShowHelp    key.Binding
+	Quit        key.Binding
+	ForceQuit   key.Binding
 }
 
 func NewAppKeyMap() *AppKeyMap {
 	return &AppKeyMap{
-		// Swiching focus.
-		toggleFocus: key.NewBinding(
-			key.WithKeys("tab", "shift+tab"),
-			key.WithHelp("⇥", "toggle focus"),
-		),
-
-		// Toggle help.
-		toggleHelp: key.NewBinding(
-			key.WithKeys("?"),
-			key.WithHelp("?", "toggle help"),
-		),
-
-		// Quitting.
-		forceQuit: key.NewBinding(key.WithKeys("ctrl+c")),
+		ToggleFocus: toggleFocus,
+		ShowHelp:    showHelp,
+		ForceQuit:   forceQuit,
+		Quit:        quit,
 	}
+}
+
+type HelpKeyMap struct {
+	viewport.KeyMap
+	ShowHelp  key.Binding
+	CloseHelp key.Binding
+}
+
+func NewHelpKeyMap() *HelpKeyMap {
+	m := &HelpKeyMap{
+		ShowHelp:  showHelp,
+		CloseHelp: closeHelp,
+	}
+	m.PageDown = pageUp
+	m.PageUp = pageDown
+	m.HalfPageUp = halfPageUp
+	m.HalfPageDown = halfPageDown
+	m.Up = cursorUp
+	m.Down = cursorDown
+	return m
 }
 
 // DefaultListKeyMap returns a default set of keybindings.
 func DefaultListKeyMap() list.KeyMap {
 	return list.KeyMap{
 		// Browsing.
-		CursorUp: key.NewBinding(
-			key.WithKeys("k", "up"),
-			key.WithHelp("k/↑", "up"),
-		),
-		CursorDown: key.NewBinding(
-			key.WithKeys("j", "down"),
-			key.WithHelp("j/↓", "down"),
-		),
-		PrevPage: key.NewBinding(
-			key.WithKeys("pgup"),
-			key.WithHelp("pgup", "prev page"),
-		),
-		NextPage: key.NewBinding(
-			key.WithKeys("pgdown"),
-			key.WithHelp("pgdn", "next page"),
-		),
-		GoToStart: key.NewBinding(
-			key.WithKeys("home"),
-			key.WithHelp("home", "go to start"),
-		),
-		GoToEnd: key.NewBinding(
-			key.WithKeys("end"),
-			key.WithHelp("end", "go to end"),
-		),
-		Filter: key.NewBinding(
-			key.WithKeys("/"),
-			key.WithHelp("/", "filter"),
-		),
+		CursorUp:   cursorUp,
+		CursorDown: cursorDown,
+		PrevPage:   pageUp,
+		NextPage:   pageDown,
+		GoToStart:  home,
+		GoToEnd:    end,
+		Filter:     search,
+
+		// Filtering.
 		ClearFilter: key.NewBinding(
 			key.WithKeys("esc"),
 			key.WithHelp("esc", "clear filter"),
 		),
-
-		// Filtering.
 		CancelWhileFiltering: key.NewBinding(
 			key.WithKeys("esc"),
 			key.WithHelp("esc", "cancel"),
@@ -76,22 +86,17 @@ func DefaultListKeyMap() list.KeyMap {
 			key.WithKeys("enter", "tab", "up", "down"),
 			key.WithHelp("enter", "apply filter"),
 		),
+	}
+}
 
-		// Toggle help.
-		ShowFullHelp: key.NewBinding(
-			key.WithKeys("?"),
-			key.WithHelp("?", "more"),
-		),
-		CloseFullHelp: key.NewBinding(
-			key.WithKeys("?"),
-			key.WithHelp("?", "close help"),
-		),
-
-		// Quitting.
-		Quit: key.NewBinding(
-			key.WithKeys("q"),
-			key.WithHelp("q", "quit"),
-		),
-		ForceQuit: key.NewBinding(key.WithKeys("ctrl+c")),
+// ViewportKeyMap returns a set of pager-like default keybindings.
+func ViewportKeyMap() viewport.KeyMap {
+	return viewport.KeyMap{
+		PageDown:     pageUp,
+		PageUp:       pageDown,
+		HalfPageUp:   halfPageUp,
+		HalfPageDown: halfPageDown,
+		Up:           cursorUp,
+		Down:         cursorDown,
 	}
 }

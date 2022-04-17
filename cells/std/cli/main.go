@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
@@ -43,6 +44,12 @@ var (
 			BorderStyle(lipgloss.NormalBorder()).
 			BorderForeground(lipgloss.Color("63"))
 
+	HelpStyle = lipgloss.NewStyle().
+			BorderStyle(lipgloss.NormalBorder()).
+			BorderForeground(lipgloss.AdaptiveColor{Light: "63", Dark: "63"})
+
+	LegendStyle = lipgloss.NewStyle().Padding(1, 0, 0, 2)
+
 	// TitleStyle = lipgloss.NewStyle().
 	// 		Foreground(lipgloss.Color("#FFFDF5")).
 	// 		Background(lipgloss.Color("#25A065")).
@@ -56,11 +63,12 @@ var (
 type AppModel struct {
 	Target *TargetModel
 	Action *ActionModel
+	Help   *HelpModel
 	Keys   *AppKeyMap
+	Legend help.Model
 	Focus
-	FullHelp bool
-	Width    int
-	Height   int
+	Width  int
+	Height int
 }
 
 func (m *AppModel) Init() tea.Cmd {
@@ -75,64 +83,77 @@ func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		// quit even during filtering
-		if key.Matches(msg, m.Keys.forceQuit) {
+		if key.Matches(msg, m.Keys.ForceQuit) {
 			return m, tea.Quit
 		}
 		// Don't match any of the keys below if we're actively filtering.
 		if m.Target.List.FilterState() == list.Filtering {
 			break
 		}
+		if key.Matches(msg, m.Keys.Quit) {
+			return m, tea.Quit
+		}
+		// Don't match any of the keys below if no target is selected.
+		if m.Target.SelectedItem() == nil {
+			return m, nil
+		}
 		switch {
-		case key.Matches(msg, m.Keys.toggleHelp):
-			m.FullHelp = !m.FullHelp
-		case key.Matches(msg, m.Keys.toggleFocus):
+		// toggle the help
+		case key.Matches(msg, m.Keys.ShowHelp):
+			// set here to ignore if unselected
+			if !m.Help.Active {
+				m.Help.Active = true
+				cmd = m.Help.RenderMarkdown()
+				return m, cmd
+			}
+		// toggle the focus
+		case key.Matches(msg, m.Keys.ToggleFocus):
+			// Don't toggle the focus if we're showing the help.
+			if m.Help.Active {
+				break
+			}
 			if m.Focus == Left {
 				m.Focus = Right
-				cmd = m.Target.List.ToggleSpinner()
-				cmds = append(cmds, cmd)
-				cmd = m.Action.List.ToggleSpinner()
-				cmds = append(cmds, cmd)
 			} else {
 				m.Focus = Left
-				cmd = m.Target.List.ToggleSpinner()
-				cmds = append(cmds, cmd)
-				cmd = m.Action.List.ToggleSpinner()
-				cmds = append(cmds, cmd)
 			}
+			m.Target, cmd = m.Target.Update(msg)
+			cmds = append(cmds, cmd)
+			m.Action, cmd = m.Action.Update(msg)
+			cmds = append(cmds, cmd)
+			return m, tea.Batch(cmds...)
 		}
 	case tea.WindowSizeMsg:
 		m.Width = msg.Width
 		m.Height = msg.Height
+		// size Target
 		m.Target.Height = msg.Height - 10
 		m.Target.Width = msg.Width*2/3 - 10
+		m.Target, _ = m.Target.Update(msg)
+		// size Action
 		m.Action.Height = msg.Height - 10
 		m.Action.Width = msg.Width*1/3 - 10
-		m.Target.List.SetHeight(m.Target.Height)
-		m.Target.List.SetWidth(m.Target.Width)
-		m.Action.List.SetHeight(m.Action.Height)
-		m.Action.List.SetWidth(m.Action.Width)
+		m.Action, _ = m.Action.Update(msg)
+		// size Help
+		m.Help.Height = msg.Height - 10
+		m.Help.Width = msg.Width - 20
+		m.Help, _ = m.Help.Update(msg)
 		return m, nil
 	}
-
-	// This will also call our delegate's update function.
-	if m.Focus == Left {
+	// route all other messages according to state
+	if m.Help.Active {
+		m.Help, cmd = m.Help.Update(msg)
+		cmds = append(cmds, cmd)
+	} else if m.Focus == Left {
 		m.Target, cmd = m.Target.Update(msg)
-		if m.Target.List.SelectedItem() != nil {
-			var (
-				target   = m.Target.List.SelectedItem().(item)
-				numItems = cap(target.actions)
-			)
-			// Make list of actions
-			items := make([]list.Item, numItems)
-			for j := 0; j < numItems; j++ {
-				items[j] = target.actions[j]
-			}
-			m.Action.List.Title = fmt.Sprintf("Actions for %s", target.StdClade)
-			m.Action.List.SetItems(items)
+		cmds = append(cmds, cmd)
+		if m.Target.SelectedItem() != nil {
+			var target = m.Target.SelectedItem()
+			m.Help.SetTarget(target)
+			m.Action.SetTarget(target)
 		} else {
 			m.Action.List.SetItems([]list.Item{})
 		}
-		cmds = append(cmds, cmd)
 	} else {
 		m.Action, cmd = m.Action.Update(msg)
 		cmds = append(cmds, cmd)
@@ -142,18 +163,14 @@ func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *AppModel) View() string {
-	var help string
-	if m.Focus == Left {
-		var l = m.Target.List
-		help = l.Styles.HelpStyle.Render(l.Help.View(l))
-	} else {
-		var l = m.Action.List
-		help = l.Styles.HelpStyle.Render(l.Help.View(l))
-	}
-
-	if m.FullHelp {
+	if m.Help.Active {
 		return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center,
-			lipgloss.NewStyle().Border(lipgloss.NormalBorder()).Padding(1, 2).Render("Help"),
+			AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
+				lipgloss.JoinVertical(
+					lipgloss.Center,
+					HelpStyle.Render(m.Help.View()),
+					LegendStyle.Render(m.Legend.View(m)),
+				)),
 		)
 	}
 
@@ -163,23 +180,54 @@ func (m *AppModel) View() string {
 				lipgloss.Center,
 				lipgloss.JoinHorizontal(
 					lipgloss.Left,
-					TargetStyle.Width(m.Target.Width).Height(m.Target.Height).Render(m.Target.View()),
-					ActionStyle.Width(m.Action.Width).Height(m.Action.Height).Render(m.Action.View()),
+					TargetStyle.Render(m.Target.View()),
+					ActionStyle.Render(m.Action.View()),
 				),
-				help,
+				LegendStyle.Render(m.Legend.View(m)),
 			)),
 	)
+}
+
+func (m *AppModel) ShortHelp() []key.Binding {
+	if m.Help.Active {
+		return append(m.Help.ShortHelp(), []key.Binding{
+			m.Keys.Quit,
+		}...)
+	}
+	if m.Focus == Left {
+		if m.Target.List.FilterState() == list.Filtering {
+			return m.Target.ShortHelp()
+		} else {
+			return append(m.Target.ShortHelp(), []key.Binding{
+				m.Keys.ToggleFocus,
+				m.Keys.ShowHelp,
+				m.Keys.Quit,
+			}...)
+		}
+	} else {
+		return append(m.Action.ShortHelp(), []key.Binding{
+			m.Keys.ToggleFocus,
+			m.Keys.ShowHelp,
+			m.Keys.Quit,
+		}...)
+	}
+}
+
+func (m *AppModel) FullHelp() [][]key.Binding {
+	kb := [][]key.Binding{{}}
+	return kb
 }
 
 func InitialPage() *AppModel {
 	target := InitialTarget()
 	action := NewAction(target.List.SelectedItem().(item))
 	return &AppModel{
-		Target:   target,
-		Action:   action,
-		Keys:     NewAppKeyMap(),
-		Focus:    Left,
-		FullHelp: false,
+		Target: target,
+		Action: action,
+		Keys:   NewAppKeyMap(),
+		Focus:  Left,
+		Help:   NewHelp(),
+		Legend: help.New(),
 	}
 }
 
