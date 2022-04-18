@@ -9,13 +9,15 @@ import (
 const targetTemplate = "//%s/%s:%s"
 
 type Item struct {
-	StdName         string `json:"__std_name"`
-	StdOrganelle    string `json:"__std_organelle"`
-	StdCell         string `json:"__std_cell"`
-	StdClade        string `json:"__std_clade"`
-	StdDescription  string `json:"__std_description"`
-	StdReadme       string `json:"__std_readme"`
-	StdCladeActions []Action
+	StdName            string `json:"__std_name"`
+	StdOrganelle       string `json:"__std_organelle"`
+	StdCell            string `json:"__std_cell"`
+	StdClade           string `json:"__std_clade"`
+	StdDescription     string `json:"__std_description"`
+	StdCellReadme      string `json:"__std_cell_readme"`
+	StdOrganelleReadme string `json:"__std_organelle_readme"`
+	StdReadme          string `json:"__std_readme"`
+	StdCladeActions    []Action
 }
 
 func (i Item) Title() string {
@@ -25,7 +27,7 @@ func (i Item) Description() string { return i.StdDescription }
 func (i Item) FilterValue() string { return i.Title() }
 
 func (i Item) GetActionItems() []list.Item {
-	var numItems = cap(i.StdCladeActions)
+	var numItems = len(i.StdCladeActions)
 	// Make list of actions
 	items := make([]list.Item, numItems)
 	for j := 0; j < numItems; j++ {

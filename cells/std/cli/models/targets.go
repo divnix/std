@@ -63,7 +63,7 @@ func (m *TargetModel) SelectedItem() *data.Item {
 }
 
 func (m *TargetModel) SetItems(l []data.Item) {
-	var numItems = cap(l)
+	var numItems = len(l)
 	// Make list of actions
 	items := make([]list.Item, numItems)
 	for j := 0; j < numItems; j++ {

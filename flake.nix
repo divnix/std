@@ -100,9 +100,15 @@
       Cells = nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom Organelles) (builtins.readDir cellsFrom);
       # Set of all std-injected outputs in the project flake in the outpts and inputs.cells format
       accumulate = builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate {};
-      stdOutput = accumulate (builtins.concatLists (builtins.map stdOutputsFor Systems));
+      stdOutput = accumulate (builtins.map stdOutputsFor Systems);
       # List of all flake outputs injected by std in the outputs and inputs.cells format
-      stdOutputsFor = system: builtins.map (loadCell system) Cells;
+      stdOutputsFor = system: let
+        acc = accumulate (builtins.map (loadCell system) Cells);
+        meta = {__std.${system} = builtins.attrValues acc.__std.${system};};
+      in
+        nixpkgs.lib.traceSeqN 4 meta
+        acc
+        // meta;
       # Load a cell, return the flake outputs injected by std
       loadCell = system: cellName: let
         cellArgs = {
@@ -157,20 +163,25 @@
           nixpkgs.lib.attrsets.mapAttrsToList (
             organelleName: output: let
               organelle = builtins.head organelles'.${organelleName};
-              toStdTypedOutput = name: output: {
-                __std_name =
-                  output.meta.mainProgram or output.pname or output.name or name;
-                __std_description =
-                  output.meta.description or output.description or "n/a";
-                __std_cell = cellName;
-                __std_clade = organelle.clade;
-                __std_organelle = organelle.name;
+              extractStdMeta = name: output: {
+                name = "${cellName}-${organelleName}-${name}";
+                value = {
+                  __std_name =
+                    output.meta.mainProgram or output.pname or output.name or name;
+                  __std_description =
+                    output.meta.description or output.description or "n/a";
+                  __std_cell = cellName;
+                  __std_clade = organelle.clade;
+                  __std_organelle = organelle.name;
+                  __std_readme = "./dummy_data/random-readme-1.md";
+                  __std_cell_readme = "./dummy_data/random-readme-2.md";
+                  __std_organelle_readme = "";
+                };
               };
             in {
               ${system}.${cellName}.${organelleName} = output;
               # parseable index of targets for tooling
-              __std.${system}.${cellName}.${organelleName} =
-                builtins.mapAttrs toStdTypedOutput output;
+              __std.${system} = nixpkgs.lib.mapAttrs' extractStdMeta output;
             }
           )
           cell;

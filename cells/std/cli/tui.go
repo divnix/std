@@ -186,7 +186,11 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 	// As soon as targets are loaded, change the title
 	if m.Target.SelectedItem() != nil {
-		m.Title = fmt.Sprintf(cmdTemplate, m.Target.SelectedItem().Title(), m.Action.SelectedItem().Title())
+		if m.Action.SelectedItem() != nil {
+			m.Title = fmt.Sprintf(cmdTemplate, m.Target.SelectedItem().Title(), m.Action.SelectedItem().Title())
+		} else {
+			m.Title = fmt.Sprintf(cmdTemplate, m.Target.SelectedItem().Title(), "NO ACTION")
+		}
 	}
 	return m, tea.Batch(cmds...)
 }

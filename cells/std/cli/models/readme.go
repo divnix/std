@@ -22,13 +22,13 @@ To create one, simply drop a file in:
 
   ${cellsFrom}/%s/%s/%s.md
 `
-	noCellReadme = `Cell '%s' has no readme yet.
+	noCellReadme = `Cell '//%s' has no readme yet.
 
 To create one, simply drop a file in:
 
   ${cellsFrom}/%s/Readme.md
 `
-	noOrganelleReadme = `Organelle '%s/%s' has no readme yet.
+	noOrganelleReadme = `Organelle '//%s/%s' has no readme yet.
 
 To create one, simply drop a file in:
 
@@ -104,8 +104,8 @@ type renderTargetMarkdownMsg struct {
 func (m *ReadmeModel) SetTarget(t *data.Item) {
 	m.Target = t
 	m.HasTargetHelp = t.StdReadme != ""
-	m.HasCellHelp = false
-	m.HasOrganelleHelp = false
+	m.HasCellHelp = t.StdCellReadme != ""
+	m.HasOrganelleHelp = t.StdOrganelleReadme != ""
 	if m.HasTargetHelp {
 		m.TargetHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", t.StdReadme))
 	} else {
@@ -116,7 +116,7 @@ func (m *ReadmeModel) SetTarget(t *data.Item) {
 		m.TargetHelp.Viewport.SetContent(content)
 	}
 	if m.HasCellHelp {
-		m.CellHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", "TODO-CELL"))
+		m.CellHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", t.StdCellReadme))
 	} else {
 		content := lipgloss.NewStyle().
 			Width(m.Width).
@@ -125,7 +125,7 @@ func (m *ReadmeModel) SetTarget(t *data.Item) {
 		m.CellHelp.Viewport.SetContent(content)
 	}
 	if m.HasOrganelleHelp {
-		m.OrganelleHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", "TODO-ORGANELLE"))
+		m.OrganelleHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", t.StdOrganelleReadme))
 	} else {
 		content := lipgloss.NewStyle().
 			Width(m.Width).
@@ -164,15 +164,13 @@ func (m *ReadmeModel) RenderMarkdown() tea.Cmd {
 	m.TargetHelp.SetIsActive(true)
 	if m.HasCellHelp {
 		cmd = func() tea.Msg {
-			// TODO: get actual cell-readme
-			return renderCellMarkdownMsg{m.CellHelp.SetFileName(m.Target.StdReadme)()}
+			return renderCellMarkdownMsg{m.CellHelp.SetFileName(m.Target.StdCellReadme)()}
 		}
 		cmds = append(cmds, cmd)
 	}
 	if m.HasOrganelleHelp {
 		cmd = func() tea.Msg {
-			// TODO: get actual organelle-readme
-			return renderOrganelleMarkdownMsg{m.OrganelleHelp.SetFileName(m.Target.StdReadme)()}
+			return renderOrganelleMarkdownMsg{m.OrganelleHelp.SetFileName(m.Target.StdOrganelleReadme)()}
 		}
 		cmds = append(cmds, cmd)
 	}

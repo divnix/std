@@ -52,7 +52,7 @@ func loadFlake() tea.Msg {
 	}
 
 	if err := json.Unmarshal(flakeStdMeta, &items); err != nil {
-		var obj map[string]interface{}
+		var obj interface{}
 		json.Unmarshal(flakeStdMeta, &obj)
 		f := colorjson.NewFormatter()
 		f.Indent = 2
@@ -60,9 +60,16 @@ func loadFlake() tea.Msg {
 		log.Fatalf("%s - object: %s", err, s)
 	}
 
+	// var obj interface{}
+	// json.Unmarshal(flakeStdMeta, &obj)
+	// f := colorjson.NewFormatter()
+	// f.Indent = 2
+	// s, _ := f.Marshal(obj)
+	// log.Fatalf("object: %s", s)
+
 	return flakeLoadedMsg{
-		Items: fakeData(),
-		// Items: items,
+		// Items: fakeData(),
+		Items: items,
 	}
 }
 
