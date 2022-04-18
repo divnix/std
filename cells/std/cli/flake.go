@@ -6,6 +6,7 @@ import (
 	"log"
 	"os/exec"
 
+	"github.com/TylerBrock/colorjson"
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/divnix/std/cells/std/cli/data"
@@ -50,7 +51,14 @@ func loadFlake() tea.Msg {
 		log.Fatal(err)
 	}
 
-	json.Unmarshal(flakeStdMeta, &items)
+	if err := json.Unmarshal(flakeStdMeta, &items); err != nil {
+		var obj map[string]interface{}
+		json.Unmarshal(flakeStdMeta, &obj)
+		f := colorjson.NewFormatter()
+		f.Indent = 2
+		s, _ := f.Marshal(obj)
+		log.Fatalf("%s - object: %s", err, s)
+	}
 
 	return flakeLoadedMsg{
 		Items: fakeData(),
