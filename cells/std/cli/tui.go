@@ -189,7 +189,7 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if m.Action.SelectedItem() != nil {
 			m.Title = fmt.Sprintf(cmdTemplate, m.Target.SelectedItem().Title(), m.Action.SelectedItem().Title())
 		} else {
-			m.Title = fmt.Sprintf(cmdTemplate, m.Target.SelectedItem().Title(), "NO ACTION")
+			m.Title = lipgloss.NewStyle().Faint(true).Render(fmt.Sprintf(cmdTemplate, m.Target.SelectedItem().Title(), "n/a"))
 		}
 	}
 	return m, tea.Batch(cmds...)
@@ -198,7 +198,7 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m *Tui) View() string {
 	var title string
 	if m.Loading {
-		title = styles.TitleStyle.Inline(true).Render("Loading") + "  " + styles.TitleStyle.Inline(true).Render(m.Spinner.View())
+		title = styles.TitleStyle.Render("Loading  " + m.Spinner.View())
 	} else {
 		title = styles.TitleStyle.Render(m.Title)
 	}
