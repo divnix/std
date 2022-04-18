@@ -73,6 +73,7 @@ type AppModel struct {
 
 func (m *AppModel) Init() tea.Cmd {
 	return tea.Batch(
+		loadFlake,
 		tea.EnterAltScreen,
 		m.Spinner.Tick,
 	)
@@ -88,6 +89,14 @@ func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Loading = false
 	}
 	switch msg := msg.(type) {
+
+	case flakeLoadedMsg:
+		m.Target.SetItems(msg.Items)
+		return m, nil
+
+	case errMsg:
+		return m, tea.Quit
+
 	case spinner.TickMsg:
 		if m.Loading {
 			m.Spinner, cmd = m.Spinner.Update(msg)
@@ -244,28 +253,6 @@ func (m *AppModel) FullHelp() [][]key.Binding {
 }
 
 func InitialPage() *AppModel {
-	// var (
-	// 	numItems = cap(i.actions)
-	// )
-	// // Make list of actions
-	// items := make([]list.Item, numItems)
-	// for j := 0; j < numItems; j++ {
-	// 	items[j] = i.actions[j]
-	// }
-	// actionList := list.New(items, list.NewDefaultDelegate(), 0, 0)
-
-	// var (
-	// 	targetsGenerator randomItemGenerator
-	// )
-
-	// // Make initial list of items
-	// const numItems = 24
-	// items := make([]list.Item, numItems)
-	// for i := 0; i < numItems; i++ {
-	// 	items[i] = targetsGenerator.next()
-	// }
-
-	// targetList := list.New(items, list.NewDefaultDelegate(), 0, 0)
 
 	target := InitialTarget()
 	action := NewAction()

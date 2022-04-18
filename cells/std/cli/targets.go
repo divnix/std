@@ -63,6 +63,16 @@ func (m *TargetModel) SelectedItem() *item {
 	return &i
 }
 
+func (m *TargetModel) SetItems(l []item) {
+	var numItems = cap(l)
+	// Make list of actions
+	items := make([]list.Item, numItems)
+	for j := 0; j < numItems; j++ {
+		items[j] = l[j]
+	}
+	m.List.SetItems(items)
+}
+
 func (m *TargetModel) HelpView() string {
 	return m.List.Help.View(m)
 }
