@@ -11,8 +11,8 @@ const spacebar = " "
 var (
 	cursorUp        = key.NewBinding(key.WithKeys("k", "up"), key.WithHelp("k/↑", "up"))
 	cursorDown      = key.NewBinding(key.WithKeys("j", "down"), key.WithHelp("j/↓", "down"))
-	halfPageUp      = key.NewBinding(key.WithKeys("left"), key.WithHelp("←", "½ back"))
-	halfPageDown    = key.NewBinding(key.WithKeys("right"), key.WithHelp("→", "½ forward"))
+	cursorLeft      = key.NewBinding(key.WithKeys("left"), key.WithHelp("←", "½ back"))
+	cursorRight     = key.NewBinding(key.WithKeys("right"), key.WithHelp("→", "½ forward"))
 	pageUp          = key.NewBinding(key.WithKeys("pgup"), key.WithHelp("pgup", "1 back"))
 	pageDown        = key.NewBinding(key.WithKeys("pgdown", spacebar), key.WithHelp("pgdn", "1 forward"))
 	home            = key.NewBinding(key.WithKeys("home"), key.WithHelp("home", "go to start"))
@@ -29,6 +29,8 @@ var (
 
 type AppKeyMap struct {
 	ToggleFocus key.Binding
+	FocusLeft   key.Binding
+	FocusRight  key.Binding
 	ShowReadme  key.Binding
 	Quit        key.Binding
 	ForceQuit   key.Binding
@@ -37,6 +39,8 @@ type AppKeyMap struct {
 func NewAppKeyMap() *AppKeyMap {
 	return &AppKeyMap{
 		ToggleFocus: toggleFocus,
+		FocusLeft:   cursorLeft,
+		FocusRight:  cursorRight,
 		ShowReadme:  showReadme,
 		ForceQuit:   forceQuit,
 		Quit:        quit,
@@ -58,8 +62,8 @@ func NewReadmeKeyMap() *ReadmeKeyMap {
 	}
 	m.PageDown = pageUp
 	m.PageUp = pageDown
-	m.HalfPageUp = halfPageUp
-	m.HalfPageDown = halfPageDown
+	m.HalfPageUp = cursorLeft
+	m.HalfPageDown = cursorRight
 	m.Up = cursorUp
 	m.Down = cursorDown
 	return m
@@ -98,8 +102,8 @@ func ViewportKeyMap() viewport.KeyMap {
 	return viewport.KeyMap{
 		PageDown:     pageUp,
 		PageUp:       pageDown,
-		HalfPageUp:   halfPageUp,
-		HalfPageDown: halfPageDown,
+		HalfPageUp:   cursorLeft,
+		HalfPageDown: cursorRight,
 		Up:           cursorUp,
 		Down:         cursorDown,
 	}

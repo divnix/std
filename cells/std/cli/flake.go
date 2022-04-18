@@ -1,29 +1,29 @@
 package main
 
 import (
-	// "fmt"
+	"encoding/json"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-func loadFlake() tea.Msg {
-	var (
-		targetsGenerator randomItemGenerator
-	)
-
-	// // Make list of actions
-	// items := make([]list.Item, numItems)
-	// for j := 0; j < numItems; j++ {
-	// 	items[j] = i.actions[j]
-	// }
-	// Make initial list of items
+func fakeData() []item {
+	var targetsGenerator randomItemGenerator
 	const numItems = 24
 	items := make([]item, numItems)
 	for i := 0; i < numItems; i++ {
 		items[i] = targetsGenerator.next()
 	}
+	return items
+}
+
+func loadFlake() tea.Msg {
+	var items []item
+
+	json.Unmarshal([]byte(``), &items)
+
 	return flakeLoadedMsg{
-		Items: items,
+		Items: fakeData(),
+		// Items: items,
 	}
 }
 

@@ -32,7 +32,7 @@ func (m *ActionModel) Update(msg tea.Msg) (*ActionModel, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch {
-		case key.Matches(msg, appKeys.ToggleFocus):
+		case key.Matches(msg, appKeys.ToggleFocus), key.Matches(msg, appKeys.FocusLeft), key.Matches(msg, appKeys.FocusRight):
 			cmd = m.List.ToggleSpinner()
 			return m, cmd
 		}

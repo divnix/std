@@ -145,6 +145,32 @@ func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.Action, cmd = m.Action.Update(msg)
 			cmds = append(cmds, cmd)
 			return m, tea.Batch(cmds...)
+		case key.Matches(msg, m.Keys.FocusLeft):
+			// Don't toggle the focus if we're showing the help.
+			if m.Readme.Active {
+				break
+			}
+			if m.Focus != Left {
+				m.Focus = Left
+				m.Target, cmd = m.Target.Update(msg)
+				cmds = append(cmds, cmd)
+				m.Action, cmd = m.Action.Update(msg)
+				cmds = append(cmds, cmd)
+			}
+			return m, tea.Batch(cmds...)
+		case key.Matches(msg, m.Keys.FocusRight):
+			// Don't toggle the focus if we're showing the help.
+			if m.Readme.Active {
+				break
+			}
+			if m.Focus != Right {
+				m.Focus = Right
+				m.Target, cmd = m.Target.Update(msg)
+				cmds = append(cmds, cmd)
+				m.Action, cmd = m.Action.Update(msg)
+				cmds = append(cmds, cmd)
+			}
+			return m, tea.Batch(cmds...)
 		}
 	case tea.WindowSizeMsg:
 		m.Width = msg.Width
@@ -258,6 +284,7 @@ func InitialPage() *AppModel {
 	action := NewAction()
 	spin := spinner.New()
 	spin.Spinner = spinner.Points
+
 	return &AppModel{
 		Target:  target,
 		Action:  action,
