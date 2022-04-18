@@ -1,11 +1,13 @@
-package main
+package dummy_data
 
 import (
 	"math/rand"
 	"sync"
+
+	"github.com/divnix/std/cells/std/cli/data"
 )
 
-type randomItemGenerator struct {
+type RandomItemGenerator struct {
 	names          []string
 	nameIndex      int
 	organelles     []string
@@ -22,7 +24,7 @@ type randomItemGenerator struct {
 	shuffle        *sync.Once
 }
 
-func (r *randomItemGenerator) reset() {
+func (r *RandomItemGenerator) reset() {
 	r.mtx = &sync.Mutex{}
 	r.shuffle = &sync.Once{}
 
@@ -95,8 +97,8 @@ func (r *randomItemGenerator) reset() {
 	}
 
 	r.readmes = []string{
-		"./random-readme-1.md",
-		"./random-readme-2.md",
+		"./dummy_data/random-readme-1.md",
+		"./dummy_data/random-readme-2.md",
 		"",
 	}
 
@@ -113,7 +115,7 @@ func (r *randomItemGenerator) reset() {
 	})
 }
 
-func (r *randomItemGenerator) next() item {
+func (r *RandomItemGenerator) Next() data.Item {
 	if r.mtx == nil {
 		r.reset()
 	}
@@ -126,19 +128,19 @@ func (r *randomItemGenerator) next() item {
 	)
 	// Make actions
 	const numItems = 3
-	items := make([]action, numItems)
+	items := make([]data.Action, numItems)
 	for i := 0; i < numItems; i++ {
 		items[i] = actionsGenerator.next()
 	}
 
-	i := item{
-		StdName:        r.names[r.nameIndex],
-		StdOrganelle:   r.organelles[r.organelleIndex],
-		StdCell:        r.cells[r.cellIndex],
-		StdClade:       r.clades[r.cladeIndex],
-		StdDescription: r.descs[r.descIndex],
-		StdReadme:      r.readmes[r.readmeIndex],
-		actions:        items,
+	i := data.Item{
+		StdName:         r.names[r.nameIndex],
+		StdOrganelle:    r.organelles[r.organelleIndex],
+		StdCell:         r.cells[r.cellIndex],
+		StdClade:        r.clades[r.cladeIndex],
+		StdDescription:  r.descs[r.descIndex],
+		StdReadme:       r.readmes[r.readmeIndex],
+		StdCladeActions: items,
 	}
 
 	r.nameIndex++
@@ -255,7 +257,7 @@ func (r *randomActionGenerator) reset() {
 
 }
 
-func (r *randomActionGenerator) next() action {
+func (r *randomActionGenerator) next() data.Action {
 	if r.mtx == nil {
 		r.reset()
 	}
@@ -263,7 +265,7 @@ func (r *randomActionGenerator) next() action {
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
 
-	a := action{
+	a := data.Action{
 		ActionName:        r.actionNames[r.actionNameIndex],
 		ActionCommand:     r.actionCommands[r.actionCommandIndex],
 		ActionDescription: r.actionDescs[r.actionDescIndex],

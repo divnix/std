@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"fmt"
@@ -9,6 +9,10 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/knipferrc/teacup/markdown"
+
+	"github.com/divnix/std/cells/std/cli/data"
+	"github.com/divnix/std/cells/std/cli/keys"
+	"github.com/divnix/std/cells/std/cli/styles"
 )
 
 const (
@@ -60,7 +64,7 @@ var (
 
 	tab = lipgloss.NewStyle().
 		Border(tabBorder, true).
-		BorderForeground(Highlight).
+		BorderForeground(styles.Highlight).
 		Padding(0, 1)
 
 	activeTab = tab.Copy().Border(activeTabBorder, true)
@@ -72,7 +76,7 @@ var (
 )
 
 type ReadmeModel struct {
-	Target           *item
+	Target           *data.Item
 	TargetHelp       markdown.Bubble
 	CellHelp         markdown.Bubble
 	OrganelleHelp    markdown.Bubble
@@ -82,7 +86,7 @@ type ReadmeModel struct {
 	Active           bool
 	Width            int
 	Height           int
-	KeyMap           *ReadmeKeyMap
+	KeyMap           *keys.ReadmeKeyMap
 	Help             help.Model
 	// Focus
 }
@@ -97,7 +101,7 @@ type renderTargetMarkdownMsg struct {
 	msg tea.Msg
 }
 
-func (m *ReadmeModel) SetTarget(t *item) {
+func (m *ReadmeModel) SetTarget(t *data.Item) {
 	m.Target = t
 	m.HasTargetHelp = t.StdReadme != ""
 	m.HasCellHelp = false
@@ -137,15 +141,15 @@ func NewReadme() *ReadmeModel {
 		ch = markdown.New(false, true, lipgloss.AdaptiveColor{})
 		oh = markdown.New(false, true, lipgloss.AdaptiveColor{})
 	)
-	th.Viewport.KeyMap = ViewportKeyMap()
-	ch.Viewport.KeyMap = ViewportKeyMap()
-	oh.Viewport.KeyMap = ViewportKeyMap()
+	th.Viewport.KeyMap = keys.ViewportKeyMap()
+	ch.Viewport.KeyMap = keys.ViewportKeyMap()
+	oh.Viewport.KeyMap = keys.ViewportKeyMap()
 	return &ReadmeModel{
 		TargetHelp:    th,
 		CellHelp:      ch,
 		OrganelleHelp: oh,
 		Help:          help.New(),
-		KeyMap:        NewReadmeKeyMap(),
+		KeyMap:        keys.NewReadmeKeyMap(),
 	}
 }
 func (m *ReadmeModel) Init() tea.Cmd {

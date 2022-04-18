@@ -1,15 +1,14 @@
-package main
+package models
 
 import (
-	"fmt"
-
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-)
 
-const targetTemplate = "//%s/%s:%s"
+	"github.com/divnix/std/cells/std/cli/data"
+	"github.com/divnix/std/cells/std/cli/keys"
+)
 
 type TargetModel struct {
 	List   list.Model
@@ -20,7 +19,7 @@ type TargetModel struct {
 func (m *TargetModel) Init() tea.Cmd { return nil }
 func (m *TargetModel) Update(msg tea.Msg) (*TargetModel, tea.Cmd) {
 	var (
-		appKeys = NewAppKeyMap()
+		appKeys = keys.NewAppKeyMap()
 		cmd     tea.Cmd
 	)
 	switch msg := msg.(type) {
@@ -46,7 +45,7 @@ func InitialTarget() *TargetModel {
 
 	targetList := list.New([]list.Item{}, list.NewDefaultDelegate(), 0, 0)
 	targetList.Title = "Target"
-	targetList.KeyMap = DefaultListKeyMap()
+	targetList.KeyMap = keys.DefaultListKeyMap()
 	targetList.SetFilteringEnabled(true)
 	targetList.StartSpinner()
 	targetList.DisableQuitKeybindings()
@@ -55,15 +54,15 @@ func InitialTarget() *TargetModel {
 	return &TargetModel{List: targetList}
 }
 
-func (m *TargetModel) SelectedItem() *item {
+func (m *TargetModel) SelectedItem() *data.Item {
 	if m.List.SelectedItem() == nil {
 		return nil
 	}
-	var i = m.List.SelectedItem().(item)
+	var i = m.List.SelectedItem().(data.Item)
 	return &i
 }
 
-func (m *TargetModel) SetItems(l []item) {
+func (m *TargetModel) SetItems(l []data.Item) {
 	var numItems = cap(l)
 	// Make list of actions
 	items := make([]list.Item, numItems)
@@ -87,30 +86,4 @@ func (m *TargetModel) ShortHelp() []key.Binding {
 func (m *TargetModel) FullHelp() [][]key.Binding {
 	kb := [][]key.Binding{{}}
 	return kb
-}
-
-type item struct {
-	StdName        string `json:"__std_name"`
-	StdOrganelle   string `json:"__std_organelle"`
-	StdCell        string `json:"__std_cell"`
-	StdClade       string `json:"__std_clade"`
-	StdDescription string `json:"__std_description"`
-	StdReadme      string `json:"__std_readme"`
-	actions        []action
-}
-
-func (i item) Title() string {
-	return fmt.Sprintf(targetTemplate, i.StdCell, i.StdOrganelle, i.StdName)
-}
-func (i item) Description() string { return i.StdDescription }
-func (i item) FilterValue() string { return i.Title() }
-
-func (i item) GetActionItems() []list.Item {
-	var numItems = cap(i.actions)
-	// Make list of actions
-	items := make([]list.Item, numItems)
-	for j := 0; j < numItems; j++ {
-		items[j] = i.actions[j]
-	}
-	return items
 }

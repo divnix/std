@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"fmt"
@@ -7,16 +7,19 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+
+	"github.com/divnix/std/cells/std/cli/data"
+	"github.com/divnix/std/cells/std/cli/keys"
 )
 
 type ActionModel struct {
-	Target *item
+	Target *data.Item
 	List   list.Model
 	Width  int
 	Height int
 }
 
-func (m *ActionModel) SetTarget(t *item) {
+func (m *ActionModel) SetTarget(t *data.Item) {
 	m.Target = t
 	m.List.Title = fmt.Sprintf("Actions for %s", t.StdClade)
 	m.List.SetItems(t.GetActionItems())
@@ -26,7 +29,7 @@ func (m *ActionModel) Init() tea.Cmd { return nil }
 
 func (m *ActionModel) Update(msg tea.Msg) (*ActionModel, tea.Cmd) {
 	var (
-		appKeys = NewAppKeyMap()
+		appKeys = keys.NewAppKeyMap()
 		cmd     tea.Cmd
 	)
 	switch msg := msg.(type) {
@@ -68,7 +71,7 @@ func NewAction() *ActionModel {
 
 	actionList := list.New([]list.Item{}, list.NewDefaultDelegate(), 0, 0)
 	actionList.Title = fmt.Sprintf("Actions")
-	actionList.KeyMap = DefaultListKeyMap()
+	actionList.KeyMap = keys.DefaultListKeyMap()
 	actionList.SetShowPagination(false)
 	actionList.SetShowHelp(false)
 	actionList.SetShowStatusBar(false)
@@ -78,20 +81,10 @@ func NewAction() *ActionModel {
 	return &ActionModel{List: actionList}
 }
 
-func (m *ActionModel) SelectedItem() *action {
+func (m *ActionModel) SelectedItem() *data.Action {
 	if m.List.SelectedItem() == nil {
 		return nil
 	}
-	var i = m.List.SelectedItem().(action)
+	var i = m.List.SelectedItem().(data.Action)
 	return &i
 }
-
-type action struct {
-	ActionName        string   `json:"__action_name"`
-	ActionCommand     []string `json:"__action_command"`
-	ActionDescription string   `json:"__action_description"`
-}
-
-func (a action) Title() string       { return a.ActionName }
-func (a action) Description() string { return a.ActionDescription }
-func (a action) FilterValue() string { return a.Title() }
