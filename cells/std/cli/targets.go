@@ -43,18 +43,8 @@ func (m *TargetModel) View() string {
 }
 
 func InitialTarget() *TargetModel {
-	var (
-		targetsGenerator randomItemGenerator
-	)
 
-	// Make initial list of items
-	const numItems = 24
-	items := make([]list.Item, numItems)
-	for i := 0; i < numItems; i++ {
-		items[i] = targetsGenerator.next()
-	}
-
-	targetList := list.New(items, list.NewDefaultDelegate(), 0, 0)
+	targetList := list.New([]list.Item{}, list.NewDefaultDelegate(), 0, 0)
 	targetList.Title = "Target"
 	targetList.KeyMap = DefaultListKeyMap()
 	targetList.SetFilteringEnabled(true)

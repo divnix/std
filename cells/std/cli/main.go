@@ -10,6 +10,7 @@ import (
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
+	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -20,6 +21,8 @@ const (
 	Left Focus = iota
 	Right
 )
+
+const cmdTemplate = "std  %s  %s"
 
 func (s Focus) String() string {
 	switch s {
@@ -49,29 +52,30 @@ var (
 
 	LegendStyle = lipgloss.NewStyle().Padding(1, 0, 0, 2)
 
-	// TitleStyle = lipgloss.NewStyle().
-	// 		Foreground(lipgloss.Color("#FFFDF5")).
-	// 		Background(lipgloss.Color("#25A065")).
-	// 		Padding(0, 1)
-
-	// StatusMessageStyle = lipgloss.NewStyle().
-	// 			Foreground(lipgloss.AdaptiveColor{Light: "#04B575", Dark: "#04B575"}).
-	// 			Render
+	TitleStyle = lipgloss.NewStyle().
+			Foreground(Highlight).Bold(true).
+			Padding(1, 1)
 )
 
 type AppModel struct {
-	Target *TargetModel
-	Action *ActionModel
-	Readme *ReadmeModel
-	Keys   *AppKeyMap
-	Legend help.Model
+	Target  *TargetModel
+	Action  *ActionModel
+	Readme  *ReadmeModel
+	Keys    *AppKeyMap
+	Legend  help.Model
+	Title   string
+	Spinner spinner.Model
+	Loading bool
 	Focus
 	Width  int
 	Height int
 }
 
 func (m *AppModel) Init() tea.Cmd {
-	return tea.EnterAltScreen
+	return tea.Batch(
+		tea.EnterAltScreen,
+		m.Spinner.Tick,
+	)
 }
 
 func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -79,7 +83,19 @@ func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds []tea.Cmd
 		cmd  tea.Cmd
 	)
+	// As soon as targets are loaded, stop the loading spinner
+	if m.Target.SelectedItem() != nil {
+		m.Loading = false
+	}
 	switch msg := msg.(type) {
+	case spinner.TickMsg:
+		if m.Loading {
+			m.Spinner, cmd = m.Spinner.Update(msg)
+			return m, cmd
+		}
+		// effectively disables the list-spinners:
+		// we're happy with a static vertical line as
+		// visual focus clue
 	case tea.KeyMsg:
 		// quit even during filtering
 		if key.Matches(msg, m.Keys.ForceQuit) {
@@ -156,16 +172,26 @@ func (m *AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Action, cmd = m.Action.Update(msg)
 		cmds = append(cmds, cmd)
 	}
-
+	// As soon as targets are loaded, change the title
+	if m.Target.SelectedItem() != nil {
+		m.Title = fmt.Sprintf(cmdTemplate, m.Target.SelectedItem().Title(), m.Action.SelectedItem().Title())
+	}
 	return m, tea.Batch(cmds...)
 }
 
 func (m *AppModel) View() string {
+	var title string
+	if m.Loading {
+		title = TitleStyle.Inline(true).Render("Loading") + "  " + TitleStyle.Inline(true).Render(m.Spinner.View())
+	} else {
+		title = TitleStyle.Render(m.Title)
+	}
 	if m.Readme.Active {
 		return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center,
 			AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
 				lipgloss.JoinVertical(
 					lipgloss.Center,
+					title,
 					ReadmeStyle.Render(m.Readme.View()),
 					LegendStyle.Render(m.Legend.View(m)),
 				)),
@@ -176,6 +202,7 @@ func (m *AppModel) View() string {
 		AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
 			lipgloss.JoinVertical(
 				lipgloss.Center,
+				title,
 				lipgloss.JoinHorizontal(
 					lipgloss.Left,
 					TargetStyle.Render(m.Target.View()),
@@ -217,15 +244,42 @@ func (m *AppModel) FullHelp() [][]key.Binding {
 }
 
 func InitialPage() *AppModel {
+	// var (
+	// 	numItems = cap(i.actions)
+	// )
+	// // Make list of actions
+	// items := make([]list.Item, numItems)
+	// for j := 0; j < numItems; j++ {
+	// 	items[j] = i.actions[j]
+	// }
+	// actionList := list.New(items, list.NewDefaultDelegate(), 0, 0)
+
+	// var (
+	// 	targetsGenerator randomItemGenerator
+	// )
+
+	// // Make initial list of items
+	// const numItems = 24
+	// items := make([]list.Item, numItems)
+	// for i := 0; i < numItems; i++ {
+	// 	items[i] = targetsGenerator.next()
+	// }
+
+	// targetList := list.New(items, list.NewDefaultDelegate(), 0, 0)
+
 	target := InitialTarget()
-	action := NewAction(target.List.SelectedItem().(item))
+	action := NewAction()
+	spin := spinner.New()
+	spin.Spinner = spinner.Points
 	return &AppModel{
-		Target: target,
-		Action: action,
-		Keys:   NewAppKeyMap(),
-		Focus:  Left,
-		Readme: NewReadme(),
-		Legend: help.New(),
+		Target:  target,
+		Action:  action,
+		Keys:    NewAppKeyMap(),
+		Focus:   Left,
+		Readme:  NewReadme(),
+		Legend:  help.New(),
+		Loading: true,
+		Spinner: spin,
 	}
 }
 

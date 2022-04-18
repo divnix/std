@@ -64,17 +64,10 @@ func (m *ActionModel) FullHelp() [][]key.Binding {
 	return kb
 }
 
-func NewAction(i item) *ActionModel {
-	var (
-		numItems = cap(i.actions)
-	)
-	// Make list of actions
-	items := make([]list.Item, numItems)
-	for j := 0; j < numItems; j++ {
-		items[j] = i.actions[j]
-	}
-	actionList := list.New(items, list.NewDefaultDelegate(), 0, 0)
-	actionList.Title = fmt.Sprintf("Actions for %s", i.StdClade)
+func NewAction() *ActionModel {
+
+	actionList := list.New([]list.Item{}, list.NewDefaultDelegate(), 0, 0)
+	actionList.Title = fmt.Sprintf("Actions")
 	actionList.KeyMap = DefaultListKeyMap()
 	actionList.SetShowPagination(false)
 	actionList.SetShowHelp(false)
@@ -83,6 +76,14 @@ func NewAction(i item) *ActionModel {
 	actionList.DisableQuitKeybindings()
 
 	return &ActionModel{List: actionList}
+}
+
+func (m *ActionModel) SelectedItem() *action {
+	if m.List.SelectedItem() == nil {
+		return nil
+	}
+	var i = m.List.SelectedItem().(action)
+	return &i
 }
 
 type action struct {
