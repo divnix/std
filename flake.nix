@@ -176,6 +176,13 @@
                   __std_readme = "./dummy_data/random-readme-1.md";
                   __std_cell_readme = "./dummy_data/random-readme-2.md";
                   __std_organelle_readme = "";
+                  __std_actions = [
+                    {
+                      __action_name = "run";
+                      __action_command = ["cowsay" "hi"];
+                      __action_description = "run this";
+                    }
+                  ];
                 };
               };
             in {

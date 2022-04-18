@@ -9,15 +9,15 @@ import (
 const targetTemplate = "//%s/%s:%s"
 
 type Item struct {
-	StdName            string `json:"__std_name"`
-	StdOrganelle       string `json:"__std_organelle"`
-	StdCell            string `json:"__std_cell"`
-	StdClade           string `json:"__std_clade"`
-	StdDescription     string `json:"__std_description"`
-	StdCellReadme      string `json:"__std_cell_readme"`
-	StdOrganelleReadme string `json:"__std_organelle_readme"`
-	StdReadme          string `json:"__std_readme"`
-	StdCladeActions    []Action
+	StdName            string   `json:"__std_name"`
+	StdOrganelle       string   `json:"__std_organelle"`
+	StdCell            string   `json:"__std_cell"`
+	StdClade           string   `json:"__std_clade"`
+	StdDescription     string   `json:"__std_description"`
+	StdCellReadme      string   `json:"__std_cell_readme"`
+	StdOrganelleReadme string   `json:"__std_organelle_readme"`
+	StdReadme          string   `json:"__std_readme"`
+	StdCladeActions    []Action `json:"__std_actions"`
 }
 
 func (i Item) Title() string {
