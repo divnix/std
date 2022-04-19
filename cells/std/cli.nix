@@ -16,7 +16,7 @@ in {
       pname = "std";
       meta.description = "A tui for projects that conform to Standard";
 
-      src = ./.;
+      src = ./cli;
 
       vendorSha256 = null;
 

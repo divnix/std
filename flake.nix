@@ -10,31 +10,10 @@
   inputs.yants.inputs.nixpkgs.follows = "nixpkgs";
   outputs = inputs': let
     nixpkgs = inputs'.nixpkgs;
-    validate = import ./validators.nix {
-      inherit (inputs') yants nixpkgs;
-      inherit organellePath;
-    };
+    validate = import ./validators.nix {inherit (inputs') yants nixpkgs;};
+    paths = import ./paths.nix;
+    clades = import ./clades.nix;
     incl = import ./incl.nix {inherit nixpkgs;};
-    organellePath = cellsFrom: cellName: organelle: {
-      file = "${cellsFrom}/${cellName}/${organelle.name}.nix";
-      dir = "${cellsFrom}/${cellName}/${organelle.name}/default.nix";
-    };
-    runnables = name: {
-      inherit name;
-      clade = "runnables";
-    };
-    installables = name: {
-      inherit name;
-      clade = "installables";
-    };
-    functions = name: {
-      inherit name;
-      clade = "functions";
-    };
-    data = name: {
-      inherit name;
-      clade = "data";
-    };
     deSystemize = system: s:
       if builtins.isAttrs s && builtins.hasAttr "${system}" s
       then s // s.${system}
@@ -61,9 +40,9 @@
       inputs,
       cellsFrom,
       organelles ? [
-        (functions "library")
-        (runnables "apps")
-        (installables "packages")
+        (clades.functions "library")
+        (clades.runnables "apps")
+        (clades.installables "packages")
       ],
       # if true, export installables _also_ as packages and runnables _also_ as apps
       as-nix-cli-epiphyte ? true,
@@ -104,9 +83,10 @@
       # List of all flake outputs injected by std in the outputs and inputs.cells format
       stdOutputsFor = system: let
         acc = accumulate (builtins.map (loadCell system) Cells);
+        # flatten meta for easier ingestion by the std cli
         meta = {__std.${system} = builtins.attrValues acc.__std.${system};};
       in
-        nixpkgs.lib.traceSeqN 4 meta
+        # nixpkgs.lib.traceSeqN 4 meta
         acc
         // meta;
       # Load a cell, return the flake outputs injected by std
@@ -146,16 +126,16 @@
             );
         in
           builtins.foldl' op {} Organelles;
-        # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
         loadOrganelle = organelle: args: let
-          path = organellePath cellsFrom cellName organelle;
-          importedFile = validate.MigrationNecesary path.file (import path.file);
-          importedDir = validate.MigrationNecesary path.dir (import path.dir);
+          cPath = paths.cellPath cellsFrom cellName;
+          oPath = paths.organellePath cPath organelle;
+          importedFile = validate.FileSignature oPath.file (import oPath.file);
+          importedDir = validate.FileSignature oPath.dir (import oPath.dir);
         in
-          if builtins.pathExists path.file
-          then validate.Import organelle.clade path.file (importedFile args)
-          else if builtins.pathExists path.dir
-          then validate.Import organelle.clade path.dir (importedDir args)
+          if builtins.pathExists oPath.file
+          then validate.Import organelle.clade oPath.file (importedFile args)
+          else if builtins.pathExists oPath.dir
+          then validate.Import organelle.clade oPath.dir (importedDir args)
           else {};
         # Postprocess the result of the cell loading
         organelles' = nixpkgs.lib.lists.groupBy (x: x.name) Organelles;
@@ -163,19 +143,31 @@
           nixpkgs.lib.attrsets.mapAttrsToList (
             organelleName: output: let
               organelle = builtins.head organelles'.${organelleName};
-              extractStdMeta = name: output: {
+              cPath = paths.cellPath cellsFrom cellName;
+              oPath = paths.organellePath cPath organelle;
+              extractStdMeta = name: output: let
+                tPath = paths.targetPath oPath name;
+              in {
                 name = "${cellName}-${organelleName}-${name}";
                 value = {
-                  __std_name =
-                    output.meta.mainProgram or output.pname or output.name or name;
+                  __std_name = name;
                   __std_description =
                     output.meta.description or output.description or "n/a";
                   __std_cell = cellName;
                   __std_clade = organelle.clade;
                   __std_organelle = organelle.name;
-                  __std_readme = "./dummy_data/random-readme-1.md";
-                  __std_cell_readme = "./dummy_data/random-readme-2.md";
-                  __std_organelle_readme = "";
+                  __std_readme =
+                    if builtins.pathExists tPath.readme
+                    then tPath.readme
+                    else "";
+                  __std_cell_readme =
+                    if builtins.pathExists cPath.readme
+                    then cPath.readme
+                    else "";
+                  __std_organelle_readme =
+                    if builtins.pathExists oPath.readme
+                    then oPath.readme
+                    else "";
                   __std_actions = [
                     {
                       __action_name = "run";
@@ -272,10 +264,13 @@
   in
     {
       inherit
+        (clades)
         runnables
         installables
         functions
         data
+        ;
+      inherit
         grow
         growOn
         harvest
@@ -290,9 +285,9 @@
         # as-nix-cli-epiphyte = false;
         cellsFrom = ./cells;
         organelles = [
-          (runnables "cli")
-          (functions "lib")
-          (functions "devshellProfiles")
+          (clades.runnables "cli")
+          (clades.functions "lib")
+          (clades.functions "devshellProfiles")
         ];
         systems = ["x86_64-linux"];
       }
