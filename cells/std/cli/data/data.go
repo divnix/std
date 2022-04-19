@@ -37,9 +37,9 @@ func (i Item) GetActionItems() []list.Item {
 }
 
 type Action struct {
-	ActionName        string   `json:"__action_name"`
-	ActionCommand     []string `json:"__action_command"`
-	ActionDescription string   `json:"__action_description"`
+	ActionName        string   `json:"name"`
+	ActionCommand     []string `json:"command"`
+	ActionDescription string   `json:"description"`
 }
 
 func (a Action) Title() string       { return a.ActionName }

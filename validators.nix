@@ -65,11 +65,21 @@ in {
         Please create at least one of the previous files and don't forget to add them to version control.
       ''
     else cell;
-  Organelles = with yants "std" "grow" "attrs";
+  Organelles = with yants "std" "grow" "attrs"; let
+    action = struct "action" {
+      name = string;
+      description = string;
+      command = list string;
+    };
+  in
     list (
       struct "organelle" {
         name = string;
         clade = enum "clades" ["runnables" "installables" "functions" "data"];
+        actions = option (functionWithArgs {
+          flake = false;
+          fragment = false;
+        });
       }
     );
   FileSignature = file: let

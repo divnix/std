@@ -12,7 +12,7 @@
     nixpkgs = inputs'.nixpkgs;
     validate = import ./validators.nix {inherit (inputs') yants nixpkgs;};
     paths = import ./paths.nix;
-    clades = import ./clades.nix;
+    clades = import ./clades.nix {inherit nixpkgs;};
     incl = import ./incl.nix {inherit nixpkgs;};
     deSystemize = system: s:
       if builtins.isAttrs s && builtins.hasAttr "${system}" s
@@ -168,13 +168,14 @@
                     if builtins.pathExists oPath.readme
                     then oPath.readme
                     else "";
-                  __std_actions = [
-                    {
-                      __action_name = "run";
-                      __action_command = ["cowsay" "hi"];
-                      __action_description = "run this";
-                    }
-                  ];
+                  __std_actions =
+                    if organelle ? actions
+                    then
+                      organelle.actions {
+                        flake = inputs.self.sourceInfo.outPath;
+                        fragment = ''"${system}"."${cellName}"."${organelleName}"."${name}"'';
+                      }
+                    else [];
                 };
               };
             in {
@@ -288,6 +289,7 @@
           (clades.runnables "cli")
           (clades.functions "lib")
           (clades.functions "devshellProfiles")
+          (clades.data "data")
         ];
         systems = ["x86_64-linux"];
       }
