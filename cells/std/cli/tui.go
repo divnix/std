@@ -43,6 +43,7 @@ type Tui struct {
 	Title   string
 	Spinner spinner.Model
 	Loading bool
+	Error   string
 	Focus
 	Width  int
 	Height int
@@ -71,8 +72,9 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Target.SetItems(msg.Items)
 		return m, nil
 
-	case errMsg:
-		return m, tea.Quit
+	case exitErrMsg:
+		m.Error = msg.Error()
+		return m, nil
 
 	case spinner.TickMsg:
 		if m.Loading {
@@ -211,6 +213,18 @@ func (m *Tui) View() string {
 					styles.ReadmeStyle.Render(m.Readme.View()),
 					styles.LegendStyle.Render(m.Legend.View(m)),
 				)),
+		)
+	}
+
+	if m.Error != "" {
+		return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, styles.
+			AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
+			lipgloss.JoinVertical(
+				lipgloss.Center,
+				title,
+				styles.ErrorStyle.Width(m.Width-10).Height(m.Height-10).Render(m.Error),
+				styles.LegendStyle.Render(m.Legend.View(m)),
+			)),
 		)
 	}
 

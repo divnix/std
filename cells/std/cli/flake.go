@@ -8,6 +8,7 @@ import (
 
 	"github.com/TylerBrock/colorjson"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 
 	"github.com/divnix/std/cells/std/cli/data"
 	"github.com/divnix/std/cells/std/cli/dummy_data"
@@ -39,6 +40,9 @@ func loadFlake() tea.Msg {
 	// detect the current system
 	currentSystem, err := exec.Command(nix, currentSystemArgs...).Output()
 	if err != nil {
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			log.Fatalln(exitErr, string(exitErr.Stderr))
+		}
 		log.Fatal(err)
 	}
 
@@ -46,9 +50,18 @@ func loadFlake() tea.Msg {
 	flakeStdMetaArgs = append(flakeStdMetaArgs, flakeStdMetaFragment)
 
 	// load the std metadata from the flake
-	flakeStdMeta, err := exec.Command(nix, flakeStdMetaArgs...).Output()
+	cmd := exec.Command(nix, flakeStdMetaArgs...)
+	flakeStdMeta, err := cmd.Output()
 	if err != nil {
-		log.Fatal(err)
+		switch exitErr := err.(type) {
+		case *exec.ExitError:
+			return exitErrMsg{
+				cmd: cmd.String(),
+				err: exitErr,
+			}
+		default:
+			log.Fatal(err)
+		}
 	}
 
 	if err := json.Unmarshal(flakeStdMeta, &items); err != nil {
@@ -77,6 +90,16 @@ type flakeLoadedMsg struct {
 	Items []data.Item
 }
 
-type errMsg struct{ err error }
+type exitErrMsg struct {
+	cmd string
+	err *exec.ExitError
+}
 
-func (e errMsg) Error() string { return e.err.Error() }
+func (e exitErrMsg) Error() string {
+	return fmt.Sprintf(
+		"%s\nresulted in %s\n\nTraceback:\n\n%s",
+		lipgloss.NewStyle().Faint(true).Bold(true).Render(e.cmd),
+		e.err.Error(),
+		string(e.err.Stderr),
+	)
+}

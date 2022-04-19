@@ -8,6 +8,10 @@ var (
 	Highlight = lipgloss.AdaptiveColor{Light: "#874BFD", Dark: "#7D56F4"}
 	AppStyle  = lipgloss.NewStyle().Padding(1, 2)
 
+	ErrorStyle = lipgloss.NewStyle().
+			BorderStyle(lipgloss.NormalBorder()).
+			BorderForeground(Highlight).Padding(0, 1)
+
 	TargetStyle = lipgloss.NewStyle().
 			BorderStyle(lipgloss.NormalBorder()).
 			BorderForeground(Highlight)

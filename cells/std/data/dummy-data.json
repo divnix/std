@@ -1,0 +1,91 @@
+[
+  {
+    "__std_actions": [
+      {
+        "command": [
+          "nix",
+          "run",
+          "/nix/store/g4ixpmwl9jw99ilf0pfp5ygpisk4zwxr-source#\"x86_64-linux\".\"std\".\"cli\".\"default\""
+        ],
+        "description": "exec this target",
+        "name": "run"
+      }
+    ],
+    "__std_cell": "std",
+    "__std_cell_readme": "/nix/store/h227imz56igrh7lgym76hg6af6pfcczz-cells/std/Readme.md",
+    "__std_clade": "runnables",
+    "__std_description": "A tui for projects that conform to Standard",
+    "__std_name": "default",
+    "__std_organelle": "cli",
+    "__std_organelle_readme": "/nix/store/h227imz56igrh7lgym76hg6af6pfcczz-cells/std/cli/Readme.md",
+    "__std_readme": "/nix/store/h227imz56igrh7lgym76hg6af6pfcczz-cells/std/cli/default.md"
+  },
+  {
+    "__std_actions": [
+      {
+        "command": [
+          "nix",
+          "build",
+          "--impure",
+          "--json",
+          "--no-link",
+          "--expr",
+          "let\n  pkgs =\n    (builtins.getFlake \"${nixpkgs.sourceInfo.outPath}\")\n    .legacyPackages\n    .${builtins.currentSystem};\n  this =\n    (builtins.getFlake \"${flake.sourceInfo.outPath}\")\n    .\"${fragment}\";\nin\n  pkgs.writeTextFile {\n    name = \"data-clade-write\";\n    text = builtins.toJSON this;\n    executable = false;\n    destination = \"/data\";\n  }\n",
+          "|",
+          "jq",
+          "-r",
+          "'.[].outputs.out'"
+        ],
+        "description": "write to file",
+        "name": "write"
+      },
+      {
+        "command": [
+          "nix",
+          "build",
+          "--impure",
+          "--expr",
+          "let\n  pkgs =\n    (builtins.getFlake \"${nixpkgs.sourceInfo.outPath}\")\n    .legacyPackages\n    .${builtins.currentSystem};\n  this =\n    (builtins.getFlake \"${flake.sourceInfo.outPath}\")\n    .\"${fragment}\";\nin\n  pkgs.writeTextFile {\n    name = \"data-clade-write\";\n    text = builtins.toJSON this;\n    executable = false;\n    destination = \"/data\";\n  }\n",
+          "|",
+          "jq",
+          "-r",
+          "'.[].outputs.out'",
+          "|",
+          "fx"
+        ],
+        "description": "interactively explore (requires: 'fx')",
+        "name": "explore"
+      }
+    ],
+    "__std_cell": "std",
+    "__std_cell_readme": "/nix/store/h227imz56igrh7lgym76hg6af6pfcczz-cells/std/Readme.md",
+    "__std_clade": "data",
+    "__std_description": "n/a",
+    "__std_name": "default",
+    "__std_organelle": "data",
+    "__std_organelle_readme": "",
+    "__std_readme": ""
+  },
+  {
+    "__std_actions": [],
+    "__std_cell": "std",
+    "__std_cell_readme": "/nix/storzz-cells/std/Readme.md",
+    "__std_clade": "functions",
+    "__std_description": "n/a",
+    "__std_name": "default",
+    "__std_organelle": "devshellProfiles",
+    "__std_organelle_readme": "/nix/store/h227imz56igrh7lgym76hg6af6pfcczz-cells/std/devshellProfiles/Readme.md",
+    "__std_readme": "/nix/store/h227imz56igrh7lgym76hg6af6pfcczz-cells/std/devshellProfiles/default.md"
+  },
+  {
+    "__std_actions": [],
+    "__std_cell": "std",
+    "__std_cell_readme": "/nix/store/h227imz56igrh7lgym76hg6af6pfcczz-cells/std/Readme.md",
+    "__std_clade": "functions",
+    "__std_description": "n/a",
+    "__std_name": "fromMakesWith",
+    "__std_organelle": "lib",
+    "__std_organelle_readme": "/nix/store/h227imz56igrh7lgym76hg6af6pfcczz-cells/std/lib/Readme.md",
+    "__std_readme": "/nix/store/h227imz56igrh7lgym76hg6af6pfcczz-cells/std/lib/fromMakesWith.md"
+  }
+]

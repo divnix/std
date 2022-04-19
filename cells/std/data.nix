@@ -2,5 +2,5 @@
   inputs,
   cell,
 }: {
-  default = {};
+  example-data = builtins.fromJSON (builtins.readFile ./data/dummy-data.json);
 }
