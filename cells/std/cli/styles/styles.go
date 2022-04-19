@@ -16,6 +16,10 @@ var (
 			BorderStyle(lipgloss.NormalBorder()).
 			BorderForeground(Highlight)
 
+	ActionInspectionStyle = lipgloss.NewStyle().
+				BorderStyle(lipgloss.NormalBorder()).
+				BorderForeground(Highlight)
+
 	ActionStyle = lipgloss.NewStyle().
 			BorderStyle(lipgloss.NormalBorder()).
 			BorderForeground(Highlight)

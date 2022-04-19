@@ -99,8 +99,9 @@ func DefaultListKeyMap() list.KeyMap {
 }
 
 type ActionDelegateKeyMap struct {
-	Exec    key.Binding
-	Inspect key.Binding
+	Exec        key.Binding
+	Inspect     key.Binding
+	QuitInspect key.Binding
 }
 
 // Additional short help entries. This satisfies the help.KeyMap interface and
@@ -109,13 +110,15 @@ func (d ActionDelegateKeyMap) ShortHelp() []key.Binding {
 	return []key.Binding{
 		d.Exec,
 		d.Inspect,
+		d.QuitInspect,
 	}
 }
 
 func NewActionDelegateKeyMap() *ActionDelegateKeyMap {
 	return &ActionDelegateKeyMap{
-		Exec:    enter,
-		Inspect: showReadme,
+		Exec:        enter,
+		Inspect:     showReadme,
+		QuitInspect: closeReadme,
 	}
 }
 

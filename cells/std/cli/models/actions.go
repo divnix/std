@@ -17,81 +17,52 @@ import (
 	"github.com/divnix/std/cells/std/cli/keys"
 )
 
-type DetachAndQuit int
-
-type ActionExitErrMsg struct {
-	cmd string
-	err *exec.ExitError
-}
-
-func (e ActionExitErrMsg) Error() string {
-	return fmt.Sprintf(
-		"%s\nresulted in %s\n\nTraceback:\n\n%s",
-		lipgloss.NewStyle().Faint(true).Bold(true).Render(e.cmd),
-		e.err.Error(),
-		string(e.err.Stderr),
-	)
-}
+type ActionInspectMsg string
 
 func newActionDelegate(keys *keys.ActionDelegateKeyMap) list.DefaultDelegate {
 	d := list.NewDefaultDelegate()
 
 	d.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd {
-		var command []string
+		var (
+			command []string
+			args    []string
+		)
 
 		if i, ok := m.SelectedItem().(data.Action); ok {
 			command = i.ActionCommand
+			args = []string{"bash", "-c", strings.Join(command, " ")}
 		} else {
 			return nil
 		}
 
-		run := func() tea.Msg {
+		execve := func() tea.Msg {
 			binary, lookErr := exec.LookPath("bash")
 			if lookErr != nil {
-				panic(lookErr)
+				log.Fatal(lookErr)
 			}
-			args := []string{"bash", "-c", strings.Join(command, " ")}
 			env := os.Environ()
 			execErr := syscall.Exec(binary, args, env)
 			if execErr != nil {
-				panic(execErr)
+				log.Fatal(execErr)
 			}
-			cmd := exec.Command("bash", append([]string{"-c"}, command...)...)
-			cmd.Stdin = os.Stdin
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-			err := cmd.Start()
-			if err != nil {
-				switch exitErr := err.(type) {
-				case *exec.ExitError:
-					return ActionExitErrMsg{
-						cmd: cmd.String(),
-						err: exitErr,
-					}
-				default:
-					log.Fatal(err)
-				}
-			}
-			// detach
-			cmd.Process.Release()
-			return DetachAndQuit(0)
+			return nil
 		}
 
 		switch msg := msg.(type) {
 		case tea.KeyMsg:
 			switch {
 			case key.Matches(msg, keys.Exec):
-				return run
+				return execve
 
-				// case key.Matches(msg, keys.Inspect):
-				// 	return m.NewStatusMessage(statusMessageStyle("Deleted " + title))
+			case key.Matches(msg, keys.Inspect):
+				return func() tea.Msg { return ActionInspectMsg(strings.Join(args[2:], " ")) }
 			}
 		}
 
 		return nil
 	}
 
-	help := []key.Binding{keys.Exec, keys.Inspect}
+	help := []key.Binding{keys.Exec}
 	d.ShortHelpFunc = func() []key.Binding { return help }
 	d.FullHelpFunc = func() [][]key.Binding { return [][]key.Binding{} }
 

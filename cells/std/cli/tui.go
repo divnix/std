@@ -35,15 +35,16 @@ func (s Focus) String() string {
 }
 
 type Tui struct {
-	Target  *models.TargetModel
-	Action  *models.ActionModel
-	Readme  *models.ReadmeModel
-	Keys    *keys.AppKeyMap
-	Legend  help.Model
-	Title   string
-	Spinner spinner.Model
-	Loading bool
-	Error   string
+	Target       *models.TargetModel
+	Action       *models.ActionModel
+	Readme       *models.ReadmeModel
+	Keys         *keys.AppKeyMap
+	Legend       help.Model
+	Title        string
+	InspecAction string
+	Spinner      spinner.Model
+	Loading      bool
+	Error        string
 	Focus
 	Width  int
 	Height int
@@ -59,23 +60,25 @@ func (m *Tui) Init() tea.Cmd {
 
 func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
-		cmds []tea.Cmd
-		cmd  tea.Cmd
+		cmds       []tea.Cmd
+		cmd        tea.Cmd
+		actionKeys = keys.NewActionDelegateKeyMap()
 	)
 	// As soon as targets are loaded, stop the loading spinner
 	if m.Target.SelectedItem() != nil {
 		m.Loading = false
 	}
 	switch msg := msg.(type) {
-	case models.DetachAndQuit:
-		return m, tea.Quit
-
 	case flakeLoadedMsg:
 		m.Target.SetItems(msg.Items)
 		return m, nil
 
 	case exitErrMsg:
 		m.Error = msg.Error()
+		return m, nil
+
+	case models.ActionInspectMsg:
+		m.InspecAction = string(msg)
 		return m, nil
 
 	case spinner.TickMsg:
@@ -91,6 +94,11 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if key.Matches(msg, m.Keys.ForceQuit) {
 			return m, tea.Quit
 		}
+		// Quit action inspection if enabled.
+		if m.InspecAction != "" && key.Matches(msg, actionKeys.QuitInspect) {
+			m.InspecAction = ""
+			return m, nil
+		}
 		// Don't match any of the keys below if we're actively filtering.
 		if m.Target.List.FilterState() == list.Filtering {
 			break
@@ -105,10 +113,12 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch {
 		// toggle the help
 		case key.Matches(msg, m.Keys.ShowReadme):
-			if !m.Readme.Active {
-				m.Readme.Active = true
-				cmd = m.Readme.RenderMarkdown()
-				return m, cmd
+			if m.Focus == Left {
+				if !m.Readme.Active {
+					m.Readme.Active = true
+					cmd = m.Readme.RenderMarkdown()
+					return m, cmd
+				}
 			}
 		// toggle the focus
 		case key.Matches(msg, m.Keys.ToggleFocus):
@@ -229,6 +239,21 @@ func (m *Tui) View() string {
 			)),
 		)
 	}
+	if m.InspecAction != "" {
+		return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, styles.
+			AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
+			lipgloss.JoinVertical(
+				lipgloss.Center,
+				title,
+				lipgloss.JoinHorizontal(
+					lipgloss.Left,
+					styles.ActionInspectionStyle.Width(m.Target.Width).Height(m.Target.Height).Render(m.InspecAction),
+					styles.ActionStyle.Render(m.Action.View()),
+				),
+				styles.LegendStyle.Render(m.Legend.View(m)),
+			)),
+		)
+	}
 
 	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, styles.
 		AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
@@ -237,7 +262,7 @@ func (m *Tui) View() string {
 			title,
 			lipgloss.JoinHorizontal(
 				lipgloss.Left,
-				styles.TargetStyle.Render(m.Target.View()),
+				styles.TargetStyle.Width(m.Target.Width).Height(m.Target.Height).Render(m.Target.View()),
 				styles.ActionStyle.Render(m.Action.View()),
 			),
 			styles.LegendStyle.Render(m.Legend.View(m)),
