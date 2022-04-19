@@ -172,6 +172,7 @@
                     if organelle ? actions
                     then
                       organelle.actions {
+                        inherit system;
                         flake = inputs.self.sourceInfo.outPath;
                         fragment = ''"${system}"."${cellName}"."${organelleName}"."${name}"'';
                       }

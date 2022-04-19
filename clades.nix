@@ -3,6 +3,7 @@
     inherit name;
     clade = "runnables";
     actions = {
+      system,
       flake,
       fragment,
     }: [
@@ -17,6 +18,7 @@
     inherit name;
     clade = "installables";
     actions = {
+      system,
       flake,
       fragment,
     }: [
@@ -45,42 +47,45 @@
     inherit name;
     clade = "data";
     actions = {
+      system,
       flake,
       fragment,
-    }: [
+    }: let
+      deps = [
+        "nix"
+        "build"
+        "--no-link"
+        "${nixpkgs.sourceInfo.outPath}#fx"
+        ";"
+        "nix"
+        "build"
+        "--no-link"
+        "${nixpkgs.sourceInfo.outPath}#jq"
+        ";"
+      ];
+      builder = ["nix" "build" "--impure" "--json" "--no-link" "--expr" expr];
+      jq = ["|" "${nixpkgs.legacyPackages.${system}.jq}/bin/jq" "-r" "'.[].outputs.out'"];
+      fx = ["|" "xargs" "cat" "|" "${nixpkgs.legacyPackages.${system}.fx}/bin/fx"];
+      expr = nixpkgs.lib.strings.escapeShellArg ''
+        let
+          pkgs = (builtins.getFlake "${nixpkgs.sourceInfo.outPath}").legacyPackages.${system};
+          this = (builtins.getFlake "${flake}").${fragment};
+        in
+          pkgs.writeTextFile {
+            name = "data.json";
+            text = builtins.toJSON this;
+          }
+      '';
+    in [
       {
         name = "write";
         description = "write to file";
-        command = [
-          "nix"
-          "build"
-          "--impure"
-          "--json"
-          "--no-link"
-          "--expr"
-          (builtins.readFile ./clades/data-write-action-expr.nix)
-          "|"
-          "jq"
-          "-r"
-          "'.[].outputs.out'"
-        ];
+        command = deps ++ builder ++ jq;
       }
       {
         name = "explore";
-        description = "interactively explore (requires: 'fx')";
-        command = [
-          "nix"
-          "build"
-          "--impure"
-          "--expr"
-          (builtins.readFile ./clades/data-write-action-expr.nix)
-          "|"
-          "jq"
-          "-r"
-          "'.[].outputs.out'"
-          "|"
-          "fx"
-        ];
+        description = "interactively explore";
+        command = deps ++ builder ++ jq ++ fx;
       }
     ];
   };

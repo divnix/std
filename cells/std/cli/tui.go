@@ -67,6 +67,8 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Loading = false
 	}
 	switch msg := msg.(type) {
+	case models.DetachAndQuit:
+		return m, tea.Quit
 
 	case flakeLoadedMsg:
 		m.Target.SetItems(msg.Items)

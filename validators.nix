@@ -77,6 +77,7 @@ in {
         name = string;
         clade = enum "clades" ["runnables" "installables" "functions" "data"];
         actions = option (functionWithArgs {
+          system = false;
           flake = false;
           fragment = false;
         });

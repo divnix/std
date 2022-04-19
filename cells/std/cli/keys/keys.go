@@ -17,9 +17,10 @@ var (
 	pageDown        = key.NewBinding(key.WithKeys("pgdown", spacebar), key.WithHelp("pgdn", "1 forward"))
 	home            = key.NewBinding(key.WithKeys("home"), key.WithHelp("home", "go to start"))
 	end             = key.NewBinding(key.WithKeys("end"), key.WithHelp("end", "go to end"))
+	enter           = key.NewBinding(key.WithKeys("enter"), key.WithHelp("⏎", "execute"))
 	search          = key.NewBinding(key.WithKeys("/"), key.WithHelp("/", "filter"))
-	showReadme      = key.NewBinding(key.WithKeys("?"), key.WithHelp("?", "readme"))
-	closeReadme     = key.NewBinding(key.WithKeys("?", "esc"), key.WithHelp("?", "close readme"))
+	showReadme      = key.NewBinding(key.WithKeys("?"), key.WithHelp("?", "inspect"))
+	closeReadme     = key.NewBinding(key.WithKeys("?", "esc"), key.WithHelp("?", "close"))
 	quit            = key.NewBinding(key.WithKeys("q"), key.WithHelp("q", "quit"))
 	forceQuit       = key.NewBinding(key.WithKeys("ctrl+c"))
 	toggleFocus     = key.NewBinding(key.WithKeys("tab", "shift+tab"), key.WithHelp("⇥", "toggle focus"))
@@ -94,6 +95,27 @@ func DefaultListKeyMap() list.KeyMap {
 			key.WithKeys("enter", "tab", "up", "down"),
 			key.WithHelp("enter", "apply filter"),
 		),
+	}
+}
+
+type ActionDelegateKeyMap struct {
+	Exec    key.Binding
+	Inspect key.Binding
+}
+
+// Additional short help entries. This satisfies the help.KeyMap interface and
+// is entirely optional.
+func (d ActionDelegateKeyMap) ShortHelp() []key.Binding {
+	return []key.Binding{
+		d.Exec,
+		d.Inspect,
+	}
+}
+
+func NewActionDelegateKeyMap() *ActionDelegateKeyMap {
+	return &ActionDelegateKeyMap{
+		Exec:    enter,
+		Inspect: showReadme,
 	}
 }
 
