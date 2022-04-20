@@ -51,18 +51,6 @@
       flake,
       fragment,
     }: let
-      deps = [
-        "nix"
-        "build"
-        "--no-link"
-        "${nixpkgs.sourceInfo.outPath}#fx"
-        ";"
-        "nix"
-        "build"
-        "--no-link"
-        "${nixpkgs.sourceInfo.outPath}#jq"
-        ";"
-      ];
       builder = ["nix" "build" "--impure" "--json" "--no-link" "--expr" expr];
       jq = ["|" "${nixpkgs.legacyPackages.${system}.jq}/bin/jq" "-r" "'.[].outputs.out'"];
       fx = ["|" "xargs" "cat" "|" "${nixpkgs.legacyPackages.${system}.fx}/bin/fx"];
@@ -80,12 +68,12 @@
       {
         name = "write";
         description = "write to file";
-        command = deps ++ builder ++ jq;
+        command = builder ++ jq;
       }
       {
         name = "explore";
         description = "interactively explore";
-        command = deps ++ builder ++ jq ++ fx;
+        command = builder ++ jq ++ fx;
       }
     ];
   };
