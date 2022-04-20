@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
 
 	"github.com/TylerBrock/colorjson"
@@ -14,10 +16,17 @@ import (
 	"github.com/divnix/std/cells/std/cli/dummy_data"
 )
 
+type outt struct {
+	drvPath string            `json:"drvPath"`
+	outputs map[string]string `json:"outputs"`
+}
+
 var (
 	currentSystemArgs    = []string{"eval", "--raw", "--impure", "--expr", "builtins.currentSystem"}
 	flakeStdMetaFragment = "%s#__std.%s"
-	flakeStdMetaArgs     = []string{"eval", "--json", "--option", "warn-dirty", "false"}
+	// flakeStdMetaArgs     = []string{"eval", "--json", "--option", "warn-dirty", "false"}
+	flakeStdMetaArgs = []string{"build", "--no-link", "--json", "--option", "warn-dirty", "false"}
+	flakeStdBuildOut = []map[string]interface{}{}
 )
 
 func fakeData() []data.Item {
@@ -51,7 +60,27 @@ func loadFlake() tea.Msg {
 
 	// load the std metadata from the flake
 	cmd := exec.Command(nix, flakeStdMetaArgs...)
-	flakeStdMeta, err := cmd.Output()
+	out, err := cmd.Output()
+	if err != nil {
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			log.Fatalln(exitErr, string(exitErr.Stderr))
+		}
+		log.Fatal(err)
+	}
+
+	if err := json.Unmarshal(out, &flakeStdBuildOut); err != nil {
+		log.Fatal(err)
+	}
+
+	flakeStdMetaJson, err := os.Open(flakeStdBuildOut[0]["outputs"].(map[string]interface{})["out"].(string))
+	if err != nil {
+		log.Fatal(err)
+	}
+	// if we os.Open returns an error then handle it
+	defer flakeStdMetaJson.Close()
+
+	// read our opened jsonFile as a byte array.
+	flakeStdMeta, _ := ioutil.ReadAll(flakeStdMetaJson)
 	if err != nil {
 		switch exitErr := err.(type) {
 		case *exec.ExitError:

@@ -83,8 +83,14 @@
       # List of all flake outputs injected by std in the outputs and inputs.cells format
       stdOutputsFor = system: let
         acc = accumulate (builtins.map (loadCell system) Cells);
-        # flatten meta for easier ingestion by the std cli
-        meta = {__std.${system} = builtins.attrValues acc.__std.${system};};
+        meta = {
+          # materialize meta & also realize all implicit runtime dependencies
+          __std.${system} = nixpkgs.legacyPackages.${system}.writeTextFile {
+            name = "__std-${system}.json";
+            # flatten meta for easier ingestion by the std cli
+            text = builtins.toJSON (builtins.attrValues acc.__std.${system});
+          };
+        };
       in
         # nixpkgs.lib.traceSeqN 4 meta
         acc
