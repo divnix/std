@@ -168,6 +168,7 @@ of what a [Standard][std] project looks like,
 take a look at the following:
 
 - [Bitte Cells][bitte-cells]
+- [`divnix/hive`][divnix-hive]
 
 :construction: Work in progress, would like to help us extend this section?
 
@@ -192,6 +193,7 @@ menu
 
 [bitte-cells]: https://github.com/input-output-hk/bitte-cells
 [cross_compiler]: https://en.wikipedia.org/wiki/Cross_compiler
+[divnix-hive]: https://github.com/divnix/hive
 [hydra]: https://github.com/NixOS/hydra
 [nix_drv]: https://nixos.org/manual/nix/unstable/expressions/derivations.html
 [nix_flakes]: https://nixos.wiki/wiki/Flakes
