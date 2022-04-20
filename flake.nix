@@ -79,9 +79,22 @@
       Cells = nixpkgs.lib.mapAttrsToList (validate.Cell cellsFrom Organelles) (builtins.readDir cellsFrom);
       # Set of all std-injected outputs in the project flake in the outpts and inputs.cells format
       accumulate = builtins.foldl' nixpkgs.lib.attrsets.recursiveUpdate {};
-      stdOutput = accumulate (builtins.concatLists (builtins.map stdOutputsFor Systems));
+      stdOutput = accumulate (builtins.map stdOutputsFor Systems);
       # List of all flake outputs injected by std in the outputs and inputs.cells format
-      stdOutputsFor = system: builtins.map (loadCell system) Cells;
+      stdOutputsFor = system: let
+        acc = accumulate (builtins.map (loadCell system) Cells);
+        meta = {
+          # materialize meta & also realize all implicit runtime dependencies
+          __std.${system} = nixpkgs.legacyPackages.${system}.writeTextFile {
+            name = "__std-${system}.json";
+            # flatten meta for easier ingestion by the std cli
+            text = builtins.toJSON (builtins.attrValues acc.__std.${system});
+          };
+        };
+      in
+        # nixpkgs.lib.traceSeqN 4 meta
+        acc
+        // meta;
       # Load a cell, return the flake outputs injected by std
       loadCell = system: cellName: let
         cellArgs = {
@@ -136,20 +149,46 @@
           nixpkgs.lib.attrsets.mapAttrsToList (
             organelleName: output: let
               organelle = builtins.head organelles'.${organelleName};
-              toStdTypedOutput = name: output: {
-                __std_name =
-                  output.meta.mainProgram or output.pname or output.name or name;
-                __std_description =
-                  output.meta.description or output.description or "n/a";
-                __std_cell = cellName;
-                __std_clade = organelle.clade;
-                __std_organelle = organelle.name;
+              cPath = paths.cellPath cellsFrom cellName;
+              oPath = paths.organellePath cPath organelle;
+              extractStdMeta = name: output: let
+                tPath = paths.targetPath oPath name;
+              in {
+                name = "${cellName}-${organelleName}-${name}";
+                value = {
+                  __std_name = name;
+                  __std_description =
+                    output.meta.description or output.description or "n/a";
+                  __std_cell = cellName;
+                  __std_clade = organelle.clade;
+                  __std_organelle = organelle.name;
+                  __std_readme =
+                    if builtins.pathExists tPath.readme
+                    then tPath.readme
+                    else "";
+                  __std_cell_readme =
+                    if builtins.pathExists cPath.readme
+                    then cPath.readme
+                    else "";
+                  __std_organelle_readme =
+                    if builtins.pathExists oPath.readme
+                    then oPath.readme
+                    else "";
+                  __std_actions =
+                    if organelle ? actions
+                    then
+                      organelle.actions {
+                        inherit system;
+                        flake = inputs.self.sourceInfo.outPath;
+                        fragment = ''"${system}"."${cellName}"."${organelleName}"."${name}"'';
+                      }
+                    else [];
+                };
               };
             in {
               ${system}.${cellName}.${organelleName} = output;
               # parseable index of targets for tooling
-              __std.${system}.${cellName}.${organelleName} =
-                builtins.mapAttrs toStdTypedOutput output;
+              __std.${system} = nixpkgs.lib.mapAttrs' extractStdMeta output;
             }
           )
           cell;

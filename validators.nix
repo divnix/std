@@ -70,6 +70,11 @@ in {
       struct "organelle" {
         name = string;
         clade = enum "clades" ["runnables" "installables" "functions" "data"];
+        actions = option (functionWithArgs {
+          system = false;
+          flake = false;
+          fragment = false;
+        });
       }
     );
   FileSignature = file: let

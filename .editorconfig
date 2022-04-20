@@ -34,8 +34,6 @@ trim_trailing_whitespace = unset
 indent_style = unset
 indent_size = unset
 
-# Rule 5: There are no rules
-# http://community.schemewiki.org/cgi-bin/scheme.cgi?scheme-style
-[*.scm]
-indent_style = unset
-indent_size = unset
+[{*.go,go.mod}]
+indent_style = tab
+indent_size = 4
