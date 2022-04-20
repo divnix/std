@@ -10,31 +10,10 @@
   inputs.yants.inputs.nixpkgs.follows = "nixpkgs";
   outputs = inputs': let
     nixpkgs = inputs'.nixpkgs;
-    validate = import ./validators.nix {
-      inherit (inputs') yants nixpkgs;
-      inherit organellePath;
-    };
+    validate = import ./validators.nix {inherit (inputs') yants nixpkgs;};
+    paths = import ./paths.nix;
+    clades = import ./clades.nix {inherit nixpkgs;};
     incl = import ./incl.nix {inherit nixpkgs;};
-    organellePath = cellsFrom: cellName: organelle: {
-      file = "${cellsFrom}/${cellName}/${organelle.name}.nix";
-      dir = "${cellsFrom}/${cellName}/${organelle.name}/default.nix";
-    };
-    runnables = name: {
-      inherit name;
-      clade = "runnables";
-    };
-    installables = name: {
-      inherit name;
-      clade = "installables";
-    };
-    functions = name: {
-      inherit name;
-      clade = "functions";
-    };
-    data = name: {
-      inherit name;
-      clade = "data";
-    };
     deSystemize = system: s:
       if builtins.isAttrs s && builtins.hasAttr "${system}" s
       then s // s.${system}
@@ -61,9 +40,9 @@
       inputs,
       cellsFrom,
       organelles ? [
-        (functions "library")
-        (runnables "apps")
-        (installables "packages")
+        (clades.functions "library")
+        (clades.runnables "apps")
+        (clades.installables "packages")
       ],
       # if true, export installables _also_ as packages and runnables _also_ as apps
       as-nix-cli-epiphyte ? true,
@@ -140,16 +119,16 @@
             );
         in
           builtins.foldl' op {} Organelles;
-        # Each Cell's Organelle can inject a singleton or an attribute set output into the project, not both
         loadOrganelle = organelle: args: let
-          path = organellePath cellsFrom cellName organelle;
-          importedFile = validate.MigrationNecesary path.file (import path.file);
-          importedDir = validate.MigrationNecesary path.dir (import path.dir);
+          cPath = paths.cellPath cellsFrom cellName;
+          oPath = paths.organellePath cPath organelle;
+          importedFile = validate.FileSignature oPath.file (import oPath.file);
+          importedDir = validate.FileSignature oPath.dir (import oPath.dir);
         in
-          if builtins.pathExists path.file
-          then validate.Import organelle.clade path.file (importedFile args)
-          else if builtins.pathExists path.dir
-          then validate.Import organelle.clade path.dir (importedDir args)
+          if builtins.pathExists oPath.file
+          then validate.Import organelle.clade oPath.file (importedFile args)
+          else if builtins.pathExists oPath.dir
+          then validate.Import organelle.clade oPath.dir (importedDir args)
           else {};
         # Postprocess the result of the cell loading
         organelles' = nixpkgs.lib.lists.groupBy (x: x.name) Organelles;
@@ -254,10 +233,13 @@
   in
     {
       inherit
+        (clades)
         runnables
         installables
         functions
         data
+        ;
+      inherit
         grow
         growOn
         harvest
@@ -272,9 +254,10 @@
         # as-nix-cli-epiphyte = false;
         cellsFrom = ./cells;
         organelles = [
-          (runnables "cli")
-          (functions "lib")
-          (functions "devshellProfiles")
+          (clades.runnables "cli")
+          (clades.functions "lib")
+          (clades.functions "devshellProfiles")
+          (clades.data "data")
         ];
         systems = ["x86_64-linux" "x86_64-darwin" "aarch64-darwin"];
       }

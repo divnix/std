@@ -5,8 +5,8 @@
 {
   nixpkgs,
   yants,
-  organellePath,
 }: let
+  inherit (import ./paths.nix) cellPath organellePath;
   prefixWithCellsFrom = path:
     builtins.concatStringsSep "/" (
       ["\${cellsFrom}"]
@@ -16,7 +16,8 @@ in {
   Systems = with yants "std" "grow" "attrs";
     list (enum "system" nixpkgs.lib.systems.doubles.all);
   Cell = cellsFrom: organelles: cell: type: let
-    path = o: organellePath cellsFrom cell o;
+    cPath = cellPath cellsFrom cell;
+    path = o: organellePath cPath o;
     atLeastOneOrganelle = builtins.any (x: x) (
       builtins.map (
         o: builtins.pathExists (path o).file || builtins.pathExists (path o).dir
@@ -71,7 +72,7 @@ in {
         clade = enum "clades" ["runnables" "installables" "functions" "data"];
       }
     );
-  MigrationNecesary = file: let
+  FileSignature = file: let
     file' = prefixWithCellsFrom file;
   in
     with yants "std" "import" file';
