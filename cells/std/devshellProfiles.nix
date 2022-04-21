@@ -19,7 +19,13 @@ in {
           eval = "$PRJ_ROOT/${config.cellsFrom}";
         }
       ];
-      commands = [{package = std;}];
+      commands = [
+        {package = std;}
+        {package = nixpkgs.adrgen;}
+      ];
+      devshell.startup.init-adrten = nixpkgs.lib.stringsWithDeps.noDepEntry ''
+        ${nixpkgs.adrgen}/bin/adrgen init "docs/adrs"
+      '';
     };
   };
 }
