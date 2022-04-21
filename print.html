@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="#.html"><strong aria-hidden="true">1.</strong> Architecture Decisions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="architecture-decisions/0001-increase-repo-discoverability-with-a-tui.html"><strong aria-hidden="true">1.1.</strong> Increase Repo Discoverability With a Tui</a></li><li class="chapter-item expanded "><a href="architecture-decisions/0002-wire-up-documentation-intrumentation.html"><strong aria-hidden="true">1.2.</strong> Wire Up Documentation Intrumentation</a></li><li class="chapter-item expanded "><a href="architecture-decisions/adr_template.html"><strong aria-hidden="true">1.3.</strong> Adr Template</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="#.html"><strong aria-hidden="true">1.</strong> Architecture Decisions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="architecture-decisions/0001-increase-repo-discoverability-with-a-tui.html"><strong aria-hidden="true">1.1.</strong> Increase Repo Discoverability With a Tui</a></li><li class="chapter-item expanded "><a href="architecture-decisions/0002-wire-up-documentation-intrumentation.html"><strong aria-hidden="true">1.2.</strong> Wire Up Documentation Intrumentation</a></li><li class="chapter-item expanded "><a href="architecture-decisions/adr_template.html"><strong aria-hidden="true">1.3.</strong> Adr Template</a></li></ol></li><li class="chapter-item expanded "><a href="std/index.html"><strong aria-hidden="true">2.</strong> Std</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/cli/index.html"><strong aria-hidden="true">2.1.</strong> Cli</a></li><li class="chapter-item expanded "><a href="std/devshellProfiles/index.html"><strong aria-hidden="true">2.2.</strong> devshellProfiles</a></li><li class="chapter-item expanded "><a href="std/lib/index.html"><strong aria-hidden="true">2.3.</strong> Lib</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/lib/fromMakesWith.html"><strong aria-hidden="true">2.3.1.</strong> fromMakesWith</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -188,6 +188,75 @@ created.</p>
 <p>What is the change that we're proposing and/or doing?</p>
 <h2 id="consequences-2"><a class="header" href="#consequences-2">Consequences</a></h2>
 <p>What becomes easier or more difficult to do because of this change?</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-cell"><a class="header" href="#the-std-cell">The <code>std</code> Cell</a></h1>
+<p>... is the only cell in <code>divnix/std</code> and provides only very limited functionality.</p>
+<ul>
+<li>It containes the TUI, in <code>./cli</code>.</li>
+<li>It containes a <code>devshellProfile</code> in <code>./devshellProfiles</code>.</li>
+<li>It containes a growing number of second level library functions in <code>./lib</code>.</li>
+</ul>
+<p>That's it.</p>
+<p>In that it showcases <em>some</em> functionality of <code>std</code> while also not only being
+useful, but <em>actually</em> used.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-tui--cli"><a class="header" href="#the-std-tui--cli">The <code>std</code> TUI / CLI</a></h1>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<ul>
+<li>Enter a <code>sta</code>ized repository.</li>
+<li>Enter it's devshell (which must include <code>//std/devshellProfiles:default</code>)</li>
+<li>Run <code>std</code>.</li>
+</ul>
+<p>It will show you around interactively and lead you very quickly to what you're looking for.</p>
+<p>It's self-documented on it's legend.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="stds-devshellprofiles"><a class="header" href="#stds-devshellprofiles"><code>std</code>'s <code>devshellProfiles</code></a></h1>
+<p>This organelle only exports a single <code>default</code> devshellProfile.</p>
+<p>Any <code>std</code>ized repository should include this into it's <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code></a>
+in order to provide any visitor with the fully pre-configured <code>std</code> TUI.</p>
+<p>It also wires &amp; instantiates a decent ADR tool. Or where you planning to hack away
+without some minimal conscious effort of decision making and recording? 😅</p>
+<h1 id="usage-example"><a class="header" href="#usage-example">Usage Example</a></h1>
+<pre><code class="language-nix">{
+  # a flake
+  # with stuff ...
+
+  outputs = inputs:
+    inputs.flake-utils.lib.eachSystem [
+      &quot;x86_64-linux&quot;
+      &quot;aarch64-linux&quot;
+      &quot;x86_64-darwin&quot;
+      &quot;aarch64-darwin&quot;
+    ] (system: let
+      inherit (inputs.std.deSystemize system inputs) devshell std;
+      inherit (devshell.legacyPackages) mkShell;
+    in {
+      devShells.default = mkShell {
+        imports = [std.std.devshellProfiles.default];
+        cellsFrom = &quot;./nix&quot;;
+      };
+    });
+}
+</code></pre>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-library"><a class="header" href="#the-std-library">The <code>std</code> library</a></h1>
+<p>This library may accumulate over time library functions that provide
+integrations with other frameworks or are so overwhelmingly &amp; generally
+useful that upstreaming them into Standard cannot be withheld.</p>
+<p>In general, though, <code>std</code> is already opinionated enough in order to grow
+this library very conservatively, only.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="frommakeswith-provides-an-interface-to-makes-tasks"><a class="header" href="#frommakeswith-provides-an-interface-to-makes-tasks"><code>fromMakesWith</code> provides an interface to <code>makes</code> tasks</a></h1>
+<p>This is an integration for <a href="https://github.com/fluidattacks/makes"><code>fluidattacks/makes</code></a>.</p>
+<p>A version that has this <a href="https://github.com/fluidattacks/makes/commit/cd8c4eda69e2ce8dc6f811973ba0d80070b4628a">patch</a> is a prerequisite.</p>
+<h2 id="usage-example-1"><a class="header" href="#usage-example-1">Usage example</a></h2>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  make = inputs.std.std.lib.fromMakesWith inputs;
+in {
+  task = make ./path/to/make/task//main.nix {};
+}
+</code></pre>
+<p><em>Some refactoring of the tasks may be necessary. Let the error messages be your friend.</em></p>
+<hr />
 
                     </main>
 
