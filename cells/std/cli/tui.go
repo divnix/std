@@ -45,6 +45,7 @@ type Tui struct {
 	Spinner      spinner.Model
 	Loading      bool
 	Error        string
+	FatalError   error
 	Focus
 	Width  int
 	Height int
@@ -76,6 +77,10 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case exitErrMsg:
 		m.Error = msg.Error()
 		return m, nil
+
+	case fatalErrMsg:
+		m.FatalError = msg.err
+		return m, tea.Quit
 
 	case models.ActionInspectMsg:
 		m.InspecAction = string(msg)

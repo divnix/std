@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
 	"math/rand"
-	"os"
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -13,8 +12,9 @@ import (
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	if err := tea.NewProgram(InitialPage()).Start(); err != nil {
-		fmt.Println("Error running program:", err)
-		os.Exit(1)
+	if model, err := tea.NewProgram(InitialPage()).StartReturningModel(); err != nil {
+		log.Fatalf("Error running program: %s", err)
+	} else if err := model.(*Tui).FatalError; err != nil {
+		log.Fatal(err)
 	}
 }
