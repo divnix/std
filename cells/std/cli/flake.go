@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 
@@ -43,16 +42,16 @@ func loadFlake() tea.Msg {
 	var items []data.Item
 	nix, err := exec.LookPath("nix")
 	if err != nil {
-		log.Fatal("You need to install 'nix' in order to use 'std'")
+		return fatalErrf("You need to install 'nix' in order to use 'std'")
 	}
 
 	// detect the current system
 	currentSystem, err := exec.Command(nix, currentSystemArgs...).Output()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			log.Fatalln(exitErr, string(exitErr.Stderr))
+			return fatalErrf("%w, stderr:\n%s", exitErr, exitErr.Stderr)
 		}
-		log.Fatal(err)
+		return fatalErr(err)
 	}
 
 	flakeStdMetaFragment = fmt.Sprintf(flakeStdMetaFragment, ".", currentSystem)
@@ -63,18 +62,18 @@ func loadFlake() tea.Msg {
 	out, err := cmd.Output()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			log.Fatalln(exitErr, string(exitErr.Stderr))
+			return fatalErrf("%w, stderr:\n%s", exitErr, exitErr.Stderr)
 		}
-		log.Fatal(err)
+		return fatalErr(err)
 	}
 
 	if err := json.Unmarshal(out, &flakeStdBuildOut); err != nil {
-		log.Fatal(err)
+		return fatalErr(err)
 	}
 
 	flakeStdMetaJson, err := os.Open(flakeStdBuildOut[0]["outputs"].(map[string]interface{})["out"].(string))
 	if err != nil {
-		log.Fatal(err)
+		return fatalErr(err)
 	}
 	// if we os.Open returns an error then handle it
 	defer flakeStdMetaJson.Close()
@@ -89,7 +88,7 @@ func loadFlake() tea.Msg {
 				err: exitErr,
 			}
 		default:
-			log.Fatal(err)
+			return fatalErr(err)
 		}
 	}
 
@@ -99,7 +98,7 @@ func loadFlake() tea.Msg {
 		f := colorjson.NewFormatter()
 		f.Indent = 2
 		s, _ := f.Marshal(obj)
-		log.Fatalf("%s - object: %s", err, s)
+		return fatalErrf("%w - object: %s", err, s)
 	}
 
 	// var obj interface{}
@@ -131,4 +130,16 @@ func (e exitErrMsg) Error() string {
 		e.err.Error(),
 		string(e.err.Stderr),
 	)
+}
+
+type fatalErrMsg struct {
+	err error
+}
+
+func fatalErr(err error) fatalErrMsg {
+	return fatalErrMsg{err}
+}
+
+func fatalErrf(f string, a ...interface{}) fatalErrMsg {
+	return fatalErrMsg{fmt.Errorf(f, a...)}
 }
