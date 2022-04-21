@@ -1,4 +1,6 @@
-{nixpkgs}: {
+{nixpkgs}: let
+  l = nixpkgs.lib // builtins;
+in {
   runnables = name: {
     inherit name;
     clade = "runnables";
@@ -54,7 +56,7 @@
       builder = ["nix" "build" "--impure" "--json" "--no-link" "--expr" expr];
       jq = ["|" "${nixpkgs.legacyPackages.${system}.jq}/bin/jq" "-r" "'.[].outputs.out'"];
       fx = ["|" "xargs" "cat" "|" "${nixpkgs.legacyPackages.${system}.fx}/bin/fx"];
-      expr = nixpkgs.lib.strings.escapeShellArg ''
+      expr = l.strings.escapeShellArg ''
         let
           pkgs = (builtins.getFlake "${nixpkgs.sourceInfo.outPath}").legacyPackages.${system};
           this = (builtins.getFlake "${flake}").${fragment};

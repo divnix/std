@@ -6,21 +6,22 @@
   nixpkgs,
   yants,
 }: let
+  l = nixpkgs.lib // builtins;
   inherit (import ./paths.nix) cellPath organellePath;
   prefixWithCellsFrom = path:
-    builtins.concatStringsSep "/" (
+    l.concatStringsSep "/" (
       ["\${cellsFrom}"]
-      ++ (nixpkgs.lib.lists.drop 4 (nixpkgs.lib.splitString "/" path))
+      ++ (l.lists.drop 4 (l.splitString "/" path))
     );
 in {
   Systems = with yants "std" "grow" "attrs";
-    list (enum "system" nixpkgs.lib.systems.doubles.all);
+    list (enum "system" l.systems.doubles.all);
   Cell = cellsFrom: organelles: cell: type: let
     cPath = cellPath cellsFrom cell;
     path = o: organellePath cPath o;
-    atLeastOneOrganelle = builtins.any (x: x) (
-      builtins.map (
-        o: builtins.pathExists (path o).file || builtins.pathExists (path o).dir
+    atLeastOneOrganelle = l.any (x: x) (
+      l.map (
+        o: l.pathExists (path o).file || l.pathExists (path o).dir
       )
       organelles
     );
@@ -46,12 +47,12 @@ in {
         it needs to provide at least one Organelle
 
         In this project, the Organelles of a Cell can be
-        ${builtins.concatStringsSep ", " (builtins.map (o: o.name) organelles)}
+        ${l.concatStringsSep ", " (l.map (o: o.name) organelles)}
 
 
         ${
-          builtins.concatStringsSep "\n\n" (
-            builtins.map (
+          l.concatStringsSep "\n\n" (
+            l.map (
               organelle: let
                 title = "To generate output for Organelle '${organelle.name}', please create:\n";
                 paths = "  - ${prefixWithCellsFrom (path organelle).file}; or\n  - ${prefixWithCellsFrom (path organelle).dir}";

@@ -3,22 +3,22 @@
 #
 # SPDX-License-Identifier: MIT
 {nixpkgs}: let
-  inherit (nixpkgs) lib;
+  l = nixpkgs.lib // builtins;
 
   # NOTE: find a way to handle duplicates better, atm they may override each
   # other without warning
   mkInclusive = verifiedPaths:
-    lib.foldl' (
+    l.foldl' (
       sum: verified: let
-        verified' = builtins.unsafeDiscardStringContext verified;
+        verified' = l.unsafeDiscardStringContext verified;
       in
-        if (lib.pathIsDirectory verified')
+        if (l.pathIsDirectory verified')
         then {
-          tree = lib.recursiveUpdate sum.tree (lib.setAttrByPath (pathToParts verified') true);
+          tree = l.recursiveUpdate sum.tree (l.setAttrByPath (pathToParts verified') true);
           prefixes = sum.prefixes ++ [verified'];
         }
         else {
-          tree = lib.recursiveUpdate sum.tree (lib.setAttrByPath (pathToParts verified') false);
+          tree = l.recursiveUpdate sum.tree (l.setAttrByPath (pathToParts verified') false);
           prefixes = sum.prefixes;
         }
     ) {
@@ -27,7 +27,7 @@
     }
     verifiedPaths;
 
-  pathToParts = path: (builtins.tail (lib.splitString "/" (toString path)));
+  pathToParts = path: (l.tail (l.splitString "/" (toString path)));
 
   # Require that every path specified does exist.
   #
@@ -49,21 +49,21 @@
   #     directory
   requireAllPathsExist = paths: let
     validation =
-      builtins.map (
+      l.map (
         path:
-          builtins.path {
+          l.path {
             name = "verify";
             path = path;
           }
       )
       paths;
   in
-    builtins.deepSeq validation paths;
+    l.deepSeq validation paths;
 
   isIncluded = patterns: name: type: let
     parts = pathToParts name;
-    matchesTree = lib.hasAttrByPath parts patterns.tree;
-    matchesPrefix = lib.any (pre: lib.hasPrefix pre name) patterns.prefixes;
+    matchesTree = l.hasAttrByPath parts patterns.tree;
+    matchesPrefix = l.any (pre: l.hasPrefix pre name) patterns.prefixes;
   in
     matchesTree || matchesPrefix;
 
@@ -72,7 +72,7 @@
     patterns = mkInclusive verifiedPaths;
     filter = isIncluded patterns;
   in
-    builtins.path {
+    l.path {
       name = "incl";
       path = root;
       filter = filter;
