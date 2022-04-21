@@ -1,6 +1,10 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
 in {
+  /*
+   Use the Runnables Clade for targets that you want to
+   make accessible with a 'run' action on the TUI.
+   */
   runnables = name: {
     inherit name;
     clade = "runnables";
@@ -16,6 +20,15 @@ in {
       }
     ];
   };
+  /*
+   Use the Installables Clade for targets that you want to
+   make availabe for installation into the user's nix profile.
+   
+   Available actions:
+     - install
+     - upgrade
+     - remove
+   */
   installables = name: {
     inherit name;
     clade = "installables";
@@ -41,10 +54,30 @@ in {
       }
     ];
   };
+  /*
+   Use the Functions Clade for reusable nix functions that you would
+   call elswhere in the code.
+   
+   Also use this for all types of modules and profiles, since they are
+   implemented as functions.
+   
+   Consequently, there are no actions available for functions.
+   */
   functions = name: {
     inherit name;
     clade = "functions";
   };
+  /*
+   Use the Data Clade json serializable data.
+   
+   Available actions:
+     - write
+     - explore
+   
+   For all actions is true:
+     Nix-proper 'stringContext'-carried dependency will be realized
+     to the store, if present.
+   */
   data = name: {
     inherit name;
     clade = "data";

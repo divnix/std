@@ -50,14 +50,25 @@ we eliminate most boilerplate;
 zero-config workflows...
 everything Just Works™.
 
-**DevOps Professionals,`nix`-loving**
+**DevOps Professionals**
 
 [Standard][std] doesn't just throw more options at you.
 It gives you and your team something much more valuable: _guidance_.
 
+**Discoverability & Gamification**
+
+[Standard][std]'s companion TUI/CLI `std` focuses on polyglot
+discoverability of your repository's targets & actions. Build
+a package, run a test, publish an artifact... Explore what's
+available with style! 😎
+
 ## How it's organized
 
 [Standard][std] places all the code in a directory of your choice.
+
+Then, with just very few hints, Standard undestands your codebase
+and let you and others easily discover what your code base has to
+offer. Almost like gitops-gamification.
 
 ![](./artwork/model.png)
 
@@ -71,6 +82,10 @@ A Cell provides functionality through **Organelles** of **Clade**:
 - Installables
 - Functions
 - Data
+
+You can even define your own clades. The standard clades already
+define a set of actions that can be run on such clades. Check them
+out in [`./src/clades.nix`][clades-nix]
 
 The built-in default **Organelles** are:
 
@@ -102,6 +117,19 @@ A potential alternative to the default **Organelle** _types_ could be:
 - DevShell Profiles (Functions)
 - Just Tasks (Runnables)
 - Entrypoints (Runnables)
+
+## Documentation
+
+Please go through the annotated source code:
+
+- [`./src/grow.nix`][grow-nix]
+- [`./src/incl.nix`][incl-nix]
+- [`./src/de-systemize.nix`][de-systemize-nix]
+- [`./src/clades.nix`][clades-nix]
+
+Then, this repo also is [Standard][std]ized and you can explore
+it functionality, including documentation by entering the Devshell
+and just type `std`.
 
 ### Hello World application
 
@@ -153,7 +181,10 @@ the inputs of your project.
         ```
 
 ```bash
-$ nix run /my/project#hello
+# CLI to be implemented ...
+# for now simply use the TUI: `std`
+$ cd /my/project
+$ std //hello/apps:default run
 Hello, world!
 ```
 
@@ -191,6 +222,10 @@ menu
 
 ---
 
+[clades-nix]: ./src/clades.nix
+[grow-nix]: ./src/grow.nix
+[incl-nix]: ./src/incl.nix
+[de-systemize-nix]: ./src/de-systemize.nix
 [bitte-cells]: https://github.com/input-output-hk/bitte-cells
 [cross_compiler]: https://en.wikipedia.org/wiki/Cross_compiler
 [divnix-hive]: https://github.com/divnix/hive
