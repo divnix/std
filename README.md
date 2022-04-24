@@ -131,74 +131,15 @@ Then, this repo also is [Standard][std]ized and you can explore
 it functionality, including documentation by entering the Devshell
 and just type `std`.
 
-### Hello World application
+Or consume the doc page under: [https://divnix.github.io/std][std-docs]
 
-[Standard][std] features a special project structure
-that brings some awesome innovation
-to this often overlooked (but important) part of your project.
-With the default **Organelles**, an `app.nix` file tells [Standard][std]
-that we are creating an Application.
-`flake.nix` is in charge
-of explicitly defining
-the inputs of your project.
-
-- `/my/project`
-
-  - `/flake.nix`
-
-    ```nix
-    {
-      inputs.std.url = "github:divnix/std";
-
-      outputs = { std, ... } @ inputs:
-        std.grow {
-          inherit inputs;
-          cellsFrom = ./cells;
-        };
-    }
-    ```
-
-  - `/cells`
-
-    - `/hello`
-
-      - `/apps.nix`
-
-        ```nix
-        { inputs
-        , cell
-        }:
-        {
-          default = inputs.nixpkgs.stdenv.mkDerivation rec {
-            pname = "hello";
-            version = "2.10";
-            src = inputs.nixpkgs.fetchurl {
-              url = "mirror://gnu/hello/${pname}-${version}.tar.gz";
-              sha256 = "0ssi1wpaf7plaswqqjwigppsg5fyh99vdlb9kzl7c9lng89ndq1i";
-            };
-          };
-        }
-        ```
-
-```bash
-# CLI to be implemented ...
-# for now simply use the TUI: `std`
-$ cd /my/project
-$ std //hello/apps:default run
-Hello, world!
-```
-
-You see? from nothing
-to running your first application
-in just a few seconds :sparkles:
-
-## Examples
+## Examples in the Wild
 
 If you'd like to see some examples
 of what a [Standard][std] project looks like,
 take a look at the following:
 
-- [Bitte Cells][bitte-cells]
+- [`input-output-hk/bitte-cells`][bitte-cells]
 - [`divnix/hive`][divnix-hive]
 
 :construction: Work in progress, would like to help us extend this section?
@@ -222,10 +163,10 @@ menu
 
 ---
 
-[clades-nix]: ./src/clades.nix
-[grow-nix]: ./src/grow.nix
-[incl-nix]: ./src/incl.nix
-[de-systemize-nix]: ./src/de-systemize.nix
+[clades-nix]: https://github.com/divnix/std/blob/main/src/clades.nix
+[grow-nix]: https://github.com/divnix/std/blob/main/src/grow.nix
+[incl-nix]: https://github.com/divnix/std/blob/main/src/incl.nix
+[de-systemize-nix]: https://github.com/divnix/std/blob/main/src/de-systemize.nix
 [bitte-cells]: https://github.com/input-output-hk/bitte-cells
 [cross_compiler]: https://en.wikipedia.org/wiki/Cross_compiler
 [divnix-hive]: https://github.com/divnix/hive
@@ -234,3 +175,4 @@ menu
 [nix_flakes]: https://nixos.wiki/wiki/Flakes
 [nix]: https://nixos.org/manual/nix/unstable
 [std]: https://github.com/divnix/std
+[std-docs]: https://divnix.github.io/std

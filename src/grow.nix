@@ -7,6 +7,11 @@
   paths = import ./paths.nix;
   clades = import ./clades.nix {inherit nixpkgs;};
   validate = import ./validators.nix {inherit yants nixpkgs;};
+  builtinNixpkgsConfig = {
+    allowUnfree = true;
+    allowUnsupportedSystem = true;
+    android_sdk.accept_license = true;
+  };
   /*
    A funtion that 'grows' 'organells' from 'cells' found in 'cellsFrom'.
    
@@ -122,13 +127,7 @@
           // {
             nixpkgs = import nixpkgs {
               localSystem = system;
-              config =
-                {
-                  allowUnfree = true;
-                  allowUnsupportedSystem = true;
-                  android_sdk.accept_license = true;
-                }
-                // nixpkgsConfig;
+              config = builtinNixpkgsConfig // nixpkgsConfig;
             };
             self =
               inputs.self.sourceInfo

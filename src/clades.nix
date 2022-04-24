@@ -68,7 +68,7 @@ in {
     clade = "functions";
   };
   /*
-   Use the Data Clade json serializable data.
+   Use the Data Clade for json serializable data.
    
    Available actions:
      - write
