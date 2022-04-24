@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="architecture-decisions/index.html"><strong aria-hidden="true">1.</strong> Architecture Decisions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="architecture-decisions/0001-increase-repo-discoverability-with-a-tui.html"><strong aria-hidden="true">1.1.</strong> Increase Repo Discoverability With a Tui</a></li><li class="chapter-item expanded "><a href="architecture-decisions/0002-wire-up-documentation-intrumentation.html"><strong aria-hidden="true">1.2.</strong> Wire Up Documentation Intrumentation</a></li><li class="chapter-item expanded "><a href="architecture-decisions/adr_template.html"><strong aria-hidden="true">1.3.</strong> Adr Template</a></li></ol></li><li class="chapter-item expanded "><a href="std/index.html"><strong aria-hidden="true">2.</strong> Std</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/cli/index.html"><strong aria-hidden="true">2.1.</strong> Cli</a></li><li class="chapter-item expanded "><a href="std/devshellProfiles/index.html"><strong aria-hidden="true">2.2.</strong> devshellProfiles</a></li><li class="chapter-item expanded "><a href="std/lib/index.html"><strong aria-hidden="true">2.3.</strong> Lib</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/lib/fromMakesWith.html"><strong aria-hidden="true">2.3.1.</strong> fromMakesWith</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="../examples/hello-world/index.html"><strong aria-hidden="true">1.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="conventions.html"><strong aria-hidden="true">2.</strong> Conventions</a></li><li class="chapter-item expanded "><a href="growing-cells.html"><strong aria-hidden="true">3.</strong> Growing Cells</a></li><li class="chapter-item expanded "><a href="incl.html"><strong aria-hidden="true">4.</strong> Include Filter</a></li><li class="chapter-item expanded "><a href="clades.html"><strong aria-hidden="true">5.</strong> Builtin Clades</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="data-clade.html"><strong aria-hidden="true">5.1.</strong> Data</a></li><li class="chapter-item expanded "><a href="function-clade.html"><strong aria-hidden="true">5.2.</strong> Function</a></li><li class="chapter-item expanded "><a href="runnables-clade.html"><strong aria-hidden="true">5.3.</strong> Runnables</a></li><li class="chapter-item expanded "><a href="installables-clade.html"><strong aria-hidden="true">5.4.</strong> Installables</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Builtin Cells</li><li class="chapter-item expanded "><a href="std/index.html"><strong aria-hidden="true">6.</strong> Std</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/cli/index.html"><strong aria-hidden="true">6.1.</strong> Cli</a></li><li class="chapter-item expanded "><a href="std/devshellProfiles/index.html"><strong aria-hidden="true">6.2.</strong> devshellProfiles</a></li><li class="chapter-item expanded "><a href="std/lib/index.html"><strong aria-hidden="true">6.3.</strong> Lib</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/lib/fromMakesWith.html"><strong aria-hidden="true">6.3.1.</strong> fromMakesWith</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">Architecture</li><li class="chapter-item expanded "><a href="architecture-decisions/index.html"><strong aria-hidden="true">7.</strong> Architecture Decisions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="architecture-decisions/0001-increase-repo-discoverability-with-a-tui.html"><strong aria-hidden="true">7.1.</strong> Increase Repo Discoverability With a Tui</a></li><li class="chapter-item expanded "><a href="architecture-decisions/0002-wire-up-documentation-intrumentation.html"><strong aria-hidden="true">7.2.</strong> Wire Up Documentation Intrumentation</a></li><li class="chapter-item expanded "><a href="architecture-decisions/adr_template.html"><strong aria-hidden="true">7.3.</strong> Adr Template</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -135,64 +135,472 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="architecture-decision-record"><a class="header" href="#architecture-decision-record">Architecture Decision Record</a></h1>
-<p>An architecture decision record (ADR) is a document that captures an
-important architectural decision made along with its context and consequences.</p>
-<p>The template in this folder has all the info.</p>
-<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
-<p>To interact with this ADR, enter the devshell and interact though the <code>adrgen</code> tool.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="1-increase-repo-discoverability-with-a-tui"><a class="header" href="#1-increase-repo-discoverability-with-a-tui">1. Increase repo discoverability with a TUI</a></h1>
-<p>Date: 2022-04-20</p>
-<h2 id="status"><a class="header" href="#status">Status</a></h2>
-<p>accepted</p>
-<h2 id="context"><a class="header" href="#context">Context</a></h2>
-<p>In gerenal, the more a polyglot repository grows, the more folks need very contextual knowledge to
-asses the old and still same question: &quot;What's in it for me?&quot; / WIIFM.</p>
-<p>And once they find an answer to that question, already ensues the next: &quot;And how do I make use of it?&quot;.</p>
-<p>Finding an answer to these questions is regularly not trivial and hugely language specific.</p>
-<p>The classic solution always has been: &quot;Write a (boilerplate) readme.&quot;.</p>
-<h2 id="decision"><a class="header" href="#decision">Decision</a></h2>
-<p>Thanks to <code>nix</code>, we can largely outperform that classic solution.</p>
-<p>So, we implement a TUI that is duely wired with the repository it represents.</p>
-<p>It queries the <code>nix</code> for the necessary metadata including targets and
-the target's actions.</p>
-<p>It also detects well-placed readme files and presents them contextually on the CLI
-to the user.</p>
-<p>The user can then fuzzy search any desired taret, query its contextual help or choose
-one of the actions for execution.</p>
-<h2 id="consequences"><a class="header" href="#consequences">Consequences</a></h2>
-<p>Not only in a polglot repository, the different stakeholders can now easily and naturally
-interact (&quot;speak&quot;) with the repository.</p>
-<p>This has the potential of optimizing away a lot of very engrained media-breaks that today sometimes
-render massive collaboration across a broad team increasingly friction-laden.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="2-wire-up-documentation-intrumentation"><a class="header" href="#2-wire-up-documentation-intrumentation">2. Wire up documentation intrumentation</a></h1>
-<p>Date: 2022-04-20</p>
-<h2 id="status-1"><a class="header" href="#status-1">Status</a></h2>
-<p>accepted</p>
-<h2 id="context-1"><a class="header" href="#context-1">Context</a></h2>
-<p>Documentation instrumentation is always necessary. But because there are so many option,
-oftentimes it's not the first thing to do when kick-starting a projects.</p>
-<p>Either because fingers are eager to hack or because the myriad of options stalls efficient
-decision making.</p>
-<h2 id="decision-1"><a class="header" href="#decision-1">Decision</a></h2>
-<p>In this context, we want to provide a default doc instrumentation setup, that, at the very
-minimum is capable of rendering and hosting the ADRs.</p>
-<p>Batteries included &amp; (this time) not removable.</p>
-<p><em>You can have any care you like as long as it's black.</em></p>
-<h2 id="consequences-1"><a class="header" href="#consequences-1">Consequences</a></h2>
-<p>As a consequence, entering a devshell, and if no <code>book.toml</code> exists, a minimal layout will be
-created.</p>
-<p>The user is then expected to fill it with life according to the <code>mdbook</code> docs.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="title"><a class="header" href="#title">{title}</a></h1>
-<p>Date: {date}</p>
-<h2 id="status-2"><a class="header" href="#status-2">Status</a></h2>
-<p>{status}</p>
-<h2 id="context-2"><a class="header" href="#context-2">Context</a></h2>
-<p>What is the issue that we're seeing that is motivating this decision or change?</p>
-<h2 id="decision-2"><a class="header" href="#decision-2">Decision</a></h2>
-<p>What is the change that we're proposing and/or doing?</p>
-<h2 id="consequences-2"><a class="header" href="#consequences-2">Consequences</a></h2>
-<p>What becomes easier or more difficult to do because of this change?</p>
+                        <!--
+SPDX-FileCopyrightText: 2022 The Standard Authors
+SPDX-FileCopyrightText: 2022 Kevin Amado <kamadorueda@gmail.com>
+
+SPDX-License-Identifier: Unlicense
+-->
+<div align="center">
+  <img src="https://github.com/divnix/std/raw/main/artwork/logo.png" width="250" />
+  <h1 id="standard"><a class="header" href="#standard">Standard</a></h1>
+  <p>Ship today with architecture for tomorrow</span>
+</div>
+<!--
+_By [Kevin Amado](https://github.com/kamadorueda),
+with contributions from [David Arnold](https://github.com/blaggacao),
+[Timothy DeHerrera](https://github.com/nrdxp)
+and many more amazing people (see end of file for a full list)._
+-->
+<p><a href="https://github.com/divnix/std">Standard</a> is THE opinionated, generic,
+<a href="https://nixos.org/manual/nix/unstable">Nix</a> <a href="https://nixos.wiki/wiki/Flakes">Flakes</a> framework
+that will allow you to grow and cultivate
+Nix Cells with ease.</p>
+<p>Nix Cells are the fine art of code organization
+using flakes.</p>
+<p>As a Nix Cell Cultivator, you can focus on building
+for your use cases and ride on the marvels of nix flakes
+while wasting virtually no thoughts on boilerplate
+code organization.</p>
+<p>Because <a href="https://github.com/divnix/std">Standard</a> is a proper framework,
+you benefit from continued performance
+and feature upgrades over time with minimum effort. :sparkles:</p>
+<p><strong>Code Organization</strong></p>
+<p><a href="https://github.com/divnix/std">Standard</a> has a pre-defined place
+for all your code.
+Packages, applications, functions, libraries, modules, profiles:
+they all have a home.</p>
+<p><strong>Developer Experience</strong></p>
+<p><a href="https://github.com/divnix/std">Standard</a> projects
+are as declarative as possible;
+we eliminate most boilerplate;
+zero-config workflows...
+everything Just Works™.</p>
+<p><strong>DevOps Professionals</strong></p>
+<p><a href="https://github.com/divnix/std">Standard</a> doesn't just throw more options at you.
+It gives you and your team something much more valuable: <em>guidance</em>.</p>
+<p><strong>Discoverability &amp; Gamification</strong></p>
+<p><a href="https://github.com/divnix/std">Standard</a>'s companion TUI/CLI <code>std</code> focuses on polyglot
+discoverability of your repository's targets &amp; actions. Build
+a package, run a test, publish an artifact... Explore what's
+available with style! 😎</p>
+<h2 id="how-its-organized"><a class="header" href="#how-its-organized">How it's organized</a></h2>
+<p><a href="https://github.com/divnix/std">Standard</a> places all the code in a directory of your choice.</p>
+<p>Then, with just very few hints, Standard undestands your codebase
+and let you and others easily discover what your code base has to
+offer. Almost like gitops-gamification.</p>
+<p><img src=".././artwork/model.png" alt="" /></p>
+<p>Related code is grouped into <strong>Cells</strong>
+that can be composed together
+to form any functionality you can imagine.</p>
+<p>A Cell provides functionality through <strong>Organelles</strong> of <strong>Clade</strong>:</p>
+<ul>
+<li>Runnables</li>
+<li>Installables</li>
+<li>Functions</li>
+<li>Data</li>
+</ul>
+<p>You can even define your own clades. The standard clades already
+define a set of actions that can be run on such clades. Check them
+out in <a href="https://github.com/divnix/std/blob/main/src/clades.nix"><code>./src/clades.nix</code></a></p>
+<p>The built-in default <strong>Organelles</strong> are:</p>
+<ul>
+<li>
+<p>Applications (Runnables)</p>
+<p>Instructions that can be run.
+For example: <code>cd</code>, <code>ls</code>, and <code>cat</code> are applications.</p>
+</li>
+<li>
+<p>Packages (Installables)</p>
+<p>Contents (files and/or directories)
+generated in a pure and reproducible way,
+also known as <a href="https://nixos.org/manual/nix/unstable/expressions/derivations.html">derivations</a>.</p>
+</li>
+<li>
+<p>Libraries (Functions)</p>
+<p>Instructions on how to turn the given inputs
+into something else.</p>
+<p>They act like a library
+that you and others can use
+in order to abstract, share
+and re-use code.</p>
+</li>
+</ul>
+<p>A potential alternative to the default <strong>Organelle</strong> <em>types</em> could be:</p>
+<ul>
+<li>NixOS Modules (Functions)</li>
+<li>NixOS Profiles (Functions)</li>
+<li>DevShell Profiles (Functions)</li>
+<li>Just Tasks (Runnables)</li>
+<li>Entrypoints (Runnables)</li>
+</ul>
+<h2 id="documentation"><a class="header" href="#documentation">Documentation</a></h2>
+<p>Please go through the annotated source code:</p>
+<ul>
+<li><a href="https://github.com/divnix/std/blob/main/src/grow.nix"><code>./src/grow.nix</code></a></li>
+<li><a href="https://github.com/divnix/std/blob/main/src/incl.nix"><code>./src/incl.nix</code></a></li>
+<li><a href="https://github.com/divnix/std/blob/main/src/de-systemize.nix"><code>./src/de-systemize.nix</code></a></li>
+<li><a href="https://github.com/divnix/std/blob/main/src/clades.nix"><code>./src/clades.nix</code></a></li>
+</ul>
+<p>Then, this repo also is <a href="https://github.com/divnix/std">Standard</a>ized and you can explore
+it functionality, including documentation by entering the Devshell
+and just type <code>std</code>.</p>
+<p>Or consume the doc page under: <a href="https://divnix.github.io/std">https://divnix.github.io/std</a></p>
+<h2 id="examples-in-the-wild"><a class="header" href="#examples-in-the-wild">Examples in the Wild</a></h2>
+<p>If you'd like to see some examples
+of what a <a href="https://github.com/divnix/std">Standard</a> project looks like,
+take a look at the following:</p>
+<ul>
+<li><a href="https://github.com/input-output-hk/bitte-cells"><code>input-output-hk/bitte-cells</code></a></li>
+<li><a href="https://github.com/divnix/hive"><code>divnix/hive</code></a></li>
+</ul>
+<p>:construction: Work in progress, would like to help us extend this section?</p>
+<h2 id="contributions"><a class="header" href="#contributions">Contributions</a></h2>
+<p>Please get ourself the appropriate environment:</p>
+<h3 id="with-direnv"><a class="header" href="#with-direnv">With <code>direnv</code></a></h3>
+<pre><code class="language-console">direnv allow
+</code></pre>
+<h3 id="without-direnv"><a class="header" href="#without-direnv">Without <code>direnv</code></a></h3>
+<pre><code class="language-console">nix develop ./devshell -c $SHELL
+menu
+</code></pre>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="hello-world"><a class="header" href="#hello-world">Hello World</a></h1>
+<p><a href="https://github.com/divnix/std">Standard</a> features a special project structure
+that brings some awesome innovation
+to this often overlooked (but important) part of your project.
+With the default <strong>Organelles</strong>, an <code>apps.nix</code> file tells <a href="https://github.com/divnix/std">Standard</a>
+that we are creating an Application.
+<code>flake.nix</code> is in charge
+of explicitly defining
+the inputs of your project.</p>
+<h4 id="flakenix"><a class="header" href="#flakenix"><code>./flake.nix</code></a></h4>
+<pre><code class="language-nix">{
+  inputs.std.url = &quot;github:divnix/std&quot;;
+
+  outputs = {std, ...} @ inputs:
+    std.grow {
+      inherit inputs;
+      cellsFrom = ./cells;
+    };
+}
+</code></pre>
+<h4 id="cellshelloappsnix"><a class="header" href="#cellshelloappsnix"><code>/cells/hello/apps.nix</code></a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: {
+  default = inputs.nixpkgs.stdenv.mkDerivation rec {
+    pname = &quot;hello&quot;;
+    version = &quot;2.10&quot;;
+    src = inputs.nixpkgs.fetchurl {
+      url = &quot;mirror://gnu/hello/${pname}-${version}.tar.gz&quot;;
+      sha256 = &quot;0ssi1wpaf7plaswqqjwigppsg5fyh99vdlb9kzl7c9lng89ndq1i&quot;;
+    };
+  };
+}
+</code></pre>
+<pre><code class="language-bash"># CLI to be implemented ...
+# for now simply use the TUI: `std`
+$ cd /examples/hello-world
+$ std //hello/apps:default run
+Hello, world!
+</code></pre>
+<p>You see? from nothing
+to running your first application
+in just a few seconds ✨</p>
+<h2 id="assumptions"><a class="header" href="#assumptions">Assumptions</a></h2>
+<p>This example consumes the following defaults or builtins:</p>
+<h3 id="default-organelles"><a class="header" href="#default-organelles"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L68-L72">Default <code>organelles</code></a></a></h3>
+<pre><code class="language-nix">    organelles ? [
+      (clades.functions &quot;library&quot;)
+      (clades.runnables &quot;apps&quot;)
+      (clades.installables &quot;packages&quot;)
+    ],
+</code></pre>
+<h3 id="default-systems"><a class="header" href="#default-systems"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L74-L77">Default <code>systems</code></a></a></h3>
+<pre><code class="language-nix">    systems ? (
+      l.systems.supported.tier1
+      ++ l.systems.supported.tier2
+    ),
+</code></pre>
+<h3 id="builtin-nixpkgsconfig"><a class="header" href="#builtin-nixpkgsconfig"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L10-L14">Builtin <code>nixpkgsConfig</code></a></a></h3>
+<pre><code class="language-nix">  builtinNixpkgsConfig = {
+    allowUnfree = true;
+    allowUnsupportedSystem = true;
+    android_sdk.accept_license = true;
+  };
+</code></pre>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="conventions-in-std"><a class="header" href="#conventions-in-std">Conventions in <code>std</code></a></h1>
+<p>In principle, we all want to be able to read code with local reasoning.</p>
+<p>However, these few conventions are pure quality of live and
+help us to keep our nix code organized.</p>
+<h2 id="nix-file-locations"><a class="header" href="#nix-file-locations">Nix File Locations</a></h2>
+<p>Nix files are imported from either of these two locations, if present, in this order of precedence:</p>
+<pre><code>${cellsFrom}/${cell}/${organelle}.nix
+${cellsFrom}/${cell}/${organelle}/default.nix
+</code></pre>
+<h2 id="readme-file-locations"><a class="header" href="#readme-file-locations">Readme File Locations</a></h2>
+<p>Readme files are picked up by the TUI in the following places:</p>
+<pre><code>${cellsFrom}/${cell}/Readme.md
+${cellsFrom}/${cell}/${organelle}/Readme.md
+${cellsFrom}/${cell}/${organelle}/${target}.md
+</code></pre>
+<h2 id="organelle-file-arguments"><a class="header" href="#organelle-file-arguments">Organelle File Arguments</a></h2>
+<p>Each organelle is a function and expects the following standardized interface for interoperability:</p>
+<pre><code class="language-nix">{ inputs, cell }: {}
+</code></pre>
+<h2 id="the-inputs-argument"><a class="header" href="#the-inputs-argument">The <code>inputs</code> argument</a></h2>
+<p>The <code>inputs</code> argument holds all the de-systemized flake inputs plus a few special inputs:</p>
+<pre><code class="language-nix">{
+  inputs = {
+    self = {}; # sourceInfo of the current repository
+    nixpkgs = {}; # an _instantiated_ nixpkgs
+    cells = {}; # the other cells in this repo
+  };
+}
+</code></pre>
+<h2 id="the-cell-argument"><a class="header" href="#the-cell-argument">The <code>cell</code> argument</a></h2>
+<p>The <code>cell</code> argument holds all the different organelle targets of the current cell.
+This is the main mechanism to by which code organization and separation of concern is enabled.</p>
+<h2 id="the-desytemized-inputs"><a class="header" href="#the-desytemized-inputs">The <code>deSytemize</code>d inputs</a></h2>
+<p>All inputs are scoped for the <em>current</em> system, that is derived from the <code>sytems</code> input list to <code>std.grow</code>.
+That means contrary to the usual nix-UX, in most cases, you don't need to worry about <code>system</code>.</p>
+<p>The current system will be &quot;lifted up&quot; one level, while still providing full access to all <code>sytems</code> for
+cross-compliation scenarios.</p>
+<pre><code class="language-nix"># inputs.a.packages.${system}
+{
+  inputs.a.packages.pkg1 = {};
+  inputs.a.packages.pkg2 = {};
+  /* ... */
+  inputs.a.packages.${system}.pkgs1 = {};
+  inputs.a.packages.${system}.pkgs2 = {};
+  /* ... */
+}
+</code></pre>
+<h4 id="desystemizes-implementation"><a class="header" href="#desystemizes-implementation"><code>deSystemize</code>'s implementation</a></h4>
+<pre><code class="language-nix">let
+  l = builtins;
+  /*
+   A helper function which hides the complexities of dealing
+   with 'system' properly from you, while still providing
+   escape hatches when dealing with cross-compilation.
+   
+   You can use this function independently of the rest of std.
+   */
+  deSystemize = system: fragment:
+    if l.isAttrs fragment &amp;&amp; l.hasAttr &quot;${system}&quot; fragment
+    then fragment // fragment.${system}
+    else
+      l.mapAttrs (
+        # _ consumes input's name
+        # fragment -&gt; maybe systems
+        _: fragment:
+          if l.isAttrs fragment &amp;&amp; l.hasAttr &quot;${system}&quot; fragment
+          then fragment // fragment.${system}
+          else
+            l.mapAttrs (
+              # _ consumes input's output's name
+              # fragment -&gt; maybe systems
+              _: fragment:
+                if l.isAttrs fragment &amp;&amp; l.hasAttr &quot;${system}&quot; fragment
+                then (fragment // fragment.${system})
+                else fragment
+            )
+            fragment
+      )
+      fragment;
+in
+  deSystemize
+</code></pre>
+<h2 id="top-level-system-scoping-of-outputs"><a class="header" href="#top-level-system-scoping-of-outputs">Top-level <code>system</code>-scoping of outputs</a></h2>
+<p>Contrary to the upstream flake schema, all outputs are <code>system</code> spaced at the top-level.
+This allows us to uniformly select on the <em>current</em> system and forget about it for most
+of the time.</p>
+<p>Sometimes <code>nix</code> evaluations don't strictly depend on a particular <code>system</code>, and scoping
+them seems counter-intuitive. But due to the fact that function calls are memoized, there
+is never a pentalty in actually scpoing them. So for the sake of uniformity, we scope them
+anyways.</p>
+<p>The outputs therefore abide by the following &quot;schema&quot;:</p>
+<pre><code class="language-nix">{
+  ${system}.${cell}.${organelle}.${target} = {};
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="growing-cells"><a class="header" href="#growing-cells">Growing Cells</a></h1>
+<p>Growing cells can be done via two variants:</p>
+<ul>
+<li><code>std.grow { cellsFrom = &quot;...&quot;; /* ... */ }</code></li>
+<li><code>std.growOn { cellsFrom = &quot;...&quot;; /* ... */ } # soil</code></li>
+</ul>
+<h2 id="stdgrowon---soil"><a class="header" href="#stdgrowon---soil"><code>std.growOn {} # soil</code></a></h2>
+<p>This eases talking and reasoning about a <code>std</code>ized repository, that also needs
+some sort of adapters to work together better with external frameworks.</p>
+<p>Typically, you'd arrange those adapters in numbered layers of soil, just
+so that it's easier to conceptually reference them when talking / chatting.</p>
+<p>It's a variadic function and takes an unlimited number of &quot;soil layers&quot;.</p>
+<pre><code class="language-nix">{
+  inputs.std.url = &quot;github:divnix/std&quot;;
+
+  outputs = {std, ...} @ inputs:
+    std.growOn {
+      inherit inputs;
+      cellsFrom = ./cells;
+    }
+    # soil
+    () # first layer
+    () # second layer
+    () # ... nth layer
+    ;
+}
+</code></pre>
+<p>These layers get recursively merged onto the output of <code>std.grow</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="include-filter"><a class="header" href="#include-filter">Include Filter</a></h1>
+<p>It is very common that you want to filter your source code in order
+to avoid unnecesary rebuilds and increase your cache hits.</p>
+<p>This is so common that <code>std</code> includes a tool for this:</p>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  inherit (inputs) nixpkgs;
+  inherit (inputs) std;
+in {
+  backend = nixpkgs.mkYarnPackage {
+    name = &quot;backend&quot;;
+    src = std.incl (inputs.self + /src/backend) [
+      (inputs.self + /src/backend/app.js)
+      (inputs.self + /src/backend/config/config.js)
+      /* ... */
+    ];
+  };
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="builtin-clades"><a class="header" href="#builtin-clades">Builtin Clades</a></h1>
+<p>A few clades (&quot;typed organelles&quot;) are packaged with <code>std</code>.</p>
+<p>In practical terms, clades distinguish themselves through the
+actions they provide to a particular organelle.</p>
+<p>It is entirely possible to define custom clades with custom
+actions according to the needs of your project.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="data"><a class="header" href="#data">Data</a></h1>
+<pre><code class="language-nix">  /*
+   Use the Data Clade for json serializable data.
+   
+   Available actions:
+     - write
+     - explore
+   
+   For all actions is true:
+     Nix-proper 'stringContext'-carried dependency will be realized
+     to the store, if present.
+   */
+  data = name: {
+    inherit name;
+    clade = &quot;data&quot;;
+    actions = {
+      system,
+      flake,
+      fragment,
+    }: let
+      builder = [&quot;nix&quot; &quot;build&quot; &quot;--impure&quot; &quot;--json&quot; &quot;--no-link&quot; &quot;--expr&quot; expr];
+      jq = [&quot;|&quot; &quot;${nixpkgs.legacyPackages.${system}.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.[].outputs.out'&quot;];
+      fx = [&quot;|&quot; &quot;xargs&quot; &quot;cat&quot; &quot;|&quot; &quot;${nixpkgs.legacyPackages.${system}.fx}/bin/fx&quot;];
+      expr = l.strings.escapeShellArg ''
+        let
+          pkgs = (builtins.getFlake &quot;${nixpkgs.sourceInfo.outPath}&quot;).legacyPackages.${system};
+          this = (builtins.getFlake &quot;${flake}&quot;).${fragment};
+        in
+          pkgs.writeTextFile {
+            name = &quot;data.json&quot;;
+            text = builtins.toJSON this;
+          }
+      '';
+    in [
+      {
+        name = &quot;write&quot;;
+        description = &quot;write to file&quot;;
+        command = builder ++ jq;
+      }
+      {
+        name = &quot;explore&quot;;
+        description = &quot;interactively explore&quot;;
+        command = builder ++ jq ++ fx;
+      }
+    ];
+  };
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="function"><a class="header" href="#function">Function</a></h1>
+<pre><code class="language-nix">  /*
+   Use the Functions Clade for reusable nix functions that you would
+   call elswhere in the code.
+   
+   Also use this for all types of modules and profiles, since they are
+   implemented as functions.
+   
+   Consequently, there are no actions available for functions.
+   */
+  functions = name: {
+    inherit name;
+    clade = &quot;functions&quot;;
+  };
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="runnables"><a class="header" href="#runnables">Runnables</a></h1>
+<pre><code class="language-nix">  /*
+   Use the Runnables Clade for targets that you want to
+   make accessible with a 'run' action on the TUI.
+   */
+  runnables = name: {
+    inherit name;
+    clade = &quot;runnables&quot;;
+    actions = {
+      system,
+      flake,
+      fragment,
+    }: [
+      {
+        name = &quot;run&quot;;
+        description = &quot;exec this target&quot;;
+        command = [&quot;nix&quot; &quot;run&quot; &quot;${flake}#${fragment}&quot;];
+      }
+    ];
+  };
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="installables"><a class="header" href="#installables">Installables</a></h1>
+<pre><code class="language-nix">  /*
+   Use the Installables Clade for targets that you want to
+   make availabe for installation into the user's nix profile.
+   
+   Available actions:
+     - install
+     - upgrade
+     - remove
+   */
+  installables = name: {
+    inherit name;
+    clade = &quot;installables&quot;;
+    actions = {
+      system,
+      flake,
+      fragment,
+    }: [
+      {
+        name = &quot;install&quot;;
+        description = &quot;install this target&quot;;
+        command = [&quot;nix&quot; &quot;profile&quot; &quot;install&quot; &quot;${flake}#${fragment}&quot;];
+      }
+      {
+        name = &quot;upgrade&quot;;
+        description = &quot;upgrade this target&quot;;
+        command = [&quot;nix&quot; &quot;profile&quot; &quot;upgrade&quot; &quot;${flake}#${fragment}&quot;];
+      }
+      {
+        name = &quot;remove&quot;;
+        description = &quot;remove this target&quot;;
+        command = [&quot;nix&quot; &quot;profile&quot; &quot;remove&quot; fragment];
+      }
+    ];
+  };
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-cell"><a class="header" href="#the-std-cell">The <code>std</code> Cell</a></h1>
 <p>... is the only cell in <code>divnix/std</code> and provides only very limited functionality.</p>
 <ul>
@@ -204,7 +612,7 @@ created.</p>
 <p>In that it showcases <em>some</em> functionality of <code>std</code> while also not only being
 useful, but <em>actually</em> used.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-tui--cli"><a class="header" href="#the-std-tui--cli">The <code>std</code> TUI / CLI</a></h1>
-<h2 id="usage-1"><a class="header" href="#usage-1">Usage</a></h2>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
 <ul>
 <li>Enter a <code>sta</code>ized repository.</li>
 <li>Enter it's devshell (which must include <code>//std/devshellProfiles:default</code>)</li>
@@ -262,6 +670,64 @@ in {
 </code></pre>
 <p><em>Some refactoring of the tasks may be necessary. Let the error messages be your friend.</em></p>
 <hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="architecture-decision-record"><a class="header" href="#architecture-decision-record">Architecture Decision Record</a></h1>
+<p>An architecture decision record (ADR) is a document that captures an
+important architectural decision made along with its context and consequences.</p>
+<p>The template in this folder has all the info.</p>
+<h2 id="usage-1"><a class="header" href="#usage-1">Usage</a></h2>
+<p>To interact with this ADR, enter the devshell and interact though the <code>adrgen</code> tool.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="1-increase-repo-discoverability-with-a-tui"><a class="header" href="#1-increase-repo-discoverability-with-a-tui">1. Increase repo discoverability with a TUI</a></h1>
+<p>Date: 2022-04-20</p>
+<h2 id="status"><a class="header" href="#status">Status</a></h2>
+<p>accepted</p>
+<h2 id="context"><a class="header" href="#context">Context</a></h2>
+<p>In gerenal, the more a polyglot repository grows, the more folks need very contextual knowledge to
+asses the old and still same question: &quot;What's in it for me?&quot; / WIIFM.</p>
+<p>And once they find an answer to that question, already ensues the next: &quot;And how do I make use of it?&quot;.</p>
+<p>Finding an answer to these questions is regularly not trivial and hugely language specific.</p>
+<p>The classic solution always has been: &quot;Write a (boilerplate) readme.&quot;.</p>
+<h2 id="decision"><a class="header" href="#decision">Decision</a></h2>
+<p>Thanks to <code>nix</code>, we can largely outperform that classic solution.</p>
+<p>So, we implement a TUI that is duely wired with the repository it represents.</p>
+<p>It queries the <code>nix</code> for the necessary metadata including targets and
+the target's actions.</p>
+<p>It also detects well-placed readme files and presents them contextually on the CLI
+to the user.</p>
+<p>The user can then fuzzy search any desired taret, query its contextual help or choose
+one of the actions for execution.</p>
+<h2 id="consequences"><a class="header" href="#consequences">Consequences</a></h2>
+<p>Not only in a polglot repository, the different stakeholders can now easily and naturally
+interact (&quot;speak&quot;) with the repository.</p>
+<p>This has the potential of optimizing away a lot of very engrained media-breaks that today sometimes
+render massive collaboration across a broad team increasingly friction-laden.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="2-wire-up-documentation-intrumentation"><a class="header" href="#2-wire-up-documentation-intrumentation">2. Wire up documentation intrumentation</a></h1>
+<p>Date: 2022-04-20</p>
+<h2 id="status-1"><a class="header" href="#status-1">Status</a></h2>
+<p>accepted</p>
+<h2 id="context-1"><a class="header" href="#context-1">Context</a></h2>
+<p>Documentation instrumentation is always necessary. But because there are so many option,
+oftentimes it's not the first thing to do when kick-starting a projects.</p>
+<p>Either because fingers are eager to hack or because the myriad of options stalls efficient
+decision making.</p>
+<h2 id="decision-1"><a class="header" href="#decision-1">Decision</a></h2>
+<p>In this context, we want to provide a default doc instrumentation setup, that, at the very
+minimum is capable of rendering and hosting the ADRs.</p>
+<p>Batteries included &amp; (this time) not removable.</p>
+<p><em>You can have any care you like as long as it's black.</em></p>
+<h2 id="consequences-1"><a class="header" href="#consequences-1">Consequences</a></h2>
+<p>As a consequence, entering a devshell, and if no <code>book.toml</code> exists, a minimal layout will be
+created.</p>
+<p>The user is then expected to fill it with life according to the <code>mdbook</code> docs.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="title"><a class="header" href="#title">{title}</a></h1>
+<p>Date: {date}</p>
+<h2 id="status-2"><a class="header" href="#status-2">Status</a></h2>
+<p>{status}</p>
+<h2 id="context-2"><a class="header" href="#context-2">Context</a></h2>
+<p>What is the issue that we're seeing that is motivating this decision or change?</p>
+<h2 id="decision-2"><a class="header" href="#decision-2">Decision</a></h2>
+<p>What is the change that we're proposing and/or doing?</p>
+<h2 id="consequences-2"><a class="header" href="#consequences-2">Consequences</a></h2>
+<p>What becomes easier or more difficult to do because of this change?</p>
 
                     </main>
 
