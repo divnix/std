@@ -30,8 +30,7 @@ in {
         fi
       '';
       devshell.startup.init-mdbook = let
-        config = {
-        };
+        config = {};
       in
         nixpkgs.lib.stringsWithDeps.noDepEntry ''
           if [ ! -f "book.toml" ]; then
@@ -58,7 +57,8 @@ in {
           book/**
           EOF
           fi
-          if [ ! $(grep "book/**" "docs/.gitignore") ]; then
+
+          if ! grep -qF 'book/' docs/.gitignore; then
           cat << EOF >> docs/.gitignore
 
           # mdbook build
