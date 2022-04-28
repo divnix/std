@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="hello-world/index.html"><strong aria-hidden="true">1.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="conventions.html"><strong aria-hidden="true">2.</strong> Conventions</a></li><li class="chapter-item expanded "><a href="growing-cells.html"><strong aria-hidden="true">3.</strong> Growing Cells</a></li><li class="chapter-item expanded "><a href="incl.html"><strong aria-hidden="true">4.</strong> Include Filter</a></li><li class="chapter-item expanded "><a href="clades.html"><strong aria-hidden="true">5.</strong> Builtin Clades</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="data-clade.html"><strong aria-hidden="true">5.1.</strong> Data</a></li><li class="chapter-item expanded "><a href="function-clade.html"><strong aria-hidden="true">5.2.</strong> Function</a></li><li class="chapter-item expanded "><a href="runnables-clade.html"><strong aria-hidden="true">5.3.</strong> Runnables</a></li><li class="chapter-item expanded "><a href="installables-clade.html"><strong aria-hidden="true">5.4.</strong> Installables</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Builtin Cells</li><li class="chapter-item expanded "><a href="std/index.html"><strong aria-hidden="true">6.</strong> Std</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/cli/index.html"><strong aria-hidden="true">6.1.</strong> Cli</a></li><li class="chapter-item expanded "><a href="std/devshellProfiles/index.html"><strong aria-hidden="true">6.2.</strong> devshellProfiles</a></li><li class="chapter-item expanded "><a href="std/lib/index.html"><strong aria-hidden="true">6.3.</strong> Lib</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/lib/fromMakesWith.html"><strong aria-hidden="true">6.3.1.</strong> fromMakesWith</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">Architecture</li><li class="chapter-item expanded "><a href="architecture-decisions/index.html"><strong aria-hidden="true">7.</strong> Architecture Decisions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="architecture-decisions/0001-increase-repo-discoverability-with-a-tui.html"><strong aria-hidden="true">7.1.</strong> Increase Repo Discoverability With a Tui</a></li><li class="chapter-item expanded "><a href="architecture-decisions/0002-wire-up-documentation-intrumentation.html"><strong aria-hidden="true">7.2.</strong> Wire Up Documentation Intrumentation</a></li><li class="chapter-item expanded "><a href="architecture-decisions/adr_template.html"><strong aria-hidden="true">7.3.</strong> Adr Template</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">User Guide</li><li class="chapter-item expanded "><a href="hello-world/index.html"><strong aria-hidden="true">1.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="conventions.html"><strong aria-hidden="true">2.</strong> Conventions</a></li><li class="chapter-item expanded "><a href="growing-cells.html"><strong aria-hidden="true">3.</strong> Growing Cells</a></li><li class="chapter-item expanded "><a href="incl.html"><strong aria-hidden="true">4.</strong> Include Filter</a></li><li class="chapter-item expanded "><a href="clades.html"><strong aria-hidden="true">5.</strong> Builtin Clades</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="data-clade.html"><strong aria-hidden="true">5.1.</strong> Data</a></li><li class="chapter-item expanded "><a href="function-clade.html"><strong aria-hidden="true">5.2.</strong> Function</a></li><li class="chapter-item expanded "><a href="runnables-clade.html"><strong aria-hidden="true">5.3.</strong> Runnables</a></li><li class="chapter-item expanded "><a href="installables-clade.html"><strong aria-hidden="true">5.4.</strong> Installables</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Builtin Cells</li><li class="chapter-item expanded "><a href="std/index.html"><strong aria-hidden="true">6.</strong> Std</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/cli/index.html"><strong aria-hidden="true">6.1.</strong> Cli</a></li><li class="chapter-item expanded "><a href="std/devshellProfiles/index.html"><strong aria-hidden="true">6.2.</strong> devshellProfiles</a></li><li class="chapter-item expanded "><a href="std/lib/index.html"><strong aria-hidden="true">6.3.</strong> Lib</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/lib/fromMakesWith.html"><strong aria-hidden="true">6.3.1.</strong> fromMakesWith</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">Architecture</li><li class="chapter-item expanded "><a href="architecture-decisions/index.html"><strong aria-hidden="true">7.</strong> Architecture Decisions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="architecture-decisions/0001-increase-repo-discoverability-with-a-tui.html"><strong aria-hidden="true">7.1.</strong> Increase Repo Discoverability With a Tui</a></li><li class="chapter-item expanded "><a href="architecture-decisions/0002-wire-up-documentation-intrumentation.html"><strong aria-hidden="true">7.2.</strong> Wire Up Documentation Intrumentation</a></li><li class="chapter-item expanded "><a href="architecture-decisions/0003-drop-as-nix-cli-epiphyte-flag.html"><strong aria-hidden="true">7.3.</strong> Drop as-nix-cli-epiphyte flag</a></li><li class="chapter-item expanded "><a href="architecture-decisions/adr_template.html"><strong aria-hidden="true">7.4.</strong> Adr Template</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -718,15 +718,41 @@ minimum is capable of rendering and hosting the ADRs.</p>
 <p>As a consequence, entering a devshell, and if no <code>book.toml</code> exists, a minimal layout will be
 created.</p>
 <p>The user is then expected to fill it with life according to the <code>mdbook</code> docs.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="3-drop-as-nix-cli-epiphyte-flag"><a class="header" href="#3-drop-as-nix-cli-epiphyte-flag">3. Drop <code>as-nix-cli-epiphyte</code> flag</a></h1>
+<p>Date: 2022-04-28</p>
+<h2 id="status-2"><a class="header" href="#status-2">Status</a></h2>
+<p>accepted</p>
+<h2 id="context-2"><a class="header" href="#context-2">Context</a></h2>
+<p>Currently, <code>std.grow</code> has a <code>as-nix-cli-epiphyte</code> flag to make the output scheme
+compatible with the <code>nix</code> CLI output scheme.</p>
+<p>However, part of the raison-d'etre of <code>std</code> are the deficiencies of the <code>nix</code> CLI
+output scheme.</p>
+<p>With the introduction of a TUI and soon a CLI equivalence, the need for matching
+the <code>nix</code> CLI interface is diminishing.</p>
+<p>For part of the target audience of <code>std</code>, however, the <code>nix</code> CLI interface is a
+productivity sink and not really a good day to day companion.</p>
+<p>Especially at the intersection of <code>nix</code> experts and non-nix experts, that particular
+aspect might be neglected by experienced <code>nix</code> experts that come with different
+priorities, habits and workflows.</p>
+<h2 id="decision-2"><a class="header" href="#decision-2">Decision</a></h2>
+<p>To cater the purpose of <code>std</code> to make this a productive Nix-related framework for
+teams, we remove the <code>as-nix-cli-epiphyte</code> flag and thereby discourage the wide-spread
+and general purpose use of the <code>nix</code> CLI.</p>
+<p>If such interoperability is still needed, a layer of soil can bring back the necessary
+adatper.</p>
+<h2 id="consequences-2"><a class="header" href="#consequences-2">Consequences</a></h2>
+<p>Nix experts that are making use of <code>std</code> outside of the above described context might
+prefer to add back a nix cli adapter as a layer of soil. However, being experts and
+knowing their needs, this is probably not a huge show stopper.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="title"><a class="header" href="#title">{title}</a></h1>
 <p>Date: {date}</p>
-<h2 id="status-2"><a class="header" href="#status-2">Status</a></h2>
+<h2 id="status-3"><a class="header" href="#status-3">Status</a></h2>
 <p>{status}</p>
-<h2 id="context-2"><a class="header" href="#context-2">Context</a></h2>
+<h2 id="context-3"><a class="header" href="#context-3">Context</a></h2>
 <p>What is the issue that we're seeing that is motivating this decision or change?</p>
-<h2 id="decision-2"><a class="header" href="#decision-2">Decision</a></h2>
+<h2 id="decision-3"><a class="header" href="#decision-3">Decision</a></h2>
 <p>What is the change that we're proposing and/or doing?</p>
-<h2 id="consequences-2"><a class="header" href="#consequences-2">Consequences</a></h2>
+<h2 id="consequences-3"><a class="header" href="#consequences-3">Consequences</a></h2>
 <p>What becomes easier or more difficult to do because of this change?</p>
 
                     </main>
