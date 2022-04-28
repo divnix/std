@@ -21,7 +21,7 @@ minimum is capable of rendering and hosting the ADRs.
 
 Batteries included & (this time) not removable.
 
-_You can have any care you like as long as it's black._
+_You can have any color you like as long as it's black._
 
 ## Consequences
 
