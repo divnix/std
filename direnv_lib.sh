@@ -29,6 +29,8 @@ use_std() {
       $PWD#\"$system\".\"$clade\".\"$organ\".\"$targt\"
       --no-update-lock-file \
       --no-write-lock-file \
+      --no-warn-dirty \
+      --accept-flake-config \
       --profile $(direnv_layout_dir)/$clade/$organ/$targt/profile
   "
 

@@ -142,6 +142,8 @@ in {
               ${flake}#${fragment} \
               --no-update-lock-file \
               --no-write-lock-file \
+              --no-warn-dirty \
+              --accept-flake-config \
               --profile "$std_layout_fragment_path/profile" \
               --command "$SHELL"
           ''
