@@ -146,6 +146,7 @@
       system,
       flake,
       fragment,
+      fragmentRelPath,
     }: [
       {
         name = &quot;run&quot;;
@@ -153,7 +154,6 @@
         command = [&quot;nix&quot; &quot;run&quot; &quot;${flake}#${fragment}&quot;];
       }
     ];
-  };
 </code></pre>
 
                     </main>

@@ -483,13 +483,15 @@ actions they provide to a particular organelle.</p>
 <p>It is entirely possible to define custom clades with custom
 actions according to the needs of your project.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="data"><a class="header" href="#data">Data</a></h1>
-<pre><code class="language-nix">  /*
+<pre><code class="language-nix">    clade = &quot;functions&quot;;
+  };
+  /*
    Use the Data Clade for json serializable data.
-   
+
    Available actions:
      - write
      - explore
-   
+
    For all actions is true:
      Nix-proper 'stringContext'-carried dependency will be realized
      to the store, if present.
@@ -501,6 +503,7 @@ actions according to the needs of your project.</p>
       system,
       flake,
       fragment,
+      fragmentRelPath,
     }: let
       builder = [&quot;nix&quot; &quot;build&quot; &quot;--impure&quot; &quot;--json&quot; &quot;--no-link&quot; &quot;--expr&quot; expr];
       jq = [&quot;|&quot; &quot;${nixpkgs.legacyPackages.${system}.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.[].outputs.out'&quot;];
@@ -525,24 +528,21 @@ actions according to the needs of your project.</p>
         name = &quot;explore&quot;;
         description = &quot;interactively explore&quot;;
         command = builder ++ jq ++ fx;
-      }
-    ];
-  };
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="function"><a class="header" href="#function">Function</a></h1>
-<pre><code class="language-nix">  /*
+<pre><code class="language-nix">    ];
+  };
+  /*
    Use the Functions Clade for reusable nix functions that you would
    call elswhere in the code.
-   
+
    Also use this for all types of modules and profiles, since they are
    implemented as functions.
-   
+
    Consequently, there are no actions available for functions.
    */
   functions = name: {
     inherit name;
-    clade = &quot;functions&quot;;
-  };
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="runnables"><a class="header" href="#runnables">Runnables</a></h1>
 <pre><code class="language-nix">  /*
@@ -556,6 +556,7 @@ actions according to the needs of your project.</p>
       system,
       flake,
       fragment,
+      fragmentRelPath,
     }: [
       {
         name = &quot;run&quot;;
@@ -563,13 +564,13 @@ actions according to the needs of your project.</p>
         command = [&quot;nix&quot; &quot;run&quot; &quot;${flake}#${fragment}&quot;];
       }
     ];
-  };
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="installables"><a class="header" href="#installables">Installables</a></h1>
-<pre><code class="language-nix">  /*
+<pre><code class="language-nix">  };
+  /*
    Use the Installables Clade for targets that you want to
    make availabe for installation into the user's nix profile.
-   
+
    Available actions:
      - install
      - upgrade
@@ -582,6 +583,7 @@ actions according to the needs of your project.</p>
       system,
       flake,
       fragment,
+      fragmentRelPath,
     }: [
       {
         name = &quot;install&quot;;
@@ -598,8 +600,6 @@ actions according to the needs of your project.</p>
         description = &quot;remove this target&quot;;
         command = [&quot;nix&quot; &quot;profile&quot; &quot;remove&quot; fragment];
       }
-    ];
-  };
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-cell"><a class="header" href="#the-std-cell">The <code>std</code> Cell</a></h1>
 <p>... is the only cell in <code>divnix/std</code> and provides only very limited functionality.</p>
