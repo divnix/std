@@ -35,17 +35,17 @@ func (s Focus) String() string {
 }
 
 type Tui struct {
-	Target       *models.TargetModel
-	Action       *models.ActionModel
-	Readme       *models.ReadmeModel
-	Keys         *keys.AppKeyMap
-	Legend       help.Model
-	Title        string
-	InspecAction string
-	Spinner      spinner.Model
-	Loading      bool
-	Error        string
-	FatalError   error
+	Target        *models.TargetModel
+	Action        *models.ActionModel
+	Readme        *models.ReadmeModel
+	Keys          *keys.AppKeyMap
+	Legend        help.Model
+	Title         string
+	InspectAction string
+	ExecveCommand []string
+	Spinner       spinner.Model
+	Loading       bool
+	FatalError    error
 	Focus
 	Width  int
 	Height int
@@ -74,16 +74,16 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Target.SetItems(msg.Items)
 		return m, nil
 
-	case exitErrMsg:
-		m.Error = msg.Error()
-		return m, nil
-
 	case fatalErrMsg:
 		m.FatalError = msg.err
 		return m, tea.Quit
 
+	case models.ActionExecveMsg:
+		m.ExecveCommand = msg.Command
+		return m, tea.Quit
+
 	case models.ActionInspectMsg:
-		m.InspecAction = string(msg)
+		m.InspectAction = string(msg)
 		return m, nil
 
 	case spinner.TickMsg:
@@ -100,8 +100,8 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 		// Quit action inspection if enabled.
-		if m.InspecAction != "" && key.Matches(msg, actionKeys.QuitInspect) {
-			m.InspecAction = ""
+		if m.InspectAction != "" && key.Matches(msg, actionKeys.QuitInspect) {
+			m.InspectAction = ""
 			return m, nil
 		}
 		// Don't match any of the keys below if we're actively filtering.
@@ -233,18 +233,7 @@ func (m *Tui) View() string {
 		)
 	}
 
-	if m.Error != "" {
-		return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, styles.
-			AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
-			lipgloss.JoinVertical(
-				lipgloss.Center,
-				title,
-				styles.ErrorStyle.Width(m.Width-10).Height(m.Height-10).Render(m.Error),
-				styles.LegendStyle.Render(m.Legend.View(m)),
-			)),
-		)
-	}
-	if m.InspecAction != "" {
+	if m.InspectAction != "" {
 		return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, styles.
 			AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
 			lipgloss.JoinVertical(
@@ -252,7 +241,7 @@ func (m *Tui) View() string {
 				title,
 				lipgloss.JoinHorizontal(
 					lipgloss.Left,
-					styles.ActionInspectionStyle.Width(m.Target.Width).Height(m.Target.Height).Render(m.InspecAction),
+					styles.ActionInspectionStyle.Width(m.Target.Width).Height(m.Target.Height).Render(m.InspectAction),
 					styles.ActionStyle.Render(m.Action.View()),
 				),
 				styles.LegendStyle.Render(m.Legend.View(m)),

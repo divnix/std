@@ -7,9 +7,11 @@ import (
 	"os"
 	"os/exec"
 
+	"math/rand"
+	"time"
+
 	"github.com/TylerBrock/colorjson"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 
 	"github.com/divnix/std/data"
 	"github.com/divnix/std/dummy_data"
@@ -23,12 +25,12 @@ type outt struct {
 var (
 	currentSystemArgs    = []string{"eval", "--raw", "--impure", "--expr", "builtins.currentSystem"}
 	flakeStdMetaFragment = "%s#__std.%s"
-	// flakeStdMetaArgs     = []string{"eval", "--json", "--option", "warn-dirty", "false"}
-	flakeStdMetaArgs = []string{"build", "--no-link", "--json", "--option", "warn-dirty", "false"}
-	flakeStdBuildOut = []map[string]interface{}{}
+	flakeStdMetaArgs     = []string{"build", "--no-link", "--json", "--option", "warn-dirty", "false"}
+	flakeStdBuildOut     = []map[string]interface{}{}
 )
 
 func fakeData() []data.Item {
+	rand.Seed(time.Now().UTC().UnixNano())
 	var targetsGenerator dummy_data.RandomItemGenerator
 	const numItems = 24
 	items := make([]data.Item, numItems)
@@ -80,17 +82,6 @@ func loadFlake() tea.Msg {
 
 	// read our opened jsonFile as a byte array.
 	flakeStdMeta, _ := ioutil.ReadAll(flakeStdMetaJson)
-	if err != nil {
-		switch exitErr := err.(type) {
-		case *exec.ExitError:
-			return exitErrMsg{
-				cmd: cmd.String(),
-				err: exitErr,
-			}
-		default:
-			return fatalErr(err)
-		}
-	}
 
 	if err := json.Unmarshal(flakeStdMeta, &items); err != nil {
 		var obj interface{}
@@ -116,20 +107,6 @@ func loadFlake() tea.Msg {
 
 type flakeLoadedMsg struct {
 	Items []data.Item
-}
-
-type exitErrMsg struct {
-	cmd string
-	err *exec.ExitError
-}
-
-func (e exitErrMsg) Error() string {
-	return fmt.Sprintf(
-		"%s\nresulted in %s\n\nTraceback:\n\n%s",
-		lipgloss.NewStyle().Faint(true).Bold(true).Render(e.cmd),
-		e.err.Error(),
-		string(e.err.Stderr),
-	)
 }
 
 type fatalErrMsg struct {

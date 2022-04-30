@@ -2,11 +2,7 @@ package models
 
 import (
 	"fmt"
-	"log"
-	"os"
-	"os/exec"
 	"strings"
-	"syscall"
 
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
@@ -18,6 +14,9 @@ import (
 )
 
 type ActionInspectMsg string
+type ActionExecveMsg struct {
+	Command []string
+}
 
 func newActionDelegate(keys *keys.ActionDelegateKeyMap) list.DefaultDelegate {
 	d := list.NewDefaultDelegate()
@@ -30,21 +29,7 @@ func newActionDelegate(keys *keys.ActionDelegateKeyMap) list.DefaultDelegate {
 
 		if i, ok := m.SelectedItem().(data.Action); ok {
 			command = i.ActionCommand
-			args = []string{"bash", "-c", strings.Join(command, " ")}
 		} else {
-			return nil
-		}
-
-		execve := func() tea.Msg {
-			binary, lookErr := exec.LookPath("bash")
-			if lookErr != nil {
-				log.Fatal(lookErr)
-			}
-			env := os.Environ()
-			execErr := syscall.Exec(binary, args, env)
-			if execErr != nil {
-				log.Fatal(execErr)
-			}
 			return nil
 		}
 
@@ -52,7 +37,7 @@ func newActionDelegate(keys *keys.ActionDelegateKeyMap) list.DefaultDelegate {
 		case tea.KeyMsg:
 			switch {
 			case key.Matches(msg, keys.Exec):
-				return execve
+				return func() tea.Msg { return ActionExecveMsg{command} }
 
 			case key.Matches(msg, keys.Inspect):
 				return func() tea.Msg { return ActionInspectMsg(strings.Join(args[2:], " ")) }
