@@ -3,9 +3,9 @@
   cell,
 }: let
   l = nixpkgs.lib // builtins;
-  inherit (inputs) devshell nixpkgs;
+  inherit (inputs) nixpkgs;
 in
-  l.mapAttrs (_: devshell.legacyPackages.mkShell) {
+  l.mapAttrs (_: cell.lib.mkShell) {
     default = {
       extraModulesPath,
       pkgs,

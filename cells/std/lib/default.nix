@@ -4,6 +4,8 @@
 }: let
   nixpkgs = inputs.nixpkgs;
 in {
+  inherit (inputs.devshell.legacyPackages) mkShell;
+
   fromMakesWith = inputs': let
     inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "makes" inputs') (
       nixpkgs.lib.traceSeqN 1 inputs' ''
