@@ -8,6 +8,13 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs.yants.url = "github:divnix/yants";
   inputs.yants.inputs.nixpkgs.follows = "nixpkgs";
+  /*
+   Auxiliar inputs used in builtin libraries or for the dev environment.
+   */
+  inputs = {
+    devshell.url = "github:numtide/devshell";
+    devshell.inputs.nixpkgs.follows = "nixpkgs";
+  };
   outputs = inputs: let
     l = inputs.nixpkgs.lib // builtins;
     clades = import ./src/clades.nix {inherit (inputs) nixpkgs;};
@@ -25,7 +32,7 @@
       ) (grow args);
   in
     {
-      inherit (clades) runnables installables functions data;
+      inherit (clades) runnables installables functions data devshells;
       inherit grow growOn deSystemize incl;
       systems = l.systems.doubles;
     }
@@ -38,6 +45,7 @@
           (clades.runnables "cli")
           (clades.functions "lib")
           (clades.functions "devshellProfiles")
+          (clades.devshells "devshells")
           (clades.data "data")
         ];
         systems = [

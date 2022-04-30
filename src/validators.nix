@@ -70,11 +70,12 @@ in {
     list (
       struct "organelle" {
         name = string;
-        clade = enum "clades" ["runnables" "installables" "functions" "data"];
+        clade = string;
         actions = option (functionWithArgs {
           system = false;
           flake = false;
           fragment = false;
+          fragmentRelPath = false;
         });
       }
     );

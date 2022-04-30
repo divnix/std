@@ -12,6 +12,7 @@ in {
       system,
       flake,
       fragment,
+      fragmentRelPath,
     }: [
       {
         name = "run";
@@ -23,7 +24,7 @@ in {
   /*
    Use the Installables Clade for targets that you want to
    make availabe for installation into the user's nix profile.
-   
+
    Available actions:
      - install
      - upgrade
@@ -36,6 +37,7 @@ in {
       system,
       flake,
       fragment,
+      fragmentRelPath,
     }: [
       {
         name = "install";
@@ -57,10 +59,10 @@ in {
   /*
    Use the Functions Clade for reusable nix functions that you would
    call elswhere in the code.
-   
+
    Also use this for all types of modules and profiles, since they are
    implemented as functions.
-   
+
    Consequently, there are no actions available for functions.
    */
   functions = name: {
@@ -69,11 +71,11 @@ in {
   };
   /*
    Use the Data Clade for json serializable data.
-   
+
    Available actions:
      - write
      - explore
-   
+
    For all actions is true:
      Nix-proper 'stringContext'-carried dependency will be realized
      to the store, if present.
@@ -85,6 +87,7 @@ in {
       system,
       flake,
       fragment,
+      fragmentRelPath,
     }: let
       builder = ["nix" "build" "--impure" "--json" "--no-link" "--expr" expr];
       jq = ["|" "${nixpkgs.legacyPackages.${system}.jq}/bin/jq" "-r" "'.[].outputs.out'"];
@@ -109,6 +112,40 @@ in {
         name = "explore";
         description = "interactively explore";
         command = builder ++ jq ++ fx;
+      }
+    ];
+  };
+  /*
+   Use the Devshells Clade for devShells.
+
+   Available actions:
+     - enter
+   */
+  devshells = name: {
+    inherit name;
+    clade = "devshells";
+    actions = {
+      system,
+      flake,
+      fragment,
+      fragmentRelPath,
+    }: [
+      {
+        name = "enter";
+        description = "enter this devshell";
+        command = [
+          "std_layout_dir=$PRJ_ROOT/.std;"
+          "std_layout_fragment_path=$std_layout_dir/${fragmentRelPath};"
+          "mkdir -p $std_layout_fragment_path;"
+          ''
+            nix develop \
+              ${flake}#${fragment} \
+              --no-update-lock-file \
+              --no-write-lock-file \
+              --profile "$std_layout_fragment_path/profile" \
+              --command "$SHELL"
+          ''
+        ];
       }
     ];
   };
