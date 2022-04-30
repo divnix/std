@@ -1,10 +1,24 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Standard
-Upstream-Contact: David Arnold <dgx.arnold@gmail.com>
+Upstream-Contact: The Standard Authors
 Source: https://github.com/divnix/std
 
-# Sample paragraph, commented out:
-#
-# Files: src/*
-# Copyright: $YEAR $NAME <$CONTACT>
-# License: ...
+Files: src/*
+Copyright: 2022 The Standard Authors
+License: Unlicense
+
+Files: docs/*
+Copyright: 2022 The Standard Authors
+License: Unlicense
+
+Files: cells/*
+Copyright: 2022 The Standard Authors
+License: Unlicense
+
+Files: flake.* book.toml adrgen.config.yml
+Copyright: 2022 The Standard Authors
+License: Unlicense
+
+Files: .github/*
+Copyright: 2022 The Standard Authors
+License: Unlicense

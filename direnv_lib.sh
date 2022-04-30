@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# SPDX-FileCopyrightText: 2022 The Standard Authors
+# SPDX-License-Identifier: Unlicense
+
 # re-branding & force congruent choice with `std` CLI
 direnv_layout_dir=$PWD/.std
 
