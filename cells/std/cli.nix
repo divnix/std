@@ -23,7 +23,7 @@ in {
 
       src = ./cli;
 
-      vendorSha256 = "sha256-wW0IyUDzOSqJulHl+QRqyZoYeEGKGzrlcF7JryNjmKc=";
+      vendorSha256 = "sha256-4vsSQTd0PDTGXwpRIvS9C6TcHnfPhjbGcJQBbo+2ajE=";
 
       ldflags = [
         "-s"

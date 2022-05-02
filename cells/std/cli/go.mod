@@ -8,5 +8,6 @@ require (
 	github.com/charmbracelet/bubbletea v0.20.1-0.20220412151435-14e58aa1f92f
 	github.com/charmbracelet/lipgloss v0.5.0
 	github.com/fatih/color v1.13.0 // indirect
+	github.com/hokaccha/go-prettyjson v0.0.0-20211117102719-0474bc63780f // indirect
 	github.com/knipferrc/teacup v0.0.16
 )
