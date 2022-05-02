@@ -135,7 +135,8 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="installables"><a class="header" href="#installables">Installables</a></h1>
-<pre><code class="language-nix">  };
+<pre><code class="language-nix">    ];
+  };
   /*
    Use the Installables Clade for targets that you want to
    make availabe for installation into the user's nix profile.
@@ -153,6 +154,7 @@
       flake,
       fragment,
       fragmentRelPath,
+      cell,
     }: [
       {
         name = &quot;install&quot;;
@@ -167,8 +169,6 @@
       {
         name = &quot;remove&quot;;
         description = &quot;remove this target&quot;;
-        command = [&quot;nix&quot; &quot;profile&quot; &quot;remove&quot; fragment];
-      }
 </code></pre>
 
                     </main>

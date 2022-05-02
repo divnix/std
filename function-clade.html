@@ -135,7 +135,9 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="function"><a class="header" href="#function">Function</a></h1>
-<pre><code class="language-nix">    ];
+<pre><code class="language-nix">        command = [&quot;nix&quot; &quot;profile&quot; &quot;remove&quot; fragment];
+      }
+    ];
   };
   /*
    Use the Functions Clade for reusable nix functions that you would
@@ -146,8 +148,6 @@
 
    Consequently, there are no actions available for functions.
    */
-  functions = name: {
-    inherit name;
 </code></pre>
 
                     </main>
