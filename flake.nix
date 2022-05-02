@@ -30,10 +30,20 @@
             growOn args (l.recursiveUpdate soil' self);
         }
       ) (grow args);
+    harvest = t: p:
+      l.mapAttrs (_: v: l.getAttrFromPath p v)
+      (
+        l.filterAttrs (
+          n: v:
+            (l.elem n l.systems.doubles.all) # avoids infinit recursion
+            && (l.hasAttrByPath p v)
+        )
+        t
+      );
   in
     {
       inherit (clades) runnables installables functions data devshells;
-      inherit grow growOn deSystemize incl;
+      inherit grow growOn deSystemize incl harvest;
       systems = l.systems.doubles;
     }
     # on our own account ...
