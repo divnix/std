@@ -22,14 +22,11 @@
     deSystemize = import ./src/de-systemize.nix;
     grow = import ./src/grow.nix {inherit (inputs) nixpkgs yants;};
 
-    growOn = args: soil:
-      l.attrsets.recursiveUpdate (
-        soil
-        // {
-          __functor = self: soil':
-            growOn args (l.recursiveUpdate soil' self);
-        }
-      ) (grow args);
+    growOn = args:
+      grow args
+      // {
+        __functor = l.flip l.recursiveUpdate;
+      };
     harvest = t: p:
       l.mapAttrs (_: v: l.getAttrFromPath p v)
       (
