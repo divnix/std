@@ -64,7 +64,7 @@ func loadFlake() tea.Msg {
 	out, err := cmd.Output()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			return fatalErrf("%w, stderr:\n%s", exitErr, exitErr.Stderr)
+			return fatalErrf("command: %s, %w, stderr:\n%s", cmd.String(), exitErr, exitErr.Stderr)
 		}
 		return fatalErr(err)
 	}
