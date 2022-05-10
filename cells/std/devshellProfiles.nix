@@ -14,11 +14,16 @@ in {
       docs.enable = (l.mkEnableOption "Enable Docs nudging") // {default = true;};
     };
     config = {
-      commands = [
-        {package = std;}
-        {package = nixpkgs.adrgen;}
-        {package = nixpkgs.mdbook;}
-      ];
+      commands =
+        [
+          {package = std;}
+        ]
+        ++ l.optionals cfg.adr.enable [
+          {package = nixpkgs.adrgen;}
+        ]
+        ++ l.optionals cfg.docs.enable [
+          {package = nixpkgs.mdbook;}
+        ];
       devshell.startup.init-adrgen = l.mkIf cfg.adr.enable (l.stringsWithDeps.noDepEntry ''
         if [ ! -d "docs/architecture-decisions" ]; then
           ${nixpkgs.adrgen}/bin/adrgen init "docs/architecture-decisions"
