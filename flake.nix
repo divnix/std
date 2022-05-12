@@ -21,7 +21,7 @@
     clades = import ./src/clades.nix {inherit (inputs) nixpkgs;};
     incl = import ./src/incl.nix {inherit (inputs) nixpkgs;};
     deSystemize = import ./src/de-systemize.nix;
-    grow = import ./src/grow.nix {inherit (inputs) nixpkgs yants kroki-preprocessor;};
+    grow = import ./src/grow.nix {inherit (inputs) nixpkgs yants;};
 
     growOn = args:
       grow args
