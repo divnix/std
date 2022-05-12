@@ -5,6 +5,7 @@
   l = nixpkgs.lib // builtins;
   std = cell.cli.default;
   nixpkgs = inputs.nixpkgs;
+  kroki-preprocessor = inputs.kroki-preprocessor;
 in {
   default = {config, ...}: let
     cfg = config.std;
@@ -17,6 +18,7 @@ in {
       commands =
         [
           {package = std;}
+          {package = kroki-preprocessor;}
         ]
         ++ l.optionals cfg.adr.enable [
           {package = nixpkgs.adrgen;}
@@ -41,6 +43,9 @@ in {
 
         [build]
         build-dir = "docs/book"
+
+        [preprocessor.kroki-preprocessor]
+        command = "${kroki-preprocessor}"
 
         EOF
         cat << EOF > docs/SUMMARY.md

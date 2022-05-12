@@ -14,13 +14,14 @@
   inputs = {
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
+    kroki-preprocessor.url = "github:input-output-hk/mdbook-kroki-preprocessor";
   };
   outputs = inputs: let
     l = inputs.nixpkgs.lib // builtins;
     clades = import ./src/clades.nix {inherit (inputs) nixpkgs;};
     incl = import ./src/incl.nix {inherit (inputs) nixpkgs;};
     deSystemize = import ./src/de-systemize.nix;
-    grow = import ./src/grow.nix {inherit (inputs) nixpkgs yants;};
+    grow = import ./src/grow.nix {inherit (inputs) nixpkgs yants kroki-preprocessor;};
 
     growOn = args:
       grow args
