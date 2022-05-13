@@ -322,7 +322,7 @@ in just a few seconds ✨</p>
 <pre><code class="language-nix">    systems ? (
       l.systems.supported.tier1
       ++ l.systems.supported.tier2
-    ),
+      ++ [&quot;aarch64-darwin&quot;] # a lot of apple M1 already out there
 </code></pre>
 <h3 id="builtin-nixpkgsconfig"><a class="header" href="#builtin-nixpkgsconfig"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L10-L14">Builtin <code>nixpkgsConfig</code></a></a></h3>
 <pre><code class="language-nix">  builtinNixpkgsConfig = {
