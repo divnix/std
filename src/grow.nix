@@ -74,6 +74,7 @@
     systems ? (
       l.systems.supported.tier1
       ++ l.systems.supported.tier2
+      ++ ["aarch64-darwin"] # a lot of apple M1 already out there
     ),
     debug ? false,
   }: let
