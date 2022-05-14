@@ -141,6 +141,10 @@ take a look at the following:
 
 - [`input-output-hk/bitte-cells`][bitte-cells]
 - [`divnix/hive`][divnix-hive]
+- [`input-output-hk/tullia`][iog-tullia]
+- [`mdbook-kroki-preprocessor`][mdbook-kroki-preprocessor]
+- [`HardenedNixOS-Profile`][hardenednixos-profile]
+- [`Julia2Nix.jl`][julia2nix]
 
 :construction: Work in progress, would like to help us extend this section?
 
@@ -163,16 +167,20 @@ menu
 
 ---
 
-[clades-nix]: https://github.com/divnix/std/blob/main/src/clades.nix
-[grow-nix]: https://github.com/divnix/std/blob/main/src/grow.nix
-[incl-nix]: https://github.com/divnix/std/blob/main/src/incl.nix
-[de-systemize-nix]: https://github.com/divnix/std/blob/main/src/de-systemize.nix
 [bitte-cells]: https://github.com/input-output-hk/bitte-cells
+[clades-nix]: https://github.com/divnix/std/blob/main/src/clades.nix
 [cross_compiler]: https://en.wikipedia.org/wiki/Cross_compiler
+[de-systemize-nix]: https://github.com/divnix/std/blob/main/src/de-systemize.nix
 [divnix-hive]: https://github.com/divnix/hive
+[grow-nix]: https://github.com/divnix/std/blob/main/src/grow.nix
+[hardenednixos-profile]: https://github.com/hardenedlinux/HardenedNixOS-Profile
 [hydra]: https://github.com/NixOS/hydra
+[incl-nix]: https://github.com/divnix/std/blob/main/src/incl.nix
+[iog-tullia]: https://github.com/input-output-hk/tullia
+[julia2nix]: https://github.com/JuliaCN/Julia2Nix.jl
+[mdbook-kroki-preprocessor]: https://github.com/input-output-hk/mdbook-kroki-preprocessor
 [nix_drv]: https://nixos.org/manual/nix/unstable/expressions/derivations.html
 [nix_flakes]: https://nixos.wiki/wiki/Flakes
 [nix]: https://nixos.org/manual/nix/unstable
-[std]: https://github.com/divnix/std
 [std-docs]: https://divnix.github.io/std
+[std]: https://github.com/divnix/std
