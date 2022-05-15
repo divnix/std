@@ -9,8 +9,8 @@
   inputs.yants.url = "github:divnix/yants";
   inputs.yants.inputs.nixpkgs.follows = "nixpkgs";
   /*
-   Auxiliar inputs used in builtin libraries or for the dev environment.
-   */
+  Auxiliar inputs used in builtin libraries or for the dev environment.
+  */
   inputs = {
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";

@@ -6,4 +6,3 @@ title = "Documentation"
 
 [build]
 build-dir = "docs/book"
-
