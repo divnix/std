@@ -13,7 +13,6 @@ in {
       flake,
       fragment,
       fragmentRelPath,
-      cell,
     }: [
       {
         name = "run";
@@ -39,7 +38,6 @@ in {
       flake,
       fragment,
       fragmentRelPath,
-      cell,
     }: [
       {
         name = "install";
@@ -90,7 +88,6 @@ in {
       flake,
       fragment,
       fragmentRelPath,
-      cell,
     }: let
       builder = ["nix" "build" "--impure" "--json" "--no-link" "--expr" expr];
       jq = ["|" "${nixpkgs.legacyPackages.${system}.jq}/bin/jq" "-r" "'.[].outputs.out'"];
@@ -132,7 +129,6 @@ in {
       flake,
       fragment,
       fragmentRelPath,
-      cell,
     }: [
       {
         name = "enter";
