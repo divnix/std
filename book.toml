@@ -6,5 +6,3 @@ title = "Documentation"
 
 [build]
 build-dir = "docs/book"
-
-[preprocessor.kroki-preprocessor]

@@ -76,18 +76,16 @@ var (
 )
 
 type ReadmeModel struct {
-	Target           *data.Item
-	TargetHelp       markdown.Bubble
-	CellHelp         markdown.Bubble
-	OrganelleHelp    markdown.Bubble
-	HasTargetHelp    bool
-	HasCellHelp      bool
-	HasOrganelleHelp bool
-	Active           bool
-	Width            int
-	Height           int
-	KeyMap           *keys.ReadmeKeyMap
-	Help             help.Model
+	TargetHelp    markdown.Bubble
+	CellHelp      markdown.Bubble
+	OrganelleHelp markdown.Bubble
+	Cell          string
+	Organelle     string
+	Target        string
+	Width         int
+	Height        int
+	KeyMap        *keys.ReadmeKeyMap
+	Help          help.Model
 	// Focus
 }
 
@@ -101,36 +99,51 @@ type renderTargetMarkdownMsg struct {
 	msg tea.Msg
 }
 
-func (m *ReadmeModel) SetTarget(t *data.Item) {
-	m.Target = t
-	m.HasTargetHelp = t.StdReadme != ""
-	m.HasCellHelp = t.StdCellReadme != ""
-	m.HasOrganelleHelp = t.StdOrganelleReadme != ""
-	if m.HasTargetHelp {
-		m.TargetHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", t.StdReadme))
+func (m *ReadmeModel) LoadReadme(d *data.Root, ci, oi, ti int) {
+	m.Cell = d.Cell(ci, oi, ti)
+	m.Organelle = d.Organelle(ci, oi, ti)
+	m.Target = d.Target(ci, oi, ti)
+	if d.HasTargetHelp(ci, oi, ti) {
+		m.TargetHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", d.TargetHelp(ci, oi, ti)))
 	} else {
 		content := lipgloss.NewStyle().
 			Width(m.Width).
 			Height(m.Height).
-			Render(fmt.Sprintf(noTargetReadme, t.Title(), t.StdCell, t.StdOrganelle, t.StdName))
+			Render(fmt.Sprintf(
+				noTargetReadme,
+				d.TargetTitle(ci, oi, ti),
+				d.Cell(ci, oi, ti),
+				d.Organelle(ci, oi, ti),
+				d.Target(ci, oi, ti),
+			))
 		m.TargetHelp.Viewport.SetContent(content)
 	}
-	if m.HasCellHelp {
-		m.CellHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", t.StdCellReadme))
+	if d.HasCellHelp(ci, oi, ti) {
+		m.CellHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", d.CellHelp(ci, oi, ti)))
 	} else {
 		content := lipgloss.NewStyle().
 			Width(m.Width).
 			Height(m.Height).
-			Render(fmt.Sprintf(noCellReadme, t.StdCell, t.StdCell))
+			Render(fmt.Sprintf(
+				noCellReadme,
+				d.Cell(ci, oi, ti),
+				d.Cell(ci, oi, ti),
+			))
 		m.CellHelp.Viewport.SetContent(content)
 	}
-	if m.HasOrganelleHelp {
-		m.OrganelleHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", t.StdOrganelleReadme))
+	if d.HasOrganelleHelp(ci, oi, ti) {
+		m.OrganelleHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", d.OrganelleHelp(ci, oi, ti)))
 	} else {
 		content := lipgloss.NewStyle().
 			Width(m.Width).
 			Height(m.Height).
-			Render(fmt.Sprintf(noOrganelleReadme, t.StdCell, t.StdOrganelle, t.StdCell, t.StdOrganelle))
+			Render(fmt.Sprintf(
+				noOrganelleReadme,
+				d.Cell(ci, oi, ti),
+				d.Organelle(ci, oi, ti),
+				d.Cell(ci, oi, ti),
+				d.Organelle(ci, oi, ti),
+			))
 		m.OrganelleHelp.Viewport.SetContent(content)
 	}
 }
@@ -156,27 +169,40 @@ func (m *ReadmeModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m *ReadmeModel) RenderMarkdown() tea.Cmd {
+func (m *ReadmeModel) RenderMarkdown(d *data.Root, ci, oi, ti int) tea.Cmd {
 	var (
 		cmds []tea.Cmd
 		cmd  tea.Cmd
 	)
+	m.LoadReadme(d, ci, oi, ti)
 	m.TargetHelp.SetIsActive(true)
-	if m.HasCellHelp {
+	if d.HasCellHelp(ci, oi, ti) {
 		cmd = func() tea.Msg {
-			return renderCellMarkdownMsg{m.CellHelp.SetFileName(m.Target.StdCellReadme)()}
+			return renderCellMarkdownMsg{
+				m.CellHelp.SetFileName(
+					d.CellHelp(ci, oi, ti),
+				)(),
+			}
 		}
 		cmds = append(cmds, cmd)
 	}
-	if m.HasOrganelleHelp {
+	if d.HasOrganelleHelp(ci, oi, ti) {
 		cmd = func() tea.Msg {
-			return renderOrganelleMarkdownMsg{m.OrganelleHelp.SetFileName(m.Target.StdOrganelleReadme)()}
+			return renderOrganelleMarkdownMsg{
+				m.OrganelleHelp.SetFileName(
+					d.OrganelleHelp(ci, oi, ti),
+				)(),
+			}
 		}
 		cmds = append(cmds, cmd)
 	}
-	if m.HasTargetHelp {
+	if d.HasTargetHelp(ci, oi, ti) {
 		cmd = func() tea.Msg {
-			return renderTargetMarkdownMsg{m.TargetHelp.SetFileName(m.Target.StdReadme)()}
+			return renderTargetMarkdownMsg{
+				m.TargetHelp.SetFileName(
+					d.TargetHelp(ci, oi, ti),
+				)(),
+			}
 		}
 		cmds = append(cmds, cmd)
 	}
@@ -190,14 +216,6 @@ func (m *ReadmeModel) Update(msg tea.Msg) (*ReadmeModel, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch {
-		// activate and deactivate help
-		// ShowHelp shadows CloseHelp in case of the toggle key '?'
-		case key.Matches(msg, m.KeyMap.CloseReadme):
-			m.Active = false
-			m.CellHelp.SetIsActive(false)
-			m.OrganelleHelp.SetIsActive(false)
-			m.TargetHelp.SetIsActive(false)
-			return m, nil
 		case key.Matches(msg, m.KeyMap.CycleTab):
 			if m.TargetHelp.Active {
 				m.TargetHelp.SetIsActive(false)
@@ -254,22 +272,22 @@ func (m *ReadmeModel) View() string {
 		content string
 	)
 	if m.CellHelp.Active {
-		tabs = append(tabs, activeTab.Render(fmt.Sprintf("Cell: %s", m.Target.StdCell)))
+		tabs = append(tabs, activeTab.Render(fmt.Sprintf("Cell: %s", m.Cell)))
 		content = m.CellHelp.View()
 	} else {
-		tabs = append(tabs, tab.Render(fmt.Sprintf("Cell: %s", m.Target.StdCell)))
+		tabs = append(tabs, tab.Render(fmt.Sprintf("Cell: %s", m.Cell)))
 	}
 	if m.OrganelleHelp.Active {
-		tabs = append(tabs, activeTab.Render(fmt.Sprintf("Organelle: %s", m.Target.StdOrganelle)))
+		tabs = append(tabs, activeTab.Render(fmt.Sprintf("Organelle: %s", m.Organelle)))
 		content = m.OrganelleHelp.View()
 	} else {
-		tabs = append(tabs, tab.Render(fmt.Sprintf("Organelle: %s", m.Target.StdOrganelle)))
+		tabs = append(tabs, tab.Render(fmt.Sprintf("Organelle: %s", m.Organelle)))
 	}
 	if m.TargetHelp.Active {
-		tabs = append(tabs, activeTab.Render(fmt.Sprintf("Target: %s", m.Target.StdName)))
+		tabs = append(tabs, activeTab.Render(fmt.Sprintf("Target: %s", m.Target)))
 		content = m.TargetHelp.View()
 	} else {
-		tabs = append(tabs, tab.Render(fmt.Sprintf("Target: %s", m.Target.StdName)))
+		tabs = append(tabs, tab.Render(fmt.Sprintf("Target: %s", m.Target)))
 	}
 
 	row := lipgloss.JoinHorizontal(lipgloss.Top, tabs...)

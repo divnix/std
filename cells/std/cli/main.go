@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -15,7 +16,7 @@ func bashExecve(command []string) error {
 	if err != nil {
 		return err
 	}
-	args := []string{"bash", "-c", strings.Join(command, " ")}
+	args := []string{"bash", "-c", fmt.Sprintf("%s && ./.std/last-action", strings.Join(command, " "))}
 	env := os.Environ()
 	if err := syscall.Exec(binary, args, env); err != nil {
 		return err

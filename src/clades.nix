@@ -2,9 +2,9 @@
   l = nixpkgs.lib // builtins;
 in {
   /*
-   Use the Runnables Clade for targets that you want to
-   make accessible with a 'run' action on the TUI.
-   */
+  Use the Runnables Clade for targets that you want to
+  make accessible with a 'run' action on the TUI.
+  */
   runnables = name: {
     inherit name;
     clade = "runnables";
@@ -13,24 +13,25 @@ in {
       flake,
       fragment,
       fragmentRelPath,
-      cell,
     }: [
       {
         name = "run";
         description = "exec this target";
-        command = ["nix" "run" "${flake}#${fragment}"];
+        command = ''
+          nix run ${flake}#${fragment}
+        '';
       }
     ];
   };
   /*
-   Use the Installables Clade for targets that you want to
-   make availabe for installation into the user's nix profile.
+  Use the Installables Clade for targets that you want to
+  make availabe for installation into the user's nix profile.
 
-   Available actions:
-     - install
-     - upgrade
-     - remove
-   */
+  Available actions:
+    - install
+    - upgrade
+    - remove
+  */
   installables = name: {
     inherit name;
     clade = "installables";
@@ -39,49 +40,54 @@ in {
       flake,
       fragment,
       fragmentRelPath,
-      cell,
     }: [
       {
         name = "install";
         description = "install this target";
-        command = ["nix" "profile" "install" "${flake}#${fragment}"];
+        command = ''
+          nix profile install ${flake}#${fragment}
+        '';
       }
       {
         name = "upgrade";
         description = "upgrade this target";
-        command = ["nix" "profile" "upgrade" "${flake}#${fragment}"];
+        command = ''
+          nix profile upgrade ${flake}#${fragment}
+        '';
       }
       {
         name = "remove";
         description = "remove this target";
-        command = ["nix" "profile" "remove" fragment];
+        command = ''
+          nix profile remove ${flake}#${fragment}
+        '';
       }
     ];
   };
   /*
-   Use the Functions Clade for reusable nix functions that you would
-   call elswhere in the code.
+  Use the Functions Clade for reusable nix functions that you would
+  call elswhere in the code.
 
-   Also use this for all types of modules and profiles, since they are
-   implemented as functions.
+  Also use this for all types of modules and profiles, since they are
+  implemented as functions.
 
-   Consequently, there are no actions available for functions.
-   */
+  Consequently, there are no actions available for functions.
+  */
   functions = name: {
     inherit name;
     clade = "functions";
   };
   /*
-   Use the Data Clade for json serializable data.
+  Use the Data Clade for json serializable data.
 
-   Available actions:
-     - write
-     - explore
+  Available actions:
+    - write
+    - explore
 
-   For all actions is true:
-     Nix-proper 'stringContext'-carried dependency will be realized
-     to the store, if present.
-   */
+  For all actions is true:
+    Nix-proper 'stringContext'-carried dependency will be realized
+    to the store, if present.
+  */
   data = name: {
     inherit name;
     clade = "data";
@@ -90,7 +96,6 @@ in {
       flake,
       fragment,
       fragmentRelPath,
-      cell,
     }: let
       builder = ["nix" "build" "--impure" "--json" "--no-link" "--expr" expr];
       jq = ["|" "${nixpkgs.legacyPackages.${system}.jq}/bin/jq" "-r" "'.[].outputs.out'"];
@@ -109,21 +114,21 @@ in {
       {
         name = "write";
         description = "write to file";
-        command = builder ++ jq;
+        command = l.concatStringsSep "\n" (builder ++ jq);
       }
       {
         name = "explore";
         description = "interactively explore";
-        command = builder ++ jq ++ fx;
+        command = l.concatStringsSep "\n" (builder ++ jq ++ fx);
       }
     ];
   };
   /*
-   Use the Devshells Clade for devShells.
+  Use the Devshells Clade for devShells.
 
-   Available actions:
-     - enter
-   */
+  Available actions:
+    - enter
+  */
   devshells = name: {
     inherit name;
     clade = "devshells";
@@ -132,26 +137,23 @@ in {
       flake,
       fragment,
       fragmentRelPath,
-      cell,
     }: [
       {
         name = "enter";
         description = "enter this devshell";
-        command = [
-          "std_layout_dir=$PRJ_ROOT/.std;"
-          "std_layout_fragment_path=$std_layout_dir/${fragmentRelPath};"
-          "mkdir -p $std_layout_fragment_path;"
-          ''
-            nix develop \
-              ${flake}#${fragment} \
-              --no-update-lock-file \
-              --no-write-lock-file \
-              --no-warn-dirty \
-              --accept-flake-config \
-              --profile "$std_layout_fragment_path/profile" \
-              --command "$SHELL"
-          ''
-        ];
+        command = ''
+          std_layout_dir=$PRJ_ROOT/.std
+          std_layout_fragment_path=$std_layout_dir/${fragmentRelPath}
+          mkdir -p $std_layout_fragment_path
+          nix develop \
+            ${flake}#${fragment} \
+            --no-update-lock-file \
+            --no-write-lock-file \
+            --no-warn-dirty \
+            --accept-flake-config \
+            --profile "$std_layout_fragment_path/profile" \
+            --command "$SHELL"
+        '';
       }
     ];
   };

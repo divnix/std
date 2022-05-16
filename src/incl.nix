@@ -6,21 +6,21 @@
   l = nixpkgs.lib // builtins;
 
   /*
-   A source inclusion helper.
-   
-   With incl, you can specify what files should become part of the
-   input hashing function of nix.
-   
-   That means, that only if that hash changes, a rebuild is triggered.
-   
-   By only including the sources that are an actual ingredient to your
-   build process, you can greatly reduce the need for arbitrary builds.
-   
-   Slightly less effective that language native build caching. But hey,
-   it's 100% polyglot.
-   
-   You can use this function independently of the rest of std.
-   */
+  A source inclusion helper.
+
+  With incl, you can specify what files should become part of the
+  input hashing function of nix.
+
+  That means, that only if that hash changes, a rebuild is triggered.
+
+  By only including the sources that are an actual ingredient to your
+  build process, you can greatly reduce the need for arbitrary builds.
+
+  Slightly less effective that language native build caching. But hey,
+  it's 100% polyglot.
+
+  You can use this function independently of the rest of std.
+  */
 
   incl = root: allowedPaths: let
     verifiedPaths = requireAllPathsExist allowedPaths;

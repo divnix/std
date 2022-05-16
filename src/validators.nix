@@ -76,7 +76,6 @@ in {
           flake = false;
           fragment = false;
           fragmentRelPath = false;
-          cell = false;
         });
       }
     );
