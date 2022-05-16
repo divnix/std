@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
@@ -10,6 +11,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
+	"github.com/divnix/std/data"
 	"github.com/divnix/std/keys"
 	"github.com/divnix/std/models"
 	"github.com/divnix/std/styles"
@@ -20,9 +22,13 @@ type Focus int64
 const (
 	Left Focus = iota
 	Right
+	Readme
+	Inspect
 )
 
-const cmdTemplate = "std  %s  %s"
+const (
+	cmdTemplate = "std  %s  %s"
+)
 
 func (s Focus) String() string {
 	switch s {
@@ -34,12 +40,47 @@ func (s Focus) String() string {
 	return "unknown"
 }
 
+type Targets = list.Model
+
+type TargetItem struct {
+	r            *data.Root
+	CellIdx      int
+	OrganelleIdx int
+	TargetIdx    int
+}
+
+func (i TargetItem) Title() string { return i.r.TargetTitle(i.CellIdx, i.OrganelleIdx, i.TargetIdx) }
+func (i TargetItem) Description() string {
+	return i.r.TargetDescription(i.CellIdx, i.OrganelleIdx, i.TargetIdx)
+}
+func (i TargetItem) FilterValue() string { return i.Title() }
+
+type Actions = list.Model
+
+type ActionItem struct {
+	r            *data.Root
+	CellIdx      int
+	OrganelleIdx int
+	TargetIdx    int
+	ActionIdx    int
+}
+
+func (i ActionItem) Title() string {
+	return i.r.ActionTitle(i.CellIdx, i.OrganelleIdx, i.TargetIdx, i.ActionIdx)
+}
+func (i ActionItem) Description() string {
+	return i.r.ActionDescription(i.CellIdx, i.OrganelleIdx, i.TargetIdx, i.ActionIdx)
+}
+func (i ActionItem) FilterValue() string { return i.Title() }
+
 type Tui struct {
-	Target        *models.TargetModel
-	Action        *models.ActionModel
+	r *data.Root
+
+	Left          Targets
+	Right         Actions
 	Readme        *models.ReadmeModel
-	Keys          *keys.AppKeyMap
 	Legend        help.Model
+	Keys          *keys.AppKeyMap
 	Title         string
 	InspectAction string
 	ExecveCommand []string
@@ -49,6 +90,68 @@ type Tui struct {
 	Focus
 	Width  int
 	Height int
+}
+
+func (m *Tui) LoadTargets() tea.Cmd {
+	var (
+		numItems = m.r.Len()
+		counter  = 0
+	)
+	// Make list of actions
+	items := make([]list.Item, numItems)
+	for ci, c := range m.r.Cells {
+		for oi, o := range c.Organelles {
+			for ti, _ := range o.Targets {
+				items[counter] = &TargetItem{m.r, ci, oi, ti}
+				counter += 1
+			}
+		}
+	}
+	cmd := m.Left.SetItems(items)
+	if m.Left.SelectedItem() != nil {
+		target := m.Left.SelectedItem().(*TargetItem)
+		cmd = tea.Batch(cmd, m.LoadActions(target))
+	}
+	return cmd
+}
+
+func (m *Tui) LoadActions(i *TargetItem) tea.Cmd {
+	_, _, t := m.r.Select(i.CellIdx, i.OrganelleIdx, i.TargetIdx)
+	var numItems = len(t.Actions)
+	// Make list of actions
+	items := make([]list.Item, numItems)
+	for j := 0; j < numItems; j++ {
+		items[j] = &ActionItem{m.r, i.CellIdx, i.OrganelleIdx, i.TargetIdx, j}
+	}
+	return m.Right.SetItems(items)
+}
+
+func (m *Tui) SetTitle() {
+
+	if m.Right.SelectedItem() != nil {
+		m.Title = fmt.Sprintf(
+			cmdTemplate,
+			m.Left.SelectedItem().(*TargetItem).Title(),
+			m.Right.SelectedItem().(*ActionItem).Title(),
+		)
+	} else {
+		m.Title = lipgloss.NewStyle().Faint(true).Render(fmt.Sprintf(
+			cmdTemplate, m.Left.SelectedItem().(*TargetItem).Title(), "",
+		))
+	}
+}
+
+func (m *Tui) GetActionCmd(i *ActionItem) ([]string, tea.Msg) {
+	nix, args, msg := GetActionEvalCmdArgs(
+		i.r.Cell(i.CellIdx, i.OrganelleIdx, i.TargetIdx),
+		i.r.Organelle(i.CellIdx, i.OrganelleIdx, i.TargetIdx),
+		i.r.Target(i.CellIdx, i.OrganelleIdx, i.TargetIdx),
+		i.r.ActionTitle(i.CellIdx, i.OrganelleIdx, i.TargetIdx, i.ActionIdx),
+	)
+	if msg != nil {
+		return nil, msg
+	}
+	return append([]string{nix}, args...), nil
 }
 
 func (m *Tui) Init() tea.Cmd {
@@ -65,120 +168,130 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmd        tea.Cmd
 		actionKeys = keys.NewActionDelegateKeyMap()
 	)
-	// As soon as targets are loaded, stop the loading spinner
-	if m.Target.SelectedItem() != nil {
-		m.Loading = false
-	}
 	switch msg := msg.(type) {
-	case flakeLoadedMsg:
-		m.Target.SetItems(msg.Items)
-		return m, nil
+	case cellLoadedMsg:
+		m.r = &msg
+		m.Loading = false
+		return m, tea.Batch(
+			m.LoadTargets(),
+			m.Left.StartSpinner(),
+		)
 
-	case fatalErrMsg:
+	case cellLoadingFatalErrMsg:
 		m.FatalError = msg.err
 		return m, tea.Quit
-
-	case models.ActionExecveMsg:
-		m.ExecveCommand = msg.Command
-		return m, tea.Quit
-
-	case models.ActionInspectMsg:
-		m.InspectAction = string(msg)
-		return m, nil
 
 	case spinner.TickMsg:
 		if m.Loading {
 			m.Spinner, cmd = m.Spinner.Update(msg)
 			return m, cmd
 		}
-		// effectively disables the list-spinners:
-		// we're happy with a static vertical line as
-		// visual focus clue
+		m.Left, cmd = m.Left.Update(msg)
+		cmds = append(cmds, cmd)
+		m.Right, cmd = m.Right.Update(msg)
+		cmds = append(cmds, cmd)
+		return m, tea.Batch(cmds...)
 	case tea.KeyMsg:
 		// quit even during filtering
 		if key.Matches(msg, m.Keys.ForceQuit) {
 			return m, tea.Quit
 		}
 		// Quit action inspection if enabled.
-		if m.InspectAction != "" && key.Matches(msg, actionKeys.QuitInspect) {
+		if m.Focus == Inspect && key.Matches(msg, actionKeys.QuitInspect) {
+			m.Focus = Right
 			m.InspectAction = ""
 			return m, nil
 		}
 		// Don't match any of the keys below if we're actively filtering.
-		if m.Target.List.FilterState() == list.Filtering {
+		if m.Left.FilterState() == list.Filtering {
 			break
 		}
 		if key.Matches(msg, m.Keys.Quit) {
 			return m, tea.Quit
 		}
 		// Don't match any of the keys below if no target is selected.
-		if m.Target.SelectedItem() == nil {
+		if m.Left.SelectedItem() == nil {
 			return m, nil
 		}
 		switch {
+		case m.Focus == Right && key.Matches(msg, actionKeys.Exec):
+			if i, ok := m.Right.SelectedItem().(*ActionItem); ok {
+				args, msg := m.GetActionCmd(i)
+				if msg != nil {
+					return m, func() tea.Msg { return msg }
+				}
+				m.ExecveCommand = args
+				return m, tea.Quit
+			}
 		// toggle the help
 		case key.Matches(msg, m.Keys.ShowReadme):
 			if m.Focus == Left {
-				if !m.Readme.Active {
-					m.Readme.Active = true
-					cmd = m.Readme.RenderMarkdown()
-					return m, cmd
+				m.Focus = Readme
+				var t = m.Left.SelectedItem().(*TargetItem)
+				cmd = m.Readme.RenderMarkdown(m.r, t.CellIdx, t.OrganelleIdx, t.TargetIdx)
+				return m, cmd
+			}
+			if m.Focus == Right {
+				if i, ok := m.Right.SelectedItem().(*ActionItem); ok {
+					m.Focus = Inspect
+					args, msg := m.GetActionCmd(i)
+					if msg != nil {
+						return m, func() tea.Msg { return msg }
+					}
+					m.InspectAction = strings.Join(args[:2], " ") +
+						" \\\n" + strings.Join(args[2:4], " ") +
+						" \\\n" + strings.Join(args[4:7], " ") +
+						" \\\n" + args[7]
+					return m, nil
+				} else {
+					return m, nil
 				}
 			}
+			fallthrough
+		case key.Matches(msg, m.Readme.KeyMap.CloseReadme):
+			if m.Focus == Readme {
+				m.Focus = Left
+				m.Readme.CellHelp.SetIsActive(false)
+				m.Readme.OrganelleHelp.SetIsActive(false)
+				m.Readme.TargetHelp.SetIsActive(false)
+				return m, nil
+			}
+			fallthrough
+
 		// toggle the focus
-		case key.Matches(msg, m.Keys.ToggleFocus):
+		case key.Matches(msg, m.Keys.ToggleFocus, m.Keys.FocusLeft, m.Keys.FocusRight):
 			// Don't toggle the focus if we're showing the help.
-			if m.Readme.Active {
+			if m.Focus == Readme || m.Focus == Inspect {
 				break
 			}
 			if m.Focus == Left {
+				if key.Matches(msg, m.Keys.FocusLeft) {
+					return m, nil
+				}
 				m.Focus = Right
+				m.SetTitle()
 			} else {
+				if key.Matches(msg, m.Keys.FocusRight) {
+					return m, nil
+				}
 				m.Focus = Left
+				m.Title = ""
 			}
-			m.Target, cmd = m.Target.Update(msg)
+			cmd = m.Left.ToggleSpinner()
 			cmds = append(cmds, cmd)
-			m.Action, cmd = m.Action.Update(msg)
+			cmd = m.Right.ToggleSpinner()
 			cmds = append(cmds, cmd)
-			return m, tea.Batch(cmds...)
-		case key.Matches(msg, m.Keys.FocusLeft):
-			// Don't toggle the focus if we're showing the help.
-			if m.Readme.Active {
-				break
-			}
-			if m.Focus != Left {
-				m.Focus = Left
-				m.Target, cmd = m.Target.Update(msg)
-				cmds = append(cmds, cmd)
-				m.Action, cmd = m.Action.Update(msg)
-				cmds = append(cmds, cmd)
-			}
-			return m, tea.Batch(cmds...)
-		case key.Matches(msg, m.Keys.FocusRight):
-			// Don't toggle the focus if we're showing the help.
-			if m.Readme.Active {
-				break
-			}
-			if m.Focus != Right {
-				m.Focus = Right
-				m.Target, cmd = m.Target.Update(msg)
-				cmds = append(cmds, cmd)
-				m.Action, cmd = m.Action.Update(msg)
-				cmds = append(cmds, cmd)
-			}
 			return m, tea.Batch(cmds...)
 		}
 	case tea.WindowSizeMsg:
 		m.Width = msg.Width
 		m.Height = msg.Height
 		// size Target
-		m.Target.Height = msg.Height - 10
-		m.Target.Width = msg.Width*2/3 - 10
-		m.Target, _ = m.Target.Update(msg)
+		m.Left.SetHeight(msg.Height - 10)
+		m.Left.SetWidth(msg.Width*2/3 - 10)
 		// size Action
-		m.Action.Height = msg.Height - 10
-		m.Action.Width = msg.Width*1/3 - 10
-		m.Action, _ = m.Action.Update(msg)
+		m.Right.SetHeight(msg.Height - 10)
+		m.Right.SetWidth(msg.Width*1/3 - 10)
 		// size Readme
 		m.Readme.Height = msg.Height - 10
 		m.Readme.Width = msg.Width - 10
@@ -186,30 +299,21 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 	// route all other messages according to state
-	if m.Readme.Active {
+	if m.Focus == Readme {
 		m.Readme, cmd = m.Readme.Update(msg)
 		cmds = append(cmds, cmd)
 	} else if m.Focus == Left {
-		m.Target, cmd = m.Target.Update(msg)
+		m.Left, cmd = m.Left.Update(msg)
 		cmds = append(cmds, cmd)
-		if m.Target.SelectedItem() != nil {
-			var target = m.Target.SelectedItem()
-			m.Readme.SetTarget(target)
-			m.Action.SetTarget(target)
+		if m.Left.SelectedItem() != nil {
+			var target = m.Left.SelectedItem().(*TargetItem)
+			cmds = append(cmds, m.LoadActions(target))
 		} else {
-			m.Action.List.SetItems([]list.Item{})
+			cmds = append(cmds, m.Right.SetItems([]list.Item{}))
 		}
 	} else {
-		m.Action, cmd = m.Action.Update(msg)
+		m.Right, cmd = m.Right.Update(msg)
 		cmds = append(cmds, cmd)
-	}
-	// As soon as targets are loaded, change the title
-	if m.Target.SelectedItem() != nil {
-		if m.Action.SelectedItem() != nil {
-			m.Title = fmt.Sprintf(cmdTemplate, m.Target.SelectedItem().Title(), m.Action.SelectedItem().Title())
-		} else {
-			m.Title = lipgloss.NewStyle().Faint(true).Render(fmt.Sprintf(cmdTemplate, m.Target.SelectedItem().Title(), "n/a"))
-		}
 	}
 	return m, tea.Batch(cmds...)
 }
@@ -221,7 +325,7 @@ func (m *Tui) View() string {
 	} else {
 		title = styles.TitleStyle.Render(m.Title)
 	}
-	if m.Readme.Active {
+	if m.Focus == Readme {
 		return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center,
 			styles.AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
 				lipgloss.JoinVertical(
@@ -241,8 +345,8 @@ func (m *Tui) View() string {
 				title,
 				lipgloss.JoinHorizontal(
 					lipgloss.Left,
-					styles.ActionInspectionStyle.Width(m.Target.Width).Height(m.Target.Height).Render(m.InspectAction),
-					styles.ActionStyle.Render(m.Action.View()),
+					styles.ActionInspectionStyle.Width(m.Left.Width()).Height(m.Left.Height()).Render(m.InspectAction),
+					styles.ActionStyle.Render(m.Right.View()),
 				),
 				styles.LegendStyle.Render(m.Legend.View(m)),
 			)),
@@ -256,8 +360,8 @@ func (m *Tui) View() string {
 			title,
 			lipgloss.JoinHorizontal(
 				lipgloss.Left,
-				styles.TargetStyle.Width(m.Target.Width).Height(m.Target.Height).Render(m.Target.View()),
-				styles.ActionStyle.Render(m.Action.View()),
+				styles.TargetStyle.Width(m.Left.Width()).Height(m.Left.Height()).Render(m.Left.View()),
+				styles.ActionStyle.Width(m.Right.Width()).Height(m.Right.Height()).Render(m.Right.View()),
 			),
 			styles.LegendStyle.Render(m.Legend.View(m)),
 		)),
@@ -265,23 +369,29 @@ func (m *Tui) View() string {
 }
 
 func (m *Tui) ShortHelp() []key.Binding {
-	if m.Readme.Active {
+	if m.Focus == Readme {
 		return append(m.Readme.ShortHelp(), []key.Binding{
 			m.Keys.Quit,
 		}...)
 	}
 	if m.Focus == Left {
-		if m.Target.List.FilterState() == list.Filtering {
-			return m.Target.ShortHelp()
+		// switch off the list's help
+		m.Left.KeyMap.ShowFullHelp.SetEnabled(false)
+		m.Left.KeyMap.CloseFullHelp.SetEnabled(false)
+		if m.Left.FilterState() == list.Filtering {
+			return m.Left.ShortHelp()
 		} else {
-			return append(m.Target.ShortHelp(), []key.Binding{
+			return append(m.Left.ShortHelp(), []key.Binding{
 				m.Keys.ToggleFocus,
 				m.Keys.ShowReadme,
 				m.Keys.Quit,
 			}...)
 		}
 	} else {
-		return append(m.Action.ShortHelp(), []key.Binding{
+		// switch off the list's help
+		m.Right.KeyMap.ShowFullHelp.SetEnabled(false)
+		m.Right.KeyMap.CloseFullHelp.SetEnabled(false)
+		return append(m.Right.ShortHelp(), []key.Binding{
 			m.Keys.ToggleFocus,
 			m.Keys.ShowReadme,
 			m.Keys.Quit,
@@ -296,14 +406,12 @@ func (m *Tui) FullHelp() [][]key.Binding {
 
 func InitialPage() *Tui {
 
-	target := models.InitialTarget()
-	action := models.NewAction()
 	spin := spinner.New()
 	spin.Spinner = spinner.Points
 
 	return &Tui{
-		Target:  target,
-		Action:  action,
+		Left:    InitialTargets(),
+		Right:   NewActions(),
 		Keys:    keys.NewAppKeyMap(),
 		Focus:   Left,
 		Readme:  models.NewReadme(),
@@ -311,4 +419,45 @@ func InitialPage() *Tui {
 		Loading: true,
 		Spinner: spin,
 	}
+}
+
+func InitialTargets() Targets {
+
+	targetList := list.New([]list.Item{}, list.NewDefaultDelegate(), 0, 0)
+	targetList.Title = "Target"
+	targetList.KeyMap = keys.DefaultListKeyMap()
+	targetList.SetFilteringEnabled(true)
+	targetList.StartSpinner()
+	targetList.DisableQuitKeybindings()
+	targetList.SetShowHelp(false)
+
+	return targetList
+}
+
+func NewActions() Actions {
+
+	newActionDelegate := func(keys *keys.ActionDelegateKeyMap) list.DefaultDelegate {
+		d := list.NewDefaultDelegate()
+
+		d.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd { return nil }
+
+		help := []key.Binding{keys.Exec}
+		d.ShortHelpFunc = func() []key.Binding { return help }
+		d.FullHelpFunc = func() [][]key.Binding { return [][]key.Binding{} }
+
+		return d
+	}
+
+	actionDelegateKeys := keys.NewActionDelegateKeyMap()
+	delegate := newActionDelegate(actionDelegateKeys)
+	actionList := list.New([]list.Item{}, delegate, 0, 0)
+	actionList.Title = fmt.Sprintf("Actions")
+	actionList.KeyMap = keys.DefaultListKeyMap()
+	actionList.SetShowPagination(false)
+	actionList.SetShowHelp(false)
+	actionList.SetShowStatusBar(false)
+	actionList.SetFilteringEnabled(false)
+	actionList.DisableQuitKeybindings()
+
+	return actionList
 }

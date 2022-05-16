@@ -17,7 +17,9 @@ in {
       {
         name = "run";
         description = "exec this target";
-        command = ["nix" "run" "${flake}#${fragment}"];
+        command = ''
+          nix run ${flake}#${fragment}
+        '';
       }
     ];
   };
@@ -42,17 +44,23 @@ in {
       {
         name = "install";
         description = "install this target";
-        command = ["nix" "profile" "install" "${flake}#${fragment}"];
+        command = ''
+          nix profile install ${flake}#${fragment}
+        '';
       }
       {
         name = "upgrade";
         description = "upgrade this target";
-        command = ["nix" "profile" "upgrade" "${flake}#${fragment}"];
+        command = ''
+          nix profile upgrade ${flake}#${fragment}
+        '';
       }
       {
         name = "remove";
         description = "remove this target";
-        command = ["nix" "profile" "remove" fragment];
+        command = ''
+          nix profile remove ${flake}#${fragment}
+        '';
       }
     ];
   };
@@ -106,12 +114,12 @@ in {
       {
         name = "write";
         description = "write to file";
-        command = builder ++ jq;
+        command = l.concatStringsSep "\n" (builder ++ jq);
       }
       {
         name = "explore";
         description = "interactively explore";
-        command = builder ++ jq ++ fx;
+        command = l.concatStringsSep "\n" (builder ++ jq ++ fx);
       }
     ];
   };
@@ -133,21 +141,19 @@ in {
       {
         name = "enter";
         description = "enter this devshell";
-        command = [
-          "std_layout_dir=$PRJ_ROOT/.std;"
-          "std_layout_fragment_path=$std_layout_dir/${fragmentRelPath};"
-          "mkdir -p $std_layout_fragment_path;"
-          ''
-            nix develop \
-              ${flake}#${fragment} \
-              --no-update-lock-file \
-              --no-write-lock-file \
-              --no-warn-dirty \
-              --accept-flake-config \
-              --profile "$std_layout_fragment_path/profile" \
-              --command "$SHELL"
-          ''
-        ];
+        command = ''
+          std_layout_dir=$PRJ_ROOT/.std
+          std_layout_fragment_path=$std_layout_dir/${fragmentRelPath}
+          mkdir -p $std_layout_fragment_path
+          nix develop \
+            ${flake}#${fragment} \
+            --no-update-lock-file \
+            --no-write-lock-file \
+            --no-warn-dirty \
+            --accept-flake-config \
+            --profile "$std_layout_fragment_path/profile" \
+            --command "$SHELL"
+        '';
       }
     ];
   };

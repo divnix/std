@@ -78,6 +78,33 @@
     ),
     debug ? false,
   }: let
+    # Validations ...
+    Organelles = validate.Organelles organelles;
+    Systems = validate.Systems systems;
+    Cells = l.mapAttrsToList (validate.Cell cellsFrom Organelles) (l.readDir cellsFrom);
+
+    # Helpers ...
+    accumulate =
+      l.foldl'
+      (acc: new: let
+        car = l.head new;
+        cdr = l.tail new;
+      in {
+        output = acc.output // car;
+        actions = acc.actions // (l.head cdr);
+        init = acc.init ++ (l.tail cdr);
+      })
+      {
+        output = {};
+        actions = {};
+        init = [];
+      };
+
+    optionalLoad = cond: elem:
+      if cond
+      then elem
+      else [{} {} {}];
+
     _debug = s: attrs: let
       traceString = l.trace s;
       traceAttrs = l.traceSeqN 1 attrs;
@@ -98,123 +125,145 @@
           then alsoTraceAttrPath attrs
           else attrs
         );
-    # Validations ...
-    Organelles = validate.Organelles organelles;
-    Systems = validate.Systems systems;
-    Cells = l.mapAttrsToList (validate.Cell cellsFrom Organelles) (l.readDir cellsFrom);
-    # Set of all std-injected outputs in the project flake in the outpts and inputs.cells format
-    accumulate = l.foldl' l.attrsets.recursiveUpdate {};
-    stdOutput = accumulate (l.map stdOutputsFor Systems);
+
     # List of all flake outputs injected by std in the outputs and inputs.cells format
-    stdOutputsFor = system: let
-      acc = accumulate (l.map (loadCell system) Cells);
-      meta = {
-        # materialize meta & also realize all implicit runtime dependencies
-        __std.${system} = nixpkgs.legacyPackages.${system}.writeTextFile {
-          name = "__std-${system}.json";
-          # flatten meta for easier ingestion by the std cli
-          text = l.toJSON (l.attrValues acc.__std.${system});
-        };
-      };
-    in
-      # l.traceSeqN 4 meta
-      acc
-      // meta;
-    # Load a cell, return the flake outputs injected by std
-    loadCell = system: cellName: let
-      cellArgs = {
-        inputs = _debug "inputs on ${system}" (
-          (deSystemize system inputs)
-          // {
-            nixpkgs = import nixpkgs {
-              localSystem = system;
-              config = builtinNixpkgsConfig // nixpkgsConfig;
-            };
-            self =
-              inputs.self.sourceInfo
-              // {rev = inputs.self.sourceInfo.rev or "not-a-commit";};
-            cells = deSystemize system (l.filterAttrs (k: v: k != "__std") stdOutput);
-          }
-        );
-      };
-      # current cell
-      cell = let
-        op = acc: organelle: let
-          args = cellArgs // {inherit cell;};
-          res = loadOrganelle organelle args;
-        in
-          acc
-          // (
-            if res == {}
-            then {}
-            else {${organelle.name} = res;}
-          );
-      in
-        l.foldl' op {} Organelles;
-      loadOrganelle = organelle: args: let
+    loadOutputFor = system: let
+      # Load a cell, return the flake outputs injected by std
+      args.inputs = _debug "inputs on ${system}" (
+        (deSystemize system inputs)
+        // {
+          nixpkgs = import nixpkgs {
+            localSystem = system;
+            config = builtinNixpkgsConfig // nixpkgsConfig;
+          };
+          self =
+            inputs.self.sourceInfo
+            // {rev = inputs.self.sourceInfo.rev or "not-a-commit";};
+          cells =
+            # recursion on cells
+            deSystemize system res.output;
+        }
+      );
+      loadCellFor = cellName: let
         cPath = paths.cellPath cellsFrom cellName;
-        oPath = paths.organellePath cPath organelle;
-        importedFile = validate.FileSignature oPath.file (import oPath.file);
-        importedDir = validate.FileSignature oPath.dir (import oPath.dir);
-      in
-        if l.pathExists oPath.file
-        then validate.Import organelle.clade oPath.file (importedFile args)
-        else if l.pathExists oPath.dir
-        then validate.Import organelle.clade oPath.dir (importedDir args)
-        else {};
-      # Postprocess the result of the cell loading
-      organelles' = l.lists.groupBy (x: x.name) Organelles;
-      postprocessedOutput =
-        l.attrsets.mapAttrsToList (
-          organelleName: output: let
-            organelle = l.head organelles'.${organelleName};
-            cPath = paths.cellPath cellsFrom cellName;
-            oPath = paths.organellePath cPath organelle;
-            extractStdMeta = name: output: let
-              tPath = paths.targetPath oPath name;
-            in {
-              name = "${cellName}-${organelleName}-${name}";
-              value = {
-                __std_name = name;
-                __std_description =
-                  output.meta.description or output.description or "n/a";
-                __std_cell = cellName;
-                __std_clade = organelle.clade;
-                __std_organelle = organelle.name;
-                __std_readme =
-                  if l.pathExists tPath.readme
-                  then tPath.readme
-                  else "";
-                __std_cell_readme =
-                  if l.pathExists cPath.readme
-                  then cPath.readme
-                  else "";
-                __std_organelle_readme =
-                  if l.pathExists oPath.readme
-                  then oPath.readme
-                  else "";
-                __std_actions =
-                  if organelle ? actions
-                  then
-                    organelle.actions {
-                      inherit system;
-                      flake = inputs.self.sourceInfo.outPath;
-                      fragment = ''"${system}"."${cellName}"."${organelleName}"."${name}"'';
-                      fragmentRelPath = "${cellName}/${organelleName}/${name}";
-                    }
-                  else [];
-              };
-            };
+        loadOrganelle = organelle: let
+          oPath = paths.organellePath cPath organelle;
+          importedFile = validate.FileSignature oPath.file (import oPath.file);
+          importedDir = validate.FileSignature oPath.dir (import oPath.dir);
+          # minimum data for initializing TUI / CLI completion
+          extractInitMeta = name: target: let
+            tPath = paths.targetPath oPath name;
+            actions =
+              if organelle ? actions
+              then
+                organelle.actions {
+                  inherit system;
+                  flake = inputs.self.sourceInfo.outPath;
+                  fragment = ''"${system}"."${cellName}"."${organelle.name}"."${name}"'';
+                  fragmentRelPath = "${cellName}/${organelle.name}/${name}";
+                }
+              else [];
           in {
-            ${system}.${cellName}.${organelleName} = output;
-            # parseable index of targets for tooling
-            __std.${system} = l.mapAttrs' extractStdMeta output;
+            inherit name;
+            deps = target.meta.after or target.after or [];
+            description = target.meta.description or target.description or "n/a";
+            readme =
+              if l.pathExists tPath.readme
+              then tPath.readme
+              else "";
+            # for speed only extract name & description, the bare minimum for display
+            actions = map (a: {inherit (a) name description;}) actions;
+          };
+          # lazy action command renedering (slow)
+          extractActionsMeta = name: target: let
+            actions =
+              if organelle ? actions
+              then
+                organelle.actions {
+                  inherit system;
+                  flake = inputs.self.sourceInfo.outPath;
+                  fragment = ''"${system}"."${cellName}"."${organelle.name}"."${name}"'';
+                  fragmentRelPath = "${cellName}/${organelle.name}/${name}";
+                }
+              else [];
+          in
+            l.listToAttrs (map (a: {
+                inherit (a) name;
+                value = nixpkgs.legacyPackages.${system}.writeShellScript a.name a.command;
+              })
+              actions);
+          imported =
+            if l.pathExists oPath.file
+            then
+              validate.Import organelle.clade oPath.file (importedFile (
+                args // {cell = res.output;} # recursion on cell
+              ))
+            else if l.pathExists oPath.dir
+            then
+              validate.Import organelle.clade oPath.dir (importedDir (
+                args // {cell = res;} # recursion on cell
+              ))
+            else null;
+        in
+          optionalLoad (imported != null)
+          [
+            {${organelle.name} = imported;}
+            # __std meta actions (slow)
+            {${organelle.name} = l.mapAttrs extractActionsMeta imported;}
+            # __std meta init (fast)
+            {
+              organelle = organelle.name;
+              clade = organelle.clade;
+              readme =
+                if l.pathExists oPath.readme
+                then oPath.readme
+                else "";
+              targets = l.mapAttrsToList extractInitMeta imported;
+            }
+          ];
+        res = accumulate (l.map loadOrganelle Organelles);
+      in
+        optionalLoad (res != {})
+        [
+          {${cellName} = res.output;}
+          # __std meta actions (slow)
+          {${cellName} = res.actions;}
+          # __std meta init (fast)
+          {
+            cell = cellName;
+            readme =
+              if l.pathExists cPath.readme
+              then cPath.readme
+              else "";
+            organelles = res.init; # []
           }
-        )
-        cell;
+        ]; # };
+      res = accumulate (l.map loadCellFor Cells);
     in
-      accumulate postprocessedOutput;
+      optionalLoad (res != {})
+      [
+        {${system} = res.output;}
+        # __std meta actions (slow)
+        {${system} = res.actions;}
+        # __std meta init (fast)
+        {
+          name = system;
+          value = res.init;
+        }
+      ];
+    res = accumulate (l.map loadOutputFor Systems);
   in
-    stdOutput;
+    res.output
+    # meta = {
+    #   # materialize meta & also realize all implicit runtime dependencies
+    #   __std.${system}.targets = nixpkgs.legacyPackages.${system}.writeTextFile {
+    #     name = "__std-${system}-targets.json";
+    #     # flatten meta for easier ingestion by the std cli
+    #     text = l.toJSON (l.attrValues acc.__std.${system}.targets);
+    #   };
+    // {
+      __std.init = l.listToAttrs res.init;
+      __std.actions = res.actions;
+    };
 in
   grow

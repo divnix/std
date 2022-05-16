@@ -3,18 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"os"
 	"os/exec"
-
-	"math/rand"
-	"time"
 
 	"github.com/TylerBrock/colorjson"
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/divnix/std/data"
-	"github.com/divnix/std/dummy_data"
 )
 
 type outt struct {
@@ -24,99 +18,113 @@ type outt struct {
 
 var (
 	currentSystemArgs    = []string{"eval", "--raw", "--impure", "--expr", "builtins.currentSystem"}
-	flakeStdMetaFragment = "%s#__std.%s"
-	flakeStdMetaArgs     = []string{"build", "--no-link", "--json", "--option", "warn-dirty", "false"}
-	flakeStdBuildOut     = []map[string]interface{}{}
+	flakeInitFragment    = "%s#__std.init.%s"
+	flakeActionsFragment = "%s#__std.actions.%s.%s.%s.%s.%s"
+	flakeEvalJson        = []string{"eval", "--json", "--option", "warn-dirty", "false"}
+	flakeEvalRaw         = []string{"eval", "--raw", "--option", "warn-dirty", "false"}
+	flakeBuild           = []string{"build", "--out-link", ".std/last-action", "--option", "warn-dirty", "false"}
 )
 
-func fakeData() []data.Item {
-	rand.Seed(time.Now().UTC().UnixNano())
-	var targetsGenerator dummy_data.RandomItemGenerator
-	const numItems = 24
-	items := make([]data.Item, numItems)
-	for i := 0; i < numItems; i++ {
-		items[i] = targetsGenerator.Next()
-	}
-	return items
-}
-
-func loadFlake() tea.Msg {
-	var items []data.Item
+func GetNix() (string, tea.Msg) {
 	nix, err := exec.LookPath("nix")
 	if err != nil {
-		return fatalErrf("You need to install 'nix' in order to use 'std'")
+		return "", cellLoadingFatalErrf("You need to install 'nix' in order to use 'std'")
 	}
+	return nix, nil
+}
 
+func getCurrentSystem() ([]byte, tea.Msg) {
 	// detect the current system
+	nix, msg := GetNix()
+	if msg != nil {
+		return nil, msg
+	}
 	currentSystem, err := exec.Command(nix, currentSystemArgs...).Output()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			return fatalErrf("%w, stderr:\n%s", exitErr, exitErr.Stderr)
+			return nil, cellLoadingFatalErrf("%w, stderr:\n%s", exitErr, exitErr.Stderr)
 		}
-		return fatalErr(err)
+		return nil, cellLoadingFatalErr(err)
+	}
+	return currentSystem, nil
+}
+
+func getInitEvalCmdArgs() ([]string, tea.Msg) {
+
+	currentSystem, err := getCurrentSystem()
+	if err != nil {
+		return nil, err
+	}
+	return append(
+		flakeEvalJson, fmt.Sprintf(flakeInitFragment, ".", currentSystem)), nil
+}
+
+func GetActionEvalCmdArgs(c, o, t, a string) (string, []string, tea.Msg) {
+	nix, msg := GetNix()
+	if msg != nil {
+		return "", nil, msg
 	}
 
-	flakeStdMetaFragment = fmt.Sprintf(flakeStdMetaFragment, ".", currentSystem)
-	flakeStdMetaArgs = append(flakeStdMetaArgs, flakeStdMetaFragment)
+	currentSystem, err := getCurrentSystem()
+	if err != nil {
+		return "", nil, err
+	}
+	return nix, append(
+		flakeBuild, fmt.Sprintf(flakeActionsFragment, ".", currentSystem, c, o, t, a)), nil
+}
+
+func loadFlake() tea.Msg {
+	var root data.Root
+
+	nix, msg := GetNix()
+	if msg != nil {
+		return msg
+	}
+
+	args, msg := getInitEvalCmdArgs()
+	if msg != nil {
+		return msg
+	}
 
 	// load the std metadata from the flake
-	cmd := exec.Command(nix, flakeStdMetaArgs...)
+	cmd := exec.Command(nix, args...)
 	out, err := cmd.Output()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			return fatalErrf("command: %s, %w, stderr:\n%s", cmd.String(), exitErr, exitErr.Stderr)
+			return cellLoadingFatalErrf("command: %s, %w, stderr:\n%s", cmd.String(), exitErr, exitErr.Stderr)
 		}
-		return fatalErr(err)
+		return cellLoadingFatalErr(err)
 	}
 
-	if err := json.Unmarshal(out, &flakeStdBuildOut); err != nil {
-		return fatalErr(err)
-	}
-
-	flakeStdMetaJson, err := os.Open(flakeStdBuildOut[0]["outputs"].(map[string]interface{})["out"].(string))
-	if err != nil {
-		return fatalErr(err)
-	}
-	// if we os.Open returns an error then handle it
-	defer flakeStdMetaJson.Close()
-
-	// read our opened jsonFile as a byte array.
-	flakeStdMeta, _ := ioutil.ReadAll(flakeStdMetaJson)
-
-	if err := json.Unmarshal(flakeStdMeta, &items); err != nil {
+	if err := json.Unmarshal(out, &root.Cells); err != nil {
 		var obj interface{}
-		json.Unmarshal(flakeStdMeta, &obj)
+		json.Unmarshal(out, &obj)
 		f := colorjson.NewFormatter()
 		f.Indent = 2
 		s, _ := f.Marshal(obj)
-		return fatalErrf("%w - object: %s", err, s)
+		return cellLoadingFatalErrf("%w - object: %s", err, s)
 	}
 
 	// var obj interface{}
-	// json.Unmarshal(flakeStdMeta, &obj)
+	// json.Unmarshal(out, &obj)
 	// f := colorjson.NewFormatter()
 	// f.Indent = 2
 	// s, _ := f.Marshal(obj)
 	// log.Fatalf("object: %s", s)
 
-	return flakeLoadedMsg{
-		// Items: fakeData(),
-		Items: items,
-	}
+	return cellLoadedMsg{root.Cells}
 }
 
-type flakeLoadedMsg struct {
-	Items []data.Item
-}
+type cellLoadedMsg = data.Root
 
-type fatalErrMsg struct {
+type cellLoadingFatalErrMsg struct {
 	err error
 }
 
-func fatalErr(err error) fatalErrMsg {
-	return fatalErrMsg{err}
+func cellLoadingFatalErr(err error) cellLoadingFatalErrMsg {
+	return cellLoadingFatalErrMsg{err}
 }
 
-func fatalErrf(f string, a ...interface{}) fatalErrMsg {
-	return fatalErrMsg{fmt.Errorf(f, a...)}
+func cellLoadingFatalErrf(f string, a ...interface{}) cellLoadingFatalErrMsg {
+	return cellLoadingFatalErrMsg{fmt.Errorf(f, a...)}
 }
