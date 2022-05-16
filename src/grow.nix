@@ -132,16 +132,18 @@
       args.inputs = _debug "inputs on ${system}" (
         (deSystemize system inputs)
         // {
-          nixpkgs = import nixpkgs {
-            localSystem = system;
-            config = builtinNixpkgsConfig // nixpkgsConfig;
-          };
           self =
             inputs.self.sourceInfo
             // {rev = inputs.self.sourceInfo.rev or "not-a-commit";};
           cells =
             # recursion on cells
             deSystemize system res.output;
+        }
+        // l.optionalAttrs (inputs ? nixpkgs) {
+          nixpkgs = import inputs.nixpkgs {
+            localSystem = system;
+            config = builtinNixpkgsConfig // nixpkgsConfig;
+          };
         }
       );
       loadCellFor = cellName: let
