@@ -387,12 +387,12 @@ cross-compliation scenarios.</p>
 <pre><code class="language-nix">let
   l = builtins;
   /*
-   A helper function which hides the complexities of dealing
-   with 'system' properly from you, while still providing
-   escape hatches when dealing with cross-compilation.
-   
-   You can use this function independently of the rest of std.
-   */
+  A helper function which hides the complexities of dealing
+  with 'system' properly from you, while still providing
+  escape hatches when dealing with cross-compilation.
+
+  You can use this function independently of the rest of std.
+  */
   deSystemize = system: fragment:
     if l.isAttrs fragment &amp;&amp; l.hasAttr &quot;${system}&quot; fragment
     then fragment // fragment.${system}
@@ -487,21 +487,27 @@ actions they provide to a particular organelle.</p>
 <p>It is entirely possible to define custom clades with custom
 actions according to the needs of your project.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="data"><a class="header" href="#data">Data</a></h1>
-<pre><code class="language-nix">  functions = name: {
+<pre><code class="language-nix">
+  Also use this for all types of modules and profiles, since they are
+  implemented as functions.
+
+  Consequently, there are no actions available for functions.
+  */
+  functions = name: {
     inherit name;
     clade = &quot;functions&quot;;
   };
   /*
-   Use the Data Clade for json serializable data.
+  Use the Data Clade for json serializable data.
 
-   Available actions:
-     - write
-     - explore
+  Available actions:
+    - write
+    - explore
 
-   For all actions is true:
-     Nix-proper 'stringContext'-carried dependency will be realized
-     to the store, if present.
-   */
+  For all actions is true:
+    Nix-proper 'stringContext'-carried dependency will be realized
+    to the store, if present.
+  */
   data = name: {
     inherit name;
     clade = &quot;data&quot;;
@@ -510,7 +516,6 @@ actions according to the needs of your project.</p>
       flake,
       fragment,
       fragmentRelPath,
-      cell,
     }: let
       builder = [&quot;nix&quot; &quot;build&quot; &quot;--impure&quot; &quot;--json&quot; &quot;--no-link&quot; &quot;--expr&quot; expr];
       jq = [&quot;|&quot; &quot;${nixpkgs.legacyPackages.${system}.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.[].outputs.out'&quot;];
@@ -527,32 +532,27 @@ actions according to the needs of your project.</p>
       '';
     in [
       {
-        name = &quot;write&quot;;
-        description = &quot;write to file&quot;;
-        command = builder ++ jq;
-      }
-      {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="function"><a class="header" href="#function">Function</a></h1>
-<pre><code class="language-nix">        command = [&quot;nix&quot; &quot;profile&quot; &quot;remove&quot; fragment];
+<pre><code class="language-nix">      }
+      {
+        name = &quot;remove&quot;;
+        description = &quot;remove this target&quot;;
+        command = ''
+          nix profile remove ${flake}#${fragment}
+        '';
       }
     ];
   };
   /*
-   Use the Functions Clade for reusable nix functions that you would
-   call elswhere in the code.
-
-   Also use this for all types of modules and profiles, since they are
-   implemented as functions.
-
-   Consequently, there are no actions available for functions.
-   */
+  Use the Functions Clade for reusable nix functions that you would
+  call elswhere in the code.
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="runnables"><a class="header" href="#runnables">Runnables</a></h1>
 <pre><code class="language-nix">  /*
-   Use the Runnables Clade for targets that you want to
-   make accessible with a 'run' action on the TUI.
-   */
+  Use the Runnables Clade for targets that you want to
+  make accessible with a 'run' action on the TUI.
+  */
   runnables = name: {
     inherit name;
     clade = &quot;runnables&quot;;
@@ -561,26 +561,27 @@ actions according to the needs of your project.</p>
       flake,
       fragment,
       fragmentRelPath,
-      cell,
     }: [
       {
         name = &quot;run&quot;;
         description = &quot;exec this target&quot;;
-        command = [&quot;nix&quot; &quot;run&quot; &quot;${flake}#${fragment}&quot;];
-      }
+        command = ''
+          nix run ${flake}#${fragment}
+        '';
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="installables"><a class="header" href="#installables">Installables</a></h1>
-<pre><code class="language-nix">    ];
+<pre><code class="language-nix">      }
+    ];
   };
   /*
-   Use the Installables Clade for targets that you want to
-   make availabe for installation into the user's nix profile.
+  Use the Installables Clade for targets that you want to
+  make availabe for installation into the user's nix profile.
 
-   Available actions:
-     - install
-     - upgrade
-     - remove
-   */
+  Available actions:
+    - install
+    - upgrade
+    - remove
+  */
   installables = name: {
     inherit name;
     clade = &quot;installables&quot;;
@@ -589,21 +590,20 @@ actions according to the needs of your project.</p>
       flake,
       fragment,
       fragmentRelPath,
-      cell,
     }: [
       {
         name = &quot;install&quot;;
         description = &quot;install this target&quot;;
-        command = [&quot;nix&quot; &quot;profile&quot; &quot;install&quot; &quot;${flake}#${fragment}&quot;];
+        command = ''
+          nix profile install ${flake}#${fragment}
+        '';
       }
       {
         name = &quot;upgrade&quot;;
         description = &quot;upgrade this target&quot;;
-        command = [&quot;nix&quot; &quot;profile&quot; &quot;upgrade&quot; &quot;${flake}#${fragment}&quot;];
-      }
-      {
-        name = &quot;remove&quot;;
-        description = &quot;remove this target&quot;;
+        command = ''
+          nix profile upgrade ${flake}#${fragment}
+        '';
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-cell"><a class="header" href="#the-std-cell">The <code>std</code> Cell</a></h1>
 <p>... is the only cell in <code>divnix/std</code> and provides only very limited functionality.</p>

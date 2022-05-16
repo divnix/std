@@ -135,19 +135,19 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="function"><a class="header" href="#function">Function</a></h1>
-<pre><code class="language-nix">        command = [&quot;nix&quot; &quot;profile&quot; &quot;remove&quot; fragment];
+<pre><code class="language-nix">      }
+      {
+        name = &quot;remove&quot;;
+        description = &quot;remove this target&quot;;
+        command = ''
+          nix profile remove ${flake}#${fragment}
+        '';
       }
     ];
   };
   /*
-   Use the Functions Clade for reusable nix functions that you would
-   call elswhere in the code.
-
-   Also use this for all types of modules and profiles, since they are
-   implemented as functions.
-
-   Consequently, there are no actions available for functions.
-   */
+  Use the Functions Clade for reusable nix functions that you would
+  call elswhere in the code.
 </code></pre>
 
                     </main>

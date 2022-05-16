@@ -136,9 +136,9 @@
                     <main>
                         <h1 id="runnables"><a class="header" href="#runnables">Runnables</a></h1>
 <pre><code class="language-nix">  /*
-   Use the Runnables Clade for targets that you want to
-   make accessible with a 'run' action on the TUI.
-   */
+  Use the Runnables Clade for targets that you want to
+  make accessible with a 'run' action on the TUI.
+  */
   runnables = name: {
     inherit name;
     clade = &quot;runnables&quot;;
@@ -147,13 +147,13 @@
       flake,
       fragment,
       fragmentRelPath,
-      cell,
     }: [
       {
         name = &quot;run&quot;;
         description = &quot;exec this target&quot;;
-        command = [&quot;nix&quot; &quot;run&quot; &quot;${flake}#${fragment}&quot;];
-      }
+        command = ''
+          nix run ${flake}#${fragment}
+        '';
 </code></pre>
 
                     </main>
