@@ -203,7 +203,7 @@
             else if l.pathExists oPath.dir
             then
               validate.Import organelle.clade oPath.dir (importedDir (
-                args // {cell = res;} # recursion on cell
+                args // {cell = res.output;} # recursion on cell
               ))
             else null;
         in
