@@ -55,11 +55,15 @@
   - `inputs.nixpkgs` - an _instatiated_ nixpkgs, configurabe via `nixpkgsConifg`
   - `inpugs.self` - the `sourceInfo` (and only that) of the current flake
 
-  Overlays? Go home or file an upstream bug. They are possible, but so heavily
-  discouraged that you gotta find out for yourself if you really need to use
-  them in an organelle. Hint: `.extend`.
+  Overlays? `nixpkgsOverlays` argument can be used to set overlays globally.
+  Usage of overlays in organelles is discouraged to avoid the performance hit
+  of recomputing the nixpkgs fixpoint. Though, if you really need to use overlays
+  in an organelle, possible solutions are:
+   - `nixpkgs.appendOverlays` or `nixpkgs.extend`.
+   - `import nixpkgs.path {}` (if you need a different set of overlays or config)
+   - an additionnal `nixpkgs-myorganelle` flake input.
 
-  Yes, std is opinionated. Make sure to also meet `alejandra`. 😎
+  Yes, std is opinionated.
 
   */
   grow = {
@@ -71,6 +75,7 @@
       (clades.installables "packages")
     ],
     nixpkgsConfig ? {},
+    nixpkgsOverlays ? [],
     systems ? (
       l.systems.supported.tier1
       ++ l.systems.supported.tier2
@@ -142,6 +147,7 @@
         // l.optionalAttrs (inputs ? nixpkgs) {
           nixpkgs = import inputs.nixpkgs {
             localSystem = system;
+            overlays = nixpkgsOverlays;
             config = builtinNixpkgsConfig // nixpkgsConfig;
           };
         }
