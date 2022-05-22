@@ -114,12 +114,12 @@ in {
       {
         name = "write";
         description = "write to file";
-        command = l.concatStringsSep "\n" (builder ++ jq);
+        command = l.concatStringsSep "\t" (builder ++ jq);
       }
       {
         name = "explore";
         description = "interactively explore";
-        command = l.concatStringsSep "\n" (builder ++ jq ++ fx);
+        command = l.concatStringsSep "\t" (builder ++ jq ++ fx);
       }
     ];
   };
