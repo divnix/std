@@ -126,6 +126,7 @@
           else attrs
         );
 
+    cells' = res.output;
     # List of all flake outputs injected by std in the outputs and inputs.cells format
     loadOutputFor = system: let
       # Load a cell, return the flake outputs injected by std
@@ -135,9 +136,8 @@
           self =
             inputs.self.sourceInfo
             // {rev = inputs.self.sourceInfo.rev or "not-a-commit";};
-          cells =
-            # recursion on cells
-            deSystemize system res.output;
+          # recursion on cells
+          cells = deSystemize system cells';
         }
         // l.optionalAttrs (inputs ? nixpkgs) {
           nixpkgs = import inputs.nixpkgs {
