@@ -23,16 +23,16 @@ use_std() {
   local clade="${frgmnts[0]}"
   local organ="${frgmnts[1]}"
   local targt="${frgmnts[2]}"
+  local profile_path="$(direnv_layout_dir)/$clade/$organ/$targt"
 
-  local cmd="
-    nix print-dev-env \
-      $PWD#\"$system\".\"$clade\".\"$organ\".\"$targt\"
-      --no-update-lock-file \
-      --no-write-lock-file \
-      --no-warn-dirty \
-      --accept-flake-config \
-      --profile $(direnv_layout_dir)/$clade/$organ/$targt/profile
-  "
+  local nix_args=(
+    "$PWD#$system.$clade.$organ.$targt"
+    "--no-update-lock-file"
+    "--no-write-lock-file"
+    "--no-warn-dirty"
+    "--accept-flake-config"
+    "--keep-outputs"
+  )
 
   if [[ -f "$cellsroot/$clade/$organ/$target.nix" ]]; then
     log_status "Watching: $clade/$organ/$target.nix"
@@ -54,5 +54,7 @@ use_std() {
   fi
 
   mkdir -p "$(direnv_layout_dir)/$clade/$organ/$targt"
-  eval "$($cmd)"
+
+  nix build "${nix_args[@]}" --profile "$profile_path/shell-profile"
+  eval "$(nix print-dev-env ${nix_args[@]} --profile $profile_path/env-profile)"
 }
