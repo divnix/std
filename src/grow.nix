@@ -71,11 +71,16 @@
       (clades.installables "packages")
     ],
     nixpkgsConfig ? {},
-    systems ? (
-      l.systems.supported.tier1
-      ++ l.systems.supported.tier2
-      ++ ["aarch64-darwin"] # a lot of apple M1 already out there
-    ),
+    systems ? [
+      # Tier 1
+      "x86_64-linux"
+      # Tier 2
+      "aarch64-linux"
+      "x86_64-darwin"
+      # Other platforms with sufficient support in stdenv which is not formally
+      # mandated by their platform tier.
+      "aarch64-darwin"  # a lot of apple M1 already out there
+    ],
     debug ? false,
   }: let
     # Validations ...
