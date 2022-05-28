@@ -34,9 +34,10 @@ through a well-defined folder structure and
 disciplining generic interfaces.
 
 With `std`, you'll learn how to organize your `nix`
-**Targets** into **Cells** and **Oranelles** &mdash;
-folded into a useful **CLI & TUI** to also make the
-lives of your colleagues easier.
+flake outputs ('**Targets**') into **Cells** and
+**Oranelles** &mdash; folded into a useful
+**CLI & TUI** to also make the lives of your
+colleagues easier.
 
 Through more intuition and less documentation,
 your team and community will finally find a
