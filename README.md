@@ -39,15 +39,15 @@ folded into a useful **CLI & TUI** to also make the
 lives of your colleagues easier.
 
 Through more intuition and less documentation,
-your team will finally find a _canonical_ answer
-to the everlasting GitOps question:
+your team and community will finally find a
+_canonical_ answer to the everlasting question:
 _What can I **do** with this repository?_
 
 ---
 
-# The `std` repository itself
+## The `std` repository itself
 
-In this repository, you'll find the implementation and an application of [Standard][std], alike.
+In this repository, you'll find, both, the _implementation_ and an _application_ of [Standard][std].
 
 ### Implementation
 
@@ -55,22 +55,12 @@ _What is `std`? &mdash; The well-commented `nix` code &rarr; [`./src`][src]._
 
 That folder implements:
 
-- [`std.grow`][grow] - the cell cultivating function
-- [`std.incl`][incl] - an inclusive-semantics source filter
-- [`std.deSystemize`][de-systemize] - a helper to hide `system`-specifics
-- [`std.{runnables,installables,functions,data,devshells}`][clades] - clades that implement actions
-
-In addition [`./flake.nix`][flake] implements:
-
-- `std.growOn` - `std.grow`-variant; receives variadic arguments:
-  ```nix
-  std.growOn
-  { /* ... */ }
-  # soil ...
-  ( /* ... */ ) # first layer
-  ( /* ... */ ) # second layer
-  ```
-- `std.harvest` cells in your compat soil layer.
+- [`std.grow`][grow]: the "smart" importer
+- [`std.grow-on`][grow-on]: `std.grow`-variant that recursively merges all variadic arguments
+- [`std.harvest`][harvest]: harvest your outputs into a different shape for compatibility
+- [`std.incl`][incl]: a source filter with additive semantics
+- [`std.deSystemize`][de-systemize]: a helper to hide `system` from plain sight
+- [`std.<clade>`][clades]: builtin **Organelle** types that implement actions
 
 _What is this crazy verbiage? &rarr; Unambigous identifiers on the phone._ ☎️
 
@@ -88,7 +78,7 @@ _Dog-fooding? &rarr; [`./cells`][cells]._
   for the defined **Organelles**. Not all **Clades** implement **Actions**.
 
 ```nix
-{{#include ../flake.nix:48:64}}
+{{#include ../dogfood.nix}}
 ```
 
 _That's it. `std.grow` is a "smart" importer of your `nix` code and is designed to keep boilerplate at bay._
@@ -119,13 +109,13 @@ _What licenses are used? &rarr; [`./.reuse/dep5`][licensing]._
 
 _And the usual copies? &rarr; [`./LICENSES`][licenses]._
 
-## Releases
+##] Releases
 
 You may find releases on the [GitHub Release Page][releases] of this repository.
 
 ---
 
-# Why `std`?
+## Why `std`?
 
 ### Problem
 
@@ -198,7 +188,7 @@ The smallest common denominator, in any case:
 
 ---
 
-# Examples in the Wild
+## Examples in the Wild
 
 If you'd like to see some examples
 of what a [Standard][std] project looks like,
@@ -214,7 +204,7 @@ take a look at the following:
 
 :construction: Work in progress, would like to help us extend this section?
 
-# Contributions
+## Contributions
 
 Please enter the development environment:
 
@@ -237,6 +227,8 @@ direnv allow
 [licensing]: https://github.com/divnix/std/blob/main/.reuse/dep5
 [licenses]: https://github.com/divnix/std/tree/main/LICENSES
 [grow]: https://github.com/divnix/std/blob/main/src/grow.nix
+[grow-on]: https://github.com/divnix/std/blob/main/src/grow-on.nix
+[harvest]: https://github.com/divnix/std/blob/main/src/harvest.nix
 [incl]: https://github.com/divnix/std/blob/main/src/incl.nix
 [de-systemize]: https://github.com/divnix/std/blob/main/src/de-systemize.nix
 [clades]: https://github.com/divnix/std/blob/main/src/clades.nix
