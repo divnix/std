@@ -1,0 +1,236 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Why std? - The Standard Book</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">Tutorials</li><li class="chapter-item expanded affix "><li class="part-title">How-To Guides</li><li class="chapter-item expanded "><a href="../guides/hello-world/index.html"><strong aria-hidden="true">1.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="../guides/growing-cells.html"><strong aria-hidden="true">2.</strong> Growing Cells</a></li><li class="chapter-item expanded "><a href="../guides/incl.html"><strong aria-hidden="true">3.</strong> Include Filter</a></li><li class="chapter-item expanded "><a href="../guides/envrc.html"><strong aria-hidden="true">4.</strong> Setup .envrc</a></li><li class="chapter-item expanded affix "><li class="part-title">Explanation</li><li class="chapter-item expanded "><a href="../explain/why-nix.html"><strong aria-hidden="true">5.</strong> Why nix?</a></li><li class="chapter-item expanded "><a href="../explain/why-std.html" class="active"><strong aria-hidden="true">6.</strong> Why std?</a></li><li class="chapter-item expanded "><a href="../explain/architecture-decisions/index.html"><strong aria-hidden="true">7.</strong> Architecture Decisions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../explain/architecture-decisions/0001-increase-repo-discoverability-with-a-tui.html"><strong aria-hidden="true">7.1.</strong> Increase Repo Discoverability With a Tui</a></li><li class="chapter-item expanded "><a href="../explain/architecture-decisions/0002-wire-up-documentation-intrumentation.html"><strong aria-hidden="true">7.2.</strong> Wire Up Documentation Intrumentation</a></li><li class="chapter-item expanded "><a href="../explain/architecture-decisions/0003-drop-as-nix-cli-epiphyte-flag.html"><strong aria-hidden="true">7.3.</strong> Drop as-nix-cli-epiphyte flag</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Reference</li><li class="chapter-item expanded "><a href="../reference/cli.html"><strong aria-hidden="true">8.</strong> TUI/CLI</a></li><li class="chapter-item expanded "><a href="../reference/conventions.html"><strong aria-hidden="true">9.</strong> Conventions</a></li><li class="chapter-item expanded "><a href="../reference/clades.html"><strong aria-hidden="true">10.</strong> Builtin Clades</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/clades/data-clade.html"><strong aria-hidden="true">10.1.</strong> Data</a></li><li class="chapter-item expanded "><a href="../reference/clades/functions-clade.html"><strong aria-hidden="true">10.2.</strong> Functions</a></li><li class="chapter-item expanded "><a href="../reference/clades/runnables-clade.html"><strong aria-hidden="true">10.3.</strong> Runnables</a></li><li class="chapter-item expanded "><a href="../reference/clades/installables-clade.html"><strong aria-hidden="true">10.4.</strong> Installables</a></li><li class="chapter-item expanded "><a href="../reference/clades/devshells-clade.html"><strong aria-hidden="true">10.5.</strong> Devshells</a></li></ol></li><li class="chapter-item expanded "><a href="../reference/std/index.html"><strong aria-hidden="true">11.</strong> //std</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/std/cli/index.html"><strong aria-hidden="true">11.1.</strong> /cli</a></li><li class="chapter-item expanded "><a href="../reference/std/devshellProfiles/index.html"><strong aria-hidden="true">11.2.</strong> /devshellProfiles</a></li><li class="chapter-item expanded "><a href="../reference/std/devshells/index.html"><strong aria-hidden="true">11.3.</strong> /devshells</a></li><li class="chapter-item expanded "><a href="../reference/std/lib/index.html"><strong aria-hidden="true">11.4.</strong> /lib</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/std/lib/fromMakesWith.html"><strong aria-hidden="true">11.4.1.</strong> /fromMakesWith</a></li><li class="chapter-item expanded "><a href="../reference/std/lib/mkShell.html"><strong aria-hidden="true">11.4.2.</strong> /mkShell</a></li></ol></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Standard Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="why-std"><a class="header" href="#why-std">Why std?</a></h1>
+<h2 id="problem"><a class="header" href="#problem">Problem</a></h2>
+<p>Nix is marvel to ones and cruelty to others.</p>
+<p>Much of this professional schism is due to two fundamental issues:</p>
+<ul>
+<li>Nix is a functional language without typing</li>
+<li>Therefore, Nix-enthusiast seem to freeking love writing the most elegant and novel boilerplate all over again the next day.</li>
+</ul>
+<p>The amount of domain specific knowledge required to untangle those most elegant and novel boilerplate patterns prevent
+the other side of the schism, very understandibly, to see through the smoke the true beauty and benefits of <code>nix</code> as a
+build and configuration language.</p>
+<p>Lack of typing adds to the problem by forcing <code>nix</code>-practitioners to go out of their way (e.g. via [<code>divnix/yants</code>][yants]) to
+add some internal boundaries and contracts to an ever morphing global context.</p>
+<p>As a consequence, few actually <em>do</em> that. And contracts across internal code boundaries are either absent or rudimentary or — yet again —
+&quot;elegant and novel&quot;. Neither of which satisfactorily settles the issue.</p>
+<h2 id="solution"><a class="header" href="#solution">Solution</a></h2>
+<p><code>std</code> doesn't add language-level typing. But a well-balanced folder layout cut at 3 layers of conceptual
+nesting provides the fundamentals for establishing internal boundaries.</p>
+<blockquote>
+<p><strong>Cell → Organelle → Target → [Action]</strong></p>
+<p>Where ...</p>
+<ul>
+<li><strong>Cells</strong> group functionality.</li>
+<li><strong>Organelles</strong> type outputs and implement <strong>Actions</strong>.</li>
+<li><strong>Targets</strong> name outputs.</li>
+</ul>
+</blockquote>
+<p>Programmers are really good at pattern-abstraction when looking at two similar but slightly
+different things: <em><strong>Cells</strong> and <strong>Organelles</strong> set the stage for code readability.</em></p>
+<p><strong>Organelles</strong> only allow one possible interface: <code>{inputs, cell}</code>:</p>
+<ul>
+<li><code>cell</code> the local <strong>Cell</strong>, promoting separation of concern</li>
+<li><code>inputs</code> the <code>deSystemize</code>ed flake inputs — plus:
+<ul>
+<li><code>inputs.self = self.sourceInfo;</code> reference source code in <code>nix</code>; filter with <code>std.incl</code>; don't misuse the global <code>self</code>.</li>
+<li><code>inputs.cells</code>: the other cells by name; code that documents its boundaries.</li>
+<li><code>inputs.nixpkgs</code>: an <em>instantiated</em> <code>nixpkgs</code> for the current system;</li>
+</ul>
+</li>
+</ul>
+<p>Now, we have <em>organized</em> <code>nix</code> code. Still, <code>nix</code> is not for everybody.
+And for everybody else the <code>std</code> TUI/CLI companion answers a single question to perfection:</p>
+<blockquote>
+<p><strong>The GitOps Question:</strong></p>
+<center><i>What can I actually <b>do</b> with this <code>std</code>-ized repository?</i></center>
+&emsp;
+</blockquote>
+<blockquote>
+<p><strong>The Standard Answer:</strong></p>
+<center><i><code>std</code> breaks down GitOps into a single UX-optimized TUI/CLI entrypoint.</i></center>
+&emsp;
+</blockquote>
+<h2 id="benefit"><a class="header" href="#benefit">Benefit</a></h2>
+<p>Not everybody is going to love <code>nix</code> now.</p>
+<p>But the ones, who know its secrets, now have an effective tool
+to more empathically spark the joy.</p>
+<p>Or simply: 💔 → 🧙 → 🔧 → ✨→ 🏖️</p>
+<p>The smallest common denominator, in any case:</p>
+<blockquote>
+<p>Only ever install a single dependency (<code>nix</code>) and reach <em>any</em> repository target. Reproducibly.</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../explain/why-nix.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../explain/architecture-decisions/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../explain/why-nix.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../explain/architecture-decisions/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
