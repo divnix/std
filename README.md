@@ -57,7 +57,7 @@ _What is `std`? &mdash; The well-commented `nix` code &rarr; [`./src`][src]._
 That folder implements:
 
 - [`std.grow`][grow]: the "smart" importer
-- [`std.grow-on`][grow-on]: `std.grow`-variant that recursively merges all variadic arguments
+- [`std.growOn`][grow-on]: `std.grow`-variant that recursively merges all variadic arguments
 - [`std.harvest`][harvest]: harvest your outputs into a different shape for compatibility
 - [`std.incl`][incl]: a source filter with additive semantics
 - [`std.deSystemize`][de-systemize]: a helper to hide `system` from plain sight
