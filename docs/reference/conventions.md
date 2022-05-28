@@ -74,7 +74,7 @@ cross-compliation scenarios.
 #### `deSystemize`'s implementation
 
 ```nix
-{{#include ../src/de-systemize.nix}}
+{{#include ../../src/de-systemize.nix}}
 ```
 
 ## Top-level `system`-scoping of outputs

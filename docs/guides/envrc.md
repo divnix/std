@@ -6,7 +6,7 @@ The integrity hash below ensures it is downloaded only once and cached
 from there on.
 
 ```bash
-{{#include ../.envrc}}
+{{#include ../../.envrc}}
 ```
 
 > **NOTE:**

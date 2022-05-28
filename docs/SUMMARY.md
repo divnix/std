@@ -6,34 +6,39 @@
 
 # How-To Guides
 
-- [Hello World](hello-world/Readme.md)
-- [Growing Cells](growing-cells.md)
-- [Include Filter](incl.md)
-- [Setup `.envrc`](envrc.md)
+- [Hello World](guides/hello-world/Readme.md)
+- [Growing Cells](guides/growing-cells.md)
+- [Include Filter](guides/incl.md)
+- [Setup `.envrc`](guides/envrc.md)
 
 # Explanation
 
-- [Architecture Decisions](architecture-decisions/Readme.md)
-  - [Increase Repo Discoverability With a Tui](architecture-decisions/0001-increase-repo-discoverability-with-a-tui.md)
-  - [Wire Up Documentation Intrumentation](architecture-decisions/0002-wire-up-documentation-intrumentation.md)
-  - [Drop `as-nix-cli-epiphyte` flag](architecture-decisions/0003-drop-as-nix-cli-epiphyte-flag.md)
+- [Why `nix`?](explain/why-nix.md)
+
+- [Why `std`?](explain/why-std.md)
+
+- [Architecture Decisions](explain/architecture-decisions/Readme.md)
+  - [Increase Repo Discoverability With a Tui](explain/architecture-decisions/0001-increase-repo-discoverability-with-a-tui.md)
+  - [Wire Up Documentation Intrumentation](explain/architecture-decisions/0002-wire-up-documentation-intrumentation.md)
+  - [Drop `as-nix-cli-epiphyte` flag](explain/architecture-decisions/0003-drop-as-nix-cli-epiphyte-flag.md)
 
 # Reference
 
-- [TUI/CLI](cli.md)
-- [Conventions](conventions.md)
-- [Builtin Clades](clades.md)
+- [TUI/CLI](reference/cli.md)
+- [Conventions](reference/conventions.md)
+- [Builtin Clades](reference/clades.md)
 
-  - [Data](data-clade.md)
-  - [Functions](functions-clade.md)
-  - [Runnables](runnables-clade.md)
-  - [Installables](installables-clade.md)
-  - [Devshells](devshells-clade.md)
+  - [Data](reference/clades/data-clade.md)
+  - [Functions](reference/clades/functions-clade.md)
+  - [Runnables](reference/clades/runnables-clade.md)
+  - [Installables](reference/clades/installables-clade.md)
+  - [Devshells](reference/clades/devshells-clade.md)
 
-- [`//std`](std/Readme.md)
+- [`//std`](reference/std/Readme.md)
 
-  - [`/cli`](std/cli/Readme.md)
-  - [`/devshellProfiles`](std/devshellProfiles/Readme.md)
-  - [`/devshells`](std/devshells/Readme.md)
-  - [`/lib`](std/lib/Readme.md)
-    - [`/fromMakesWith`](std/lib/fromMakesWith.md)
+  - [`/cli`](reference/std/cli/Readme.md)
+  - [`/devshellProfiles`](reference/std/devshellProfiles/Readme.md)
+  - [`/devshells`](reference/std/devshells/Readme.md)
+  - [`/lib`](reference/std/lib/Readme.md)
+    - [`/fromMakesWith`](reference/std/lib/fromMakesWith.md)
+    - [`/mkShell`](reference/std/lib/mkShell.md)

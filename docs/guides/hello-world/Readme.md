@@ -38,19 +38,19 @@ This example consumes the following defaults or builtins:
 ### [Default `organelles`][grow-nix-default-organelles]
 
 ```nix
-{{#include ../../src/grow.nix:68:72}}
+{{#include ../../../src/grow.nix:68:72}}
 ```
 
 ### [Default `systems`][grow-nix-default-systems]
 
 ```nix
-{{#include ../../src/grow.nix:74:83}}
+{{#include ../../../src/grow.nix:74:83}}
 ```
 
 ### [Builtin `nixpkgsConfig`][grow-nix-builtin-nixpkgs-config]
 
 ```nix
-{{#include ../../src/grow.nix:10:14}}
+{{#include ../../../src/grow.nix:10:14}}
 ```
 
 ---
