@@ -79,7 +79,7 @@
       "x86_64-darwin"
       # Other platforms with sufficient support in stdenv which is not formally
       # mandated by their platform tier.
-      "aarch64-darwin"  # a lot of apple M1 already out there
+      "aarch64-darwin" # a lot of apple M1 already out there
     ],
     debug ? false,
   }: let

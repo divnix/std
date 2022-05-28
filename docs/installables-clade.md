@@ -1,5 +1,5 @@
 # Installables
 
 ```nix
-{{#include ../src/clades.nix:23:56}}
+{{#include ../src/clades/installables.nix}}
 ```

@@ -1,5 +1,5 @@
 # Data
 
 ```nix
-{{#include ../src/clades.nix:70:114}}
+{{#include ../src/clades/data.nix}}
 ```

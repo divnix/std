@@ -15,17 +15,15 @@ the inputs of your project.
 {{#include ./flake.nix}}
 ```
 
-#### `/cells/hello/apps.nix`
+#### `./cells/hello/apps.nix`
 
 ```nix
 {{#include ./cells/hello/apps.nix}}
 ```
 
 ```bash
-# CLI to be implemented ...
-# for now simply use the TUI: `std`
-$ cd /examples/hello-world
-$ std //hello/apps:default run
+$ cd hello-world
+$ std //hello/apps/default:run
 Hello, world!
 ```
 
@@ -46,7 +44,7 @@ This example consumes the following defaults or builtins:
 ### [Default `systems`][grow-nix-default-systems]
 
 ```nix
-{{#include ../../src/grow.nix:74:77}}
+{{#include ../../src/grow.nix:74:83}}
 ```
 
 ### [Builtin `nixpkgsConfig`][grow-nix-builtin-nixpkgs-config]
