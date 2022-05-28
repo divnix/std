@@ -24,9 +24,28 @@ that will allow you to grow and cultivate
 Nix Cells with ease. Nix Cells are the fine
 art of code organization using flakes.
 
+_Once_ your `nix` code has evolved into a giant
+ball of spaghetti and nobody else except a few
+select members of your tribe can still read it
+with ease; and _once_ to the rest of your colleagues
+it has grown into an impertience, _then_ `std`
+brings the overdue order to your piece of art
+through a well-defined folder structure and
+disciplining generic interfaces.
+
+With `std`, you'll learn how to organize your `nix`
+**Targets** into **Cells** and **Oranelles** &mdash;
+folded into a useful **CLI & TUI** to also make the
+lives of your colleagues easier.
+
+Through more intuition and less documentation,
+your team will finally find a _canonical_ answer
+to the everlasting GitOps question:
+_What can I **do** with this repository?_
+
 ---
 
-# The `std` Repository
+# The `std` repository itself
 
 In this repository, you'll find the implementation and an application of [Standard][std], alike.
 
