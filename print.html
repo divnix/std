@@ -169,32 +169,22 @@ disciplining generic interfaces.</p>
 folded into a useful <strong>CLI &amp; TUI</strong> to also make the
 lives of your colleagues easier.</p>
 <p>Through more intuition and less documentation,
-your team will finally find a <em>canonical</em> answer
-to the everlasting GitOps question:
+your team and community will finally find a
+<em>canonical</em> answer to the everlasting question:
 <em>What can I <strong>do</strong> with this repository?</em></p>
 <hr />
-<h1 id="the-std-repository-itself"><a class="header" href="#the-std-repository-itself">The <code>std</code> repository itself</a></h1>
-<p>In this repository, you'll find the implementation and an application of <a href="https://github.com/divnix/std">Standard</a>, alike.</p>
+<h2 id="the-std-repository-itself"><a class="header" href="#the-std-repository-itself">The <code>std</code> repository itself</a></h2>
+<p>In this repository, you'll find, both, the <em>implementation</em> and an <em>application</em> of <a href="https://github.com/divnix/std">Standard</a>.</p>
 <h3 id="implementation"><a class="header" href="#implementation">Implementation</a></h3>
 <p><em>What is <code>std</code>? — The well-commented <code>nix</code> code → <a href="https://github.com/divnix/std/tree/main/src"><code>./src</code></a>.</em></p>
 <p>That folder implements:</p>
 <ul>
-<li><a href="https://github.com/divnix/std/blob/main/src/grow.nix"><code>std.grow</code></a> - the cell cultivating function</li>
-<li><a href="https://github.com/divnix/std/blob/main/src/incl.nix"><code>std.incl</code></a> - an inclusive-semantics source filter</li>
-<li><a href="https://github.com/divnix/std/blob/main/src/de-systemize.nix"><code>std.deSystemize</code></a> - a helper to hide <code>system</code>-specifics</li>
-<li><a href="https://github.com/divnix/std/blob/main/src/clades.nix"><code>std.{runnables,installables,functions,data,devshells}</code></a> - clades that implement actions</li>
-</ul>
-<p>In addition <a href="https://github.com/divnix/std/blob/main/flake.nix"><code>./flake.nix</code></a> implements:</p>
-<ul>
-<li><code>std.growOn</code> - <code>std.grow</code>-variant; receives variadic arguments:
-<pre><code class="language-nix">std.growOn
-{ /* ... */ }
-# soil ...
-( /* ... */ ) # first layer
-( /* ... */ ) # second layer
-</code></pre>
-</li>
-<li><code>std.harvest</code> cells in your compat soil layer.</li>
+<li><a href="https://github.com/divnix/std/blob/main/src/grow.nix"><code>std.grow</code></a>: the &quot;smart&quot; importer</li>
+<li><a href="https://github.com/divnix/std/blob/main/src/grow-on.nix"><code>std.grow-on</code></a>: <code>std.grow</code>-variant that recursively merges all variadic arguments</li>
+<li><a href="https://github.com/divnix/std/blob/main/src/harvest.nix"><code>std.harvest</code></a>: harvest your outputs into a different shape for compatibility</li>
+<li><a href="https://github.com/divnix/std/blob/main/src/incl.nix"><code>std.incl</code></a>: a source filter with additive semantics</li>
+<li><a href="https://github.com/divnix/std/blob/main/src/de-systemize.nix"><code>std.deSystemize</code></a>: a helper to hide <code>system</code> from plain sight</li>
+<li><a href="https://github.com/divnix/std/blob/main/src/clades.nix"><code>std.&lt;clade&gt;</code></a>: builtin <strong>Organelle</strong> types that implement actions</li>
 </ul>
 <p><em>What is this crazy verbiage? → Unambigous identifiers on the phone.</em> ☎️</p>
 <h3 id="application"><a class="header" href="#application">Application</a></h3>
@@ -209,23 +199,22 @@ each only implement a <code>default</code> <strong>Target</strong>. <a href="htt
 <li><strong>Actions:</strong> some <strong>Targets</strong> have <strong>Actions</strong> derived from the <strong>Organelles</strong>. See <a href="https://github.com/divnix/std/blob/main/flake.nix"><code>./flake.nix</code></a>
 for the defined <strong>Organelles</strong>. Not all <strong>Clades</strong> implement <strong>Actions</strong>.</li>
 </ul>
-<pre><code class="language-nix">      grow {
-        inherit inputs;
-        cellsFrom = ./cells;
-        organelles = [
-          (clades.runnables &quot;cli&quot;)
-          (clades.functions &quot;lib&quot;)
-          (clades.functions &quot;devshellProfiles&quot;)
-          (clades.devshells &quot;devshells&quot;)
-          (clades.data &quot;data&quot;)
-        ];
-        systems = [
-          &quot;aarch64-darwin&quot;
-          &quot;aarch64-linux&quot;
-          &quot;x86_64-darwin&quot;
-          &quot;x86_64-linux&quot;
-        ];
-      }
+<pre><code class="language-nix">{
+  grow,
+  inputs,
+  clades,
+}:
+grow {
+  inherit inputs;
+  cellsFrom = ./cells;
+  organelles = [
+    (clades.runnables &quot;cli&quot;)
+    (clades.functions &quot;lib&quot;)
+    (clades.functions &quot;devshellProfiles&quot;)
+    (clades.devshells &quot;devshells&quot;)
+    (clades.data &quot;data&quot;)
+  ];
+}
 </code></pre>
 <p><em>That's it. <code>std.grow</code> is a &quot;smart&quot; importer of your <code>nix</code> code and is designed to keep boilerplate at bay.</em></p>
 <blockquote>
@@ -246,10 +235,10 @@ It answers one critical question to newcomers and vetarans alike:</p>
 <h3 id="licenses"><a class="header" href="#licenses">Licenses</a></h3>
 <p><em>What licenses are used? → <a href="https://github.com/divnix/std/blob/main/.reuse/dep5"><code>./.reuse/dep5</code></a>.</em></p>
 <p><em>And the usual copies? → <a href="https://github.com/divnix/std/tree/main/LICENSES"><code>./LICENSES</code></a>.</em></p>
-<h2 id="releases"><a class="header" href="#releases">Releases</a></h2>
+<p>##] Releases</p>
 <p>You may find releases on the <a href="https://github.com/divnix/std/releases">GitHub Release Page</a> of this repository.</p>
 <hr />
-<h1 id="why-std"><a class="header" href="#why-std">Why <code>std</code>?</a></h1>
+<h2 id="why-std"><a class="header" href="#why-std">Why <code>std</code>?</a></h2>
 <h3 id="problem"><a class="header" href="#problem">Problem</a></h3>
 <p>Nix is marvel to ones and cruelty to others.</p>
 <p>Much of this professional schism is due to two fundamental issues:</p>
@@ -311,7 +300,7 @@ to more empathically spark the joy.</p>
 <p>Only ever install a single dependency (<code>nix</code>) and reach <em>any</em> repository target. Reproducibly.</p>
 </blockquote>
 <hr />
-<h1 id="examples-in-the-wild"><a class="header" href="#examples-in-the-wild">Examples in the Wild</a></h1>
+<h2 id="examples-in-the-wild"><a class="header" href="#examples-in-the-wild">Examples in the Wild</a></h2>
 <p>If you'd like to see some examples
 of what a <a href="https://github.com/divnix/std">Standard</a> project looks like,
 take a look at the following:</p>
@@ -325,7 +314,7 @@ take a look at the following:</p>
 <li><a href="https://github.com/input-output-hk/cardano-world"><code>inputs-output-hk/cardano-world</code></a></li>
 </ul>
 <p>:construction: Work in progress, would like to help us extend this section?</p>
-<h1 id="contributions"><a class="header" href="#contributions">Contributions</a></h1>
+<h2 id="contributions"><a class="header" href="#contributions">Contributions</a></h2>
 <p>Please enter the development environment:</p>
 <pre><code class="language-console">direnv allow
 </code></pre>
