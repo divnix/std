@@ -5,7 +5,8 @@ import (
 )
 
 var (
-	targetTemplate = "//%s/%s:%s"
+	targetTemplate = "//%s/%s/%s"
+	actionTemplate = "//%s/%s/%s:%s"
 )
 
 type Root struct {
@@ -49,6 +50,12 @@ func (r *Root) Select(ci, oi, ti int) (Cell, Organelle, Target) {
 		t = o.Targets[ti]
 	)
 	return c, o, t
+}
+
+func (r *Root) ActionArg(ci, oi, ti, ai int) string {
+	c, o, t := r.Select(ci, oi, ti)
+	a := t.Actions[ai]
+	return fmt.Sprintf(actionTemplate, c.Cell, o.Organelle, t.Target, a.Name)
 }
 
 func (r *Root) ActionTitle(ci, oi, ti, ai int) string {

@@ -3,9 +3,11 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/oriser/regroup"
 
+	"github.com/rsteube/carapace"
 	"github.com/spf13/cobra"
 )
 
@@ -46,7 +48,7 @@ var rootCmd = &cobra.Command{
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		fmt.Printf("%+v\n", append([]string{nix}, args...))
+		// fmt.Printf("%+v\n", append([]string{nix}, args...))
 		if err = bashExecve(append([]string{nix}, args...)); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -60,4 +62,34 @@ func ExecuteCli() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func init() {
+	carapace.Gen(rootCmd).Standalone()
+	// completes: '//cell/organelle/target:action'
+	carapace.Gen(rootCmd).PositionalAnyCompletion(
+		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+			root, err := LoadFlake()
+			if err != nil {
+				return carapace.ActionMessage(fmt.Sprintf("%v\n", err))
+			}
+			var values = []string{}
+			for ci, c := range root.Cells {
+				for oi, o := range c.Organelles {
+					for ti, t := range o.Targets {
+						for ai, a := range t.Actions {
+							values = append(
+								values,
+								root.ActionArg(ci, oi, ti, ai),
+								fmt.Sprintf("%s: %s", a.Name, t.Description),
+							)
+						}
+					}
+				}
+			}
+			return carapace.ActionValuesDescribed(
+				values...,
+			).Cache(30*time.Second).Invoke(c).ToMultiPartsA("/", ":")
+		}),
+	)
 }

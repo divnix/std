@@ -11,5 +11,6 @@ require (
 	github.com/hokaccha/go-prettyjson v0.0.0-20211117102719-0474bc63780f // indirect
 	github.com/knipferrc/teacup v0.0.16
 	github.com/oriser/regroup v0.0.0-20210730155327-fca8d7531263
+	github.com/rsteube/carapace v0.20.5-0.20220527214157-2f37b477ac7c
 	github.com/spf13/cobra v1.4.0
 )

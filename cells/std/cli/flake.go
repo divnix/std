@@ -2,11 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os/exec"
 
 	"github.com/TylerBrock/colorjson"
-	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/divnix/std/data"
 )
@@ -25,44 +25,48 @@ var (
 	flakeBuild           = []string{"build", "--out-link", ".std/last-action", "--option", "warn-dirty", "false"}
 )
 
-func GetNix() (string, tea.Msg) {
+func GetNix() (string, error) {
 	nix, err := exec.LookPath("nix")
 	if err != nil {
-		return "", cellLoadingFatalErrf("You need to install 'nix' in order to use 'std'")
+		return "", errors.New("You need to install 'nix' in order to use 'std'")
 	}
 	return nix, nil
 }
 
-func getCurrentSystem() ([]byte, tea.Msg) {
+func getCurrentSystem() ([]byte, error) {
 	// detect the current system
-	nix, msg := GetNix()
-	if msg != nil {
-		return nil, msg
+	nix, err := GetNix()
+	if err != nil {
+		return nil, err
 	}
 	currentSystem, err := exec.Command(nix, currentSystemArgs...).Output()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			return nil, cellLoadingFatalErrf("%w, stderr:\n%s", exitErr, exitErr.Stderr)
+			return nil, fmt.Errorf("%w, stderr:\n%s", exitErr, exitErr.Stderr)
 		}
-		return nil, cellLoadingFatalErr(err)
+		return nil, err
 	}
 	return currentSystem, nil
 }
 
-func getInitEvalCmdArgs() ([]string, tea.Msg) {
+func GetInitEvalCmdArgs() (string, []string, error) {
+	nix, err := GetNix()
+	if err != nil {
+		return "", nil, err
+	}
 
 	currentSystem, err := getCurrentSystem()
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
-	return append(
+	return nix, append(
 		flakeEvalJson, fmt.Sprintf(flakeInitFragment, ".", currentSystem)), nil
 }
 
-func GetActionEvalCmdArgs(c, o, t, a string) (string, []string, tea.Msg) {
-	nix, msg := GetNix()
-	if msg != nil {
-		return "", nil, msg
+func GetActionEvalCmdArgs(c, o, t, a string) (string, []string, error) {
+	nix, err := GetNix()
+	if err != nil {
+		return "", nil, err
 	}
 
 	currentSystem, err := getCurrentSystem()
@@ -73,17 +77,12 @@ func GetActionEvalCmdArgs(c, o, t, a string) (string, []string, tea.Msg) {
 		flakeBuild, fmt.Sprintf(flakeActionsFragment, ".", currentSystem, c, o, t, a)), nil
 }
 
-func loadFlake() tea.Msg {
-	var root data.Root
+func LoadFlake() (*data.Root, error) {
+	var root = &data.Root{}
 
-	nix, msg := GetNix()
-	if msg != nil {
-		return msg
-	}
-
-	args, msg := getInitEvalCmdArgs()
-	if msg != nil {
-		return msg
+	nix, args, err := GetInitEvalCmdArgs()
+	if err != nil {
+		return nil, err
 	}
 
 	// load the std metadata from the flake
@@ -91,9 +90,9 @@ func loadFlake() tea.Msg {
 	out, err := cmd.Output()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			return cellLoadingFatalErrf("command: %s, %w, stderr:\n%s", cmd.String(), exitErr, exitErr.Stderr)
+			return nil, fmt.Errorf("command: %s, %w, stderr:\n%s", cmd.String(), exitErr, exitErr.Stderr)
 		}
-		return cellLoadingFatalErr(err)
+		return nil, err
 	}
 
 	if err := json.Unmarshal(out, &root.Cells); err != nil {
@@ -102,7 +101,7 @@ func loadFlake() tea.Msg {
 		f := colorjson.NewFormatter()
 		f.Indent = 2
 		s, _ := f.Marshal(obj)
-		return cellLoadingFatalErrf("%w - object: %s", err, s)
+		return nil, fmt.Errorf("%w - object: %s", err, s)
 	}
 
 	// var obj interface{}
@@ -112,19 +111,5 @@ func loadFlake() tea.Msg {
 	// s, _ := f.Marshal(obj)
 	// log.Fatalf("object: %s", s)
 
-	return cellLoadedMsg{root.Cells}
-}
-
-type cellLoadedMsg = data.Root
-
-type cellLoadingFatalErrMsg struct {
-	err error
-}
-
-func cellLoadingFatalErr(err error) cellLoadingFatalErrMsg {
-	return cellLoadingFatalErrMsg{err}
-}
-
-func cellLoadingFatalErrf(f string, a ...interface{}) cellLoadingFatalErrMsg {
-	return cellLoadingFatalErrMsg{fmt.Errorf(f, a...)}
+	return root, nil
 }

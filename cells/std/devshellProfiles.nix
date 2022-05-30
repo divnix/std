@@ -14,6 +14,15 @@ in {
       docs.enable = (l.mkEnableOption "Enable Docs nudging") // {default = true;};
     };
     config = {
+      motd = ''
+
+        {202}{bold}🔨 Welcome to ${config.name} 🔨{reset}
+
+        {italic}To autocomplete 'std' in bash, zsh, oil: {202}source <(std _carapace){reset}
+        {italic}More shells: https://rsteube.github.io/carapace/carapace/gen/hiddenSubcommand.html{reset}
+
+        $(type -p menu &>/dev/null && menu)
+      '';
       commands =
         [
           {package = std;}

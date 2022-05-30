@@ -79,6 +79,12 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/rivo/uniseg v0.1.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/rivo/uniseg v0.2.0 h1:S1pD9weZBuJdFmowNwbpi7BJ8TNftyUImj/0WQi72jY=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
+github.com/rsteube/carapace v0.20.3 h1:O3Bnx2IS9r9i5aS/tPuxnzqCb2H/H1QEBsUeBEhMuM4=
+github.com/rsteube/carapace v0.20.3/go.mod h1:GgiwpPVhucHNOv0AmtIkxhiEFkCMP5BBRauyQLP0mFY=
+github.com/rsteube/carapace v0.20.4-0.20220526092656-c9b358dda0b0 h1:n0LyaIth6kyFEoM9dSQFDvp53/vsRbKtebJ8g8jOaXU=
+github.com/rsteube/carapace v0.20.4-0.20220526092656-c9b358dda0b0/go.mod h1:GgiwpPVhucHNOv0AmtIkxhiEFkCMP5BBRauyQLP0mFY=
+github.com/rsteube/carapace v0.20.5-0.20220527214157-2f37b477ac7c h1:f93OvownjdlYRsQ72g5vqQ2CQUmwcRC1L9NZBlPvizQ=
+github.com/rsteube/carapace v0.20.5-0.20220527214157-2f37b477ac7c/go.mod h1:GgiwpPVhucHNOv0AmtIkxhiEFkCMP5BBRauyQLP0mFY=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/sahilm/fuzzy v0.1.0 h1:FzWGaw2Opqyu+794ZQ9SYifWv2EIXpwP4q8dY1kDAwI=
 github.com/sahilm/fuzzy v0.1.0/go.mod h1:VFvziUEIMCrT6A6tw2RFIXPXXmzXbOsSHF0DOI8ZK9Y=
