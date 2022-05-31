@@ -53,7 +53,7 @@
 
   - `inputs.cells` - all other cells, deSystemized
   - `inputs.nixpkgs` - an _instatiated_ nixpkgs, configurabe via `nixpkgsConifg`
-  - `inpugs.self` - the `sourceInfo` (and only that) of the current flake
+  - `inputs.self` - the `sourceInfo` (and only that) of the current flake
 
   Overlays? Go home or file an upstream bug. They are possible, but so heavily
   discouraged that you gotta find out for yourself if you really need to use
