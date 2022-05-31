@@ -57,4 +57,6 @@ use_std() {
 
   nix build "${nix_args[@]}" --profile "$profile_path/shell-profile"
   eval "$(nix print-dev-env ${nix_args[@]} --profile $profile_path/env-profile)"
+  # this is not true
+  unset IN_NIX_SHELL
 }
