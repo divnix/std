@@ -31,7 +31,7 @@
             "--keep-outputs"
           )
           nix build "''${nix_args[@]}" --profile "$profile_path/shell-profile"
-          nix develop "''${nix_args[@]}" --profile "$profile_path/env-profile" --command "$SHELL"
+          bash -c "source $profile_path/shell-profile/env.bash; SHLVL=$SHLVL; __devshell-motd; exec $SHELL -i"
         '';
       }
     ];
