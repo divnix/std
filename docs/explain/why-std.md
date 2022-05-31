@@ -68,3 +68,5 @@ Or simply: 💔 &rarr; 🧙 &rarr; 🔧 &rarr; ✨&rarr; 🏖️
 The smallest common denominator, in any case:
 
 > Only ever install a single dependency (`nix`) and reach _any_ repository target. Reproducibly.
+
+[yants]: https://github.com/divnix/yants
