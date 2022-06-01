@@ -80,11 +80,11 @@
         "std": "std"
       },
       "locked": {
-        "lastModified": 1652254097,
-        "narHash": "sha256-EXUXFChyRL7fxO3dLd30yxfs1hnGg4U1ULTluySJAXA=",
+        "lastModified": 1654109943,
+        "narHash": "sha256-g5TC2L09JziXQmXwdUdJMCGYloblbTBjM5VX2R+E4vk=",
         "owner": "input-output-hk",
         "repo": "mdbook-kroki-preprocessor",
-        "rev": "5d624920bd8480c7e27bd4b13b68f2822375a148",
+        "rev": "a294ca451b408cff1987e48d7c394e062c347e19",
         "type": "github"
       },
       "original": {

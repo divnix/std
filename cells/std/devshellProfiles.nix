@@ -24,10 +24,10 @@ in {
 
         $(type -p menu &>/dev/null && menu)
       '';
+      packages = [kroki-preprocessor];
       commands =
         [
           {package = std;}
-          {package = kroki-preprocessor;}
         ]
         ++ l.optionals cfg.adr.enable [
           {package = nixpkgs.adrgen;}
