@@ -31,5 +31,5 @@
       systems = l.systems.doubles;
     }
     # on our own account ...
-    // (import ./dogfood.nix {inherit inputs grow clades;});
+    // (import ./dogfood.nix {inherit inputs growOn clades harvest;});
 }

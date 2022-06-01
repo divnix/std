@@ -79,4 +79,20 @@ in {
       '');
     };
   };
+  checks = {...}: {
+    commands = [
+      {
+        name = "clade-data";
+        command = "cat $(std //std/data/example:write)";
+      }
+      {
+        name = "clade-devshells";
+        command = "std //std/devshell/default:enter -- echo OK";
+      }
+      {
+        name = "clade-runnables";
+        command = "std //std/cli/default:run -- std OK";
+      }
+    ];
+  };
 }

@@ -62,4 +62,11 @@ in
         pre-commit.text = builtins.readFile ./devshells/pre-commit.sh;
       };
     };
+    checks = {pkgs, config, ...}: {
+      name = "checks";
+      imports = [
+        cell.devshellProfiles.default
+        cell.devshellProfiles.checks
+      ];
+    };
   }
