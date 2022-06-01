@@ -1,0 +1,31 @@
+name: "nix-linux"
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3.0.2
+
+    - uses: cachix/install-nix-action@v17
+      with:
+        install_url: https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.9.0pre20220519_5aeda91/install
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+          system-features = nixos-test benchmark big-parallel kvm recursive-nix
+
+    - name: Nix Flake Show
+      run: nix flake show
+
+    - name: Build Std
+      run: nix run --show-trace --print-build-logs .#x86_64-linux.std.cli.default -- std --version
+
+    - name: Check std devshells
+      run: nix develop --show-trace --print-build-logs .#devShells.x86_64-linux.checks --command echo OK
+
+    - name: Check std data clade
+      run: nix develop --show-trace --print-build-logs .#devShells.x86_64-linux.checks --command clade-data
