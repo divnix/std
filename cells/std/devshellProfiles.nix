@@ -24,7 +24,7 @@ in {
 
         $(type -p menu &>/dev/null && menu)
       '';
-      packages = [kroki-preprocessor];
+      packages = l.optionals (cfg.docs.enable && nixpkgs.stdenv.isLinux) [kroki-preprocessor];
       commands =
         [
           {package = std;}
@@ -40,7 +40,8 @@ in {
           ${nixpkgs.adrgen}/bin/adrgen init "docs/architecture-decisions"
         fi
       '');
-      devshell.startup.init-mdbook = l.mkIf cfg.docs.enable (l.stringsWithDeps.noDepEntry ''
+      devshell.startup.init-mdbook = l.mkIf (cfg.docs.enable && nixpkgs.stdenv.isLinux)
+        (l.stringsWithDeps.noDepEntry ''
         if [ ! -f "book.toml" ]; then
         mkdir -p docs
         cat << EOF > book.toml
