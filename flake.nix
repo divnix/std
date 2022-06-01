@@ -26,7 +26,7 @@
     l = inputs.nixpkgs.lib // builtins;
   in
     {
-      inherit (clades) runnables installables functions data devshells containers files;
+      inherit (clades) runnables installables functions data devshells containers files microvms;
       inherit grow growOn deSystemize incl harvest;
       systems = l.systems.doubles;
     }

@@ -6,4 +6,5 @@
   devshells = import ./clades/devshells.nix {inherit nixpkgs;};
   containers = import ./clades/containers.nix {inherit nixpkgs;};
   files = import ./clades/files.nix {inherit nixpkgs;};
+  microvms = import ./clades/microvms.nix {inherit nixpkgs;};
 }
