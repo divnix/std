@@ -5,7 +5,7 @@
   l = nixpkgs.lib // builtins;
   std = cell.cli.default;
   nixpkgs = inputs.nixpkgs;
-  kroki-preprocessor = inputs.kroki-preprocessor;
+  kroki-preprocessor = inputs.kroki-preprocessor.preprocessor.apps.preprocessor;
 in {
   default = {config, ...}: let
     cfg = config.std;
