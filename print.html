@@ -201,11 +201,12 @@ each only implement a <code>default</code> <strong>Target</strong>. <a href="htt
 for the defined <strong>Organelles</strong>. Not all <strong>Clades</strong> implement <strong>Actions</strong>.</li>
 </ul>
 <pre><code class="language-nix">{
-  grow,
+  growOn,
   inputs,
   clades,
+  harvest,
 }:
-grow {
+growOn {
   inherit inputs;
   cellsFrom = ./cells;
   organelles = [
@@ -215,6 +216,8 @@ grow {
     (clades.devshells &quot;devshells&quot;)
     (clades.data &quot;data&quot;)
   ];
+} {
+  devShells = harvest inputs.self [&quot;std&quot; &quot;devshells&quot;];
 }
 </code></pre>
 <p><em>That's it. <code>std.grow</code> is a &quot;smart&quot; importer of your <code>nix</code> code and is designed to keep boilerplate at bay.</em></p>
