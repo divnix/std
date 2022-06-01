@@ -48,6 +48,7 @@ in
           package = nixpkgs.gopls;
           category = "cli-dev";
         }
+      ] ++ l.optionals nixpkgs.stdenv.isLinux [
         {
           package = nixpkgs.golangci-lint;
           category = "cli-dev";
