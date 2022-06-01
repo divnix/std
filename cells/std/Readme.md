@@ -2,9 +2,9 @@
 
 ... is the only cell in `divnix/std` and provides only very limited functionality.
 
-- It containes the TUI, in `./cli`.
-- It containes a `devshellProfile` in `./devshellProfiles`.
-- It containes a growing number of second level library functions in `./lib`.
+- It contains the TUI, in `./cli`.
+- It contains a `devshellProfile` in `./devshellProfiles`.
+- It contains a growing number of second level library functions in `./lib`.
 
 That's it.
 

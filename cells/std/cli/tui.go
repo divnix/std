@@ -27,7 +27,7 @@ const (
 )
 
 const (
-	cmdTemplate = "std  %s  %s"
+	cmdTemplate = "std %s:%s"
 )
 
 func (s Focus) String() string {
@@ -141,17 +141,28 @@ func (m *Tui) SetTitle() {
 	}
 }
 
+type cellLoadedMsg = data.Root
+type cellLoadingFatalErrMsg struct{ err error }
+
 func (m *Tui) GetActionCmd(i *ActionItem) ([]string, tea.Msg) {
-	nix, args, msg := GetActionEvalCmdArgs(
+	nix, args, err := GetActionEvalCmdArgs(
 		i.r.Cell(i.CellIdx, i.OrganelleIdx, i.TargetIdx),
 		i.r.Organelle(i.CellIdx, i.OrganelleIdx, i.TargetIdx),
 		i.r.Target(i.CellIdx, i.OrganelleIdx, i.TargetIdx),
 		i.r.ActionTitle(i.CellIdx, i.OrganelleIdx, i.TargetIdx, i.ActionIdx),
 	)
-	if msg != nil {
-		return nil, msg
+	if err != nil {
+		return nil, cellLoadingFatalErrMsg{err}
 	}
 	return append([]string{nix}, args...), nil
+}
+
+func loadFlake() tea.Msg {
+	root, err := LoadFlake()
+	if err != nil {
+		return cellLoadingFatalErrMsg{err}
+	}
+	return cellLoadedMsg{root.Cells}
 }
 
 func (m *Tui) Init() tea.Cmd {

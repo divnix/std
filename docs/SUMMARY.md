@@ -2,31 +2,43 @@
 
 [Introduction](README.md)
 
-# User Guide
+# Tutorials
 
-- [Hello World](hello-world/Readme.md)
-- [Conventions](conventions.md)
-- [Growing Cells](growing-cells.md)
-- [Include Filter](incl.md)
-- [Builtin Clades](clades.md)
-  - [Data](data-clade.md)
-  - [Function](function-clade.md)
-  - [Runnables](runnables-clade.md)
-  - [Installables](installables-clade.md)
+# How-To Guides
 
-# Builtin Cells
+- [Hello World](guides/hello-world/Readme.md)
+- [Growing Cells](guides/growing-cells.md)
+- [Include Filter](guides/incl.md)
+- [Setup `.envrc`](guides/envrc.md)
 
-- [Std](std/Readme.md)
+# Explanation
 
-  - [Cli](std/cli/Readme.md)
-  - [devshellProfiles](std/devshellProfiles/Readme.md)
-  - [Lib](std/lib/Readme.md)
-    - [fromMakesWith](std/lib/fromMakesWith.md)
+- [Why `nix`?](explain/why-nix.md)
 
-# Architecture
+- [Why `std`?](explain/why-std.md)
 
-- [Architecture Decisions](architecture-decisions/Readme.md)
-  - [Increase Repo Discoverability With a Tui](architecture-decisions/0001-increase-repo-discoverability-with-a-tui.md)
-  - [Wire Up Documentation Intrumentation](architecture-decisions/0002-wire-up-documentation-intrumentation.md)
-  - [Drop `as-nix-cli-epiphyte` flag](architecture-decisions/0003-drop-as-nix-cli-epiphyte-flag.md)
-  - [Adr Template](architecture-decisions/adr_template.md)
+- [Architecture Decisions](explain/architecture-decisions/Readme.md)
+  - [Increase Repo Discoverability With a Tui](explain/architecture-decisions/0001-increase-repo-discoverability-with-a-tui.md)
+  - [Wire Up Documentation Intrumentation](explain/architecture-decisions/0002-wire-up-documentation-intrumentation.md)
+  - [Drop `as-nix-cli-epiphyte` flag](explain/architecture-decisions/0003-drop-as-nix-cli-epiphyte-flag.md)
+
+# Reference
+
+- [TUI/CLI](reference/cli.md)
+- [Conventions](reference/conventions.md)
+- [Builtin Clades](reference/clades.md)
+
+  - [Data](reference/clades/data-clade.md)
+  - [Functions](reference/clades/functions-clade.md)
+  - [Runnables](reference/clades/runnables-clade.md)
+  - [Installables](reference/clades/installables-clade.md)
+  - [Devshells](reference/clades/devshells-clade.md)
+
+- [`//std`](reference/std/Readme.md)
+
+  - [`/cli`](reference/std/cli/Readme.md)
+  - [`/devshellProfiles`](reference/std/devshellProfiles/Readme.md)
+  - [`/devshells`](reference/std/devshells/Readme.md)
+  - [`/lib`](reference/std/lib/Readme.md)
+    - [`/fromMakesWith`](reference/std/lib/fromMakesWith.md)
+    - [`/mkShell`](reference/std/lib/mkShell.md)

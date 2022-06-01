@@ -53,7 +53,7 @@
 
   - `inputs.cells` - all other cells, deSystemized
   - `inputs.nixpkgs` - an _instatiated_ nixpkgs, configurabe via `nixpkgsConifg`
-  - `inpugs.self` - the `sourceInfo` (and only that) of the current flake
+  - `inputs.self` - the `sourceInfo` (and only that) of the current flake
 
   Overlays? Go home or file an upstream bug. They are possible, but so heavily
   discouraged that you gotta find out for yourself if you really need to use
@@ -71,11 +71,16 @@
       (clades.installables "packages")
     ],
     nixpkgsConfig ? {},
-    systems ? (
-      l.systems.supported.tier1
-      ++ l.systems.supported.tier2
-      ++ ["aarch64-darwin"] # a lot of apple M1 already out there
-    ),
+    systems ? [
+      # Tier 1
+      "x86_64-linux"
+      # Tier 2
+      "aarch64-linux"
+      "x86_64-darwin"
+      # Other platforms with sufficient support in stdenv which is not formally
+      # mandated by their platform tier.
+      "aarch64-darwin" # a lot of apple M1 already out there
+    ],
     debug ? false,
   }: let
     # Validations ...
@@ -126,22 +131,24 @@
           else attrs
         );
 
+    cells' = res.output;
     # List of all flake outputs injected by std in the outputs and inputs.cells format
     loadOutputFor = system: let
       # Load a cell, return the flake outputs injected by std
       args.inputs = _debug "inputs on ${system}" (
         (deSystemize system inputs)
         // {
-          nixpkgs = import nixpkgs {
-            localSystem = system;
-            config = builtinNixpkgsConfig // nixpkgsConfig;
-          };
           self =
             inputs.self.sourceInfo
             // {rev = inputs.self.sourceInfo.rev or "not-a-commit";};
-          cells =
-            # recursion on cells
-            deSystemize system res.output;
+          # recursion on cells
+          cells = deSystemize system cells';
+        }
+        // l.optionalAttrs (inputs ? nixpkgs) {
+          nixpkgs = import inputs.nixpkgs {
+            localSystem = system;
+            config = builtinNixpkgsConfig // nixpkgsConfig;
+          };
         }
       );
       loadCellFor = cellName: let
@@ -201,7 +208,7 @@
             else if l.pathExists oPath.dir
             then
               validate.Import organelle.clade oPath.dir (importedDir (
-                args // {cell = res;} # recursion on cell
+                args // {cell = res.output;} # recursion on cell
               ))
             else null;
         in

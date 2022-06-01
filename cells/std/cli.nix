@@ -23,7 +23,16 @@ in {
 
       src = ./cli;
 
-      vendorSha256 = "sha256-4vsSQTd0PDTGXwpRIvS9C6TcHnfPhjbGcJQBbo+2ajE=";
+      vendorSha256 = "sha256-XfTd0xLWqAV5AsSPb+ui4VYLWg+Ahs48cdYeexMb4HU=";
+
+      nativeBuildInputs = [nixpkgs.installShellFiles];
+
+      postInstall = ''
+        installShellCompletion --cmd std \
+          --bash <($out/bin/std _carapace bash) \
+          --fish <($out/bin/std _carapace fish) \
+          --zsh <($out/bin/std _carapace zsh)
+      '';
 
       ldflags = [
         "-s"

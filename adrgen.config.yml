@@ -1,6 +1,6 @@
 default_meta: []
 default_status: proposed
-directory: docs/architecture-decisions
+directory: docs/explain/architecture-decisions
 id_digit_number: 4
 supported_statuses:
 - proposed
@@ -9,4 +9,4 @@ supported_statuses:
 - superseded
 - amended
 - deprecated
-template_file: docs/architecture-decisions/adr_template.md
+template_file: docs/explain/architecture-decisions/adr_template.md

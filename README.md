@@ -8,7 +8,7 @@ SPDX-License-Identifier: Unlicense
 <div align="center">
   <img src="https://github.com/divnix/std/raw/main/artwork/logo.png" width="250" />
   <h1>Standard</h1>
-  <p>Ship today with architecture for tomorrow</span>
+  <p>Ship today.</span>
 </div>
 
 <!--
@@ -19,119 +19,105 @@ and many more amazing people (see end of file for a full list)._
 -->
 
 [Standard][std] is THE opinionated, generic,
-[Nix][nix] [Flakes][nix_flakes] framework
+[Nix][nix] [Flakes][nix-flakes] framework
 that will allow you to grow and cultivate
-Nix Cells with ease.
+Nix Cells with ease. Nix Cells are the fine
+art of code organization using flakes.
 
-Nix Cells are the fine art of code organization
-using flakes.
+_Once_ your `nix` code has evolved into a giant
+ball of spaghetti and nobody else except a few
+select members of your tribe can still read it
+with ease; and _once_ to the rest of your colleagues
+it has grown into an impertience, _then_ `std`
+brings the overdue order to your piece of art
+through a well-defined folder structure and
+disciplining generic interfaces.
 
-As a Nix Cell Cultivator, you can focus on building
-for your use cases and ride on the marvels of nix flakes
-while wasting virtually no thoughts on boilerplate
-code organization.
+With `std`, you'll learn how to organize your `nix`
+flake outputs ('**Targets**') into **Cells** and
+**Oranelles** &mdash; folded into a useful
+**CLI & TUI** to also make the lives of your
+colleagues easier.
 
-Because [Standard][std] is a proper framework,
-you benefit from continued performance
-and feature upgrades over time with minimum effort. :sparkles:
+Through more intuition and less documentation,
+your team and community will finally find a
+_canonical_ answer to the everlasting question:
+_What can I **do** with this repository?_
 
-**Code Organization**
+---
 
-[Standard][std] has a pre-defined place
-for all your code.
-Packages, applications, functions, libraries, modules, profiles:
-they all have a home.
+## The `std` repository itself
 
-**Developer Experience**
+In this repository, you'll find, both, the _implementation_ and an _application_ of [Standard][std].
 
-[Standard][std] projects
-are as declarative as possible;
-we eliminate most boilerplate;
-zero-config workflows...
-everything Just Works™.
+### Implementation
 
-**DevOps Professionals**
+_What is `std`? &mdash; The well-commented `nix` code &rarr; [`./src`][src]._
 
-[Standard][std] doesn't just throw more options at you.
-It gives you and your team something much more valuable: _guidance_.
+That folder implements:
 
-**Discoverability & Gamification**
+- [`std.grow`][grow]: the "smart" importer
+- [`std.growOn`][grow-on]: `std.grow`-variant that recursively merges all additinonal variadic arguments
+- [`std.harvest`][harvest]: harvest your **Targets** into a different shape for compatibility
+- [`std.incl`][incl]: a straight-forward source filter with additive semantics
+- [`std.deSystemize`][de-systemize]: a helper to hide `system` from plain sight
+- [`std.<clade>`][clades]: builtin **Organelle** types that implement **Actions**
 
-[Standard][std]'s companion TUI/CLI `std` focuses on polyglot
-discoverability of your repository's targets & actions. Build
-a package, run a test, publish an artifact... Explore what's
-available with style! 😎
+_What is this crazy verbiage? &rarr; Unambigous identifiers on the phone._ ☎️
 
-## How it's organized
+### Application
 
-[Standard][std] places all the code in a directory of your choice.
+_Dog-fooding? &rarr; [`./cells`][cells]._
 
-Then, with just very few hints, Standard undestands your codebase
-and let you and others easily discover what your code base has to
-offer. Almost like gitops-gamification.
+- **Cells:** this is no big monorepo, so [`./cells`][cells] only implements a single **Cell**: [`std`][std-cell].
+- **Organelles:** [`std`][std-cell] implements the [`cli`][cli-organelle],
+  [`devshellProfiles`][devshellprofiles-organelle], [`devshells`][devshells-organelle]
+  & [`lib`][lib-organelle] **Organelle**.
+- **Targets:** [`cli`][cli-organelle], [`devshellProfiles`][devshellprofiles-organelle] & [`devshells`][devshells-organelle]
+  each only implement a `default` **Target**. [`lib`][lib-organelle] has more.
+- **Actions:** some **Targets** have **Actions** derived from the **Organelles**. See [`./flake.nix`][flake]
+  for the defined **Organelles**. Not all **Clades** implement **Actions**.
 
-![](./artwork/model.png)
+```nix
+{{#include ../dogfood.nix}}
+```
 
-Related code is grouped into **Cells**
-that can be composed together
-to form any functionality you can imagine.
+_That's it. `std.grow` is a "smart" importer of your `nix` code and is designed to keep boilerplate at bay._
 
-A Cell provides functionality through **Organelles** of **Clade**:
+> **TIP:**
+> Now, enter the devshell (`direnv allow`) and play with the `std` CLI/TUI companion.
+> It answers one critical question to newcomers and vetarans alike:
+>
+> <center><i>What can I <b>do</b> with this repository?</i></center>
+> &emsp;
 
-- Runnables
-- Installables
-- Functions
-- Data
+### Documentation
 
-You can even define your own clades. The standard clades already
-define a set of actions that can be run on such clades. Check them
-out in [`./src/clades.nix`][clades-nix]
+_Where can I find the documentation? &rarr; [`./docs`][docs]._
 
-The built-in default **Organelles** are:
+_No, I mean rendered? &rarr; [The Standard Book][book]._
 
-- Applications (Runnables)
+The documentation is structured around these axes:
 
-  Instructions that can be run.
-  For example: `cd`, `ls`, and `cat` are applications.
+|                  | For Study   | For Work      |
+| ---------------- | ----------- | ------------- |
+| **The Practice** | Tutorials   | How-To Guides |
+| **The Theory**   | Explanation | Reference     |
 
-- Packages (Installables)
+### Licenses
 
-  Contents (files and/or directories)
-  generated in a pure and reproducible way,
-  also known as [derivations][nix_drv].
+_What licenses are used? &rarr; [`./.reuse/dep5`][licensing]._
 
-- Libraries (Functions)
+_And the usual copies? &rarr; [`./LICENSES`][licenses]._
 
-  Instructions on how to turn the given inputs
-  into something else.
+## Releases
 
-  They act like a library
-  that you and others can use
-  in order to abstract, share
-  and re-use code.
+You may find releases on the [GitHub Release Page][releases] of this repository.
 
-A potential alternative to the default **Organelle** _types_ could be:
+## Why?
 
-- NixOS Modules (Functions)
-- NixOS Profiles (Functions)
-- DevShell Profiles (Functions)
-- Just Tasks (Runnables)
-- Entrypoints (Runnables)
-
-## Documentation
-
-Please go through the annotated source code:
-
-- [`./src/grow.nix`][grow-nix]
-- [`./src/incl.nix`][incl-nix]
-- [`./src/de-systemize.nix`][de-systemize-nix]
-- [`./src/clades.nix`][clades-nix]
-
-Then, this repo also is [Standard][std]ized and you can explore
-it functionality, including documentation by entering the Devshell
-and just type `std`.
-
-Or consume the doc page under: [https://divnix.github.io/std][std-docs]
+- [Why `nix`?][why-nix]
+- [Why `std`?][why-std]
 
 ## Examples in the Wild
 
@@ -145,42 +131,49 @@ take a look at the following:
 - [`mdbook-kroki-preprocessor`][mdbook-kroki-preprocessor]
 - [`HardenedNixOS-Profile`][hardenednixos-profile]
 - [`Julia2Nix.jl`][julia2nix]
+- [`inputs-output-hk/cardano-world`][cardano-world]
 
 :construction: Work in progress, would like to help us extend this section?
 
 ## Contributions
 
-Please get ourself the appropriate environment:
-
-### With `direnv`
+Please enter the development environment:
 
 ```console
 direnv allow
 ```
 
-### Without `direnv`
-
-```console
-nix develop ./devshell -c $SHELL
-menu
-```
-
 ---
 
+[std-cell]: https://github.com/divnix/std/tree/main/cells/std
+[cli-organelle]: https://github.com/divnix/std/blob/main/cells/std/cli.nix
+[devshellprofiles-organelle]: https://github.com/divnix/std/blob/main/cells/std/devshellProfiles.nix
+[devshells-organelle]: https://github.com/divnix/std/blob/main/cells/std/devshells.nix
+[lib-organelle]: https://github.com/divnix/std/blob/main/cells/std/lib/default.nix
+[cells]: https://github.com/divnix/std/tree/main/cells
+[src]: https://github.com/divnix/std/tree/main/src
+[docs]: https://github.com/divnix/std/tree/main/docs
+[book]: https://divnix.github.io/std
+[releases]: https://github.com/divnix/std/releases
+[licensing]: https://github.com/divnix/std/blob/main/.reuse/dep5
+[licenses]: https://github.com/divnix/std/tree/main/LICENSES
+[grow]: https://github.com/divnix/std/blob/main/src/grow.nix
+[grow-on]: https://github.com/divnix/std/blob/main/src/grow-on.nix
+[harvest]: https://github.com/divnix/std/blob/main/src/harvest.nix
+[incl]: https://github.com/divnix/std/blob/main/src/incl.nix
+[de-systemize]: https://github.com/divnix/std/blob/main/src/de-systemize.nix
+[clades]: https://github.com/divnix/std/blob/main/src/clades.nix
+[flake]: https://github.com/divnix/std/blob/main/flake.nix
+[yants]: https://github.com/divnix/yants
 [bitte-cells]: https://github.com/input-output-hk/bitte-cells
-[clades-nix]: https://github.com/divnix/std/blob/main/src/clades.nix
-[cross_compiler]: https://en.wikipedia.org/wiki/Cross_compiler
-[de-systemize-nix]: https://github.com/divnix/std/blob/main/src/de-systemize.nix
+[cardano-world]: https://github.com/input-output-hk/cardano-world
 [divnix-hive]: https://github.com/divnix/hive
-[grow-nix]: https://github.com/divnix/std/blob/main/src/grow.nix
 [hardenednixos-profile]: https://github.com/hardenedlinux/HardenedNixOS-Profile
-[hydra]: https://github.com/NixOS/hydra
-[incl-nix]: https://github.com/divnix/std/blob/main/src/incl.nix
 [iog-tullia]: https://github.com/input-output-hk/tullia
 [julia2nix]: https://github.com/JuliaCN/Julia2Nix.jl
 [mdbook-kroki-preprocessor]: https://github.com/input-output-hk/mdbook-kroki-preprocessor
-[nix_drv]: https://nixos.org/manual/nix/unstable/expressions/derivations.html
-[nix_flakes]: https://nixos.wiki/wiki/Flakes
+[nix-flakes]: https://nixos.wiki/wiki/Flakes
 [nix]: https://nixos.org/manual/nix/unstable
-[std-docs]: https://divnix.github.io/std
 [std]: https://github.com/divnix/std
+[why-std]: https://divnix.github.io/std/explain/why-std.html
+[why-nix]: https://divnix.github.io/std/explain/why-nix.html
