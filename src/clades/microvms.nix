@@ -1,11 +1,15 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the Microvms Clade for Microvm.nix - https://github.com/astro/microvm.nix
-  Available actions:
-    - run
-  */
+   Use the Microvms Clade for Microvm.nix - https://github.com/astro/microvm.nix
 
+   Available actions:
+    - qemu
+    - kvmtool
+    - crosvm
+    - firecracker
+    - cloud-hypervisor
+  */
   substituters = "--option extra-substituters https://microvm.cachix.org";
   keys = "--option extra-trusted-public-keys microvm.cachix.org-1:oXnBc6hRE3eX5rSYdRyMYXnfzcCxC7yKPTbZXALsqys=";
 
