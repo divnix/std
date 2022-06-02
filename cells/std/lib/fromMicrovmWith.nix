@@ -5,7 +5,7 @@
       In order to be able to use 'std.std.lib.fromMicrovmWith', an input
       named 'microvm' must be defined in the flake. See inputs above.
 
-      microm.url = "github:astro/microvm.nix";
+      microvm.url = "github:astro/microvm.nix";
     ''
   );
   assert nixpkgs.lib.assertMsg (builtins.hasAttr "nixpkgs" inputs') (
@@ -29,7 +29,7 @@
         inputsChecked.microvm.nixosModules.host
         # this runs as a MicroVM that nests MicroVMs
         inputsChecked.microvm.nixosModules.microvm
-        # your custom moduel
+        # your custom module
         module
       ];
     };
