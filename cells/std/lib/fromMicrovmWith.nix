@@ -15,9 +15,9 @@
       named 'nixpkgs' must be defined in the flake. See inputs above.
     ''
   ); inputs';
-  microvm = channel: module: let
+  microvm = module: let
     nixosSystem = args:
-      import "${channel.path}/nixos/lib/eval-config.nix" (args
+      import "${inputsChecked.nixpkgs.path}/nixos/lib/eval-config.nix" (args
         // {
           modules = args.modules;
         });
