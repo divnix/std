@@ -32,6 +32,7 @@
   - [Functions](reference/clades/functions-clade.md)
   - [Runnables](reference/clades/runnables-clade.md)
   - [Installables](reference/clades/installables-clade.md)
+  - [Microvms](reference/clades/microvms-clade.md)
   - [Devshells](reference/clades/devshells-clade.md)
   - [Containers](reference/clades/containers-clade.md)
 
