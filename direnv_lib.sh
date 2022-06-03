@@ -20,7 +20,8 @@ use_std() {
   local system
   system="$(nix eval --raw --impure --expr builtins.currentSystem)"
   local cellsroot="$1"
-  local frgmnts=($(echo "$2" | sed 's#//##' | sed 's#:# #' | sed 's#/# #g'))
+  local -a frgmnts
+  mapfile -d " " -t frgmnts < <(echo -n "$2" | sed 's#//##' | sed 's#:# #' | sed 's#/# #g')
   local clade="${frgmnts[0]}"
   local organ="${frgmnts[1]}"
   local target="${frgmnts[2]}"
@@ -31,7 +32,9 @@ use_std() {
     "--no-write-lock-file"
     "--no-warn-dirty"
     "--accept-flake-config"
+    "--no-link"
     "--keep-outputs"
+    "--build-poll-interval" "0"
   )
 
   if [[ -f "$cellsroot/$clade/$organ/$target.nix" ]]; then
@@ -56,8 +59,7 @@ use_std() {
   mkdir -p "$(direnv_layout_dir)/$clade/$organ/$target"
 
   nix build "$PWD#$system.$clade.$organ.$target" "${nix_args[@]}" --profile "$profile_path/shell-profile"
-  drv=$(nix path-info --derivation "$profile_path/shell-profile")
-  eval "$(nix print-dev-env "$drv" "${nix_args[@]}" --profile "$profile_path/env-profile")"
+  . "$profile_path/shell-profile/entrypoint"
   # this is not true
   unset IN_NIX_SHELL
 }
