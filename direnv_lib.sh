@@ -17,16 +17,16 @@ direnv_layout_dir=$PWD/.std
 # Find out the integrity hash:
 #   direnv fetchurl https://raw.githubusercontent.com/divnix/std/main/direnv_lib.sh
 use_std() {
-  local system="$(nix eval --raw --impure --expr builtins.currentSystem)"
+  local system
+  system="$(nix eval --raw --impure --expr builtins.currentSystem)"
   local cellsroot="$1"
   local frgmnts=($(echo "$2" | sed 's#//##' | sed 's#:# #' | sed 's#/# #g'))
   local clade="${frgmnts[0]}"
   local organ="${frgmnts[1]}"
-  local targt="${frgmnts[2]}"
-  local profile_path="$(direnv_layout_dir)/$clade/$organ/$targt"
+  local target="${frgmnts[2]}"
+  local profile_path="$direnv_layout_dir/$clade/$organ/$target"
 
   local nix_args=(
-    "$PWD#$system.$clade.$organ.$targt"
     "--no-update-lock-file"
     "--no-write-lock-file"
     "--no-warn-dirty"
@@ -45,18 +45,19 @@ use_std() {
     watch_file "$cellsroot/$clade/$organ.nix"
   fi
 
-  if [[ -d "$cellsroot/$clade/$organ/$targt" ]]; then
-    log_status "Watching: $cellsroot/$clade/$organ/$targt (recursively)"
-    watch_dir "$cellsroot/$clade/$organ/$targt"
+  if [[ -d "$cellsroot/$clade/$organ/$target" ]]; then
+    log_status "Watching: $cellsroot/$clade/$organ/$target (recursively)"
+    watch_dir "$cellsroot/$clade/$organ/$target"
   elif [[ -d "$cellsroot/$clade/$organ" ]]; then
     log_status "Watching: $cellsroot/$clade/$organ (recursively)"
     watch_dir "$cellsroot/$clade/$organ"
   fi
 
-  mkdir -p "$(direnv_layout_dir)/$clade/$organ/$targt"
+  mkdir -p "$(direnv_layout_dir)/$clade/$organ/$target"
 
-  nix build "${nix_args[@]}" --profile "$profile_path/shell-profile"
-  eval "$(nix print-dev-env ${nix_args[@]} --profile $profile_path/env-profile)"
+  nix build "$PWD#$system.$clade.$organ.$target" "${nix_args[@]}" --profile "$profile_path/shell-profile"
+  drv=$(nix path-info --derivation "$profile_path/shell-profile")
+  eval "$(nix print-dev-env "$drv" "${nix_args[@]}" --profile "$profile_path/env-profile")"
   # this is not true
   unset IN_NIX_SHELL
 }
