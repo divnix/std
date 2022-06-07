@@ -147,6 +147,7 @@
         // l.optionalAttrs (inputs ? nixpkgs) {
           nixpkgs = import inputs.nixpkgs {
             localSystem = system;
+            overlays = [];
             config = builtinNixpkgsConfig // nixpkgsConfig;
           };
         }
