@@ -7,11 +7,6 @@
   paths = import ./paths.nix;
   clades = import ./clades.nix {inherit nixpkgs;};
   validate = import ./validators.nix {inherit yants nixpkgs;};
-  builtinNixpkgsConfig = {
-    allowUnfree = true;
-    allowUnsupportedSystem = true;
-    android_sdk.accept_license = true;
-  };
   /*
   A funtion that 'grows' 'organells' from 'cells' found in 'cellsFrom'.
 
@@ -145,11 +140,7 @@
           cells = deSystemize system cells';
         }
         // l.optionalAttrs (inputs ? nixpkgs) {
-          nixpkgs = import inputs.nixpkgs {
-            localSystem = system;
-            overlays = [];
-            config = builtinNixpkgsConfig // nixpkgsConfig;
-          };
+          nixpkgs = deSystemize system nixpkgs.legacyPackages;
         }
       );
       loadCellFor = cellName: let
