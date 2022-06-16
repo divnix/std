@@ -55,7 +55,7 @@ in {
         build-dir = "docs/book"
 
         [preprocessor.kroki-preprocessor]
-        command = "${kroki-preprocessor}"
+        command = "${kroki-preprocessor}/bin/mdbook-kroki-preprocessor"
 
         EOF
         cat << EOF > docs/SUMMARY.md
