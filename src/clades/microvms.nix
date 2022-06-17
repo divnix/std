@@ -1,9 +1,9 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-   Use the Microvms Clade for Microvm.nix - https://github.com/astro/microvm.nix
+  Use the Microvms Clade for Microvm.nix - https://github.com/astro/microvm.nix
 
-   Available actions:
+  Available actions:
     - qemu
     - kvmtool
     - crosvm
