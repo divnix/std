@@ -35,7 +35,7 @@ disciplining generic interfaces.
 
 With `std`, you'll learn how to organize your `nix`
 flake outputs ('**Targets**') into **Cells** and
-**Oranelles** &mdash; folded into a useful
+**Organelles** &mdash; folded into a useful
 **CLI & TUI** to also make the lives of your
 colleagues easier.
 
