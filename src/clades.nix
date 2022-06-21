@@ -4,4 +4,5 @@
   functions = import ./clades/functions.nix {inherit nixpkgs;};
   data = import ./clades/data.nix {inherit nixpkgs;};
   devshells = import ./clades/devshells.nix {inherit nixpkgs;};
+  containers = import ./clades/containers.nix {inherit nixpkgs;};
 }
