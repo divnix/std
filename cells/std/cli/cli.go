@@ -18,7 +18,7 @@ type Spec struct {
 	Action    string `regroup:"action,required"`
 }
 
-var re = regroup.MustCompile(`^//(?P<cell>\w+)/(?P<organelle>\w+)/(?P<target>\w+):(?P<action>\w+)`)
+var re = regroup.MustCompile(`^//(?P<cell>[^/]+)/(?P<organelle>[^/]+)/(?P<target>[^:]+):(?P<action>.+)`)
 
 var rootCmd = &cobra.Command{
 	Use:     "std //cell/organelle/target:action",
