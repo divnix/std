@@ -33,6 +33,7 @@
   - [Runnables](reference/clades/runnables-clade.md)
   - [Installables](reference/clades/installables-clade.md)
   - [Devshells](reference/clades/devshells-clade.md)
+  - [Containers](reference/clades/containers-clade.md)
 
 - [`//std`](reference/std/Readme.md)
 
