@@ -13,6 +13,7 @@ growOn {
     (clades.functions "devshellProfiles")
     (clades.devshells "devshells")
     (clades.data "data")
+    (clades.files "files")
   ];
 } {
   devShells = harvest inputs.self ["std" "devshells"];
