@@ -1,10 +1,10 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-   Use the Files Clade for any text data.
-   
-   Available actions:
-     - explore
+  Use the Files Clade for any text data.
+
+  Available actions:
+    - explore
    */
   files = name: {
     inherit name;
