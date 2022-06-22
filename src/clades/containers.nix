@@ -1,13 +1,13 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-   Use the Containers Clade for OCI-images built with nix2container.
+  Use the Containers Clade for OCI-images built with nix2container.
 
-   Available actions:
-     - print-image
-     - copy-to-registry
-     - copy-to-podman
-     - copy-to-docker
+  Available actions:
+    - print-image
+    - copy-to-registry
+    - copy-to-podman
+    - copy-to-docker
    */
   containers = name: {
     inherit name;
