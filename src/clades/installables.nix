@@ -9,6 +9,7 @@
     - upgrade
     - remove
     - build
+    - bundle
   */
   installables = name: {
     inherit name;
@@ -45,6 +46,13 @@
         description = "build this target";
         command = ''
           nix build ${flake}#${fragment}
+        '';
+      }
+      {
+        name = "bundle";
+        description = "bundle this target";
+        command = ''
+          nix bundle --bundler github:Ninlives/relocatable.nix --refresh ${flake}#${fragment}
         '';
       }
     ];
