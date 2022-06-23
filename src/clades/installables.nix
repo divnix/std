@@ -10,6 +10,7 @@
     - remove
     - build
     - bundle
+    - bundleImage
   */
   installables = name: {
     inherit name;
@@ -53,6 +54,13 @@
         description = "bundle this target";
         command = ''
           nix bundle --bundler github:Ninlives/relocatable.nix --refresh ${flake}#${fragment}
+        '';
+      }
+      {
+        name = "bundleImage";
+        description = "bundle this target to image";
+        command = ''
+          nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh ${flake}#${fragment}
         '';
       }
     ];
