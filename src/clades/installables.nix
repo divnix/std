@@ -8,6 +8,7 @@
     - install
     - upgrade
     - remove
+    - build
   */
   installables = name: {
     inherit name;
@@ -37,6 +38,13 @@
         description = "remove this target";
         command = ''
           nix profile remove ${flake}#${fragment}
+        '';
+      }
+      {
+        name = "build";
+        description = "build this target";
+        command = ''
+          nix build ${flake}#${fragment}
         '';
       }
     ];
