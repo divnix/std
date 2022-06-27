@@ -47,6 +47,7 @@
   - [`/lib`](reference/std/lib/Readme.md)
     - [`/fromMakesWith`](reference/std/lib/fromMakesWith.md)
     - [`/mkShell`](reference/std/lib/mkShell.md)
+    - [`/writeShellEntrypoint`](reference/std/lib/writeShellEntrypoint.md)
     - [`/mkNixago`](reference/std/lib/mkNixago.md)
   - [`/nixago`](reference/std/nixago/Readme.md)
     - [`/adrgen`](reference/std/nixago/adrgen.md)

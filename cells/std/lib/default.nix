@@ -109,4 +109,16 @@ in {
     l.customisation.callPackageWith makes;
 
   fromMicrovmWith = import ./fromMicrovmWith.nix {inherit nixpkgs;};
+
+  writeShellEntrypoint = inputs': let
+    inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "n2c" inputs') (
+      nixpkgs.lib.traceSeqN 1 inputs' ''
+
+        In order to be able to use 'std.std.lib.writeShellEntrypoint', an input
+        named 'n2c' (representing 'nlewo/nix2container') must be defined in the flake.
+        See inputs above.
+      ''
+    ); inputs';
+  in
+    import ./writeShellEntrypoint.nix { inputs = inputsChecked; inherit cell;};
 }
