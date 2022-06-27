@@ -31,7 +31,7 @@ teams, we remove the `as-nix-cli-epiphyte` flag and thereby discourage the wide-
 and general purpose use of the `nix` CLI.
 
 If such interoperability is still needed, a layer of soil can bring back the necessary
-adatper.
+adapter.
 
 ## Consequences
 

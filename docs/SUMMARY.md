@@ -19,7 +19,7 @@
 
 - [Architecture Decisions](explain/architecture-decisions/Readme.md)
   - [Increase Repo Discoverability With a Tui](explain/architecture-decisions/0001-increase-repo-discoverability-with-a-tui.md)
-  - [Wire Up Documentation Intrumentation](explain/architecture-decisions/0002-wire-up-documentation-intrumentation.md)
+  - [Wire Up Documentation Instrumentation](explain/architecture-decisions/0002-wire-up-documentation-instrumentation.md)
   - [Drop `as-nix-cli-epiphyte` flag](explain/architecture-decisions/0003-drop-as-nix-cli-epiphyte-flag.md)
 
 # Reference

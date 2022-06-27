@@ -2,10 +2,10 @@
 
 This organelle only exports a single `default` devshellProfile.
 
-Any `std`ized repository should include this into it's [`numtide/devshell`][devshell]
+Any `std`ized repository should include this into its [`numtide/devshell`][devshell]
 in order to provide any visitor with the fully pre-configured `std` TUI.
 
-It also wires & instantiates a decent ADR tool. Or where you planning to hack away
+It also wires & instantiates a decent ADR tool. Or were you planning to hack away
 without some minimal conscious effort of decision making and recording? 😅
 
 # Usage Example
