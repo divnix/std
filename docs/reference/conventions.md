@@ -2,7 +2,7 @@
 
 In principle, we all want to be able to read code with local reasoning.
 
-However, these few conventions are pure quality of live and
+However, these few conventions are pure quality of life and
 help us to keep our nix code organized.
 
 ## Nix File Locations
@@ -49,15 +49,15 @@ The `inputs` argument holds all the de-systemized flake inputs plus a few specia
 ## The `cell` argument
 
 The `cell` argument holds all the different organelle targets of the current cell.
-This is the main mechanism to by which code organization and separation of concern is enabled.
+This is the main mechanism by which code organization and separation of concern is enabled.
 
 ## The `deSytemize`d inputs
 
-All inputs are scoped for the _current_ system, that is derived from the `sytems` input list to `std.grow`.
+All inputs are scoped for the _current_ system, that is derived from the `systems` input list to `std.grow`.
 That means contrary to the usual nix-UX, in most cases, you don't need to worry about `system`.
 
-The current system will be "lifted up" one level, while still providing full access to all `sytems` for
-cross-compliation scenarios.
+The current system will be "lifted up" one level, while still providing full access to all `systems` for
+cross-compilation scenarios.
 
 ```nix
 # inputs.a.packages.${system}
@@ -85,7 +85,7 @@ of the time.
 
 Sometimes `nix` evaluations don't strictly depend on a particular `system`, and scoping
 them seems counter-intuitive. But due to the fact that function calls are memoized, there
-is never a pentalty in actually scpoing them. So for the sake of uniformity, we scope them
+is never a penalty in actually scoping them. So for the sake of uniformity, we scope them
 anyways.
 
 The outputs therefore abide by the following "schema":

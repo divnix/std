@@ -8,7 +8,7 @@ So here, we'll try to break it down, instead.
 
 In configuration management, you have a choice: data vs. language.
 
-On stackoverflow, you'll be tought the "data" stance, because it's simple.
+On stackoverflow, you'll be taught the "data" stance, because it's simple.
 
 And all of a sudden you hit reality. Outside of a "lab" environment, you suddenly
 need to manage a varying degree of complexity.
@@ -17,7 +17,7 @@ So you need configuration combinators, or in other words a full blown language
 to efficiently render your configurations.
 
 There are a couple of options, that you'll recognize if you've gotten serious about
-the configuration challange, like:
+the configuration challenge, like:
 
 - [`dhall`][dhall]
 - [`cue`][cue]
@@ -32,7 +32,7 @@ but it has superpowers. Read on!
 You know the concept of string interpolation.
 
 Every time `nix` interpolates an identifier, there is something that
-you don't immediatly see: it keeps a so called "string context" right
+you don't immediately see: it keeps a so called "string context" right
 at the site of interpolation. That string context holds a directed acyclic
 graph of all the dependencies that are required to make that string.
 
@@ -40,7 +40,7 @@ graph of all the dependencies that are required to make that string.
 
 There is a special category of strings, so called "Nix store paths"
 (strings that start with `/nix/store/...`). These store paths represent
-build artifacts that are content adressed ahead-of-time through
+build artifacts that are content addressed ahead-of-time through
 the inputs of an otherwise pure build function, called [`derivation`][derivations].
 
 When you finally reify (i.e. "build") your string interpolation, then all these Nix store

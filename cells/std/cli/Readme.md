@@ -2,7 +2,7 @@
 
 ## Usage
 
-- Enter a `sta`ized repository.
+- Enter a `std`ized repository.
 - Enter it's devshell (which must include `//std/devshellProfiles:default`)
 - Run `std`.
 

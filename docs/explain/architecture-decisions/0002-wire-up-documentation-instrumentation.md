@@ -1,4 +1,4 @@
-# 2. Wire up documentation intrumentation
+# 2. Wire up documentation instrumentation
 
 Date: 2022-04-20
 
@@ -8,8 +8,8 @@ accepted
 
 ## Context
 
-Documentation instrumentation is always necessary. But because there are so many option,
-oftentimes it's not the first thing to do when kick-starting a projects.
+Documentation instrumentation is always necessary. But because there are so many options,
+oftentimes it's not the first thing to do when kick-starting a project.
 
 Either because fingers are eager to hack or because the myriad of options stalls efficient
 decision making.

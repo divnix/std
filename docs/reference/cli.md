@@ -9,7 +9,7 @@ std
 # CLI
 std //<TAB>
 
-# Verstion
+# Version
 std -v
 ```
 

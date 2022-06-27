@@ -1,7 +1,7 @@
 # Include Filter
 
 It is very common that you want to filter your source code in order
-to avoid unnecesary rebuilds and increase your cache hits.
+to avoid unnecessary rebuilds and increase your cache hits.
 
 This is so common that `std` includes a tool for this:
 

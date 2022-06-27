@@ -7,10 +7,10 @@ Nix is marvel to ones and cruelty to others.
 Much of this professional schism is due to two fundamental issues:
 
 - Nix is a functional language without typing
-- Therefore, Nix-enthusiast seem to freeking love writing the most elegant and novel boilerplate all over again the next day.
+- Therefore, Nix-enthusiast seem to freaking love writing the most elegant and novel boilerplate all over again the next day.
 
 The amount of domain specific knowledge required to untangle those most elegant and novel boilerplate patterns prevent
-the other side of the schism, very understandibly, to see through the smoke the true beauty and benefits of `nix` as a
+the other side of the schism, very understandably, to see through the smoke the true beauty and benefits of `nix` as a
 build and configuration language.
 
 Lack of typing adds to the problem by forcing `nix`-practitioners to go out of their way (e.g. via [`divnix/yants`][yants]) to
