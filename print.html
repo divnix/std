@@ -834,6 +834,9 @@ in
     - install
     - upgrade
     - remove
+    - build
+    - bundle
+    - bundleImage
   */
   installables = name: {
     inherit name;
@@ -863,6 +866,27 @@ in
         description = &quot;remove this target&quot;;
         command = ''
           nix profile remove ${flake}#${fragment}
+        '';
+      }
+      {
+        name = &quot;build&quot;;
+        description = &quot;build this target&quot;;
+        command = ''
+          nix build ${flake}#${fragment}
+        '';
+      }
+      {
+        name = &quot;bundle&quot;;
+        description = &quot;bundle this target&quot;;
+        command = ''
+          nix bundle --bundler github:Ninlives/relocatable.nix --refresh ${flake}#${fragment}
+        '';
+      }
+      {
+        name = &quot;bundleImage&quot;;
+        description = &quot;bundle this target to image&quot;;
+        command = ''
+          nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh ${flake}#${fragment}
         '';
       }
     ];
