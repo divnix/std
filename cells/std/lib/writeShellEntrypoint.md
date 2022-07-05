@@ -43,6 +43,7 @@ The following contracts can be consumed:
 
 ```
 /bin/entrypoint # always present
+/bin/runtime    # always present, drops into the runtime environment
 /bin/live       # if livenessProbe was set
 /bin/ready      # if readinessProbe was set
 ```
@@ -63,6 +64,7 @@ The following contracts can be consumed:
 
 ```
 /bin/entrypoint # always present
+/bin/runtime    # always present, drops into the runtime environment
 /bin/debug      # always present, drops into the debugging environment
 /bin/live       # if livenessProbe was set
 /bin/ready      # if readinessProbe was set
