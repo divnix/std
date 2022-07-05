@@ -23,7 +23,7 @@
       })
     ];
     contents =
-      []
+      [entrypoint.runtime]
       ++ (l.optional (entrypoint.livenessProbe != null) entrypoint.livenessProbe)
       ++ (l.optional (entrypoint.readinessProbe != null) entrypoint.readinessProbe);
     config.Cmd = ["${entrypoint}/bin/entrypoint"];
@@ -164,6 +164,13 @@
           '';
         }
       else null;
+    runtime = nixpkgs.writeTextFile {
+      name = "runtime";
+      executable = true;
+      destination = "/bin/runtime";
+      inherit checkPhase;
+      text = prelude;
+    };
     inner =
       nixpkgs.writeTextFile {
         name = "entrypoint";
@@ -189,7 +196,7 @@
           ++ (l.optional (nixpkgs.stdenv.hostPlatform.libc == "glibc") locales);
         livenessProbe = live;
         readinessProbe = ready;
-        inherit debugInputs package live ready;
+        inherit debugInputs package live ready runtime;
       };
   in
     inner
