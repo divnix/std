@@ -8,7 +8,7 @@
   clades = import ./clades.nix {inherit nixpkgs;};
   validate = import ./validators.nix {inherit yants nixpkgs;};
   /*
-  A funtion that 'grows' 'organells' from 'cells' found in 'cellsFrom'.
+  A function that 'grows' 'organells' from 'cells' found in 'cellsFrom'.
 
   This figurative glossary is so non-descriptive, yet fitting, that
   it will be easy to reason about this nomenclature even in a casual
@@ -29,25 +29,25 @@
 
   The usual dealings with 'system' are greatly reduced in std. Inspired by
   the ideas known partly as "Super Simple Flakes" in the community, contrary
-  to clasical nix, _all_ oututs are simply scoped by system as the first-level
+  to clasical nix, _all_ outputs are simply scoped by system as the first-level
   output key. That's it. Never deal with it again. The 'deSystemize' function
   automatically folds any particular system scope of inputs automatically one
-  level up. So,when dealing with inputs, no dealing with 'system' either.
+  level up. So, when dealing with inputs, no dealing with 'system' either.
 
   If you need to crosscompile and know your current system, `inputs.nixpkgs.system`
-  always has it. and all other inputs still expose `inputs.foo.system` as a
+  always has it. And all other inputs still expose `inputs.foo.system` as a
   fall back. But use your escape hatch wisely. If you feel that you need it and
   you aren't doing cross-compilation, search for the upstream bug.
   It's there! Guaranteed!
 
   Debugging? You can gain a better understanding of the `inputs` argument by
-  declaring the debug attribute for example like so: `debug = ["inputs" "yants"];`
+  declaring the debug attribute for example like so: `debug = ["inputs" "yants"];`.
   A tracer will give you more context about what's in it for you.
 
   Finally, there are a couple of special inputs:
 
   - `inputs.cells` - all other cells, deSystemized
-  - `inputs.nixpkgs` - an _instatiated_ nixpkgs, configurabe via `nixpkgsConifg`
+  - `inputs.nixpkgs` - an _instatiated_ nixpkgs, configurabe via `nixpkgsConfig`
   - `inputs.self` - the `sourceInfo` (and only that) of the current flake
 
   Overlays? Go home or file an upstream bug. They are possible, but so heavily
