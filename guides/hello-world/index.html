@@ -169,6 +169,8 @@ the inputs of your project.</p>
 }
 </code></pre>
 <pre><code class="language-bash">$ cd hello-world
+# fetch `std`
+$ nix shell github:divnix/std
 $ std //hello/apps/default:run
 Hello, world!
 </code></pre>
@@ -177,31 +179,24 @@ to running your first application
 in just a few seconds ✨</p>
 <h2 id="assumptions"><a class="header" href="#assumptions">Assumptions</a></h2>
 <p>This example consumes the following defaults or builtins:</p>
-<h3 id="default-organelles"><a class="header" href="#default-organelles"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L68-L72">Default <code>organelles</code></a></a></h3>
+<h3 id="default-organelles"><a class="header" href="#default-organelles"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L63-L67">Default <code>organelles</code></a></a></h3>
+<pre><code class="language-nix">    organelles ? [
+      (clades.functions &quot;library&quot;)
+      (clades.runnables &quot;apps&quot;)
+      (clades.installables &quot;packages&quot;)
+    ],
+</code></pre>
+<h3 id="default-systems"><a class="header" href="#default-systems"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L68-L77">Default <code>systems</code></a></a></h3>
 <pre><code class="language-nix">    systems ? [
       # Tier 1
       &quot;x86_64-linux&quot;
       # Tier 2
       &quot;aarch64-linux&quot;
-</code></pre>
-<h3 id="default-systems"><a class="header" href="#default-systems"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L74-L77">Default <code>systems</code></a></a></h3>
-<pre><code class="language-nix">      # Other platforms with sufficient support in stdenv which is not formally
+      &quot;x86_64-darwin&quot;
+      # Other platforms with sufficient support in stdenv which is not formally
       # mandated by their platform tier.
       &quot;aarch64-darwin&quot; # a lot of apple M1 already out there
     ],
-    debug ? false,
-  }: let
-    # Validations ...
-    Organelles = validate.Organelles organelles;
-    Systems = validate.Systems systems;
-    Cells = l.mapAttrsToList (validate.Cell cellsFrom Organelles) (l.readDir cellsFrom);
-</code></pre>
-<h3 id="builtin-nixpkgsconfig"><a class="header" href="#builtin-nixpkgsconfig"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L10-L14">Builtin <code>nixpkgsConfig</code></a></a></h3>
-<pre><code class="language-nix">  /*
-  A funtion that 'grows' 'organells' from 'cells' found in 'cellsFrom'.
-
-  This figurative glossary is so non-descriptive, yet fitting, that
-  it will be easy to reason about this nomenclature even in a casual
 </code></pre>
 <hr />
 

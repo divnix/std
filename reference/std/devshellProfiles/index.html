@@ -140,25 +140,43 @@ in order to provide any visitor with the fully pre-configured <code>std</code> T
 <p>It also wires &amp; instantiates a decent ADR tool. Or were you planning to hack away
 without some minimal conscious effort of decision making and recording? 😅</p>
 <h1 id="usage-example"><a class="header" href="#usage-example">Usage Example</a></h1>
-<pre><code class="language-nix">{
-  # a flake
-  # with stuff ...
+<pre><code class="language-nix"># ./nix/automation/devshells.nix
+{
+  inputs,
+  cell,
+}: let
+  l = nixpkgs.lib // builtins;
+  inherit (inputs) nixpkgs;
+  inherit (inputs.std) std;
+in
+  l.mapAttrs (_: std.lib.mkShell) {
+    # `default` is a special target in newer nix versions
+    # see: harvesting below
+    default = {
+      name = &quot;My Devshell&quot;;
+      # make `std` available in the numtide/devshell
+      imports = [ std.devshellProfiles.default ];
+    };
+  }
+</code></pre>
+<pre><code class="language-nix"># ./flake.nix
+{
+  inputs.std.url = &quot;github:divnix/std&quot;;
 
   outputs = inputs:
-    inputs.flake-utils.lib.eachSystem [
-      &quot;x86_64-linux&quot;
-      &quot;aarch64-linux&quot;
-      &quot;x86_64-darwin&quot;
-      &quot;aarch64-darwin&quot;
-    ] (system: let
-      inherit (inputs.std.deSystemize system inputs) devshell std;
-      inherit (devshell.legacyPackages) mkShell;
-    in {
-      devShells.default = mkShell {
-        imports = [std.std.devshellProfiles.default];
-        cellsFrom = &quot;./nix&quot;;
-      };
-    });
+    inputs.std.growOn {
+      inherit inputs;
+      cellsFrom = ./nix;
+      organelles = [
+        /* ... */
+        (inputs.std.clades.devshells &quot;devshells&quot;)
+      ];
+    }
+    # soil for compatiblity ...
+    {
+      # ... with `nix develop` - `default` is a special target for `nix develop`
+      devShells = inputs.std.harvest inputs.self [&quot;automation&quot; &quot;devshells&quot;];
+    };
 }
 </code></pre>
 <hr />

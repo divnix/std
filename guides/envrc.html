@@ -165,6 +165,81 @@ direnv: using std cells //std/devshells:default
 direnv: Watching: cells/std/devshells.nix
 direnv: Watching: cells/std/devshells (recursively)
 </code></pre>
+<p>For reference, the above example loads the <code>default</code> devshell from:</p>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  l = nixpkgs.lib // builtins;
+  inherit (inputs) nixpkgs;
+in
+  l.mapAttrs (_: cell.lib.mkShell) {
+    default = {
+      extraModulesPath,
+      pkgs,
+      ...
+    }: {
+      name = &quot;Standard&quot;;
+      packages = [
+        # formatters
+        nixpkgs.alejandra
+        nixpkgs.shfmt
+        nixpkgs.nodePackages.prettier
+      ];
+      commands = [
+        {
+          package = nixpkgs.treefmt;
+          category = &quot;formatters&quot;;
+        }
+        {
+          package = nixpkgs.editorconfig-checker;
+          category = &quot;formatters&quot;;
+        }
+        {
+          package = nixpkgs.reuse;
+          category = &quot;legal&quot;;
+        }
+        {
+          package = nixpkgs.delve;
+          category = &quot;cli-dev&quot;;
+          name = &quot;dlv&quot;;
+        }
+        {
+          package = nixpkgs.go;
+          category = &quot;cli-dev&quot;;
+        }
+        {
+          package = nixpkgs.gotools;
+          category = &quot;cli-dev&quot;;
+        }
+        {
+          package = nixpkgs.gopls;
+          category = &quot;cli-dev&quot;;
+        }
+      ] ++ l.optionals nixpkgs.stdenv.isLinux [
+        {
+          package = nixpkgs.golangci-lint;
+          category = &quot;cli-dev&quot;;
+        }
+      ];
+      imports = [
+        &quot;${extraModulesPath}/git/hooks.nix&quot;
+        cell.devshellProfiles.default
+      ];
+      git.hooks = {
+        enable = true;
+        pre-commit.text = builtins.readFile ./devshells/pre-commit.sh;
+      };
+    };
+    checks = {pkgs, config, ...}: {
+      name = &quot;checks&quot;;
+      imports = [
+        cell.devshellProfiles.default
+        cell.devshellProfiles.checks
+      ];
+    };
+  }
+</code></pre>
 
                     </main>
 

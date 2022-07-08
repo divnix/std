@@ -219,6 +219,7 @@ growOn {
   ];
 } {
   devShells = harvest inputs.self [&quot;std&quot; &quot;devshells&quot;];
+  packages = harvest inputs.self [&quot;std&quot; &quot;cli&quot;];
 }
 </code></pre>
 <p><em>That's it. <code>std.grow</code> is a &quot;smart&quot; importer of your <code>nix</code> code and is designed to keep boilerplate at bay.</em></p>
@@ -303,6 +304,8 @@ the inputs of your project.</p>
 }
 </code></pre>
 <pre><code class="language-bash">$ cd hello-world
+# fetch `std`
+$ nix shell github:divnix/std
 $ std //hello/apps/default:run
 Hello, world!
 </code></pre>
@@ -311,31 +314,24 @@ to running your first application
 in just a few seconds ✨</p>
 <h2 id="assumptions"><a class="header" href="#assumptions">Assumptions</a></h2>
 <p>This example consumes the following defaults or builtins:</p>
-<h3 id="default-organelles"><a class="header" href="#default-organelles"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L68-L72">Default <code>organelles</code></a></a></h3>
+<h3 id="default-organelles"><a class="header" href="#default-organelles"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L63-L67">Default <code>organelles</code></a></a></h3>
+<pre><code class="language-nix">    organelles ? [
+      (clades.functions &quot;library&quot;)
+      (clades.runnables &quot;apps&quot;)
+      (clades.installables &quot;packages&quot;)
+    ],
+</code></pre>
+<h3 id="default-systems"><a class="header" href="#default-systems"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L68-L77">Default <code>systems</code></a></a></h3>
 <pre><code class="language-nix">    systems ? [
       # Tier 1
       &quot;x86_64-linux&quot;
       # Tier 2
       &quot;aarch64-linux&quot;
-</code></pre>
-<h3 id="default-systems"><a class="header" href="#default-systems"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L74-L77">Default <code>systems</code></a></a></h3>
-<pre><code class="language-nix">      # Other platforms with sufficient support in stdenv which is not formally
+      &quot;x86_64-darwin&quot;
+      # Other platforms with sufficient support in stdenv which is not formally
       # mandated by their platform tier.
       &quot;aarch64-darwin&quot; # a lot of apple M1 already out there
     ],
-    debug ? false,
-  }: let
-    # Validations ...
-    Organelles = validate.Organelles organelles;
-    Systems = validate.Systems systems;
-    Cells = l.mapAttrsToList (validate.Cell cellsFrom Organelles) (l.readDir cellsFrom);
-</code></pre>
-<h3 id="builtin-nixpkgsconfig"><a class="header" href="#builtin-nixpkgsconfig"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L10-L14">Builtin <code>nixpkgsConfig</code></a></a></h3>
-<pre><code class="language-nix">  /*
-  A funtion that 'grows' 'organells' from 'cells' found in 'cellsFrom'.
-
-  This figurative glossary is so non-descriptive, yet fitting, that
-  it will be easy to reason about this nomenclature even in a casual
 </code></pre>
 <hr />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="growing-cells"><a class="header" href="#growing-cells">Growing Cells</a></h1>
@@ -418,6 +414,81 @@ current devshell, discoverable through these or similar logs during loading:</p>
 direnv: using std cells //std/devshells:default
 direnv: Watching: cells/std/devshells.nix
 direnv: Watching: cells/std/devshells (recursively)
+</code></pre>
+<p>For reference, the above example loads the <code>default</code> devshell from:</p>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  l = nixpkgs.lib // builtins;
+  inherit (inputs) nixpkgs;
+in
+  l.mapAttrs (_: cell.lib.mkShell) {
+    default = {
+      extraModulesPath,
+      pkgs,
+      ...
+    }: {
+      name = &quot;Standard&quot;;
+      packages = [
+        # formatters
+        nixpkgs.alejandra
+        nixpkgs.shfmt
+        nixpkgs.nodePackages.prettier
+      ];
+      commands = [
+        {
+          package = nixpkgs.treefmt;
+          category = &quot;formatters&quot;;
+        }
+        {
+          package = nixpkgs.editorconfig-checker;
+          category = &quot;formatters&quot;;
+        }
+        {
+          package = nixpkgs.reuse;
+          category = &quot;legal&quot;;
+        }
+        {
+          package = nixpkgs.delve;
+          category = &quot;cli-dev&quot;;
+          name = &quot;dlv&quot;;
+        }
+        {
+          package = nixpkgs.go;
+          category = &quot;cli-dev&quot;;
+        }
+        {
+          package = nixpkgs.gotools;
+          category = &quot;cli-dev&quot;;
+        }
+        {
+          package = nixpkgs.gopls;
+          category = &quot;cli-dev&quot;;
+        }
+      ] ++ l.optionals nixpkgs.stdenv.isLinux [
+        {
+          package = nixpkgs.golangci-lint;
+          category = &quot;cli-dev&quot;;
+        }
+      ];
+      imports = [
+        &quot;${extraModulesPath}/git/hooks.nix&quot;
+        cell.devshellProfiles.default
+      ];
+      git.hooks = {
+        enable = true;
+        pre-commit.text = builtins.readFile ./devshells/pre-commit.sh;
+      };
+    };
+    checks = {pkgs, config, ...}: {
+      name = &quot;checks&quot;;
+      imports = [
+        cell.devshellProfiles.default
+        cell.devshellProfiles.checks
+      ];
+    };
+  }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="why-nix"><a class="header" href="#why-nix">Why <code>nix</code>?</a></h1>
 <p>A lot of people write a lot of confusing stuff about nix.</p>
@@ -1007,25 +1078,43 @@ in order to provide any visitor with the fully pre-configured <code>std</code> T
 <p>It also wires &amp; instantiates a decent ADR tool. Or were you planning to hack away
 without some minimal conscious effort of decision making and recording? 😅</p>
 <h1 id="usage-example"><a class="header" href="#usage-example">Usage Example</a></h1>
-<pre><code class="language-nix">{
-  # a flake
-  # with stuff ...
+<pre><code class="language-nix"># ./nix/automation/devshells.nix
+{
+  inputs,
+  cell,
+}: let
+  l = nixpkgs.lib // builtins;
+  inherit (inputs) nixpkgs;
+  inherit (inputs.std) std;
+in
+  l.mapAttrs (_: std.lib.mkShell) {
+    # `default` is a special target in newer nix versions
+    # see: harvesting below
+    default = {
+      name = &quot;My Devshell&quot;;
+      # make `std` available in the numtide/devshell
+      imports = [ std.devshellProfiles.default ];
+    };
+  }
+</code></pre>
+<pre><code class="language-nix"># ./flake.nix
+{
+  inputs.std.url = &quot;github:divnix/std&quot;;
 
   outputs = inputs:
-    inputs.flake-utils.lib.eachSystem [
-      &quot;x86_64-linux&quot;
-      &quot;aarch64-linux&quot;
-      &quot;x86_64-darwin&quot;
-      &quot;aarch64-darwin&quot;
-    ] (system: let
-      inherit (inputs.std.deSystemize system inputs) devshell std;
-      inherit (devshell.legacyPackages) mkShell;
-    in {
-      devShells.default = mkShell {
-        imports = [std.std.devshellProfiles.default];
-        cellsFrom = &quot;./nix&quot;;
-      };
-    });
+    inputs.std.growOn {
+      inherit inputs;
+      cellsFrom = ./nix;
+      organelles = [
+        /* ... */
+        (inputs.std.clades.devshells &quot;devshells&quot;)
+      ];
+    }
+    # soil for compatiblity ...
+    {
+      # ... with `nix develop` - `default` is a special target for `nix develop`
+      devShells = inputs.std.harvest inputs.self [&quot;automation&quot; &quot;devshells&quot;];
+    };
 }
 </code></pre>
 <hr />

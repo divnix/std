@@ -218,6 +218,7 @@ growOn {
   ];
 } {
   devShells = harvest inputs.self [&quot;std&quot; &quot;devshells&quot;];
+  packages = harvest inputs.self [&quot;std&quot; &quot;cli&quot;];
 }
 </code></pre>
 <p><em>That's it. <code>std.grow</code> is a &quot;smart&quot; importer of your <code>nix</code> code and is designed to keep boilerplate at bay.</em></p>
