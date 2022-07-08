@@ -17,4 +17,5 @@ growOn {
   ];
 } {
   devShells = harvest inputs.self ["std" "devshells"];
+  packages = harvest inputs.self ["std" "cli"];
 }

@@ -23,6 +23,8 @@ the inputs of your project.
 
 ```bash
 $ cd hello-world
+# fetch `std`
+$ nix shell github:divnix/std
 $ std //hello/apps/default:run
 Hello, world!
 ```
@@ -38,24 +40,17 @@ This example consumes the following defaults or builtins:
 ### [Default `organelles`][grow-nix-default-organelles]
 
 ```nix
-{{#include ../../../src/grow.nix:68:72}}
+{{#include ../../../src/grow.nix:63:67}}
 ```
 
 ### [Default `systems`][grow-nix-default-systems]
 
 ```nix
-{{#include ../../../src/grow.nix:74:83}}
-```
-
-### [Builtin `nixpkgsConfig`][grow-nix-builtin-nixpkgs-config]
-
-```nix
-{{#include ../../../src/grow.nix:10:14}}
+{{#include ../../../src/grow.nix:68:77}}
 ```
 
 ---
 
 [std]: https://github.com/divnix/std
-[grow-nix-default-organelles]: https://github.com/divnix/std/blob/main/src/grow.nix#L68-L72
-[grow-nix-default-systems]: https://github.com/divnix/std/blob/main/src/grow.nix#L74-L77
-[grow-nix-builtin-nixpkgs-config]: https://github.com/divnix/std/blob/main/src/grow.nix#L10-L14
+[grow-nix-default-organelles]: https://github.com/divnix/std/blob/main/src/grow.nix#L63-L67
+[grow-nix-default-systems]: https://github.com/divnix/std/blob/main/src/grow.nix#L68-L77
