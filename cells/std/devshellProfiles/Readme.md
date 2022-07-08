@@ -11,25 +11,45 @@ without some minimal conscious effort of decision making and recording? 😅
 # Usage Example
 
 ```nix
+# ./nix/automation/devshells.nix
 {
-  # a flake
-  # with stuff ...
+  inputs,
+  cell,
+}: let
+  l = nixpkgs.lib // builtins;
+  inherit (inputs) nixpkgs;
+  inherit (inputs.std) std;
+in
+  l.mapAttrs (_: std.lib.mkShell) {
+    # `default` is a special target in newer nix versions
+    # see: harvesting below
+    default = {
+      name = "My Devshell";
+      # make `std` available in the numtide/devshell
+      imports = [ std.devshellProfiles.default ];
+    };
+  }
+```
+
+```nix
+# ./flake.nix
+{
+  inputs.std.url = "github:divnix/std";
 
   outputs = inputs:
-    inputs.flake-utils.lib.eachSystem [
-      "x86_64-linux"
-      "aarch64-linux"
-      "x86_64-darwin"
-      "aarch64-darwin"
-    ] (system: let
-      inherit (inputs.std.deSystemize system inputs) devshell std;
-      inherit (devshell.legacyPackages) mkShell;
-    in {
-      devShells.default = mkShell {
-        imports = [std.std.devshellProfiles.default];
-        cellsFrom = "./nix";
-      };
-    });
+    inputs.std.growOn {
+      inherit inputs;
+      cellsFrom = ./nix;
+      organelles = [
+        /* ... */
+        (inputs.std.clades.devshells "devshells")
+      ];
+    }
+    # soil for compatiblity ...
+    {
+      # ... with `nix develop` - `default` is a special target for `nix develop`
+      devShells = inputs.std.harvest inputs.self ["automation" "devshells"];
+    };
 }
 ```
 
