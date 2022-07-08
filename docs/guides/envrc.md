@@ -23,3 +23,9 @@ direnv: using std cells //std/devshells:default
 direnv: Watching: cells/std/devshells.nix
 direnv: Watching: cells/std/devshells (recursively)
 ```
+
+For reference, the above example loads the `default` devshell from:
+
+```nix
+{{#include ../../cells/std/devshells.nix}}
+```
