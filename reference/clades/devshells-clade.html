@@ -159,12 +159,14 @@
           profile_path=&quot;$std_layout_dir/${fragmentRelPath}&quot;
           mkdir -p &quot;$profile_path&quot;
           nix_args=(
-            &quot;${flake}#${fragment}&quot;
+            &quot;$PRJ_ROOT#${fragment}&quot;
             &quot;--no-update-lock-file&quot;
             &quot;--no-write-lock-file&quot;
             &quot;--no-warn-dirty&quot;
             &quot;--accept-flake-config&quot;
+            &quot;--no-link&quot;
             &quot;--keep-outputs&quot;
+            &quot;--build-poll-interval&quot; &quot;0&quot;
           )
           nix build &quot;''${nix_args[@]}&quot; --profile &quot;$profile_path/shell-profile&quot;
           bash -c &quot;source $profile_path/shell-profile/env.bash; SHLVL=$SHLVL; __devshell-motd; exec $SHELL -i&quot;
