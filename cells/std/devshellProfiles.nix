@@ -40,44 +40,45 @@ in {
           ${nixpkgs.adrgen}/bin/adrgen init "docs/architecture-decisions"
         fi
       '');
-      devshell.startup.init-mdbook = l.mkIf (cfg.docs.enable && nixpkgs.stdenv.isLinux)
+      devshell.startup.init-mdbook =
+        l.mkIf (cfg.docs.enable && nixpkgs.stdenv.isLinux)
         (l.stringsWithDeps.noDepEntry ''
-        if [ ! -f "book.toml" ]; then
-        mkdir -p docs
-        cat << EOF > book.toml
-        [book]
-        language = "en"
-        multilingual = false
-        src = "docs"
-        title = "Documentation"
+          if [ ! -f "book.toml" ]; then
+          mkdir -p docs
+          cat << EOF > book.toml
+          [book]
+          language = "en"
+          multilingual = false
+          src = "docs"
+          title = "Documentation"
 
-        [build]
-        build-dir = "docs/book"
+          [build]
+          build-dir = "docs/book"
 
-        [preprocessor.kroki-preprocessor]
-        command = "${kroki-preprocessor}/bin/mdbook-kroki-preprocessor"
+          [preprocessor.kroki-preprocessor]
+          command = "${kroki-preprocessor}/bin/mdbook-kroki-preprocessor"
 
-        EOF
-        cat << EOF > docs/SUMMARY.md
-        # Summary
+          EOF
+          cat << EOF > docs/SUMMARY.md
+          # Summary
 
-        EOF
-        fi
-        if [ ! -f "docs/.gitignore" ]; then
-        cat << EOF > docs/.gitignore
-        # mdbook build
-        book/**
-        EOF
-        fi
+          EOF
+          fi
+          if [ ! -f "docs/.gitignore" ]; then
+          cat << EOF > docs/.gitignore
+          # mdbook build
+          book/**
+          EOF
+          fi
 
-        if ! grep -qF 'book/' docs/.gitignore; then
-        cat << EOF >> docs/.gitignore
+          if ! grep -qF 'book/' docs/.gitignore; then
+          cat << EOF >> docs/.gitignore
 
-        # mdbook build
-        book/**
-        EOF
-        fi
-      '');
+          # mdbook build
+          book/**
+          EOF
+          fi
+        '');
     };
   };
   checks = {...}: {

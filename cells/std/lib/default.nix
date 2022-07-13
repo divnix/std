@@ -38,5 +38,5 @@ in {
   in
     nixpkgs.lib.customisation.callPackageWith makes;
 
-  fromMicrovmWith = import ./fromMicrovmWith.nix { inherit nixpkgs; };
+  fromMicrovmWith = import ./fromMicrovmWith.nix {inherit nixpkgs;};
 }
