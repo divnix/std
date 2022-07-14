@@ -186,42 +186,44 @@ in
         nixpkgs.shfmt
         nixpkgs.nodePackages.prettier
       ];
-      commands = [
-        {
-          package = nixpkgs.treefmt;
-          category = &quot;formatters&quot;;
-        }
-        {
-          package = nixpkgs.editorconfig-checker;
-          category = &quot;formatters&quot;;
-        }
-        {
-          package = nixpkgs.reuse;
-          category = &quot;legal&quot;;
-        }
-        {
-          package = nixpkgs.delve;
-          category = &quot;cli-dev&quot;;
-          name = &quot;dlv&quot;;
-        }
-        {
-          package = nixpkgs.go;
-          category = &quot;cli-dev&quot;;
-        }
-        {
-          package = nixpkgs.gotools;
-          category = &quot;cli-dev&quot;;
-        }
-        {
-          package = nixpkgs.gopls;
-          category = &quot;cli-dev&quot;;
-        }
-      ] ++ l.optionals nixpkgs.stdenv.isLinux [
-        {
-          package = nixpkgs.golangci-lint;
-          category = &quot;cli-dev&quot;;
-        }
-      ];
+      commands =
+        [
+          {
+            package = nixpkgs.treefmt;
+            category = &quot;formatters&quot;;
+          }
+          {
+            package = nixpkgs.editorconfig-checker;
+            category = &quot;formatters&quot;;
+          }
+          {
+            package = nixpkgs.reuse;
+            category = &quot;legal&quot;;
+          }
+          {
+            package = nixpkgs.delve;
+            category = &quot;cli-dev&quot;;
+            name = &quot;dlv&quot;;
+          }
+          {
+            package = nixpkgs.go;
+            category = &quot;cli-dev&quot;;
+          }
+          {
+            package = nixpkgs.gotools;
+            category = &quot;cli-dev&quot;;
+          }
+          {
+            package = nixpkgs.gopls;
+            category = &quot;cli-dev&quot;;
+          }
+        ]
+        ++ l.optionals nixpkgs.stdenv.isLinux [
+          {
+            package = nixpkgs.golangci-lint;
+            category = &quot;cli-dev&quot;;
+          }
+        ];
       imports = [
         &quot;${extraModulesPath}/git/hooks.nix&quot;
         cell.devshellProfiles.default
@@ -231,7 +233,11 @@ in
         pre-commit.text = builtins.readFile ./devshells/pre-commit.sh;
       };
     };
-    checks = {pkgs, config, ...}: {
+    checks = {
+      pkgs,
+      config,
+      ...
+    }: {
       name = &quot;checks&quot;;
       imports = [
         cell.devshellProfiles.default
