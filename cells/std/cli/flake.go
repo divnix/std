@@ -22,7 +22,14 @@ var (
 	flakeActionsFragment = "%s#__std.actions.%s.%s.%s.%s.%s"
 	flakeEvalJson        = []string{"eval", "--json", "--option", "warn-dirty", "false"}
 	flakeEvalRaw         = []string{"eval", "--raw", "--option", "warn-dirty", "false"}
-	flakeBuild           = []string{"build", "--out-link", ".std/last-action", "--option", "warn-dirty", "false"}
+	flakeBuild           = []string{
+		"build",
+		"--out-link", ".std/last-action",
+		"--no-update-lock-file",
+		"--no-write-lock-file",
+		"--no-warn-dirty",
+		"--accept-flake-config",
+	}
 )
 
 func GetNix() (string, error) {

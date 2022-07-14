@@ -136,8 +136,28 @@ func (m *Tui) SetTitle() {
 		)
 	} else {
 		m.Title = lipgloss.NewStyle().Faint(true).Render(fmt.Sprintf(
-			cmdTemplate, m.Left.SelectedItem().(*TargetItem).Title(), "",
+			cmdTemplate, m.Left.SelectedItem().(*TargetItem).Title(), "n/a",
 		))
+	}
+}
+
+func (m *Tui) SetInspect() (tea.Model, tea.Cmd) {
+	if i, ok := m.Right.SelectedItem().(*ActionItem); ok {
+		args, msg := m.GetActionCmd(i)
+		if msg != nil {
+			return m, func() tea.Msg { return msg }
+		}
+		m.InspectAction = strings.Join(args[:2], " ") +
+			" \\\n  " + strings.Join(args[2:4], " ") +
+			" \\\n  " + strings.Join(args[4:5], " ") +
+			" \\\n  " + strings.Join(args[5:6], " ") +
+			" \\\n  " + strings.Join(args[6:7], " ") +
+			" \\\n  " + strings.Join(args[7:8], " ") +
+			" \\\n  " + args[8]
+		return m, nil
+	} else {
+		m.InspectAction = ""
+		return m, nil
 	}
 }
 
@@ -210,7 +230,6 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Quit action inspection if enabled.
 		if m.Focus == Inspect && key.Matches(msg, actionKeys.QuitInspect) {
 			m.Focus = Right
-			m.InspectAction = ""
 			return m, nil
 		}
 		// Don't match any of the keys below if we're actively filtering.
@@ -243,20 +262,8 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, cmd
 			}
 			if m.Focus == Right {
-				if i, ok := m.Right.SelectedItem().(*ActionItem); ok {
-					m.Focus = Inspect
-					args, msg := m.GetActionCmd(i)
-					if msg != nil {
-						return m, func() tea.Msg { return msg }
-					}
-					m.InspectAction = strings.Join(args[:2], " ") +
-						" \\\n" + strings.Join(args[2:4], " ") +
-						" \\\n" + strings.Join(args[4:7], " ") +
-						" \\\n" + args[7]
-					return m, nil
-				} else {
-					return m, nil
-				}
+				m.Focus = Inspect
+				return m.SetInspect()
 			}
 			fallthrough
 		case key.Matches(msg, m.Readme.KeyMap.CloseReadme):
@@ -267,7 +274,6 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.Readme.TargetHelp.SetIsActive(false)
 				return m, nil
 			}
-			fallthrough
 
 		// toggle the focus
 		case key.Matches(msg, m.Keys.ToggleFocus, m.Keys.FocusLeft, m.Keys.FocusRight):
@@ -324,6 +330,9 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	} else {
 		m.Right, cmd = m.Right.Update(msg)
+		m.SetTitle()
+		cmds = append(cmds, cmd)
+		_, cmd = m.SetInspect()
 		cmds = append(cmds, cmd)
 	}
 	return m, tea.Batch(cmds...)
@@ -348,7 +357,7 @@ func (m *Tui) View() string {
 		)
 	}
 
-	if m.InspectAction != "" {
+	if m.Focus == Inspect {
 		return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, styles.
 			AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
 			lipgloss.JoinVertical(
