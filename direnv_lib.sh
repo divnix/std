@@ -20,8 +20,7 @@ use_std() {
   local system
   system="$(nix eval --raw --impure --expr builtins.currentSystem)"
   local cellsroot="$1"
-  local -a frgmnts
-  mapfile -d " " -t frgmnts < <(echo -n "$2" | sed 's#//##' | sed 's#:# #' | sed 's#/# #g')
+  local frgmnts=($(echo "$2" | sed 's#//##' | sed 's#:# #' | sed 's#/# #g'))
   local clade="${frgmnts[0]}"
   local organ="${frgmnts[1]}"
   local target="${frgmnts[2]}"
