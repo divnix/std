@@ -19,13 +19,13 @@ current devshell, discoverable through these or similar logs during loading:
 
 ```console
 direnv: loading https://raw.githubusercontent.com/divnix/std/...
-direnv: using std cells //std/devshells:default
-direnv: Watching: cells/std/devshells.nix
-direnv: Watching: cells/std/devshells (recursively)
+direnv: using std cells //automation/devshells:default
+direnv: Watching: cells/automation/devshells.nix
+direnv: Watching: cells/automation/devshells (recursively)
 ```
 
 For reference, the above example loads the `default` devshell from:
 
 ```nix
-{{#include ../../cells/std/devshells.nix}}
+{{#include ../../cells/automation/devshells.nix}}
 ```

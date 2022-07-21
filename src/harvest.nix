@@ -18,15 +18,21 @@
   }
   ```
   */
-  harvest = t: p:
-    l.mapAttrs (_: v: l.getAttrFromPath p v)
-    (
-      l.filterAttrs (
-        n: v:
-          (l.elem n l.systems.doubles.all) # avoids infinit recursion
-          && (l.hasAttrByPath p v)
-      )
-      t
-    );
+  harvest = t: p: let
+    multiplePaths = l.isList (l.elemAt p 0);
+    hoist = path:
+      l.mapAttrs (_: v: l.getAttrFromPath path v)
+      (
+        l.filterAttrs (
+          n: v:
+            (l.elem n l.systems.doubles.all) # avoids infinit recursion
+            && (l.hasAttrByPath path v)
+        )
+        t
+      );
+  in
+    if multiplePaths
+    then l.foldl' l.recursiveUpdate {} (map (path: hoist path) p)
+    else hoist p;
 in
   harvest

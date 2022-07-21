@@ -3,7 +3,6 @@
   cell,
 }: let
   l = nixpkgs.lib // builtins;
-  std = cell.cli.default;
   nixpkgs = inputs.nixpkgs;
 in {
   default = {config, ...}: let
@@ -26,7 +25,7 @@ in {
       packages = l.optionals (cfg.docs.enable && nixpkgs.stdenv.isLinux) [cell.packages.mdbook-kroki-preprocessor];
       commands =
         [
-          {package = std;}
+          {package = cell.cli.default;}
         ]
         ++ l.optionals cfg.adr.enable [
           {package = cell.packages.adrgen;}
@@ -79,21 +78,5 @@ in {
           fi
         '');
     };
-  };
-  checks = {...}: {
-    commands = [
-      {
-        name = "clade-data";
-        command = "cat $(std //std/data/example:write)";
-      }
-      {
-        name = "clade-devshells";
-        command = "std //std/devshell/default:enter -- echo OK";
-      }
-      {
-        name = "clade-runnables";
-        command = "std //std/cli/default:run -- std OK";
-      }
-    ];
   };
 }

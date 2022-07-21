@@ -4,8 +4,9 @@
 }: let
   l = nixpkgs.lib // builtins;
   inherit (inputs) nixpkgs;
+  inherit (inputs.cells) std;
 in
-  l.mapAttrs (_: cell.lib.mkShell) {
+  l.mapAttrs (_: std.lib.mkShell) {
     default = {
       extraModulesPath,
       pkgs,
@@ -58,7 +59,7 @@ in
         ];
       imports = [
         "${extraModulesPath}/git/hooks.nix"
-        cell.devshellProfiles.default
+        std.devshellProfiles.default
       ];
       git.hooks = {
         enable = true;
@@ -72,8 +73,21 @@ in
     }: {
       name = "checks";
       imports = [
-        cell.devshellProfiles.default
-        cell.devshellProfiles.checks
+        std.devshellProfiles.default
+      ];
+      commands = [
+        {
+          name = "clade-data";
+          command = "cat $(std //tests/data/example:write)";
+        }
+        {
+          name = "clade-devshells";
+          command = "std //std/devshell/default:enter -- echo OK";
+        }
+        {
+          name = "clade-runnables";
+          command = "std //std/cli/default:run -- std OK";
+        }
       ];
     };
   }

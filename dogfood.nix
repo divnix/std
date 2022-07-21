@@ -17,6 +17,6 @@ growOn {
     (clades.files "files")
   ];
 } {
-  devShells = harvest inputs.self ["std" "devshells"];
-  packages = harvest inputs.self ["std" "cli"];
+  devShells = harvest inputs.self ["automation" "devshells"];
+  packages = harvest inputs.self [["std" "cli"] ["std" "packages"]];
 }

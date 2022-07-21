@@ -40,7 +40,10 @@
 
   - [`/cli`](reference/std/cli/Readme.md)
   - [`/devshellProfiles`](reference/std/devshellProfiles/Readme.md)
-  - [`/devshells`](reference/std/devshells/Readme.md)
   - [`/lib`](reference/std/lib/Readme.md)
     - [`/fromMakesWith`](reference/std/lib/fromMakesWith.md)
     - [`/mkShell`](reference/std/lib/mkShell.md)
+
+- [`//automation`]()
+
+  - [`/devshells`](reference/automation/devshells/Readme.md)
