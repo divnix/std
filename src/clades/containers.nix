@@ -8,7 +8,7 @@
     - copy-to-registry
     - copy-to-podman
     - copy-to-docker
-   */
+  */
   containers = name: {
     inherit name;
     clade = "containers";
