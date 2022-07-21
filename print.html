@@ -280,6 +280,7 @@ the inputs of your project.</p>
 <h4 id="flakenix"><a class="header" href="#flakenix"><code>./flake.nix</code></a></h4>
 <pre><code class="language-nix">{
   inputs.std.url = &quot;github:divnix/std&quot;;
+  inputs.nixpkgs.url = &quot;nixpkgs&quot;;
 
   outputs = {std, ...} @ inputs:
     std.grow {
