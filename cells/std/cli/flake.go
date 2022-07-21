@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 
 	"github.com/TylerBrock/colorjson"
@@ -20,9 +22,15 @@ var (
 	currentSystemArgs    = []string{"eval", "--raw", "--impure", "--expr", "builtins.currentSystem"}
 	flakeInitFragment    = "%s#__std.init.%s"
 	flakeActionsFragment = "%s#__std.actions.%s.%s.%s.%s.%s"
-	flakeEvalJson        = []string{"eval", "--json", "--option", "warn-dirty", "false"}
-	flakeEvalRaw         = []string{"eval", "--raw", "--option", "warn-dirty", "false"}
-	flakeBuild           = []string{
+	flakeEvalJson        = []string{
+		"eval",
+		"--json",
+		"--no-update-lock-file",
+		"--no-write-lock-file",
+		"--no-warn-dirty",
+		"--accept-flake-config",
+	}
+	flakeBuild = []string{
 		"build",
 		"--out-link", ".std/last-action",
 		"--no-update-lock-file",
@@ -84,23 +92,10 @@ func GetActionEvalCmdArgs(c, o, t, a string) (string, []string, error) {
 		flakeBuild, fmt.Sprintf(flakeActionsFragment, ".", currentSystem, c, o, t, a)), nil
 }
 
-func LoadFlake() (*data.Root, error) {
+func LoadJson(buf *bytes.Buffer) (*data.Root, error) {
 	var root = &data.Root{}
 
-	nix, args, err := GetInitEvalCmdArgs()
-	if err != nil {
-		return nil, err
-	}
-
-	// load the std metadata from the flake
-	cmd := exec.Command(nix, args...)
-	out, err := cmd.Output()
-	if err != nil {
-		if exitErr, ok := err.(*exec.ExitError); ok {
-			return nil, fmt.Errorf("command: %s, %w, stderr:\n%s", cmd.String(), exitErr, exitErr.Stderr)
-		}
-		return nil, err
-	}
+	var out = buf.Bytes()
 
 	if err := json.Unmarshal(out, &root.Cells); err != nil {
 		var obj interface{}
@@ -119,4 +114,24 @@ func LoadFlake() (*data.Root, error) {
 	// log.Fatalf("object: %s", s)
 
 	return root, nil
+}
+
+func LoadFlakeCmd() (*exec.Cmd, *bytes.Buffer, error) {
+
+	nix, args, err := GetInitEvalCmdArgs()
+	if err != nil {
+		return nil, nil, err
+	}
+	devNull, err := os.Open(os.DevNull)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// load the std metadata from the flake
+	buf := new(bytes.Buffer)
+	cmd := exec.Command(nix, args...)
+	cmd.Stdin = devNull
+	cmd.Stdout = buf
+
+	return cmd, buf, nil
 }

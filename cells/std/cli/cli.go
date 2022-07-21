@@ -69,7 +69,15 @@ func init() {
 	// completes: '//cell/organelle/target:action'
 	carapace.Gen(rootCmd).PositionalAnyCompletion(
 		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
-			root, err := LoadFlake()
+			cmd, buf, err := LoadFlakeCmd()
+			if err != nil {
+				return carapace.ActionMessage(fmt.Sprintf("%v\n", err))
+			}
+			err = cmd.Run()
+			if err != nil {
+				return carapace.ActionMessage(fmt.Sprintf("%v\n", err))
+			}
+			root, err := LoadJson(buf)
 			if err != nil {
 				return carapace.ActionMessage(fmt.Sprintf("%v\n", err))
 			}

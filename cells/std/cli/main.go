@@ -30,7 +30,10 @@ func bashExecve(command []string) error {
 func main() {
 	if len(os.Args[1:]) == 0 {
 		// with NO arguments, invoke the TUI
-		if model, err := tea.NewProgram(InitialPage()).StartReturningModel(); err != nil {
+		if model, err := tea.NewProgram(
+			InitialPage(),
+			tea.WithAltScreen(),
+		).StartReturningModel(); err != nil {
 			log.Fatalf("Error running program: %s", err)
 		} else if err := model.(*Tui).FatalError; err != nil {
 			log.Fatal(err)

@@ -177,18 +177,22 @@ func (m *Tui) GetActionCmd(i *ActionItem) ([]string, tea.Msg) {
 	return append([]string{nix}, args...), nil
 }
 
-func loadFlake() tea.Msg {
-	root, err := LoadFlake()
-	if err != nil {
-		return cellLoadingFatalErrMsg{err}
-	}
-	return cellLoadedMsg{root.Cells}
-}
-
 func (m *Tui) Init() tea.Cmd {
+	cmd, buf, err := LoadFlakeCmd()
+	if err != nil {
+		return func() tea.Msg { return cellLoadingFatalErrMsg{err} }
+	}
 	return tea.Batch(
-		loadFlake,
-		tea.EnterAltScreen,
+		tea.ExecProcess(cmd, func(err error) tea.Msg {
+			if err != nil {
+				return cellLoadingFatalErrMsg{err}
+			}
+			root, err := LoadJson(buf)
+			if err != nil {
+				return cellLoadingFatalErrMsg{err}
+			}
+			return cellLoadedMsg{root.Cells}
+		}),
 		m.Spinner.Tick,
 	)
 }
@@ -345,21 +349,33 @@ func (m *Tui) View() string {
 	} else {
 		title = styles.TitleStyle.Render(m.Title)
 	}
+
+	placementClosure := func(s string) string {
+		return lipgloss.Place(
+			m.Width,
+			m.Height,
+			lipgloss.Center,
+			lipgloss.Center,
+			styles.AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(s),
+		)
+	}
+
+	if m.Loading {
+		return placementClosure(title)
+	}
 	if m.Focus == Readme {
-		return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center,
-			styles.AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
-				lipgloss.JoinVertical(
-					lipgloss.Center,
-					title,
-					styles.ReadmeStyle.Render(m.Readme.View()),
-					styles.LegendStyle.Render(m.Legend.View(m)),
-				)),
+		return placementClosure(
+			lipgloss.JoinVertical(
+				lipgloss.Center,
+				title,
+				styles.ReadmeStyle.Render(m.Readme.View()),
+				styles.LegendStyle.Render(m.Legend.View(m)),
+			),
 		)
 	}
 
 	if m.Focus == Inspect {
-		return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, styles.
-			AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
+		return placementClosure(
 			lipgloss.JoinVertical(
 				lipgloss.Center,
 				title,
@@ -369,12 +385,11 @@ func (m *Tui) View() string {
 					styles.ActionStyle.Render(m.Right.View()),
 				),
 				styles.LegendStyle.Render(m.Legend.View(m)),
-			)),
+			),
 		)
 	}
 
-	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, styles.
-		AppStyle.MaxWidth(m.Width).MaxHeight(m.Height).Render(
+	return placementClosure(
 		lipgloss.JoinVertical(
 			lipgloss.Center,
 			title,
@@ -384,7 +399,7 @@ func (m *Tui) View() string {
 				styles.ActionStyle.Width(m.Right.Width()).Height(m.Right.Height()).Render(m.Right.View()),
 			),
 			styles.LegendStyle.Render(m.Legend.View(m)),
-		)),
+		),
 	)
 }
 
