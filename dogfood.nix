@@ -12,6 +12,7 @@ growOn {
     (clades.functions "lib")
     (clades.functions "devshellProfiles")
     (clades.devshells "devshells")
+    (clades.installables "packages")
     (clades.data "data")
     (clades.files "files")
   ];

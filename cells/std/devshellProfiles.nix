@@ -5,7 +5,6 @@
   l = nixpkgs.lib // builtins;
   std = cell.cli.default;
   nixpkgs = inputs.nixpkgs;
-  kroki-preprocessor = inputs.kroki-preprocessor.preprocessor.apps.preprocessor;
 in {
   default = {config, ...}: let
     cfg = config.std;
@@ -24,20 +23,20 @@ in {
 
         $(type -p menu &>/dev/null && menu)
       '';
-      packages = l.optionals (cfg.docs.enable && nixpkgs.stdenv.isLinux) [kroki-preprocessor];
+      packages = l.optionals (cfg.docs.enable && nixpkgs.stdenv.isLinux) [cell.packages.mdbook-kroki-preprocessor];
       commands =
         [
           {package = std;}
         ]
         ++ l.optionals cfg.adr.enable [
-          {package = nixpkgs.adrgen;}
+          {package = cell.packages.adrgen;}
         ]
         ++ l.optionals cfg.docs.enable [
-          {package = nixpkgs.mdbook;}
+          {package = cell.packages.mdbook;}
         ];
       devshell.startup.init-adrgen = l.mkIf cfg.adr.enable (l.stringsWithDeps.noDepEntry ''
         if [ ! -d "docs/architecture-decisions" ]; then
-          ${nixpkgs.adrgen}/bin/adrgen init "docs/architecture-decisions"
+          ${l.getExe cell.packages.adrgen} init "docs/architecture-decisions"
         fi
       '');
       devshell.startup.init-mdbook =
@@ -56,7 +55,7 @@ in {
           build-dir = "docs/book"
 
           [preprocessor.kroki-preprocessor]
-          command = "${kroki-preprocessor}/bin/mdbook-kroki-preprocessor"
+          command = "${l.getExe cell.packages.mdbook-kroki-preprocessor}"
 
           EOF
           cat << EOF > docs/SUMMARY.md

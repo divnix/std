@@ -21,29 +21,6 @@
         "type": "github"
       }
     },
-    "devshell_2": {
-      "inputs": {
-        "flake-utils": "flake-utils_2",
-        "nixpkgs": [
-          "kroki-preprocessor",
-          "std",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1650900878,
-        "narHash": "sha256-qhNncMBSa9STnhiLfELEQpYC1L4GrYHNIzyCZ/pilsI=",
-        "owner": "numtide",
-        "repo": "devshell",
-        "rev": "d97df53b5ddaa1cfbea7cddbd207eb2634304733",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "devshell",
-        "type": "github"
-      }
-    },
     "flake-utils": {
       "locked": {
         "lastModified": 1642700792,
@@ -59,73 +36,23 @@
         "type": "github"
       }
     },
-    "flake-utils_2": {
+    "mdbook-kroki-preprocessor": {
+      "flake": false,
       "locked": {
-        "lastModified": 1642700792,
-        "narHash": "sha256-XqHrk7hFb+zBvRg6Ghl+AZDq03ov6OshJLiSWOoX5es=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "846b2ae0fc4cc943637d3d1def4454213e203cba",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "kroki-preprocessor": {
-      "inputs": {
-        "nixpkgs": "nixpkgs",
-        "std": "std"
-      },
-      "locked": {
-        "lastModified": 1654109943,
-        "narHash": "sha256-g5TC2L09JziXQmXwdUdJMCGYloblbTBjM5VX2R+E4vk=",
-        "owner": "input-output-hk",
+        "lastModified": 1655670640,
+        "narHash": "sha256-JjqdxftHBjABTkOpFl3cWUJtc/KGwkQ3NRWGLjH2oUs=",
+        "owner": "JoelCourtney",
         "repo": "mdbook-kroki-preprocessor",
-        "rev": "a294ca451b408cff1987e48d7c394e062c347e19",
+        "rev": "bb6e607437ecc3f22fd9036acee6b797a5b45dbc",
         "type": "github"
       },
       "original": {
-        "owner": "input-output-hk",
+        "owner": "JoelCourtney",
         "repo": "mdbook-kroki-preprocessor",
         "type": "github"
       }
     },
     "nixpkgs": {
-      "locked": {
-        "lastModified": 1652059086,
-        "narHash": "sha256-CjHSbr6LSFkN4YBdTB6+8ZQmSqhsbiXqAeQ9hQJ/gBI=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "934e076a441e318897aa17540f6cf7caadc69028",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixpkgs-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1650469885,
-        "narHash": "sha256-BuILRZ6pzMnGey8/irbjGq1oo3vIvZa1pitSdZCmIXA=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "df78cc4e2a46fca75d14508a5d2ed3494add28ff",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixpkgs-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_3": {
       "locked": {
         "lastModified": 1658311025,
         "narHash": "sha256-GqagY5YmaZB3YaO41kKcQhe5RcpS83wnsW8iCu5Znqo=",
@@ -144,54 +71,12 @@
     "root": {
       "inputs": {
         "devshell": "devshell",
-        "kroki-preprocessor": "kroki-preprocessor",
-        "nixpkgs": "nixpkgs_3",
-        "yants": "yants_2"
-      }
-    },
-    "std": {
-      "inputs": {
-        "devshell": "devshell_2",
-        "nixpkgs": "nixpkgs_2",
+        "mdbook-kroki-preprocessor": "mdbook-kroki-preprocessor",
+        "nixpkgs": "nixpkgs",
         "yants": "yants"
-      },
-      "locked": {
-        "lastModified": 1651690129,
-        "narHash": "sha256-M3zYXGhio1uOoA9vudLlNOHI2pKyA4Zlfy1ZiGoShto=",
-        "owner": "divnix",
-        "repo": "std",
-        "rev": "a65cbc4adddc95118331e178a3f3b88f03a0b50b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "divnix",
-        "repo": "std",
-        "type": "github"
       }
     },
     "yants": {
-      "inputs": {
-        "nixpkgs": [
-          "kroki-preprocessor",
-          "std",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1645126146,
-        "narHash": "sha256-XQ1eg4gzXoc7Tl8iXak1uCt3KnsTyxqPtLE+vOoDnrQ=",
-        "owner": "divnix",
-        "repo": "yants",
-        "rev": "77df2be1b3cce9f571c6cf451f786b266a6869cc",
-        "type": "github"
-      },
-      "original": {
-        "owner": "divnix",
-        "repo": "yants",
-        "type": "github"
-      }
-    },
-    "yants_2": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"

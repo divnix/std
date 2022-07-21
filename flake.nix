@@ -14,7 +14,10 @@
   inputs = {
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
-    kroki-preprocessor.url = "github:input-output-hk/mdbook-kroki-preprocessor";
+    mdbook-kroki-preprocessor = {
+      url = "github:JoelCourtney/mdbook-kroki-preprocessor";
+      flake = false;
+    };
   };
   outputs = inputs: let
     clades = import ./src/clades.nix {inherit (inputs) nixpkgs;};
