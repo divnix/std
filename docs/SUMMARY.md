@@ -35,6 +35,7 @@
   - [Microvms](reference/clades/microvms-clade.md)
   - [Devshells](reference/clades/devshells-clade.md)
   - [Containers](reference/clades/containers-clade.md)
+  - [Nixago](reference/clades/nixago-clade.md)
 
 - [`//std`](reference/std/Readme.md)
 
@@ -43,6 +44,7 @@
   - [`/lib`](reference/std/lib/Readme.md)
     - [`/fromMakesWith`](reference/std/lib/fromMakesWith.md)
     - [`/mkShell`](reference/std/lib/mkShell.md)
+    - [`/mkNixago`](reference/std/lib/mkNixago.md)
 
 - [`//automation`]()
 

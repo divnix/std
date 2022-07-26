@@ -7,4 +7,5 @@
   containers = import ./clades/containers.nix {inherit nixpkgs;};
   files = import ./clades/files.nix {inherit nixpkgs;};
   microvms = import ./clades/microvms.nix {inherit nixpkgs;};
+  nixago = import ./clades/nixago.nix {inherit nixpkgs;};
 }

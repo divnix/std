@@ -12,8 +12,17 @@
   Auxiliar inputs used in builtin libraries or for the dev environment.
   */
   inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
+    devshell.inputs.flake-utils.follows = "flake-utils";
+    nixago.url = "github:nix-community/nixago";
+    nixago.inputs.nixpkgs.follows = "nixpkgs";
+    nixago.inputs.nixago-exts.url = "github:divnix/blank";
+    nixago.inputs.flake-utils.follows = "flake-utils";
+    data-merge.url = "github:divnix/data-merge";
+    data-merge.inputs.nixlib.follows = "nixpkgs";
+    data-merge.inputs.yants.follows = "yants";
     mdbook-kroki-preprocessor = {
       url = "github:JoelCourtney/mdbook-kroki-preprocessor";
       flake = false;
