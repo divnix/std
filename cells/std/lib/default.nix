@@ -5,6 +5,18 @@
   nixpkgs = inputs.nixpkgs;
 in {
   inherit (inputs.devshell.legacyPackages) mkShell;
+  mkNixago = configuration:
+    (inputs.nixago.lib.make configuration)
+    // {
+      # transparently extend config data with a functor
+      __functor = _: extra: (inputs.nixago.lib.make (configuration
+        // {
+          configData = inputs.data-merge.merge configuration.configData extra;
+        }));
+      # implement a minimal numtide/devshell forward contract
+      packages = configuration.packages or [];
+      commands = configuration.commands or [];
+    };
 
   fromMakesWith = inputs': let
     inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "makes" inputs') (
