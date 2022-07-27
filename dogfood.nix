@@ -13,6 +13,7 @@ growOn {
     (clades.functions "devshellProfiles")
     (clades.devshells "devshells")
     (clades.installables "packages")
+    (clades.nixago "nixago")
     (clades.data "data")
     (clades.files "files")
   ];

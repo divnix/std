@@ -8,10 +8,17 @@ in {
   default = {config, ...}: let
     cfg = config.std;
   in {
-    options.std = {
-      adr.enable = (l.mkEnableOption "Enable ADR nudging") // {default = true;};
-      docs.enable = (l.mkEnableOption "Enable Docs nudging") // {default = true;};
-    };
+    imports = [
+      (nixpkgs.path + "/nixos/modules/misc/assertions.nix")
+      (l.mkRemovedOptionModule ["std" "adr" "enable"] ''
+        The std.adr.enable option has been removed from the std shell.
+        Please look for something like "adr.enable = false" and drop it.
+      '')
+      (l.mkRemovedOptionModule ["std" "docs" "enable"] ''
+        The std.docs.enable option has been removed from the std shell.
+        Please look for something like "docs.enable = false" and drop it.
+      '')
+    ];
     config = {
       motd = ''
 
@@ -22,61 +29,7 @@ in {
 
         $(type -p menu &>/dev/null && menu)
       '';
-      packages = l.optionals (cfg.docs.enable && nixpkgs.stdenv.isLinux) [cell.packages.mdbook-kroki-preprocessor];
-      commands =
-        [
-          {package = cell.cli.default;}
-        ]
-        ++ l.optionals cfg.adr.enable [
-          {package = cell.packages.adrgen;}
-        ]
-        ++ l.optionals cfg.docs.enable [
-          {package = cell.packages.mdbook;}
-        ];
-      devshell.startup.init-adrgen = l.mkIf cfg.adr.enable (l.stringsWithDeps.noDepEntry ''
-        if [ ! -d "docs/architecture-decisions" ]; then
-          ${l.getExe cell.packages.adrgen} init "docs/architecture-decisions"
-        fi
-      '');
-      devshell.startup.init-mdbook =
-        l.mkIf (cfg.docs.enable && nixpkgs.stdenv.isLinux)
-        (l.stringsWithDeps.noDepEntry ''
-          if [ ! -f "book.toml" ]; then
-          mkdir -p docs
-          cat << EOF > book.toml
-          [book]
-          language = "en"
-          multilingual = false
-          src = "docs"
-          title = "Documentation"
-
-          [build]
-          build-dir = "docs/book"
-
-          [preprocessor.kroki-preprocessor]
-          command = "${l.getExe cell.packages.mdbook-kroki-preprocessor}"
-
-          EOF
-          cat << EOF > docs/SUMMARY.md
-          # Summary
-
-          EOF
-          fi
-          if [ ! -f "docs/.gitignore" ]; then
-          cat << EOF > docs/.gitignore
-          # mdbook build
-          book/**
-          EOF
-          fi
-
-          if ! grep -qF 'book/' docs/.gitignore; then
-          cat << EOF >> docs/.gitignore
-
-          # mdbook build
-          book/**
-          EOF
-          fi
-        '');
+      commands = [{package = cell.cli.default;}];
     };
   };
 }
