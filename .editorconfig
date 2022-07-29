@@ -1,39 +1,29 @@
-# SPDX-FileCopyrightText: 2022 David Arnold <dgx.arnold@gmail.com>
-# SPDX-FileCopyrightText: 2022 Kevin Amado <kamadorueda@gmail.com>
-#
-# SPDX-License-Identifier: Unlicense
-
-# Editor configuration, see http://editorconfig.org
-root = true
-
 [*]
-end_of_line = lf
-insert_final_newline = true
-trim_trailing_whitespace = true
-charset = utf-8
-indent_style = space
-indent_size = 2
-
-# Ignore diffs/patches
-[*.{diff,patch}]
-end_of_line = unset
-insert_final_newline = unset
-trim_trailing_whitespace = unset
-indent_size = unset
+charset=utf-8
+end_of_line=lf
+indent_size=2
+indent_style=space
+insert_final_newline=true
+trim_trailing_whitespace=true
 
 [*.md]
-max_line_length = off
-trim_trailing_whitespace = false
+max_line_length=off
+trim_trailing_whitespace=false
 
-# Ignore paths
 [*.xcf]
-charset = unset
-end_of_line = unset
-insert_final_newline = unset
-trim_trailing_whitespace = unset
-indent_style = unset
-indent_size = unset
+charset=unset
+end_of_line=unset
+indent_size=unset
+indent_style=unset
+insert_final_newline=unset
+trim_trailing_whitespace=unset
+
+[*.{diff,patch}]
+end_of_line=unset
+indent_size=unset
+insert_final_newline=unset
+trim_trailing_whitespace=unset
 
 [{*.go,go.mod}]
-indent_style = tab
-indent_size = 4
+indent_size=4
+indent_style=tab

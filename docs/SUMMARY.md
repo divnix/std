@@ -17,10 +17,10 @@
 
 - [Why `std`?](explain/why-std.md)
 
-- [Architecture Decisions](explain/architecture-decisions/Readme.md)
-  - [Increase Repo Discoverability With a Tui](explain/architecture-decisions/0001-increase-repo-discoverability-with-a-tui.md)
-  - [Wire Up Documentation Instrumentation](explain/architecture-decisions/0002-wire-up-documentation-instrumentation.md)
-  - [Drop `as-nix-cli-epiphyte` flag](explain/architecture-decisions/0003-drop-as-nix-cli-epiphyte-flag.md)
+- [Architecture Decisions](explain/architecture-decision-records/Readme.md)
+  - [Increase Repo Discoverability With a Tui](explain/architecture-decision-records/0001-increase-repo-discoverability-with-a-tui.md)
+  - [Wire Up Documentation Instrumentation](explain/architecture-decision-records/0002-wire-up-documentation-instrumentation.md)
+  - [Drop `as-nix-cli-epiphyte` flag](explain/architecture-decision-records/0003-drop-as-nix-cli-epiphyte-flag.md)
 
 # Reference
 

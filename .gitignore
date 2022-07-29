@@ -6,3 +6,9 @@
 .std
 /**/flake.lock
 result
+
+# nixago: ignore-linked-files
+adrgen.config.yml
+.conform.yaml
+treefmt.toml
+lefthook.yml
