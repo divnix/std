@@ -94,13 +94,15 @@ in
         '';
       in ''
         # Configure gitignore
-        create () { echo -n "$str" > "${file}" }
-        append () { echo -en "\n$str" >> "${file}" }
-        if ! test -f "${file}"
-        then
+        create() {
+          echo -n "$str" > "${file}"
+        }
+        append() {
+          echo -en "\n$str" >> "${file}"
+        }
+        if ! test -f "${file}"; then
           create
-        else if ! grep -qF "${sentinel}" "${file}"
-        then
+        elif ! grep -qF "${sentinel}" "${file}"; then
           append
         fi
       '';
