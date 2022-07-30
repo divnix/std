@@ -47,12 +47,12 @@
     - [`/mkShell`](reference/std/lib/mkShell.md)
     - [`/mkNixago`](reference/std/lib/mkNixago.md)
   - [`/nixago`](reference/std/nixago/Readme.md)
-    - [`adrgen`](reference/std/nixago/adrgen.md)
-    - [`conform`](reference/std/nixago/conform.md)
-    - [`editorconfig`](reference/std/nixago/editorconfig.md)
-    - [`lefthook`](reference/std/nixago/lefthook.md)
-    - [`mdbook`](reference/std/nixago/mdbook.md)
-    - [`treefmt`](reference/std/nixago/treefmt.md)
+    - [`/adrgen`](reference/std/nixago/adrgen.md)
+    - [`/conform`](reference/std/nixago/conform.md)
+    - [`/editorconfig`](reference/std/nixago/editorconfig.md)
+    - [`/lefthook`](reference/std/nixago/lefthook.md)
+    - [`/mdbook`](reference/std/nixago/mdbook.md)
+    - [`/treefmt`](reference/std/nixago/treefmt.md)
 
 - [`//automation`]()
 
