@@ -4,7 +4,9 @@ Date: 2022-04-20
 
 ## Status
 
-accepted
+superseded
+
+Superseded by [4. Add Nixago Instrumentation](0004-add-nixago-instrumentation.md)
 
 ## Context
 
