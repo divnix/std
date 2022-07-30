@@ -3,7 +3,7 @@
   cell,
 }: let
   l = nixpkgs.lib // builtins;
-  inherit (inputs) nixpkgs data-merge;
+  inherit (inputs) nixpkgs;
   inherit (inputs.cells) std;
 in
   l.mapAttrs (_: std.lib.mkShell) {
@@ -15,36 +15,10 @@ in
       name = "Standard";
       nixago = [
         (std.nixago.conform {configData = {inherit (inputs) cells;};})
+        cell.nixago.treefmt
+        cell.nixago.editorconfig
+        cell.nixago.mdbook
         std.nixago.lefthook
-        (std.nixago.treefmt {
-          configData.formatter.go = {
-            command = "gofmt";
-            options = ["-w"];
-            includes = ["*.go"];
-          };
-          packages = [nixpkgs.go];
-        })
-        (std.nixago.editorconfig {
-          configData = {
-            "*.xcf" = {
-              charset = "unset";
-              end_of_line = "unset";
-              insert_final_newline = "unset";
-              trim_trailing_whitespace = "unset";
-              indent_style = "unset";
-              indent_size = "unset";
-            };
-            "{*.go,go.mod}" = {
-              indent_style = "tab";
-              indent_size = 4;
-            };
-          };
-        })
-        (std.nixago.mdbook {
-          configData = {
-            book.title = "The Standard Book";
-          };
-        })
         std.nixago.adrgen
       ];
       commands =
