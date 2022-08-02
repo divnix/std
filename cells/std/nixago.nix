@@ -76,7 +76,7 @@ in
       in ''
         # Install configured hooks
         for stage in ${stagesStr}; do
-          ${nixpkgs.lefthook}/bin/lefthook -a add "$stage"
+          ${nixpkgs.lefthook}/bin/lefthook add -f "$stage"
         done
       '';
     };
