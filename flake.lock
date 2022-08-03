@@ -10,11 +10,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1655854240,
-        "narHash": "sha256-j74ixD7Y0bF3h0fBJFKPR9botlrMu0fgG/YsiUKybko=",
+        "lastModified": 1659548052,
+        "narHash": "sha256-fzI2gp1skGA8mQo/FBFrUAtY0GQkAIAaV/V127TJPyY=",
         "owner": "divnix",
         "repo": "data-merge",
-        "rev": "0bbe0a68d4ee090b8bbad0c5e1e85060d2bdfe98",
+        "rev": "d160d18ce7b1a45b88344aa3f13ed1163954b497",
         "type": "github"
       },
       "original": {
