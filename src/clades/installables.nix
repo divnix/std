@@ -11,6 +11,7 @@
     - build
     - bundle
     - bundleImage
+    - bundleAppImage
   */
   installables = name: {
     inherit name;
@@ -61,6 +62,13 @@
         description = "bundle this target to image";
         command = ''
           nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh ${flake}#${fragment}
+        '';
+      }
+      {
+        name = "bundleAppImage";
+        description = "bundle this target to AppImage";
+        command = ''
+          nix bundle --bundler github:ralismark/nix-appimage --refresh ${flake}#${fragment}
         '';
       }
     ];
