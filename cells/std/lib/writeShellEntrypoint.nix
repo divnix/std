@@ -130,10 +130,10 @@
       ${l.optionalString (nixpkgs.stdenv.hostPlatform.libc == "glibc") "export LOCALE_ARCHIVE=${locales}/lib/locale/locale-archive"}
       ${l.concatStringsSep "\n" (l.mapAttrsToList (n: v: "export ${n}=${''"$''}{${n}:-${toString v}}${''"''}") env)}
     '';
-    checkPhase = ''
+    checkPhase' = path: ''
       runHook preCheck
-      ${nixpkgs.stdenv.shell} -n $out/bin/entrypoint
-      ${nixpkgs.shellcheck}/bin/shellcheck $out/bin/entrypoint
+      ${nixpkgs.stdenv.shell} -n $out/${path}
+      ${nixpkgs.shellcheck}/bin/shellcheck $out/${path}
       runHook postCheck
     '';
     live =
@@ -143,7 +143,7 @@
           name = "live";
           executable = true;
           destination = "/bin/live";
-          inherit checkPhase;
+          checkPhase = checkPhase' "/bin/live";
           text = ''
             ${prelude}
 
@@ -158,7 +158,7 @@
           name = "ready";
           executable = true;
           destination = "/bin/ready";
-          inherit checkPhase;
+          checkPhase = checkPhase' "/bin/ready";
           text = ''
             ${prelude}
 
@@ -170,7 +170,7 @@
       name = "runtime";
       executable = true;
       destination = "/bin/runtime";
-      inherit checkPhase;
+      checkPhase = checkPhase' "/bin/runtime";
       text = prelude;
     };
     inner =
@@ -178,7 +178,7 @@
         name = "entrypoint";
         executable = true;
         destination = "/bin/entrypoint";
-        inherit checkPhase;
+        checkPhase = checkPhase' "/bin/entrypoint";
         text = ''
           ${prelude}
 
