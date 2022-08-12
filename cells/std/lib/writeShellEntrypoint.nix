@@ -27,6 +27,8 @@
       ++ (l.optional (entrypoint.livenessProbe != null) entrypoint.livenessProbe)
       ++ (l.optional (entrypoint.readinessProbe != null) entrypoint.readinessProbe);
     config.Cmd = ["${entrypoint}/bin/entrypoint"];
+    config.User = "65534"; # nobody
+    config.Group = "65534"; # nogroup
     config.Labels =
       (l.optionalAttrs (entrypoint.package ? src) {
         "org.opencontainers.image.source" = "file://${l.unsafeDiscardStringContext entrypoint.package.src}";
