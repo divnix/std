@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Unlicense
 
 # re-branding & force congruent choice with `std` CLI
-direnv_layout_dir=$PWD/.std
+direnv_layout_dir=$(git rev-parse --show-toplevel)/.std
 
 # Usage use std <cellsroot> <target>
 #
