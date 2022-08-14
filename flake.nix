@@ -8,6 +8,9 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs.yants.url = "github:divnix/yants";
   inputs.yants.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.dmerge.url = "github:divnix/data-merge";
+  inputs.dmerge.inputs.nixlib.follows = "nixpkgs";
+  inputs.dmerge.inputs.yants.follows = "yants";
   /*
   Auxiliar inputs used in builtin libraries or for the dev environment.
   */
@@ -20,9 +23,6 @@
     nixago.inputs.nixpkgs.follows = "nixpkgs";
     nixago.inputs.nixago-exts.url = "github:divnix/blank";
     nixago.inputs.flake-utils.follows = "flake-utils";
-    data-merge.url = "github:divnix/data-merge";
-    data-merge.inputs.nixlib.follows = "nixpkgs";
-    data-merge.inputs.yants.follows = "yants";
     mdbook-kroki-preprocessor = {
       url = "github:JoelCourtney/mdbook-kroki-preprocessor";
       flake = false;
@@ -38,6 +38,7 @@
     l = inputs.nixpkgs.lib // builtins;
   in
     {
+      inherit (inputs) yants dmerge; # convenience re-exports
       inherit clades;
       inherit (clades) runnables installables functions data devshells containers files microvms nixago;
       inherit grow growOn deSystemize incl harvest;

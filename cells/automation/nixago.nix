@@ -2,7 +2,7 @@
   inputs,
   cell,
 }: let
-  inherit (inputs) nixpkgs data-merge;
+  inherit (inputs) nixpkgs;
   inherit (inputs.cells) std;
 in {
   treefmt = std.nixago.treefmt {

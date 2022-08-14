@@ -2,7 +2,10 @@
   inputs,
   cell,
 }: let
+  inherit (inputs) dmerge devshell nixago;
   nixpkgs = inputs.nixpkgs;
+
+  l = nixpkgs.lib // builtins;
 in {
   mkShell = configuration: let
     nixagoModule = {
@@ -22,19 +25,19 @@ in {
 
         config = mkIf (cfg.nixago != []) {
           devshell = let
-            acc = nixpkgs.lib.foldl inputs.nixpkgs.lib.recursiveUpdate {};
+            acc = l.foldl l.recursiveUpdate {};
           in
             acc (
               []
               ++ (builtins.map (o: o.devshell) cfg.nixago)
-              ++ [{startup.nixago-setup-hook = nixpkgs.lib.stringsWithDeps.noDepEntry (inputs.nixago.lib.makeAll cfg.nixago).shellHook;}]
+              ++ [{startup.nixago-setup-hook = l.stringsWithDeps.noDepEntry (nixago.lib.makeAll cfg.nixago).shellHook;}]
             );
           packages = builtins.concatMap (o: o.packages) cfg.nixago;
           commands = builtins.concatMap (o: o.commands) cfg.nixago;
         };
       };
   in
-    inputs.devshell.legacyPackages.mkShell {
+    devshell.legacyPackages.mkShell {
       imports = [configuration nixagoModule];
     };
 
@@ -58,13 +61,13 @@ in {
       newSelf =
         __passthru
         // {
-          configData = inputs.data-merge.merge __passthru.configData configData;
+          configData = dmerge.merge __passthru.configData configData;
           packages = __passthru.packages ++ packages;
           commands = __passthru.commands ++ commands;
-          devshell = inputs.nixpkgs.lib.recursiveUpdate __passthru.devshell devshell;
+          devshell = l.recursiveUpdate __passthru.devshell devshell;
         };
     in
-      (inputs.nixago.lib.make newSelf)
+      (nixago.lib.make newSelf)
       // {
         # keep here, cause nixago.lib.make would strip them
         inherit __functor;
@@ -74,22 +77,22 @@ in {
     __functor configuration' {};
 
   fromMakesWith = inputs': let
-    inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "makes" inputs') (
-      nixpkgs.lib.traceSeqN 1 inputs' ''
+    inputsChecked = assert l.assertMsg (builtins.hasAttr "makes" inputs') (
+      l.traceSeqN 1 inputs' ''
 
         In order to be able to use 'std.std.lib.fromMakesWith', an input
         named 'makes' must be defined in the flake. See inputs above.
       ''
     );
-    assert nixpkgs.lib.assertMsg (builtins.hasAttr "nixpkgs" inputs') (
-      nixpkgs.lib.traceSeqN 1 inputs' ''
+    assert l.assertMsg (builtins.hasAttr "nixpkgs" inputs') (
+      l.traceSeqN 1 inputs' ''
 
         In order to be able to use 'std.std.lib.fromMakesWith', an input
         named 'nixpkgs' must be defined in the flake. See inputs above.
       ''
     ); inputs';
-    makes = nixpkgs.lib.fix (
-      nixpkgs.lib.extends (
+    makes = l.fix (
+      l.extends (
         _: _: {
           inherit (inputsChecked.nixpkgs) system;
           inputs = inputsChecked;
@@ -103,7 +106,7 @@ in {
       .__unfix__
     );
   in
-    nixpkgs.lib.customisation.callPackageWith makes;
+    l.customisation.callPackageWith makes;
 
   fromMicrovmWith = import ./fromMicrovmWith.nix {inherit nixpkgs;};
 }
