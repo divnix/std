@@ -7,7 +7,7 @@ with inputs.nixpkgs;
     pname = "mdbook-kroki-preprocessor";
     version = "0.1.0";
     nativeBuildInputs = [pkg-config];
-    buildInputs = [openssl];
+    buildInputs = [openssl] ++ lib.optional stdenv.isDarwin darwin.apple_sdk.frameworks.Security;
 
     cargoLock = {
       lockFile = inputs.mdbook-kroki-preprocessor + "/Cargo.lock";
