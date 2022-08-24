@@ -144,12 +144,7 @@ from there on.</p>
 #
 # SPDX-License-Identifier: Unlicense
 
-# for debugging, change to:
-# source_env ./direnv_lib.sh
-
-source_url \
-  &quot;https://raw.githubusercontent.com/divnix/std/main/direnv_lib.sh&quot; \
-  &quot;sha256-gnjtiJpKbz4L4udoK12AvBwL1lo5RqPR9mbLu1zuajw=&quot;
+source &quot;$(nix eval .#__std.direnv_lib)&quot;
 use std cells //automation/devshells:default
 </code></pre>
 <blockquote>
