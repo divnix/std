@@ -29,3 +29,6 @@ jobs:
 
     - name: Check std data clade
       run: nix develop --show-trace --print-build-logs .#devShells.x86_64-linux.checks --command clade-data
+
+    - name: Check default devshell
+      run: nix develop --show-trace --print-build-logs .#devShells.x86_64-linux.default --command echo OK
