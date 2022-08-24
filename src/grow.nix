@@ -8,55 +8,55 @@
   clades = import ./clades.nix {inherit nixpkgs;};
   validate = import ./validators.nix {inherit yants nixpkgs;};
   /*
-  A function that 'grows' 'organells' from 'cells' found in 'cellsFrom'.
-
-  This figurative glossary is so non-descriptive, yet fitting, that
-  it will be easy to reason about this nomenclature even in a casual
-  conversation when not having convenient access to the actual code.
-
-  Essentially, it is a special type of importer, that detects nix &
-  some companion files placed in a specific folder structure inside
-  your repository.
-
-  The root of that special folder hierarchy is declared via 'cellsFrom'.
-  This is a good opportunity to isolate your actual build-relevant source
-  code from other repo boilerplate or documentation as a first line measure
-  to improve build caching.
-
-  Organelles are the actual typed flake outputs, for convenience, organelles
-  are grouped into Clades which usually augment an organelle with action
-  definitions that the std TUI will be able to understand and execute.
-
-  The usual dealings with 'system' are greatly reduced in std. Inspired by
-  the ideas known partly as "Super Simple Flakes" in the community, contrary
-  to clasical nix, _all_ outputs are simply scoped by system as the first-level
-  output key. That's it. Never deal with it again. The 'deSystemize' function
-  automatically folds any particular system scope of inputs automatically one
-  level up. So, when dealing with inputs, no dealing with 'system' either.
-
-  If you need to crosscompile and know your current system, `inputs.nixpkgs.system`
-  always has it. And all other inputs still expose `inputs.foo.system` as a
-  fall back. But use your escape hatch wisely. If you feel that you need it and
-  you aren't doing cross-compilation, search for the upstream bug.
-  It's there! Guaranteed!
-
-  Debugging? You can gain a better understanding of the `inputs` argument by
-  declaring the debug attribute for example like so: `debug = ["inputs" "yants"];`.
-  A tracer will give you more context about what's in it for you.
-
-  Finally, there are a couple of special inputs:
-
-  - `inputs.cells` - all other cells, deSystemized
-  - `inputs.nixpkgs` - an _instatiated_ nixpkgs, configurabe via `nixpkgsConfig`
-  - `inputs.self` - the `sourceInfo` (and only that) of the current flake
-
-  Overlays? Go home or file an upstream bug. They are possible, but so heavily
-  discouraged that you gotta find out for yourself if you really need to use
-  them in an organelle. Hint: `.extend`.
-
-  Yes, std is opinionated. Make sure to also meet `alejandra`. 😎
-
-  */
+   A function that 'grows' 'organells' from 'cells' found in 'cellsFrom'.
+   
+   This figurative glossary is so non-descriptive, yet fitting, that
+   it will be easy to reason about this nomenclature even in a casual
+   conversation when not having convenient access to the actual code.
+   
+   Essentially, it is a special type of importer, that detects nix &
+   some companion files placed in a specific folder structure inside
+   your repository.
+   
+   The root of that special folder hierarchy is declared via 'cellsFrom'.
+   This is a good opportunity to isolate your actual build-relevant source
+   code from other repo boilerplate or documentation as a first line measure
+   to improve build caching.
+   
+   Organelles are the actual typed flake outputs, for convenience, organelles
+   are grouped into Clades which usually augment an organelle with action
+   definitions that the std TUI will be able to understand and execute.
+   
+   The usual dealings with 'system' are greatly reduced in std. Inspired by
+   the ideas known partly as "Super Simple Flakes" in the community, contrary
+   to clasical nix, _all_ outputs are simply scoped by system as the first-level
+   output key. That's it. Never deal with it again. The 'deSystemize' function
+   automatically folds any particular system scope of inputs automatically one
+   level up. So, when dealing with inputs, no dealing with 'system' either.
+   
+   If you need to crosscompile and know your current system, `inputs.nixpkgs.system`
+   always has it. And all other inputs still expose `inputs.foo.system` as a
+   fall back. But use your escape hatch wisely. If you feel that you need it and
+   you aren't doing cross-compilation, search for the upstream bug.
+   It's there! Guaranteed!
+   
+   Debugging? You can gain a better understanding of the `inputs` argument by
+   declaring the debug attribute for example like so: `debug = ["inputs" "yants"];`.
+   A tracer will give you more context about what's in it for you.
+   
+   Finally, there are a couple of special inputs:
+   
+   - `inputs.cells` - all other cells, deSystemized
+   - `inputs.nixpkgs` - an _instatiated_ nixpkgs, configurabe via `nixpkgsConfig`
+   - `inputs.self` - the `sourceInfo` (and only that) of the current flake
+   
+   Overlays? Go home or file an upstream bug. They are possible, but so heavily
+   discouraged that you gotta find out for yourself if you really need to use
+   them in an organelle. Hint: `.extend`.
+   
+   Yes, std is opinionated. Make sure to also meet `alejandra`. 😎
+   
+   */
   grow = {
     inputs,
     cellsFrom,
@@ -154,7 +154,8 @@
             actions =
               if organelle ? actions
               then
-                organelle.actions {
+                organelle.actions
+                {
                   inherit system;
                   flake = inputs.self.sourceInfo.outPath;
                   fragment = ''"${system}"."${cellName}"."${organelle.name}"."${name}"'';
@@ -177,7 +178,8 @@
             actions =
               if organelle ? actions
               then
-                organelle.actions {
+                organelle.actions
+                {
                   inherit system;
                   flake = inputs.self.sourceInfo.outPath;
                   fragment = ''"${system}"."${cellName}"."${organelle.name}"."${name}"'';
@@ -185,7 +187,8 @@
                 }
               else [];
           in
-            l.listToAttrs (map (a: {
+            l.listToAttrs (map
+              (a: {
                 inherit (a) name;
                 value = nixpkgs.legacyPackages.${system}.writeShellScript a.name a.command;
               })
@@ -193,12 +196,14 @@
           imported =
             if l.pathExists oPath.file
             then
-              validate.Import organelle.clade oPath.file (importedFile (
+              validate.Import organelle.clade oPath.file
+              (importedFile (
                 args // {cell = res.output;} # recursion on cell
               ))
             else if l.pathExists oPath.dir
             then
-              validate.Import organelle.clade oPath.dir (importedDir (
+              validate.Import organelle.clade oPath.dir
+              (importedDir (
                 args // {cell = res.output;} # recursion on cell
               ))
             else null;
