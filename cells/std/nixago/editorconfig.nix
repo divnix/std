@@ -21,4 +21,12 @@
     max_line_length = "off";
     trim_trailing_whitespace = false;
   };
+  "{LICENSES/**,LICENSE}" = {
+    end_of_line = "unset";
+    insert_final_newline = "unset";
+    trim_trailing_whitespace = "unset";
+    charset = "unset";
+    indent_style = "unset";
+    indent_size = "unset";
+  };
 }
