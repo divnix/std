@@ -11,11 +11,8 @@ direnv_layout_dir=$(git rev-parse --show-toplevel)/.std
 # Loads the environment determined by the given std target
 #
 # Example (.envrc):
-#   source_url https://raw.githubusercontent.com/divnix/std/main/direnv_lib.sh <integrity-hash>
+#   source "$(nix eval .#__std.direnv_lib)"
 #   use std cells //std/devshells:default
-#
-# Find out the integrity hash:
-#   direnv fetchurl https://raw.githubusercontent.com/divnix/std/main/direnv_lib.sh
 use_std() {
   local system
   system="$(nix eval --raw --impure --expr builtins.currentSystem)"

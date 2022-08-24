@@ -267,6 +267,7 @@
     // {
       __std.init = l.listToAttrs res.init;
       __std.actions = res.actions;
+      __std.direnv_lib = ../direnv_lib.sh;
     };
 in
   grow
