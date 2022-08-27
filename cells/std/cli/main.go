@@ -19,8 +19,20 @@ var buildCommit = "dirty"
 // TODO: coordinate with `numtide` about PRJ Base Directory Specification
 const (
 	PRJ_ROOT      = "PRJ_ROOT"
+	NIX_CONFIG    = "NIX_CONFIG"
 	prjRootGitCmd = "git rev-parse --show-toplevel"
 )
+
+// extraNixConfig implements quality of life flags for the nix command invocation
+var extraNixConfig = strings.Join([]string{
+	// can never occur: actions invoke store path copies of the flake
+	// "warn-dirty = false",
+	"accept-flake-config = true",
+	"builders-use-substitutes = true",
+	// TODO: these are unfortunately not available for setting as env flags
+	// update-lock-file = false,
+	// write-lock-file = false,
+}, "\n")
 
 func bashExecve(command []string) error {
 	binary, err := exec.LookPath("bash")
@@ -42,6 +54,12 @@ func bashExecve(command []string) error {
 		}
 
 		os.Setenv(PRJ_ROOT, prjRoot)
+	}
+	nixConfigEnv, present := os.LookupEnv(NIX_CONFIG)
+	if !present {
+		os.Setenv(NIX_CONFIG, extraNixConfig)
+	} else {
+		os.Setenv(NIX_CONFIG, fmt.Sprintf("%s\n%s", nixConfigEnv, extraNixConfig))
 	}
 	env := os.Environ()
 	args := []string{"bash", "-c", fmt.Sprintf("%s && %s/.std/last-action", strings.Join(command, " "), prjRoot)}

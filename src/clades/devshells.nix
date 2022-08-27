@@ -29,8 +29,8 @@
             "--no-warn-dirty"
             "--accept-flake-config"
             "--no-link"
-            "--keep-outputs"
             "--build-poll-interval" "0"
+            "--builders-use-substitutes"
           )
           nix build "''${nix_args[@]}" --profile "$profile_path/shell-profile"
           bash -c "source $profile_path/shell-profile/env.bash; SHLVL=$SHLVL; __devshell-motd; exec $SHELL -i"

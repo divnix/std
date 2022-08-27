@@ -37,6 +37,7 @@ var (
 		"--no-write-lock-file",
 		"--no-warn-dirty",
 		"--accept-flake-config",
+		"--builders-use-substitutes",
 	}
 )
 

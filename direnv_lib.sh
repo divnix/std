@@ -6,6 +6,9 @@
 # re-branding & force congruent choice with `std` CLI
 direnv_layout_dir=$(git rev-parse --show-toplevel)/.std
 
+# nicer dienv & nixago output styling
+export DIRENV_LOG_FORMAT=$'\E[mdirenv: \E[38;5;8m%s\E[m'
+
 # Usage use std <cellsroot> <target>
 #
 # Loads the environment determined by the given std target
@@ -27,10 +30,11 @@ use_std() {
     "--no-update-lock-file"
     "--no-write-lock-file"
     "--no-warn-dirty"
-    "--accept-flake-config"
     "--no-link"
     "--keep-outputs"
     "--build-poll-interval" "0"
+    "--accept-flake-config"
+    "--builders-use-substitutes"
   )
 
   if [[ -f "$cellsroot/$clade/$organ/$target.nix" ]]; then
