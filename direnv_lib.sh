@@ -37,6 +37,11 @@ use_std() {
     "--builders-use-substitutes"
   )
 
+  shift 2
+  if [[ $# -gt 0 ]]; then
+    nix_args+=("${@}")
+  fi
+
   if [[ -f "$cellsroot/$clade/$organ/$target.nix" ]]; then
     log_status "Watching: $clade/$organ/$target.nix"
     watch_file "$cellsroot/$clade/$organ/$target.nix"
