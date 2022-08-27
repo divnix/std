@@ -144,7 +144,14 @@ from there on.</p>
 #
 # SPDX-License-Identifier: Unlicense
 
-source &quot;$(nix eval .#__std.direnv_lib)&quot;
+source &quot;$(
+  nix eval \
+  --no-update-lock-file \
+  --no-write-lock-file \
+  --no-warn-dirty \
+  --accept-flake-config \
+  .#__std.direnv_lib 2&gt;/dev/null
+)&quot;
 use std cells //automation/devshells:default
 </code></pre>
 <blockquote>
