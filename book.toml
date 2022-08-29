@@ -7,5 +7,12 @@ title = "The Standard Book"
 [build]
 build-dir = "docs/book"
 
-[preprocessor.kroki-preprocessor]
-command = "mdbook-kroki-preprocessor"
+[output.html]
+additional-js = ["static/mermaid.min.js", "static/mermaid-init.js"]
+
+[preprocessor]
+
+#[preprocessor.kroki-preprocessor]
+#command = "mdbook-kroki-preprocessor"
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
