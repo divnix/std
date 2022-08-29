@@ -25,6 +25,10 @@
   - [0003 Increase Repo Discoverability With a Tui](explain/architecture-decision-records/0001-increase-repo-discoverability-with-a-tui.md)
   - [0004 Add Nixago Instrumentation](explain/architecture-decision-records/0004-add-nixago-instrumentation.md)
 
+# Patterns
+
+- [The 4 Packaging Layers](patterns/four-packaging-layers.md)
+
 # Reference
 
 - [TUI/CLI](reference/cli.md)

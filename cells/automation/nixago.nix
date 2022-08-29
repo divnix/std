@@ -6,10 +6,15 @@
   inherit (inputs.cells) std;
 in {
   treefmt = std.nixago.treefmt {
-    configData.formatter.go = {
-      command = "gofmt";
-      options = ["-w"];
-      includes = ["*.go"];
+    configData.formatter = {
+      go = {
+        command = "gofmt";
+        options = ["-w"];
+        includes = ["*.go"];
+      };
+      prettier = {
+        excludes = ["**.min.js"];
+      };
     };
     packages = [nixpkgs.go];
   };
@@ -32,6 +37,9 @@ in {
   mdbook = std.nixago.mdbook {
     configData = {
       book.title = "The Standard Book";
+      preprocessor.mermaid.command = "mdbook-mermaid";
+      output.html.additional-js = ["static/mermaid.min.js" "static/mermaid-init.js"];
     };
+    packages = [nixpkgs.mdbook-mermaid];
   };
 }
