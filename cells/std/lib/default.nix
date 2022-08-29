@@ -39,6 +39,13 @@ in {
   in
     devshell.legacyPackages.mkShell {
       imports = [configuration nixagoModule];
+      devshell.startup.update-direnv_lib = l.stringsWithDeps.noDepEntry ''
+      if [[ -f "$PRJ_ROOT/.envrc" && -n "$(grep 'direnv_lib.sh' $PRJ_ROOT/.envrc)"]]; then
+          oldSha=$(cat $PRJ_ROOT/.envrc | grep -o 'sha256.*[^"]')
+          newSha=$(direnv fetchurl https://raw.githubusercontent.com/divnix/std/main/direnv_lib.sh | grep 'sha256')
+          sed -i "s|$oldSha|$newSha|" $PRJ_ROOT/.envrc
+       fi
+      '';
     };
 
   mkNixago = configuration: let
