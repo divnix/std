@@ -10,9 +10,9 @@ from there on.
 ```
 
 > **NOTE:**
-> In the above code (`use` `std`) **`cells`** (`//std/...`) refers to the
+> In the above code `use std` **`cells`** `//std/...` refers to the
 > folder where **Cells** are grown from. If your folder is e.g. `nix`, adapt
-> to (`use` `std`) **`nix`** (`//...`) and so forth.
+> to `use std` **`nix`** `//...` and so forth.
 
 It is used to automatically set up file watches on files that could modify the
 current devshell, discoverable through these or similar logs during loading:

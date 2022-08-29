@@ -4,9 +4,11 @@
 
 # Tutorials
 
+- [Hello World](tutorials/hello-world/Readme.md)
+- [Hello Moon](tutorials/hello-moon/Readme.md)
+
 # How-To Guides
 
-- [Hello World](guides/hello-world/Readme.md)
 - [Growing Cells](guides/growing-cells.md)
 - [Include Filter](guides/incl.md)
 - [Setup `.envrc`](guides/envrc.md)
@@ -57,3 +59,5 @@
 - [`//automation`]()
 
   - [`/devshells`](reference/automation/devshells/Readme.md)
+
+- [Glossary](glossary.md)
