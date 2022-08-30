@@ -89,16 +89,16 @@ in
         sentinel = "nixago-auto-created: mdbook-build-folder";
         file = "docs/.gitignore";
         str = ''
-          # mdbook build folder; ${sentinel}
+          # ${sentinel}
           book/**
         '';
       in ''
         # Configure gitignore
         create() {
-          echo -n "$str" > "${file}"
+          echo -n "${str}" > "${file}"
         }
         append() {
-          echo -en "\n$str" >> "${file}"
+          echo -en "\n${str}" >> "${file}"
         }
         if ! test -f "${file}"; then
           create
