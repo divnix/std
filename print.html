@@ -350,7 +350,7 @@ Namely:</p>
 </ul>
 <p>The terms <em>&quot;Clade&quot;</em>, <em>&quot;Cell&quot;</em>, <em>&quot;Organelle&quot;</em>, <em>&quot;Target&quot;</em> and <em>&quot;Action&quot;</em> have special meaning within the context of <code>std</code>.
 With these clear definions, we navigate and communicate the code structure much more easily.
-In order to familiarize yourself with them, please have a quick glance at the <a href="tutorials/hello-moon/glossary.html">glossary</a>.</p>
+In order to familiarize yourself with them, please have a quick glance at the <a href="tutorials/hello-moon/../../glossary.html">glossary</a>.</p>
 <h2 id="file-layout"><a class="header" href="#file-layout">File Layout</a></h2>
 <p>Let's start again with a flake:</p>
 <h4 id="flakenix-1"><a class="header" href="#flakenix-1"><code>./flake.nix</code></a></h4>
@@ -422,7 +422,7 @@ In here, we wire up two tools from the Nix ecosystem: <a href="https://github.co
 <p><em>Please refer to these links to get yourself a quick overview before continuing this tutorial, in case you don't know them, yet.</em></p>
 <p>A <em>very</em> short refresher:</p>
 <ul>
-<li><strong>Nixago</strong>: Template &amp; render repository (dot-)files with nix. <a href="tutorials/hello-moon/explain/why-nix.html">Why nix?</a></li>
+<li><strong>Nixago</strong>: Template &amp; render repository (dot-)files with nix. <a href="tutorials/hello-moon/../../explain/why-nix.html">Why nix?</a></li>
 <li><strong>Devshell</strong>: Friendly &amp; reproducible develompent shells — the original ™.</li>
 </ul>
 </blockquote>
@@ -502,7 +502,7 @@ in
     };
   }
 </code></pre>
-<p>The <code>nixago = [];</code> option in this definition is a special integration provided by the <a href="tutorials/hello-moon/reference/std/lib/mkShell.html">Standard's <code>devshell</code>-wrapper (<code>std.lib.mkShell</code>)</a>.</p>
+<p>The <code>nixago = [];</code> option in this definition is a special integration provided by the <a href="tutorials/hello-moon/../../reference/std/lib/mkShell.html">Standard's <code>devshell</code>-wrapper (<code>std.lib.mkShell</code>)</a>.</p>
 <p><em>This is how <code>std</code> delivers on its promise of being a (horizontal) integration tool that wrapps (vertical) component tools into a polished user story and experience.</em></p>
 <p>Because we made use of <code>std.harvest</code> in the flake, you now can actually test out the devshell via the Nix CLI compat layer by just running <code>nix develop -c &quot;$SHELL&quot;</code> in the directory of the flake.
 For a more elegant method of entering a development shell read on the <a href="tutorials/hello-moon/index.html#direnv">direnv</a> section below.</p>
@@ -614,7 +614,7 @@ $ nix shell github:divnix/std
 $ std //automation/devshells/default:enter
 </code></pre>
 <p>Since we have declared the devshell Organelle as a <code>clades.devshells</code>, <code>std</code> auments it's Targets with the Clade Actions.</p>
-<p>See <a href="tutorials/hello-moon/reference/clades/devshells-clade.html"><code>clades.devshells</code></a> for more details on the available Actions and their implementation.</p>
+<p>See <a href="tutorials/hello-moon/../../reference/clades/devshells-clade.html"><code>clades.devshells</code></a> for more details on the available Actions and their implementation.</p>
 <p>Thanks to the <code>cell.devshells</code>' <code>nixago</code> option, entering the devshell will also automatically reconcile the repository files under Nixago's management.</p>
 <p><strong>Explore a Nixago Pebble via <code>std</code></strong></p>
 <p>You can also explore the nixago configuration via the Nixago Clade's <code>explore</code>-Action.</p>
@@ -622,14 +622,14 @@ $ std //automation/devshells/default:enter
 $ nix shell github:divnix/std
 $ std //automation/nixago/treefmt:explore
 </code></pre>
-<p>See <a href="tutorials/hello-moon/reference/clades/nixago-clade.html"><code>clades.nixago</code></a> for more details on the available Actions and their implementation.</p>
+<p>See <a href="tutorials/hello-moon/../../reference/clades/nixago-clade.html"><code>clades.nixago</code></a> for more details on the available Actions and their implementation.</p>
 <h2 id="direnv"><a class="header" href="#direnv">direnv</a></h2>
 <p>Manually entering the devshell is boring.
 How about a daemon always does that automatically &amp; efficiently when you <code>cd</code> into a project directory?
 Enter <a href="https://direnv.net"><code>direnv</code></a> — the original (again; and even from the same author) 😊.</p>
 <p>Before you continue, first install direnv according to it's <a href="https://direnv.net/docs/installation.html">install instructions</a>.
 It's super simple &amp; super useful ™ and you should do it <em>right now</em> if you haven't yet.</p>
-<p>Please lern how to enable <code>direnv</code> in this procject by following the <a href="tutorials/hello-moon/guides/envrc.html">direnv how-to</a>.</p>
+<p>Please lern how to enable <code>direnv</code> in this procject by following the <a href="tutorials/hello-moon/../../guides/envrc.html">direnv how-to</a>.</p>
 <p>In this case, you would adapt the relevant line to: <strong><code>use std nix //automation/devshells:default</code></strong>.</p>
 <p>Now, you can simply <code>cd</code> into that directory, and the devshells is being loaded.
 The MOTD will be shown, too.</p>
