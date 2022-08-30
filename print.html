@@ -164,8 +164,8 @@ it has grown into an impertinence, <em>then</em> <code>std</code>
 brings the overdue order to your piece of art
 through a well-defined folder structure and
 disciplining generic interfaces.</p>
-<p>With <code>std</code>, you'll learn how to organize your <code>nix</code>
-flake outputs ('<strong>Targets</strong>') into <strong>Cells</strong> and
+<p>With <code>std</code>, you’ll learn how to organize your <code>nix</code>
+flake outputs (‘<strong>Targets</strong>’) into <strong>Cells</strong> and
 <strong>Organelles</strong> — folded into a useful
 <strong>CLI &amp; TUI</strong> to also make the lives of your
 colleagues easier.</p>
@@ -175,12 +175,12 @@ your team and community will finally find a
 <em>What can I <strong>do</strong> with this repository?</em></p>
 <hr />
 <h2 id="the-std-repository-itself"><a class="header" href="#the-std-repository-itself">The <code>std</code> repository itself</a></h2>
-<p>In this repository, you'll find, both, the <em>implementation</em> and an <em>application</em> of <a href="https://github.com/divnix/std">Standard</a>.</p>
+<p>In this repository, you’ll find, both, the <em>implementation</em> and an <em>application</em> of <a href="https://github.com/divnix/std">Standard</a>.</p>
 <h3 id="implementation"><a class="header" href="#implementation">Implementation</a></h3>
 <p><em>What is <code>std</code>? — The well-commented <code>nix</code> code → <a href="https://github.com/divnix/std/tree/main/src"><code>./src</code></a>.</em></p>
 <p>That folder implements:</p>
 <ul>
-<li><a href="https://github.com/divnix/std/blob/main/src/grow.nix"><code>std.grow</code></a>: the &quot;smart&quot; importer</li>
+<li><a href="https://github.com/divnix/std/blob/main/src/grow.nix"><code>std.grow</code></a>: the “smart” importer</li>
 <li><a href="https://github.com/divnix/std/blob/main/src/grow-on.nix"><code>std.growOn</code></a>: <code>std.grow</code>-variant that recursively merges all additional variadic arguments</li>
 <li><a href="https://github.com/divnix/std/blob/main/src/harvest.nix"><code>std.harvest</code></a>: harvest your <strong>Targets</strong> into a different shape for compatibility</li>
 <li><a href="https://github.com/divnix/std/blob/main/src/incl.nix"><code>std.incl</code></a>: a straight-forward source filter with additive semantics</li>
@@ -224,7 +224,7 @@ growOn {
   packages = harvest inputs.self [[&quot;std&quot; &quot;cli&quot;] [&quot;std&quot; &quot;packages&quot;]];
 }
 </code></pre>
-<p><em>That's it. <code>std.grow</code> is a &quot;smart&quot; importer of your <code>nix</code> code and is designed to keep boilerplate at bay.</em></p>
+<p><em>That’s it. <code>std.grow</code> is a “smart” importer of your <code>nix</code> code and is designed to keep boilerplate at bay.</em></p>
 <blockquote>
 <p><strong>TIP:</strong>
 Now, enter the devshell (<code>direnv allow</code>) and play with the <code>std</code> CLI/TUI companion.
@@ -252,7 +252,7 @@ It answers one critical question to newcomers and veterans alike:</p>
 <li><a href="https://divnix.github.io/std/explain/why-std.html">Why <code>std</code>?</a></li>
 </ul>
 <h2 id="examples-in-the-wild"><a class="header" href="#examples-in-the-wild">Examples in the Wild</a></h2>
-<p>If you'd like to see some examples
+<p>If you’d like to see some examples
 of what a <a href="https://github.com/divnix/std">Standard</a> project looks like,
 take a look at the following:</p>
 <ul>
@@ -344,15 +344,15 @@ It also makes use of more advanced functions of <code>std</code>.
 Namely:</p>
 <ul>
 <li><code>std.growOn</code> instead of <code>std.grow</code></li>
-<li><code>std.harvest</code> to provide compatibility layers of &quot;soil&quot;</li>
+<li><code>std.harvest</code> to provide compatibility layers of “soil”</li>
 <li>non-default Organelle definitions</li>
 <li>the input debug facility</li>
 </ul>
-<p>The terms <em>&quot;Clade&quot;</em>, <em>&quot;Cell&quot;</em>, <em>&quot;Organelle&quot;</em>, <em>&quot;Target&quot;</em> and <em>&quot;Action&quot;</em> have special meaning within the context of <code>std</code>.
+<p>The terms <em>“Clade”</em>, <em>“Cell”</em>, <em>“Organelle”</em>, <em>“Target”</em> and <em>“Action”</em> have special meaning within the context of <code>std</code>.
 With these clear definitions, we navigate and communicate the code structure much more easily.
 In order to familiarize yourself with them, please have a quick glance at the <a href="tutorials/hello-moon/../../glossary.html">glossary</a>.</p>
 <h2 id="file-layout"><a class="header" href="#file-layout">File Layout</a></h2>
-<p>Let's start again with a flake:</p>
+<p>Let’s start again with a flake:</p>
 <h4 id="flakenix-1"><a class="header" href="#flakenix-1"><code>./flake.nix</code></a></h4>
 <pre><code class="language-nix">{
   inputs.std.url = &quot;github:divnix/std&quot;;
@@ -410,8 +410,8 @@ In order to familiarize yourself with them, please have a quick glance at the <a
 </code></pre>
 <p>This time we specified <code>cellsFrom = ./nix;</code>.
 This is gentle so that our colleagues know immediately which files to either look or never look at depending on where they stand.</p>
-<p>We also used <code>std.growOn</code> instead of <code>std.grow</code> so that we can add compatibility layers of &quot;soil&quot;.</p>
-<p>Furthermore, we only defined two Organelles: <code>nixago</code> &amp; <code>devshells</code>. More on them follows...</p>
+<p>We also used <code>std.growOn</code> instead of <code>std.grow</code> so that we can add compatibility layers of “soil”.</p>
+<p>Furthermore, we only defined two Organelles: <code>nixago</code> &amp; <code>devshells</code>. More on them follows…</p>
 <h4 id="nixautomation"><a class="header" href="#nixautomation"><code>./nix/automation/*</code></a></h4>
 <p>Next, we define a <code>automation</code> cell.
 Each project will have some amount of automation.
@@ -419,7 +419,7 @@ This can be repository automation, such as code generation.
 Or it can be a CI/CD specification.
 In here, we wire up two tools from the Nix ecosystem: <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code></a> &amp; <a href="https://github.com/nix-community/nixago"><code>nix-community/nixago</code></a>.</p>
 <blockquote>
-<p><em>Please refer to these links to get yourself a quick overview before continuing this tutorial, in case you don't know them, yet.</em></p>
+<p><em>Please refer to these links to get yourself a quick overview before continuing this tutorial, in case you don’t know them, yet.</em></p>
 <p>A <em>very</em> short refresher:</p>
 <ul>
 <li><strong>Nixago</strong>: Template &amp; render repository (dot-)files with nix. <a href="tutorials/hello-moon/../../explain/why-nix.html">Why nix?</a></li>
@@ -429,16 +429,16 @@ In here, we wire up two tools from the Nix ecosystem: <a href="https://github.co
 <blockquote>
 <p><strong>Some semantic background:</strong></p>
 <p>Both, Nixago &amp; Devshell are <em>Component Tools</em>.</p>
-<p><em>(Vertical) Component Tools</em> are distinct from <em>(Horizontal) Integration Tools</em> — such as <code>std</code> — in that they provide a specific capability in a minimal linux style: <em>&quot;Do one thing and do it well.&quot;</em></p>
+<p><em>(Vertical) Component Tools</em> are distinct from <em>(Horizontal) Integration Tools</em> — such as <code>std</code> — in that they provide a specific capability in a minimal linux style: <em>“Do one thing and do it well.”</em></p>
 <p>Integration Tools however combine them into a polished user story and experience.</p>
 <p>The Nix ecosystem is very rich in <em>component tools</em>, however only few <em>integration tools</em> exist at the time of writing.</p>
 </blockquote>
 <h4 id="nixautomationdevshellsnix"><a class="header" href="#nixautomationdevshellsnix"><code>./nix/automation/devshells.nix</code></a></h4>
-<p>Let's start with the <code>cell.devshells</code> Organelle and work our way backwards to the <code>cell.nixago</code> Organelle below.</p>
+<p>Let’s start with the <code>cell.devshells</code> Organelle and work our way backwards to the <code>cell.nixago</code> Organelle below.</p>
 <blockquote>
 <p><strong>More semantic background:</strong></p>
 <p>I could also reference them as <code>inputs.cells.automation.devshells</code> &amp; <code>inputs.cells.automation.nixago</code>.</p>
-<p>But, because we are sticking with the local Cell context, we don't want to confuse the future code reader.
+<p>But, because we are sticking with the local Cell context, we don’t want to confuse the future code reader.
 Instead, we gently hint at the locality by just referring them via the <code>cell</code> context.</p>
 </blockquote>
 <pre><code class="language-nix">{
@@ -502,13 +502,13 @@ in
     };
   }
 </code></pre>
-<p>The <code>nixago = [];</code> option in this definition is a special integration provided by the <a href="tutorials/hello-moon/../../reference/std/lib/mkShell.html">Standard's <code>devshell</code>-wrapper (<code>std.lib.mkShell</code>)</a>.</p>
+<p>The <code>nixago = [];</code> option in this definition is a special integration provided by the <a href="tutorials/hello-moon/../../reference/std/lib/mkShell.html">Standard’s <code>devshell</code>-wrapper (<code>std.lib.mkShell</code>)</a>.</p>
 <p><em>This is how <code>std</code> delivers on its promise of being a (horizontal) integration tool that wraps (vertical) component tools into a polished user story and experience.</em></p>
 <p>Because we made use of <code>std.harvest</code> in the flake, you now can actually test out the devshell via the Nix CLI compat layer by just running <code>nix develop -c &quot;$SHELL&quot;</code> in the directory of the flake.
 For a more elegant method of entering a development shell read on the <a href="tutorials/hello-moon/index.html#direnv">direnv</a> section below.</p>
 <h4 id="nixautomationnixagonix"><a class="header" href="#nixautomationnixagonix"><code>./nix/automation/nixago.nix</code></a></h4>
 <p>As we have seen above, the <code>nixago</code> option in the <code>cell.devshells</code> Organelle references Targets from both <code>std.nixago</code> <em>and</em> <code>cell.nixago</code>.
-While you can explore <code>std.nixago</code> <a href="https://github.com/divnix/std/blob/main/cells/std/nixago.nix">here</a>, let's now have a closer look at <code>cell.nixago</code>:</p>
+While you can explore <code>std.nixago</code> <a href="https://github.com/divnix/std/blob/main/cells/std/nixago.nix">here</a>, let’s now have a closer look at <code>cell.nixago</code>:</p>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -576,7 +576,7 @@ The way <code>configData</code> is merged upon the existing pebble is via a simp
 <blockquote>
 <p><strong>Background on array merge strategies:</strong></p>
 <p>If you know how a plain data-merge (does not magically) deal with array merge semantics, you noticed:
-We didn't have to annotate our right-hand-side arrays in this example because we where not actually amending or modifying any left-hand-site array type data structure.</p>
+We didn’t have to annotate our right-hand-side arrays in this example because we where not actually amending or modifying any left-hand-site array type data structure.</p>
 <p>Would we have done so, we would have had to annotate:</p>
 <ul>
 <li>either with <code>std.dmerge.append [/* ... */]</code>;</li>
@@ -605,19 +605,19 @@ trace: {
 <p><strong>Invoke devshell via <code>nix</code></strong></p>
 <pre><code class="language-bash">nix develop -c &quot;$SHELL&quot;
 </code></pre>
-<p>By quirks of the Nix CLI, if you don't specify <code>-c &quot;$SHELL&quot;</code>, you'll be thrown into an unfamiliar bare <code>bash</code> interactive shell.
-That's not what you want.</p>
+<p>By quirks of the Nix CLI, if you don’t specify <code>-c &quot;$SHELL&quot;</code>, you’ll be thrown into an unfamiliar bare <code>bash</code> interactive shell.
+That’s not what you want.</p>
 <p><strong>Invoke the devshell via <code>std</code></strong></p>
-<p>In this case, invoking <code>$SHELL</code> correctly is taken care for you by the Clade's <code>enter</code> Action.</p>
+<p>In this case, invoking <code>$SHELL</code> correctly is taken care for you by the Clade’s <code>enter</code> Action.</p>
 <pre><code class="language-bash"># fetch `std`
 $ nix shell github:divnix/std
 $ std //automation/devshells/default:enter
 </code></pre>
-<p>Since we have declared the devshell Organelle as a <code>clades.devshells</code>, <code>std</code> auments it's Targets with the Clade Actions.</p>
+<p>Since we have declared the devshell Organelle as a <code>clades.devshells</code>, <code>std</code> auments it’s Targets with the Clade Actions.</p>
 <p>See <a href="tutorials/hello-moon/../../reference/clades/devshells-clade.html"><code>clades.devshells</code></a> for more details on the available Actions and their implementation.</p>
-<p>Thanks to the <code>cell.devshells</code>' <code>nixago</code> option, entering the devshell will also automatically reconcile the repository files under Nixago's management.</p>
+<p>Thanks to the <code>cell.devshells</code>’ <code>nixago</code> option, entering the devshell will also automatically reconcile the repository files under Nixago’s management.</p>
 <p><strong>Explore a Nixago Pebble via <code>std</code></strong></p>
-<p>You can also explore the nixago configuration via the Nixago Clade's <code>explore</code>-Action.</p>
+<p>You can also explore the nixago configuration via the Nixago Clade’s <code>explore</code>-Action.</p>
 <pre><code class="language-bash"># fetch `std`
 $ nix shell github:divnix/std
 $ std //automation/nixago/treefmt:explore
@@ -627,15 +627,15 @@ $ std //automation/nixago/treefmt:explore
 <p>Manually entering the devshell is boring.
 How about a daemon always does that automatically &amp; efficiently when you <code>cd</code> into a project directory?
 Enter <a href="https://direnv.net"><code>direnv</code></a> — the original (again; and even from the same author) 😊.</p>
-<p>Before you continue, first install direnv according to it's <a href="https://direnv.net/docs/installation.html">install instructions</a>.
-It's super simple &amp; super useful ™ and you should do it <em>right now</em> if you haven't yet.</p>
+<p>Before you continue, first install direnv according to it’s <a href="https://direnv.net/docs/installation.html">install instructions</a>.
+It’s super simple &amp; super useful ™ and you should do it <em>right now</em> if you haven’t yet.</p>
 <p>Please learn how to enable <code>direnv</code> in this project by following the <a href="tutorials/hello-moon/../../guides/envrc.html">direnv how-to</a>.</p>
 <p>In this case, you would adapt the relevant line to: <strong><code>use std nix //automation/devshells:default</code></strong>.</p>
 <p>Now, you can simply <code>cd</code> into that directory, and the devshells is being loaded.
 The MOTD will be shown, too.</p>
 <p>The first time, you need to teach the <code>direnv</code> daemon to trust the <code>.envrc</code> file via <code>direnv allow</code>.
 If you want to reload the devshell (e.g. to reconcile Nixago Pepples), you can just run <code>direnv reload</code>.</p>
-<p>Because I use these commands so often, I've set: <code>alias d=&quot;direnv&quot;</code> in my shell's RC file.</p>
+<p>Because I use these commands so often, I’ve set: <code>alias d=&quot;direnv&quot;</code> in my shell’s RC file.</p>
 <hr />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="growing-cells"><a class="header" href="#growing-cells">Growing Cells</a></h1>
 <p>Growing cells can be done via two variants:</p>
@@ -646,9 +646,9 @@ If you want to reload the devshell (e.g. to reconcile Nixago Pepples), you can j
 <h2 id="stdgrowon---soil"><a class="header" href="#stdgrowon---soil"><code>std.growOn {} # soil</code></a></h2>
 <p>This eases talking and reasoning about a <code>std</code>ized repository, that also needs
 some sort of adapters to work together better with external frameworks.</p>
-<p>Typically, you'd arrange those adapters in numbered layers of soil, just
-so that it's easier to conceptually reference them when talking / chatting.</p>
-<p>It's a variadic function and takes an unlimited number of &quot;soil layers&quot;.</p>
+<p>Typically, you’d arrange those adapters in numbered layers of soil, just
+so that it’s easier to conceptually reference them when talking / chatting.</p>
+<p>It’s a variadic function and takes an unlimited number of “soil layers”.</p>
 <pre><code class="language-nix">{
   inputs.std.url = &quot;github:divnix/std&quot;;
 
@@ -806,15 +806,15 @@ in
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="why-nix"><a class="header" href="#why-nix">Why <code>nix</code>?</a></h1>
 <p>A lot of people write a lot of confusing stuff about nix.</p>
-<p>So here, we'll try to break it down, instead.</p>
-<h2 id="nix-is-json-on-steroids"><a class="header" href="#nix-is-json-on-steroids"><code>nix</code> is &quot;<code>json</code> on steroids&quot;</a></h2>
+<p>So here, we’ll try to break it down, instead.</p>
+<h2 id="nix-is-json-on-steroids"><a class="header" href="#nix-is-json-on-steroids"><code>nix</code> is “<code>json</code> on steroids”</a></h2>
 <p>In configuration management, you have a choice: data vs. language.</p>
-<p>On stackoverflow, you'll be taught the &quot;data&quot; stance, because it's simple.</p>
-<p>And all of a sudden you hit reality. Outside of a &quot;lab&quot; environment, you suddenly
+<p>On stackoverflow, you’ll be taught the “data” stance, because it’s simple.</p>
+<p>And all of a sudden you hit reality. Outside of a “lab” environment, you suddenly
 need to manage a varying degree of complexity.</p>
 <p>So you need configuration combinators, or in other words a full blown language
 to efficiently render your configurations.</p>
-<p>There are a couple of options, that you'll recognize if you've gotten serious about
+<p>There are a couple of options, that you’ll recognize if you’ve gotten serious about
 the configuration challenge, like:</p>
 <ul>
 <li><a href="https://dhall-lang.org/"><code>dhall</code></a></li>
@@ -822,32 +822,32 @@ the configuration challenge, like:</p>
 <li><a href="https://jsonnet.org/"><code>jsonnet</code></a></li>
 <li><a href="https://nickel-lang.org/"><code>nickel</code></a></li>
 </ul>
-<p>And there is <a href="https://nixos.org/"><code>nix</code></a>, the language. In most aspects, it isn't hugely distinct from the others,
+<p>And there is <a href="https://nixos.org/"><code>nix</code></a>, the language. In most aspects, it isn’t hugely distinct from the others,
 but it has superpowers. Read on!</p>
-<h2 id="nix-superpowers"><a class="header" href="#nix-superpowers"><code>nix</code>' superpowers</a></h2>
+<h2 id="nix-superpowers"><a class="header" href="#nix-superpowers"><code>nix</code>’ superpowers</a></h2>
 <p>You know the concept of string interpolation.</p>
 <p>Every time <code>nix</code> interpolates an identifier, there is something that
-you don't immediately see: it keeps a so called &quot;string context&quot; right
+you don’t immediately see: it keeps a so called “string context” right
 at the site of interpolation. That string context holds a directed acyclic
 graph of all the dependencies that are required to make that string.</p>
-<p>&quot;Well, it's just a string; what on earth should I need to make a string?&quot;, you may say.</p>
-<p>There is a special category of strings, so called &quot;Nix store paths&quot;
+<p>“Well, it’s just a string; what on earth should I need to make a string?”, you may say.</p>
+<p>There is a special category of strings, so called “Nix store paths”
 (strings that start with <code>/nix/store/...</code>). These store paths represent
 build artifacts that are content addressed ahead-of-time through
 the inputs of an otherwise pure build function, called <a href="https://nixos.org/manual/nix/stable/expressions/derivations.html"><code>derivation</code></a>.</p>
-<p>When you finally reify (i.e. &quot;build&quot;) your string interpolation, then all these Nix store
+<p>When you finally reify (i.e. “build”) your string interpolation, then all these Nix store
 paths get build as well.</p>
 <p>This might be a bit of a mind-boggling angle, but after a while, you may realize:</p>
 <ul>
 <li>Nix is a massive build pipeline that tracks all things to their source.</li>
 <li>In their capacity as <em>pure</em> build functions, <a href="https://nixos.org/manual/nix/stable/expressions/derivations.html"><code>derviation</code>s</a> build <em>reproducibly</em>.</li>
 <li>Reproducible builds are the future of software supply chain security, among other things.</li>
-<li>You'll start asking: &quot;who the heck invented all that insecure nonsense of opaque binary registries?
-Shouldn't have those smart people have known better?&quot;</li>
-<li>And from this realization, there's no coming back.</li>
-<li>And you'll have joined the <a href="https://discourse.nixos.org/t/nixos-foundation-participating-in-eus-next-generation-internet-initiative/2011">European Union</a>, <a href="https://discourse.nixos.org/t/mercury-bank-nix-engineers/13784">banks</a> and <a href="https://github.com/input-output-hk/cardano-world">blockchain companies</a> who also realized:
+<li>You’ll start asking: “who the heck invented all that insecure nonsense of opaque binary registries?
+Shouldn’t have those smart people have known better?”</li>
+<li>And from this realization, there’s no coming back.</li>
+<li>And you’ll have joined the <a href="https://discourse.nixos.org/t/nixos-foundation-participating-in-eus-next-generation-internet-initiative/2011">European Union</a>, <a href="https://discourse.nixos.org/t/mercury-bank-nix-engineers/13784">banks</a> and <a href="https://github.com/input-output-hk/cardano-world">blockchain companies</a> who also realized:
 we need to fix our utterly broken and insecure build systems!</li>
-<li>By that time, you'll have already assimilated the legendary <a href="http://users.ece.cmu.edu/%7Eganger/712.fall02/papers/p761-thompson.pdf">Ken Thompson's &quot;Reflections on Trusting Trust&quot;</a>.</li>
+<li>By that time, you’ll have already assimilated the legendary <a href="http://users.ece.cmu.edu/%7Eganger/712.fall02/papers/p761-thompson.pdf">Ken Thompson’s “Reflections on Trusting Trust”</a>.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="why-std"><a class="header" href="#why-std">Why std?</a></h1>
 <h2 id="problem"><a class="header" href="#problem">Problem</a></h2>
@@ -863,13 +863,13 @@ build and configuration language.</p>
 <p>Lack of typing adds to the problem by forcing <code>nix</code>-practitioners to go out of their way (e.g. via <a href="https://github.com/divnix/yants"><code>divnix/yants</code></a>) to
 add some internal boundaries and contracts to an ever morphing global context.</p>
 <p>As a consequence, few actually <em>do</em> that. And contracts across internal code boundaries are either absent or rudimentary or — yet again —
-&quot;elegant and novel&quot;. Neither of which satisfactorily settles the issue.</p>
+“elegant and novel”. Neither of which satisfactorily settles the issue.</p>
 <h2 id="solution"><a class="header" href="#solution">Solution</a></h2>
-<p><code>std</code> doesn't add language-level typing. But a well-balanced folder layout cut at 3 layers of conceptual
+<p><code>std</code> doesn’t add language-level typing. But a well-balanced folder layout cut at 3 layers of conceptual
 nesting provides the fundamentals for establishing internal boundaries.</p>
 <blockquote>
 <p><strong>Cell → Organelle → Target → [Action]</strong></p>
-<p>Where ...</p>
+<p>Where …</p>
 <ul>
 <li><strong>Cells</strong> group functionality.</li>
 <li><strong>Organelles</strong> type outputs and implement <strong>Actions</strong>.</li>
@@ -883,7 +883,7 @@ different things: <em><strong>Cells</strong> and <strong>Organelles</strong> set
 <li><code>cell</code> the local <strong>Cell</strong>, promoting separation of concern</li>
 <li><code>inputs</code> the <code>deSystemize</code>ed flake inputs — plus:
 <ul>
-<li><code>inputs.self = self.sourceInfo;</code> reference source code in <code>nix</code>; filter with <code>std.incl</code>; don't misuse the global <code>self</code>.</li>
+<li><code>inputs.self = self.sourceInfo;</code> reference source code in <code>nix</code>; filter with <code>std.incl</code>; don’t misuse the global <code>self</code>.</li>
 <li><code>inputs.cells</code>: the other cells by name; code that documents its boundaries.</li>
 <li><code>inputs.nixpkgs</code>: an <em>instantiated</em> <code>nixpkgs</code> for the current system;</li>
 </ul>
@@ -923,7 +923,7 @@ important architectural decision made along with its context and consequences.</
 <h2 id="context"><a class="header" href="#context">Context</a></h2>
 <p>Currently, <code>std.grow</code> has a <code>as-nix-cli-epiphyte</code> flag to make the output scheme
 compatible with the <code>nix</code> CLI output scheme.</p>
-<p>However, part of the raison-d'etre of <code>std</code> are the deficiencies of the <code>nix</code> CLI
+<p>However, part of the raison-d’etre of <code>std</code> are the deficiencies of the <code>nix</code> CLI
 output scheme.</p>
 <p>With the introduction of a TUI and soon a CLI equivalence, the need for matching
 the <code>nix</code> CLI interface is diminishing.</p>
@@ -949,14 +949,14 @@ knowing their needs, this is probably not a huge show stopper.</p>
 <p>Superseded by <a href="explain/architecture-decision-records/0004-add-nixago-instrumentation.html">4. Add Nixago Instrumentation</a></p>
 <h2 id="context-1"><a class="header" href="#context-1">Context</a></h2>
 <p>Documentation instrumentation is always necessary. But because there are so many options,
-oftentimes it's not the first thing to do when kick-starting a project.</p>
+oftentimes it’s not the first thing to do when kick-starting a project.</p>
 <p>Either because fingers are eager to hack or because the myriad of options stalls efficient
 decision making.</p>
 <h2 id="decision-1"><a class="header" href="#decision-1">Decision</a></h2>
 <p>In this context, we want to provide a default doc instrumentation setup, that, at the very
 minimum is capable of rendering and hosting the ADRs.</p>
 <p>Batteries included &amp; (this time) not removable.</p>
-<p><em>You can have any color you like as long as it's black.</em></p>
+<p><em>You can have any color you like as long as it’s black.</em></p>
 <h2 id="consequences-1"><a class="header" href="#consequences-1">Consequences</a></h2>
 <p>As a consequence, entering a devshell, and if no <code>book.toml</code> exists, a minimal layout will be
 created.</p>
@@ -967,22 +967,22 @@ created.</p>
 <p>accepted</p>
 <h2 id="context-2"><a class="header" href="#context-2">Context</a></h2>
 <p>In general, the more a polyglot repository grows, the more folks need very contextual knowledge to
-assess the old and still same question: &quot;What's in it for me?&quot; / WIIFM.</p>
-<p>And once they find an answer to that question, already ensues the next: &quot;And how do I make use of it?&quot;.</p>
+assess the old and still same question: “What’s in it for me?” / WIIFM.</p>
+<p>And once they find an answer to that question, already ensues the next: “And how do I make use of it?”.</p>
 <p>Finding an answer to these questions is regularly not trivial and hugely language specific.</p>
-<p>The classic solution always has been: &quot;Write a (boilerplate) readme.&quot;.</p>
+<p>The classic solution always has been: “Write a (boilerplate) readme.”.</p>
 <h2 id="decision-2"><a class="header" href="#decision-2">Decision</a></h2>
 <p>Thanks to <code>nix</code>, we can largely outperform that classic solution.</p>
 <p>So, we implement a TUI that is duly wired with the repository it represents.</p>
 <p>It queries the <code>nix</code> for the necessary metadata including targets and
-the target's actions.</p>
+the target’s actions.</p>
 <p>It also detects well-placed readme files and presents them contextually on the CLI
 to the user.</p>
 <p>The user can then fuzzy search any desired target, query its contextual help or choose
 one of the actions for execution.</p>
 <h2 id="consequences-2"><a class="header" href="#consequences-2">Consequences</a></h2>
 <p>Not only in a polyglot repository, the different stakeholders can now easily and naturally
-interact (&quot;speak&quot;) with the repository.</p>
+interact (“speak”) with the repository.</p>
 <p>This has the potential of optimizing away a lot of very engrained media-breaks that today sometimes
 render massive collaboration across a broad team increasingly friction-laden.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="4-add-nixago-instrumentation"><a class="header" href="#4-add-nixago-instrumentation">4. Add Nixago Instrumentation</a></h1>
@@ -992,8 +992,8 @@ render massive collaboration across a broad team increasingly friction-laden.</p
 <p>Supersedes <a href="explain/architecture-decision-records/0002-wire-up-documentation-instrumentation.html">2. Wire up documentation instrumentation</a></p>
 <h2 id="context-3"><a class="header" href="#context-3">Context</a></h2>
 <p>The current implementation of mdbook instrumentation and adrgen instrumentation is brittle and ad-hoc.
-Furthermore, the making these two &quot;special&quot; is a contentious decision.</p>
-<p>Adjacently, oftentimes, there are other &quot;repo dotfiles&quot; that we want to somehow centrally manage (and
+Furthermore, the making these two “special” is a contentious decision.</p>
+<p>Adjacently, oftentimes, there are other “repo dotfiles” that we want to somehow centrally manage (and
 auto-update), instead of copy pasting them for the n-th time.</p>
 <p>Recently, the Nixago project has seen the face of the earth which deals precisely with repo dotfile
 templating and linking/copying.</p>
@@ -1003,7 +1003,7 @@ together with Devshells.</p>
 <p>Ship some generic Nixago Pebbles as part of the <code>std</code> Celle.</p>
 <h2 id="consequences-3"><a class="header" href="#consequences-3">Consequences</a></h2>
 <ul>
-<li>mdbook / adgen dotfile templating is no more &quot;special&quot;</li>
+<li>mdbook / adgen dotfile templating is no more “special”</li>
 <li>user can make use of this instrumentation to template <em>any</em> repo dotfile</li>
 <li>user can reuse the shipped Nixago Pebbles and take inspiration from our dogfooding</li>
 </ul>
@@ -1015,13 +1015,13 @@ together with Devshells.</p>
 <h2 id="the-problem"><a class="header" href="#the-problem">The Problem</a></h2>
 <p>We have written an application and now we want to package and run it.
 For its supply chain security benefits, we have been advised to employ reproducible and source-based distribution mechanisms.
-We furthermore need an interoperability platform that is generic and versatile: a <em>configuration &quot;lingua franca&quot;</em>.
+We furthermore need an interoperability platform that is generic and versatile: a <em>configuration “lingua franca”</em>.
 Our peers who write another application in another language should share that same approach.
 Thereby, we avoid the negative external effects of DevOps silos on integrators and operators, alike.
 Short: we make adoption of our application as easy as possible for our consumers.</p>
 <h2 id="the-actors"><a class="header" href="#the-actors">The Actors</a></h2>
 <p><em>Note, that each actor persona can be exercised by one and the same person or a group of persons.
-Although possible, and even frequently so, it doesn't imply that these roles are necessarily taken by distinct individuals.</em></p>
+Although possible, and even frequently so, it doesn’t imply that these roles are necessarily taken by distinct individuals.</em></p>
 <h3 id="developer"><a class="header" href="#developer">Developer</a></h3>
 <p>The Developer persona incrementally modifies the source code.
 At times, such modification are relevant at the interface to the Operator persona.
@@ -1034,15 +1034,16 @@ She also supervises and observes the running application across different enviro
 <h3 id="release-manager"><a class="header" href="#release-manager">Release Manager</a></h3>
 <p>The Release Manager persona cuts releases at discrete points in time.
 In doing so, she procures their artifacts for general (public) consumtion.
-Any release is tied to a sufficiently high level of assurance of an artifact's desired properties.
+Any release is tied to a sufficiently high level of assurance of an artifact’s desired properties.
 For that purpose, she works with the Developer, Operator &amp; QA personas along these 4 layers of packaging.</p>
 <h3 id="qa"><a class="header" href="#qa">QA</a></h3>
-<p>The QA persona establishes various levels of assurance of an artifact's desired properties.
+<p>The QA persona establishes various levels of assurance of an artifact’s desired properties.
 Thereby, the observable artifacts can emanate from any layer of these 4 layers of packaging.
 She informs the Developer, Operator and Release Manager personas about any found assurance levels.
 She can do so through manual or automatic (CI) means.</p>
 <h2 id="the-layers"><a class="header" href="#the-layers">The Layers</a></h2>
-<pre><code class="language-mermaid">flowchart TD
+<pre class="mermaid">
+flowchart TD
     packaging([Packaging])
     entrypoint([Entrypoint])
     image([OCI-Image])
@@ -1055,14 +1056,14 @@ She can do so through manual or automatic (CI) means.</p>
     click entrypoint href &quot;#entrypoint-layer&quot; &quot;Jump to the entrypoint layer section&quot;
     click image href &quot;#oci-image-layer&quot; &quot;Jump to the OCI image layer section&quot;
     click scheduler href &quot;#scheduler-chart-layer&quot; &quot;Jump to the scheduler chart layer section&quot;
-</code></pre>
+`</pre>
 <hr />
 <p>There is one very important factoring &amp; interoperability rule about these layers:</p>
 <p><em>A domain concern of a higher layer <strong>must not</strong> bleed into previous layers.</em></p>
 <p>Observing this very simple rule ensures long term interoperability and maintainability of the stack.
 For example, not presuming a particular scheduler in the entrypoint gives contributors a chance to easily add another scheduler target without painful refactoring.</p>
 <blockquote>
-<p><em><strong>Future Work:</strong> depending on how you count, there may be actually a 5th layer: the <strong>operator</strong> layer. But we may cover this in a future version of this article in further detail. If you don't want to wait, you may have a conceptual look at the <a href="https://juju.is/docs/olm">Charmed Operator Framework</a> and <a href="https://charmhub.io/">Charmehub</a>.</em></p>
+<p><em><strong>Future Work:</strong> depending on how you count, there may be actually a 5th layer: the <strong>operator</strong> layer. But we may cover this in a future version of this article in further detail. If you don’t want to wait, you may have a conceptual look at the <a href="https://juju.is/docs/olm">Charmed Operator Framework</a> and <a href="https://charmhub.io/">Charmehub</a>.</em></p>
 </blockquote>
 <p><em>Note, that it would be possible to further fold these interfaces and a Nix veteran might be inclined to do so.
 But doing so would defeat the purpose of exposing well defined layered interfaces alongside role-boundaries, subject matter concepts for ease of communication and collaboration; as well as external artifact consumers.</em></p>
@@ -1075,16 +1076,16 @@ Actors:
 </code></pre>
 <p>This Organelle builds, unit-tests &amp; packages the application via the appropriate <a href="patterns/../explain/why-nix.html#nix-superpowers">Nix primitives</a>.
 Each programming language has a different best practice approach to packaging.
-Therfore, a fair ammount of domain knowledge between Nix and the language's build system is required.</p>
+Therfore, a fair ammount of domain knowledge between Nix and the language’s build system is required.</p>
 <p>The location of the actual build instructions are secondary.
-At minimum, though, for transparency's and uniformity's sake, they are still proxied via this Organelle.
+At minimum, though, for transparency’s and uniformity’s sake, they are still proxied via this Organelle.
 So in the case that upstream already contains appropriate build instructions, the following indirection is perfectly valid (and necessary):</p>
 <pre><code class="language-nix">{ inputs, cell }: {
   app = inputs.upstream.packages.some-app;
 }
 </code></pre>
 <p>Build instructions themselves should encompass executing unit tests.
-Builds that fail unit tests should already be filtered out at this layer (i.e. &quot;a build that fails unit tests is no build, at all&quot;).</p>
+Builds that fail unit tests should already be filtered out at this layer (i.e. “a build that fails unit tests is no build, at all”).</p>
 <p>A Release Manager may decide to provide these artifacts to the general public on tagged releases.</p>
 <blockquote>
 <p><strong>In a hurry?</strong></p>
@@ -1215,8 +1216,8 @@ ${cellsFrom}/${cell}/${organelle}/${target}.md
 This is the main mechanism by which code organization and separation of concern is enabled.</p>
 <h2 id="the-desytemized-inputs"><a class="header" href="#the-desytemized-inputs">The <code>deSytemize</code>d inputs</a></h2>
 <p>All inputs are scoped for the <em>current</em> system, that is derived from the <code>systems</code> input list to <code>std.grow</code>.
-That means contrary to the usual nix-UX, in most cases, you don't need to worry about <code>system</code>.</p>
-<p>The current system will be &quot;lifted up&quot; one level, while still providing full access to all <code>systems</code> for
+That means contrary to the usual nix-UX, in most cases, you don’t need to worry about <code>system</code>.</p>
+<p>The current system will be “lifted up” one level, while still providing full access to all <code>systems</code> for
 cross-compilation scenarios.</p>
 <pre><code class="language-nix"># inputs.a.packages.${system}
 {
@@ -1228,7 +1229,7 @@ cross-compilation scenarios.</p>
   /* ... */
 }
 </code></pre>
-<h4 id="desystemizes-implementation"><a class="header" href="#desystemizes-implementation"><code>deSystemize</code>'s implementation</a></h4>
+<h4 id="desystemizes-implementation"><a class="header" href="#desystemizes-implementation"><code>deSystemize</code>’s implementation</a></h4>
 <pre><code class="language-nix">let
   l = builtins;
   /*
@@ -1256,17 +1257,17 @@ in
 <p>Contrary to the upstream flake schema, all outputs are <code>system</code> spaced at the top-level.
 This allows us to uniformly select on the <em>current</em> system and forget about it for most
 of the time.</p>
-<p>Sometimes <code>nix</code> evaluations don't strictly depend on a particular <code>system</code>, and scoping
+<p>Sometimes <code>nix</code> evaluations don’t strictly depend on a particular <code>system</code>, and scoping
 them seems counter-intuitive. But due to the fact that function calls are memoized, there
 is never a penalty in actually scoping them. So for the sake of uniformity, we scope them
 anyways.</p>
-<p>The outputs therefore abide by the following &quot;schema&quot;:</p>
+<p>The outputs therefore abide by the following “schema”:</p>
 <pre><code class="language-nix">{
   ${system}.${cell}.${organelle}.${target} = {};
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="builtin-clades"><a class="header" href="#builtin-clades">Builtin Clades</a></h1>
-<p>A few clades (&quot;typed organelles&quot;) are packaged with <code>std</code>.</p>
+<p>A few clades (“typed organelles”) are packaged with <code>std</code>.</p>
 <p>In practical terms, clades distinguish themselves through the
 actions they provide to a particular organelle.</p>
 <p>It is entirely possible to define custom clades with custom
@@ -1631,24 +1632,24 @@ in
   nixago
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-cell"><a class="header" href="#the-std-cell">The <code>std</code> Cell</a></h1>
-<p>... is the only cell in <code>divnix/std</code> and provides only very limited functionality.</p>
+<p>… is the only cell in <code>divnix/std</code> and provides only very limited functionality.</p>
 <ul>
 <li>It contains the TUI, in <code>./cli</code>.</li>
 <li>It contains a <code>devshellProfile</code> in <code>./devshellProfiles</code>.</li>
 <li>It contains a growing number of second level library functions in <code>./lib</code>.</li>
 <li>Packages that are used in std devshells are proxied in <code>./packages</code>.</li>
 </ul>
-<p>That's it.</p>
+<p>That’s it.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-tui--cli"><a class="header" href="#the-std-tui--cli">The <code>std</code> TUI / CLI</a></h1>
 <h2 id="usage-1"><a class="header" href="#usage-1">Usage</a></h2>
 <ul>
 <li>Enter a <code>std</code>ized repository.</li>
-<li>Enter it's devshell (which must include <code>//std/devshellProfiles:default</code>)</li>
+<li>Enter it’s devshell (which must include <code>//std/devshellProfiles:default</code>)</li>
 <li>Run <code>std</code>.</li>
 </ul>
-<p>It will show you around interactively and lead you very quickly to what you're looking for.</p>
-<p>It's self-documented on it's legend.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="stds-devshellprofiles"><a class="header" href="#stds-devshellprofiles"><code>std</code>'s <code>devshellProfiles</code></a></h1>
+<p>It will show you around interactively and lead you very quickly to what you’re looking for.</p>
+<p>It’s self-documented on it’s legend.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="stds-devshellprofiles"><a class="header" href="#stds-devshellprofiles"><code>std</code>’s <code>devshellProfiles</code></a></h1>
 <p>This organelle only exports a single <code>default</code> devshellProfile.</p>
 <p>Any <code>std</code>ized repository should include this into its <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code></a>
 in order to provide any visitor with the fully pre-configured <code>std</code> TUI.</p>
@@ -1717,7 +1718,7 @@ in {
 <p><em>Some refactoring of the tasks may be necessary. Let the error messages be your friend.</em></p>
 <hr />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mkshell"><a class="header" href="#mkshell"><code>mkShell</code></a></h1>
-<p>This is a transparent convenience proxy for <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code>'s</a> <code>mkShell</code> function.</p>
+<p>This is a transparent convenience proxy for <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code>’s</a> <code>mkShell</code> function.</p>
 <p>It is enriched with a tight integration for <code>std</code> <a href="https://github.com/nix-community/nixago">Nixago</a> pebbles:</p>
 <pre><code class="language-nix">{ inputs, cell}: {
   default = inputs.std.std.lib.mkShell {
@@ -1736,7 +1737,7 @@ in {
 <p><em>Note, that you can extend any Nixago Pebble at the calling site
 via a built-in functor like in the example above.</em></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="writeshellentrypoint"><a class="header" href="#writeshellentrypoint"><code>writeShellEntrypoint</code></a></h1>
-<p>... is a function to write Standard OCI-image entrypoints.</p>
+<p>… is a function to write Standard OCI-image entrypoints.</p>
 <p>The function signature is as follows:</p>
 <pre><code class="language-nix">{
   # the installable that is wrapped by this entrypoint (re-exported)
@@ -1755,7 +1756,7 @@ via a built-in functor like in the example above.</em></p>
   readinessProbe ? null,
 }
 </code></pre>
-<p>It's output wraps utility functions to generate size-optimized OCI-images:</p>
+<p>It’s output wraps utility functions to generate size-optimized OCI-images:</p>
 <pre><code class="language-nix">rec {
   entrypoint = std.std.lib.writeShellEntrypoint inputs { /* ... */ };
   oci-image = entrypoint.mkOCI &quot;docker.io/my-oci-image&quot;;
@@ -1771,11 +1772,11 @@ via a built-in functor like in the example above.</em></p>
 /bin/live       # if livenessProbe was set
 /bin/ready      # if readinessProbe was set
 </code></pre>
-<p>That's it. There is nothing more to see.</p>
+<p>That’s it. There is nothing more to see.</p>
 <p>All other dependencies are contained in <code>/nix/store/...</code>.</p>
 <h2 id="the-debug-image"><a class="header" href="#the-debug-image">The Debug Image</a></h2>
 <p>Debug Images wrap the standard images and provide additional debugging packages.</p>
-<p>Hence, they are neither minimal, nor hardened because of the debugging packages' added surface.</p>
+<p>Hence, they are neither minimal, nor hardened because of the debugging packages’ added surface.</p>
 <h3 id="contracts-1"><a class="header" href="#contracts-1">Contracts</a></h3>
 <p>The following contracts can be consumed:</p>
 <pre><code>/bin/entrypoint # always present
@@ -1785,7 +1786,7 @@ via a built-in functor like in the example above.</em></p>
 /bin/ready      # if readinessProbe was set
 </code></pre>
 <h2 id="how-to-extend"><a class="header" href="#how-to-extend">How to extend?</a></h2>
-<p>A Standard or Debug Image doesn't have a package manager available in the environment.</p>
+<p>A Standard or Debug Image doesn’t have a package manager available in the environment.</p>
 <p>Hence, to extend the image you have two options:</p>
 <h3 id="nix-based-extension"><a class="header" href="#nix-based-extension">Nix-based extension</a></h3>
 <pre><code class="language-nix">rec {
@@ -1811,9 +1812,9 @@ COPY --from=builder /... /
 </code></pre>
 <p><em>Please refer to the official dockerfile documentation for more details.</em></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mknixago"><a class="header" href="#mknixago"><code>mkNixago</code></a></h1>
-<p>This is a transparent convenience proxy for <a href="https://github.com/nix-community/nixago"><code>nix-community/nixago</code>'s</a> <code>lib.${system}.make</code> function.</p>
+<p>This is a transparent convenience proxy for <a href="https://github.com/nix-community/nixago"><code>nix-community/nixago</code>’s</a> <code>lib.${system}.make</code> function.</p>
 <p>It is enriched with a forward contract towards <code>std</code> enriched <code>mkShell</code> implementation.</p>
-<p>In order to define <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code>'s</a> <code>commands</code> &amp; <code>packages</code> alongside the Nixago pebble,
+<p>In order to define <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code>’s</a> <code>commands</code> &amp; <code>packages</code> alongside the Nixago pebble,
 just add the following attrset to the Nixago spec. It will be picked up automatically by <code>mkShell</code> when that pebble
 is used inside its <code>config.nixago</code>-option.</p>
 <pre><code class="language-nix">{ inputs, cell }: {
@@ -1830,7 +1831,7 @@ is used inside its <code>config.nixago</code>-option.</p>
 downstream re-use.</p>
 <p>Some Pebbles may have a special integration for <code>std</code>.</p>
 <p>For example, the <code>conform</code> Pebble can undestand <code>inputs.cells</code>
-and add each Cell as a so called &quot;scope&quot; to its
+and add each Cell as a so called “scope” to its
 <a href="https://www.conventionalcommits.org/">Conventional Commit</a> configuration.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="adrgen"><a class="header" href="#adrgen"><a href="https://github.com/asiermarques/adrgen"><code>adrgen</code></a></a></h1>
 <p>A great tool to manage Architecture Decision Records.</p>

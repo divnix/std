@@ -141,13 +141,13 @@
 <h2 id="the-problem"><a class="header" href="#the-problem">The Problem</a></h2>
 <p>We have written an application and now we want to package and run it.
 For its supply chain security benefits, we have been advised to employ reproducible and source-based distribution mechanisms.
-We furthermore need an interoperability platform that is generic and versatile: a <em>configuration &quot;lingua franca&quot;</em>.
+We furthermore need an interoperability platform that is generic and versatile: a <em>configuration “lingua franca”</em>.
 Our peers who write another application in another language should share that same approach.
 Thereby, we avoid the negative external effects of DevOps silos on integrators and operators, alike.
 Short: we make adoption of our application as easy as possible for our consumers.</p>
 <h2 id="the-actors"><a class="header" href="#the-actors">The Actors</a></h2>
 <p><em>Note, that each actor persona can be exercised by one and the same person or a group of persons.
-Although possible, and even frequently so, it doesn't imply that these roles are necessarily taken by distinct individuals.</em></p>
+Although possible, and even frequently so, it doesn’t imply that these roles are necessarily taken by distinct individuals.</em></p>
 <h3 id="developer"><a class="header" href="#developer">Developer</a></h3>
 <p>The Developer persona incrementally modifies the source code.
 At times, such modification are relevant at the interface to the Operator persona.
@@ -160,15 +160,16 @@ She also supervises and observes the running application across different enviro
 <h3 id="release-manager"><a class="header" href="#release-manager">Release Manager</a></h3>
 <p>The Release Manager persona cuts releases at discrete points in time.
 In doing so, she procures their artifacts for general (public) consumtion.
-Any release is tied to a sufficiently high level of assurance of an artifact's desired properties.
+Any release is tied to a sufficiently high level of assurance of an artifact’s desired properties.
 For that purpose, she works with the Developer, Operator &amp; QA personas along these 4 layers of packaging.</p>
 <h3 id="qa"><a class="header" href="#qa">QA</a></h3>
-<p>The QA persona establishes various levels of assurance of an artifact's desired properties.
+<p>The QA persona establishes various levels of assurance of an artifact’s desired properties.
 Thereby, the observable artifacts can emanate from any layer of these 4 layers of packaging.
 She informs the Developer, Operator and Release Manager personas about any found assurance levels.
 She can do so through manual or automatic (CI) means.</p>
 <h2 id="the-layers"><a class="header" href="#the-layers">The Layers</a></h2>
-<pre><code class="language-mermaid">flowchart TD
+<pre class="mermaid">
+flowchart TD
     packaging([Packaging])
     entrypoint([Entrypoint])
     image([OCI-Image])
@@ -181,14 +182,14 @@ She can do so through manual or automatic (CI) means.</p>
     click entrypoint href &quot;#entrypoint-layer&quot; &quot;Jump to the entrypoint layer section&quot;
     click image href &quot;#oci-image-layer&quot; &quot;Jump to the OCI image layer section&quot;
     click scheduler href &quot;#scheduler-chart-layer&quot; &quot;Jump to the scheduler chart layer section&quot;
-</code></pre>
+`</pre>
 <hr />
 <p>There is one very important factoring &amp; interoperability rule about these layers:</p>
 <p><em>A domain concern of a higher layer <strong>must not</strong> bleed into previous layers.</em></p>
 <p>Observing this very simple rule ensures long term interoperability and maintainability of the stack.
 For example, not presuming a particular scheduler in the entrypoint gives contributors a chance to easily add another scheduler target without painful refactoring.</p>
 <blockquote>
-<p><em><strong>Future Work:</strong> depending on how you count, there may be actually a 5th layer: the <strong>operator</strong> layer. But we may cover this in a future version of this article in further detail. If you don't want to wait, you may have a conceptual look at the <a href="https://juju.is/docs/olm">Charmed Operator Framework</a> and <a href="https://charmhub.io/">Charmehub</a>.</em></p>
+<p><em><strong>Future Work:</strong> depending on how you count, there may be actually a 5th layer: the <strong>operator</strong> layer. But we may cover this in a future version of this article in further detail. If you don’t want to wait, you may have a conceptual look at the <a href="https://juju.is/docs/olm">Charmed Operator Framework</a> and <a href="https://charmhub.io/">Charmehub</a>.</em></p>
 </blockquote>
 <p><em>Note, that it would be possible to further fold these interfaces and a Nix veteran might be inclined to do so.
 But doing so would defeat the purpose of exposing well defined layered interfaces alongside role-boundaries, subject matter concepts for ease of communication and collaboration; as well as external artifact consumers.</em></p>
@@ -201,16 +202,16 @@ Actors:
 </code></pre>
 <p>This Organelle builds, unit-tests &amp; packages the application via the appropriate <a href="../explain/why-nix.html#nix-superpowers">Nix primitives</a>.
 Each programming language has a different best practice approach to packaging.
-Therfore, a fair ammount of domain knowledge between Nix and the language's build system is required.</p>
+Therfore, a fair ammount of domain knowledge between Nix and the language’s build system is required.</p>
 <p>The location of the actual build instructions are secondary.
-At minimum, though, for transparency's and uniformity's sake, they are still proxied via this Organelle.
+At minimum, though, for transparency’s and uniformity’s sake, they are still proxied via this Organelle.
 So in the case that upstream already contains appropriate build instructions, the following indirection is perfectly valid (and necessary):</p>
 <pre><code class="language-nix">{ inputs, cell }: {
   app = inputs.upstream.packages.some-app;
 }
 </code></pre>
 <p>Build instructions themselves should encompass executing unit tests.
-Builds that fail unit tests should already be filtered out at this layer (i.e. &quot;a build that fails unit tests is no build, at all&quot;).</p>
+Builds that fail unit tests should already be filtered out at this layer (i.e. “a build that fails unit tests is no build, at all”).</p>
 <p>A Release Manager may decide to provide these artifacts to the general public on tagged releases.</p>
 <blockquote>
 <p><strong>In a hurry?</strong></p>

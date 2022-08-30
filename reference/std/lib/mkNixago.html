@@ -134,9 +134,9 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="mknixago"><a class="header" href="#mknixago"><code>mkNixago</code></a></h1>
-<p>This is a transparent convenience proxy for <a href="https://github.com/nix-community/nixago"><code>nix-community/nixago</code>'s</a> <code>lib.${system}.make</code> function.</p>
+<p>This is a transparent convenience proxy for <a href="https://github.com/nix-community/nixago"><code>nix-community/nixago</code>’s</a> <code>lib.${system}.make</code> function.</p>
 <p>It is enriched with a forward contract towards <code>std</code> enriched <code>mkShell</code> implementation.</p>
-<p>In order to define <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code>'s</a> <code>commands</code> &amp; <code>packages</code> alongside the Nixago pebble,
+<p>In order to define <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code>’s</a> <code>commands</code> &amp; <code>packages</code> alongside the Nixago pebble,
 just add the following attrset to the Nixago spec. It will be picked up automatically by <code>mkShell</code> when that pebble
 is used inside its <code>config.nixago</code>-option.</p>
 <pre><code class="language-nix">{ inputs, cell }: {

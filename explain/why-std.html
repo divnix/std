@@ -147,13 +147,13 @@ build and configuration language.</p>
 <p>Lack of typing adds to the problem by forcing <code>nix</code>-practitioners to go out of their way (e.g. via <a href="https://github.com/divnix/yants"><code>divnix/yants</code></a>) to
 add some internal boundaries and contracts to an ever morphing global context.</p>
 <p>As a consequence, few actually <em>do</em> that. And contracts across internal code boundaries are either absent or rudimentary or — yet again —
-&quot;elegant and novel&quot;. Neither of which satisfactorily settles the issue.</p>
+“elegant and novel”. Neither of which satisfactorily settles the issue.</p>
 <h2 id="solution"><a class="header" href="#solution">Solution</a></h2>
-<p><code>std</code> doesn't add language-level typing. But a well-balanced folder layout cut at 3 layers of conceptual
+<p><code>std</code> doesn’t add language-level typing. But a well-balanced folder layout cut at 3 layers of conceptual
 nesting provides the fundamentals for establishing internal boundaries.</p>
 <blockquote>
 <p><strong>Cell → Organelle → Target → [Action]</strong></p>
-<p>Where ...</p>
+<p>Where …</p>
 <ul>
 <li><strong>Cells</strong> group functionality.</li>
 <li><strong>Organelles</strong> type outputs and implement <strong>Actions</strong>.</li>
@@ -167,7 +167,7 @@ different things: <em><strong>Cells</strong> and <strong>Organelles</strong> set
 <li><code>cell</code> the local <strong>Cell</strong>, promoting separation of concern</li>
 <li><code>inputs</code> the <code>deSystemize</code>ed flake inputs — plus:
 <ul>
-<li><code>inputs.self = self.sourceInfo;</code> reference source code in <code>nix</code>; filter with <code>std.incl</code>; don't misuse the global <code>self</code>.</li>
+<li><code>inputs.self = self.sourceInfo;</code> reference source code in <code>nix</code>; filter with <code>std.incl</code>; don’t misuse the global <code>self</code>.</li>
 <li><code>inputs.cells</code>: the other cells by name; code that documents its boundaries.</li>
 <li><code>inputs.nixpkgs</code>: an <em>instantiated</em> <code>nixpkgs</code> for the current system;</li>
 </ul>

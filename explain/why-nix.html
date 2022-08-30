@@ -135,15 +135,15 @@
                     <main>
                         <h1 id="why-nix"><a class="header" href="#why-nix">Why <code>nix</code>?</a></h1>
 <p>A lot of people write a lot of confusing stuff about nix.</p>
-<p>So here, we'll try to break it down, instead.</p>
-<h2 id="nix-is-json-on-steroids"><a class="header" href="#nix-is-json-on-steroids"><code>nix</code> is &quot;<code>json</code> on steroids&quot;</a></h2>
+<p>So here, we’ll try to break it down, instead.</p>
+<h2 id="nix-is-json-on-steroids"><a class="header" href="#nix-is-json-on-steroids"><code>nix</code> is “<code>json</code> on steroids”</a></h2>
 <p>In configuration management, you have a choice: data vs. language.</p>
-<p>On stackoverflow, you'll be taught the &quot;data&quot; stance, because it's simple.</p>
-<p>And all of a sudden you hit reality. Outside of a &quot;lab&quot; environment, you suddenly
+<p>On stackoverflow, you’ll be taught the “data” stance, because it’s simple.</p>
+<p>And all of a sudden you hit reality. Outside of a “lab” environment, you suddenly
 need to manage a varying degree of complexity.</p>
 <p>So you need configuration combinators, or in other words a full blown language
 to efficiently render your configurations.</p>
-<p>There are a couple of options, that you'll recognize if you've gotten serious about
+<p>There are a couple of options, that you’ll recognize if you’ve gotten serious about
 the configuration challenge, like:</p>
 <ul>
 <li><a href="https://dhall-lang.org/"><code>dhall</code></a></li>
@@ -151,32 +151,32 @@ the configuration challenge, like:</p>
 <li><a href="https://jsonnet.org/"><code>jsonnet</code></a></li>
 <li><a href="https://nickel-lang.org/"><code>nickel</code></a></li>
 </ul>
-<p>And there is <a href="https://nixos.org/"><code>nix</code></a>, the language. In most aspects, it isn't hugely distinct from the others,
+<p>And there is <a href="https://nixos.org/"><code>nix</code></a>, the language. In most aspects, it isn’t hugely distinct from the others,
 but it has superpowers. Read on!</p>
-<h2 id="nix-superpowers"><a class="header" href="#nix-superpowers"><code>nix</code>' superpowers</a></h2>
+<h2 id="nix-superpowers"><a class="header" href="#nix-superpowers"><code>nix</code>’ superpowers</a></h2>
 <p>You know the concept of string interpolation.</p>
 <p>Every time <code>nix</code> interpolates an identifier, there is something that
-you don't immediately see: it keeps a so called &quot;string context&quot; right
+you don’t immediately see: it keeps a so called “string context” right
 at the site of interpolation. That string context holds a directed acyclic
 graph of all the dependencies that are required to make that string.</p>
-<p>&quot;Well, it's just a string; what on earth should I need to make a string?&quot;, you may say.</p>
-<p>There is a special category of strings, so called &quot;Nix store paths&quot;
+<p>“Well, it’s just a string; what on earth should I need to make a string?”, you may say.</p>
+<p>There is a special category of strings, so called “Nix store paths”
 (strings that start with <code>/nix/store/...</code>). These store paths represent
 build artifacts that are content addressed ahead-of-time through
 the inputs of an otherwise pure build function, called <a href="https://nixos.org/manual/nix/stable/expressions/derivations.html"><code>derivation</code></a>.</p>
-<p>When you finally reify (i.e. &quot;build&quot;) your string interpolation, then all these Nix store
+<p>When you finally reify (i.e. “build”) your string interpolation, then all these Nix store
 paths get build as well.</p>
 <p>This might be a bit of a mind-boggling angle, but after a while, you may realize:</p>
 <ul>
 <li>Nix is a massive build pipeline that tracks all things to their source.</li>
 <li>In their capacity as <em>pure</em> build functions, <a href="https://nixos.org/manual/nix/stable/expressions/derivations.html"><code>derviation</code>s</a> build <em>reproducibly</em>.</li>
 <li>Reproducible builds are the future of software supply chain security, among other things.</li>
-<li>You'll start asking: &quot;who the heck invented all that insecure nonsense of opaque binary registries?
-Shouldn't have those smart people have known better?&quot;</li>
-<li>And from this realization, there's no coming back.</li>
-<li>And you'll have joined the <a href="https://discourse.nixos.org/t/nixos-foundation-participating-in-eus-next-generation-internet-initiative/2011">European Union</a>, <a href="https://discourse.nixos.org/t/mercury-bank-nix-engineers/13784">banks</a> and <a href="https://github.com/input-output-hk/cardano-world">blockchain companies</a> who also realized:
+<li>You’ll start asking: “who the heck invented all that insecure nonsense of opaque binary registries?
+Shouldn’t have those smart people have known better?”</li>
+<li>And from this realization, there’s no coming back.</li>
+<li>And you’ll have joined the <a href="https://discourse.nixos.org/t/nixos-foundation-participating-in-eus-next-generation-internet-initiative/2011">European Union</a>, <a href="https://discourse.nixos.org/t/mercury-bank-nix-engineers/13784">banks</a> and <a href="https://github.com/input-output-hk/cardano-world">blockchain companies</a> who also realized:
 we need to fix our utterly broken and insecure build systems!</li>
-<li>By that time, you'll have already assimilated the legendary <a href="http://users.ece.cmu.edu/%7Eganger/712.fall02/papers/p761-thompson.pdf">Ken Thompson's &quot;Reflections on Trusting Trust&quot;</a>.</li>
+<li>By that time, you’ll have already assimilated the legendary <a href="http://users.ece.cmu.edu/%7Eganger/712.fall02/papers/p761-thompson.pdf">Ken Thompson’s “Reflections on Trusting Trust”</a>.</li>
 </ul>
 
                     </main>

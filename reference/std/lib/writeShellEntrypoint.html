@@ -134,7 +134,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="writeshellentrypoint"><a class="header" href="#writeshellentrypoint"><code>writeShellEntrypoint</code></a></h1>
-<p>... is a function to write Standard OCI-image entrypoints.</p>
+<p>… is a function to write Standard OCI-image entrypoints.</p>
 <p>The function signature is as follows:</p>
 <pre><code class="language-nix">{
   # the installable that is wrapped by this entrypoint (re-exported)
@@ -153,7 +153,7 @@
   readinessProbe ? null,
 }
 </code></pre>
-<p>It's output wraps utility functions to generate size-optimized OCI-images:</p>
+<p>It’s output wraps utility functions to generate size-optimized OCI-images:</p>
 <pre><code class="language-nix">rec {
   entrypoint = std.std.lib.writeShellEntrypoint inputs { /* ... */ };
   oci-image = entrypoint.mkOCI &quot;docker.io/my-oci-image&quot;;
@@ -169,11 +169,11 @@
 /bin/live       # if livenessProbe was set
 /bin/ready      # if readinessProbe was set
 </code></pre>
-<p>That's it. There is nothing more to see.</p>
+<p>That’s it. There is nothing more to see.</p>
 <p>All other dependencies are contained in <code>/nix/store/...</code>.</p>
 <h2 id="the-debug-image"><a class="header" href="#the-debug-image">The Debug Image</a></h2>
 <p>Debug Images wrap the standard images and provide additional debugging packages.</p>
-<p>Hence, they are neither minimal, nor hardened because of the debugging packages' added surface.</p>
+<p>Hence, they are neither minimal, nor hardened because of the debugging packages’ added surface.</p>
 <h3 id="contracts-1"><a class="header" href="#contracts-1">Contracts</a></h3>
 <p>The following contracts can be consumed:</p>
 <pre><code>/bin/entrypoint # always present
@@ -183,7 +183,7 @@
 /bin/ready      # if readinessProbe was set
 </code></pre>
 <h2 id="how-to-extend"><a class="header" href="#how-to-extend">How to extend?</a></h2>
-<p>A Standard or Debug Image doesn't have a package manager available in the environment.</p>
+<p>A Standard or Debug Image doesn’t have a package manager available in the environment.</p>
 <p>Hence, to extend the image you have two options:</p>
 <h3 id="nix-based-extension"><a class="header" href="#nix-based-extension">Nix-based extension</a></h3>
 <pre><code class="language-nix">rec {

@@ -163,8 +163,8 @@ it has grown into an impertinence, <em>then</em> <code>std</code>
 brings the overdue order to your piece of art
 through a well-defined folder structure and
 disciplining generic interfaces.</p>
-<p>With <code>std</code>, you'll learn how to organize your <code>nix</code>
-flake outputs ('<strong>Targets</strong>') into <strong>Cells</strong> and
+<p>With <code>std</code>, you’ll learn how to organize your <code>nix</code>
+flake outputs (‘<strong>Targets</strong>’) into <strong>Cells</strong> and
 <strong>Organelles</strong> — folded into a useful
 <strong>CLI &amp; TUI</strong> to also make the lives of your
 colleagues easier.</p>
@@ -174,12 +174,12 @@ your team and community will finally find a
 <em>What can I <strong>do</strong> with this repository?</em></p>
 <hr />
 <h2 id="the-std-repository-itself"><a class="header" href="#the-std-repository-itself">The <code>std</code> repository itself</a></h2>
-<p>In this repository, you'll find, both, the <em>implementation</em> and an <em>application</em> of <a href="https://github.com/divnix/std">Standard</a>.</p>
+<p>In this repository, you’ll find, both, the <em>implementation</em> and an <em>application</em> of <a href="https://github.com/divnix/std">Standard</a>.</p>
 <h3 id="implementation"><a class="header" href="#implementation">Implementation</a></h3>
 <p><em>What is <code>std</code>? — The well-commented <code>nix</code> code → <a href="https://github.com/divnix/std/tree/main/src"><code>./src</code></a>.</em></p>
 <p>That folder implements:</p>
 <ul>
-<li><a href="https://github.com/divnix/std/blob/main/src/grow.nix"><code>std.grow</code></a>: the &quot;smart&quot; importer</li>
+<li><a href="https://github.com/divnix/std/blob/main/src/grow.nix"><code>std.grow</code></a>: the “smart” importer</li>
 <li><a href="https://github.com/divnix/std/blob/main/src/grow-on.nix"><code>std.growOn</code></a>: <code>std.grow</code>-variant that recursively merges all additional variadic arguments</li>
 <li><a href="https://github.com/divnix/std/blob/main/src/harvest.nix"><code>std.harvest</code></a>: harvest your <strong>Targets</strong> into a different shape for compatibility</li>
 <li><a href="https://github.com/divnix/std/blob/main/src/incl.nix"><code>std.incl</code></a>: a straight-forward source filter with additive semantics</li>
@@ -223,7 +223,7 @@ growOn {
   packages = harvest inputs.self [[&quot;std&quot; &quot;cli&quot;] [&quot;std&quot; &quot;packages&quot;]];
 }
 </code></pre>
-<p><em>That's it. <code>std.grow</code> is a &quot;smart&quot; importer of your <code>nix</code> code and is designed to keep boilerplate at bay.</em></p>
+<p><em>That’s it. <code>std.grow</code> is a “smart” importer of your <code>nix</code> code and is designed to keep boilerplate at bay.</em></p>
 <blockquote>
 <p><strong>TIP:</strong>
 Now, enter the devshell (<code>direnv allow</code>) and play with the <code>std</code> CLI/TUI companion.
@@ -251,7 +251,7 @@ It answers one critical question to newcomers and veterans alike:</p>
 <li><a href="https://divnix.github.io/std/explain/why-std.html">Why <code>std</code>?</a></li>
 </ul>
 <h2 id="examples-in-the-wild"><a class="header" href="#examples-in-the-wild">Examples in the Wild</a></h2>
-<p>If you'd like to see some examples
+<p>If you’d like to see some examples
 of what a <a href="https://github.com/divnix/std">Standard</a> project looks like,
 take a look at the following:</p>
 <ul>

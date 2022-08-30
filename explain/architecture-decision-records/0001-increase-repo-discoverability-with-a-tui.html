@@ -139,22 +139,22 @@
 <p>accepted</p>
 <h2 id="context"><a class="header" href="#context">Context</a></h2>
 <p>In general, the more a polyglot repository grows, the more folks need very contextual knowledge to
-assess the old and still same question: &quot;What's in it for me?&quot; / WIIFM.</p>
-<p>And once they find an answer to that question, already ensues the next: &quot;And how do I make use of it?&quot;.</p>
+assess the old and still same question: “What’s in it for me?” / WIIFM.</p>
+<p>And once they find an answer to that question, already ensues the next: “And how do I make use of it?”.</p>
 <p>Finding an answer to these questions is regularly not trivial and hugely language specific.</p>
-<p>The classic solution always has been: &quot;Write a (boilerplate) readme.&quot;.</p>
+<p>The classic solution always has been: “Write a (boilerplate) readme.”.</p>
 <h2 id="decision"><a class="header" href="#decision">Decision</a></h2>
 <p>Thanks to <code>nix</code>, we can largely outperform that classic solution.</p>
 <p>So, we implement a TUI that is duly wired with the repository it represents.</p>
 <p>It queries the <code>nix</code> for the necessary metadata including targets and
-the target's actions.</p>
+the target’s actions.</p>
 <p>It also detects well-placed readme files and presents them contextually on the CLI
 to the user.</p>
 <p>The user can then fuzzy search any desired target, query its contextual help or choose
 one of the actions for execution.</p>
 <h2 id="consequences"><a class="header" href="#consequences">Consequences</a></h2>
 <p>Not only in a polyglot repository, the different stakeholders can now easily and naturally
-interact (&quot;speak&quot;) with the repository.</p>
+interact (“speak”) with the repository.</p>
 <p>This has the potential of optimizing away a lot of very engrained media-breaks that today sometimes
 render massive collaboration across a broad team increasingly friction-laden.</p>
 

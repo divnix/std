@@ -140,15 +140,15 @@ It also makes use of more advanced functions of <code>std</code>.
 Namely:</p>
 <ul>
 <li><code>std.growOn</code> instead of <code>std.grow</code></li>
-<li><code>std.harvest</code> to provide compatibility layers of &quot;soil&quot;</li>
+<li><code>std.harvest</code> to provide compatibility layers of “soil”</li>
 <li>non-default Organelle definitions</li>
 <li>the input debug facility</li>
 </ul>
-<p>The terms <em>&quot;Clade&quot;</em>, <em>&quot;Cell&quot;</em>, <em>&quot;Organelle&quot;</em>, <em>&quot;Target&quot;</em> and <em>&quot;Action&quot;</em> have special meaning within the context of <code>std</code>.
+<p>The terms <em>“Clade”</em>, <em>“Cell”</em>, <em>“Organelle”</em>, <em>“Target”</em> and <em>“Action”</em> have special meaning within the context of <code>std</code>.
 With these clear definitions, we navigate and communicate the code structure much more easily.
 In order to familiarize yourself with them, please have a quick glance at the <a href="../../glossary.html">glossary</a>.</p>
 <h2 id="file-layout"><a class="header" href="#file-layout">File Layout</a></h2>
-<p>Let's start again with a flake:</p>
+<p>Let’s start again with a flake:</p>
 <h4 id="flakenix"><a class="header" href="#flakenix"><code>./flake.nix</code></a></h4>
 <pre><code class="language-nix">{
   inputs.std.url = &quot;github:divnix/std&quot;;
@@ -206,8 +206,8 @@ In order to familiarize yourself with them, please have a quick glance at the <a
 </code></pre>
 <p>This time we specified <code>cellsFrom = ./nix;</code>.
 This is gentle so that our colleagues know immediately which files to either look or never look at depending on where they stand.</p>
-<p>We also used <code>std.growOn</code> instead of <code>std.grow</code> so that we can add compatibility layers of &quot;soil&quot;.</p>
-<p>Furthermore, we only defined two Organelles: <code>nixago</code> &amp; <code>devshells</code>. More on them follows...</p>
+<p>We also used <code>std.growOn</code> instead of <code>std.grow</code> so that we can add compatibility layers of “soil”.</p>
+<p>Furthermore, we only defined two Organelles: <code>nixago</code> &amp; <code>devshells</code>. More on them follows…</p>
 <h4 id="nixautomation"><a class="header" href="#nixautomation"><code>./nix/automation/*</code></a></h4>
 <p>Next, we define a <code>automation</code> cell.
 Each project will have some amount of automation.
@@ -215,7 +215,7 @@ This can be repository automation, such as code generation.
 Or it can be a CI/CD specification.
 In here, we wire up two tools from the Nix ecosystem: <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code></a> &amp; <a href="https://github.com/nix-community/nixago"><code>nix-community/nixago</code></a>.</p>
 <blockquote>
-<p><em>Please refer to these links to get yourself a quick overview before continuing this tutorial, in case you don't know them, yet.</em></p>
+<p><em>Please refer to these links to get yourself a quick overview before continuing this tutorial, in case you don’t know them, yet.</em></p>
 <p>A <em>very</em> short refresher:</p>
 <ul>
 <li><strong>Nixago</strong>: Template &amp; render repository (dot-)files with nix. <a href="../../explain/why-nix.html">Why nix?</a></li>
@@ -225,16 +225,16 @@ In here, we wire up two tools from the Nix ecosystem: <a href="https://github.co
 <blockquote>
 <p><strong>Some semantic background:</strong></p>
 <p>Both, Nixago &amp; Devshell are <em>Component Tools</em>.</p>
-<p><em>(Vertical) Component Tools</em> are distinct from <em>(Horizontal) Integration Tools</em> — such as <code>std</code> — in that they provide a specific capability in a minimal linux style: <em>&quot;Do one thing and do it well.&quot;</em></p>
+<p><em>(Vertical) Component Tools</em> are distinct from <em>(Horizontal) Integration Tools</em> — such as <code>std</code> — in that they provide a specific capability in a minimal linux style: <em>“Do one thing and do it well.”</em></p>
 <p>Integration Tools however combine them into a polished user story and experience.</p>
 <p>The Nix ecosystem is very rich in <em>component tools</em>, however only few <em>integration tools</em> exist at the time of writing.</p>
 </blockquote>
 <h4 id="nixautomationdevshellsnix"><a class="header" href="#nixautomationdevshellsnix"><code>./nix/automation/devshells.nix</code></a></h4>
-<p>Let's start with the <code>cell.devshells</code> Organelle and work our way backwards to the <code>cell.nixago</code> Organelle below.</p>
+<p>Let’s start with the <code>cell.devshells</code> Organelle and work our way backwards to the <code>cell.nixago</code> Organelle below.</p>
 <blockquote>
 <p><strong>More semantic background:</strong></p>
 <p>I could also reference them as <code>inputs.cells.automation.devshells</code> &amp; <code>inputs.cells.automation.nixago</code>.</p>
-<p>But, because we are sticking with the local Cell context, we don't want to confuse the future code reader.
+<p>But, because we are sticking with the local Cell context, we don’t want to confuse the future code reader.
 Instead, we gently hint at the locality by just referring them via the <code>cell</code> context.</p>
 </blockquote>
 <pre><code class="language-nix">{
@@ -298,13 +298,13 @@ in
     };
   }
 </code></pre>
-<p>The <code>nixago = [];</code> option in this definition is a special integration provided by the <a href="../../reference/std/lib/mkShell.html">Standard's <code>devshell</code>-wrapper (<code>std.lib.mkShell</code>)</a>.</p>
+<p>The <code>nixago = [];</code> option in this definition is a special integration provided by the <a href="../../reference/std/lib/mkShell.html">Standard’s <code>devshell</code>-wrapper (<code>std.lib.mkShell</code>)</a>.</p>
 <p><em>This is how <code>std</code> delivers on its promise of being a (horizontal) integration tool that wraps (vertical) component tools into a polished user story and experience.</em></p>
 <p>Because we made use of <code>std.harvest</code> in the flake, you now can actually test out the devshell via the Nix CLI compat layer by just running <code>nix develop -c &quot;$SHELL&quot;</code> in the directory of the flake.
 For a more elegant method of entering a development shell read on the <a href="#direnv">direnv</a> section below.</p>
 <h4 id="nixautomationnixagonix"><a class="header" href="#nixautomationnixagonix"><code>./nix/automation/nixago.nix</code></a></h4>
 <p>As we have seen above, the <code>nixago</code> option in the <code>cell.devshells</code> Organelle references Targets from both <code>std.nixago</code> <em>and</em> <code>cell.nixago</code>.
-While you can explore <code>std.nixago</code> <a href="https://github.com/divnix/std/blob/main/cells/std/nixago.nix">here</a>, let's now have a closer look at <code>cell.nixago</code>:</p>
+While you can explore <code>std.nixago</code> <a href="https://github.com/divnix/std/blob/main/cells/std/nixago.nix">here</a>, let’s now have a closer look at <code>cell.nixago</code>:</p>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -372,7 +372,7 @@ The way <code>configData</code> is merged upon the existing pebble is via a simp
 <blockquote>
 <p><strong>Background on array merge strategies:</strong></p>
 <p>If you know how a plain data-merge (does not magically) deal with array merge semantics, you noticed:
-We didn't have to annotate our right-hand-side arrays in this example because we where not actually amending or modifying any left-hand-site array type data structure.</p>
+We didn’t have to annotate our right-hand-side arrays in this example because we where not actually amending or modifying any left-hand-site array type data structure.</p>
 <p>Would we have done so, we would have had to annotate:</p>
 <ul>
 <li>either with <code>std.dmerge.append [/* ... */]</code>;</li>
@@ -401,19 +401,19 @@ trace: {
 <p><strong>Invoke devshell via <code>nix</code></strong></p>
 <pre><code class="language-bash">nix develop -c &quot;$SHELL&quot;
 </code></pre>
-<p>By quirks of the Nix CLI, if you don't specify <code>-c &quot;$SHELL&quot;</code>, you'll be thrown into an unfamiliar bare <code>bash</code> interactive shell.
-That's not what you want.</p>
+<p>By quirks of the Nix CLI, if you don’t specify <code>-c &quot;$SHELL&quot;</code>, you’ll be thrown into an unfamiliar bare <code>bash</code> interactive shell.
+That’s not what you want.</p>
 <p><strong>Invoke the devshell via <code>std</code></strong></p>
-<p>In this case, invoking <code>$SHELL</code> correctly is taken care for you by the Clade's <code>enter</code> Action.</p>
+<p>In this case, invoking <code>$SHELL</code> correctly is taken care for you by the Clade’s <code>enter</code> Action.</p>
 <pre><code class="language-bash"># fetch `std`
 $ nix shell github:divnix/std
 $ std //automation/devshells/default:enter
 </code></pre>
-<p>Since we have declared the devshell Organelle as a <code>clades.devshells</code>, <code>std</code> auments it's Targets with the Clade Actions.</p>
+<p>Since we have declared the devshell Organelle as a <code>clades.devshells</code>, <code>std</code> auments it’s Targets with the Clade Actions.</p>
 <p>See <a href="../../reference/clades/devshells-clade.html"><code>clades.devshells</code></a> for more details on the available Actions and their implementation.</p>
-<p>Thanks to the <code>cell.devshells</code>' <code>nixago</code> option, entering the devshell will also automatically reconcile the repository files under Nixago's management.</p>
+<p>Thanks to the <code>cell.devshells</code>’ <code>nixago</code> option, entering the devshell will also automatically reconcile the repository files under Nixago’s management.</p>
 <p><strong>Explore a Nixago Pebble via <code>std</code></strong></p>
-<p>You can also explore the nixago configuration via the Nixago Clade's <code>explore</code>-Action.</p>
+<p>You can also explore the nixago configuration via the Nixago Clade’s <code>explore</code>-Action.</p>
 <pre><code class="language-bash"># fetch `std`
 $ nix shell github:divnix/std
 $ std //automation/nixago/treefmt:explore
@@ -423,15 +423,15 @@ $ std //automation/nixago/treefmt:explore
 <p>Manually entering the devshell is boring.
 How about a daemon always does that automatically &amp; efficiently when you <code>cd</code> into a project directory?
 Enter <a href="https://direnv.net"><code>direnv</code></a> — the original (again; and even from the same author) 😊.</p>
-<p>Before you continue, first install direnv according to it's <a href="https://direnv.net/docs/installation.html">install instructions</a>.
-It's super simple &amp; super useful ™ and you should do it <em>right now</em> if you haven't yet.</p>
+<p>Before you continue, first install direnv according to it’s <a href="https://direnv.net/docs/installation.html">install instructions</a>.
+It’s super simple &amp; super useful ™ and you should do it <em>right now</em> if you haven’t yet.</p>
 <p>Please learn how to enable <code>direnv</code> in this project by following the <a href="../../guides/envrc.html">direnv how-to</a>.</p>
 <p>In this case, you would adapt the relevant line to: <strong><code>use std nix //automation/devshells:default</code></strong>.</p>
 <p>Now, you can simply <code>cd</code> into that directory, and the devshells is being loaded.
 The MOTD will be shown, too.</p>
 <p>The first time, you need to teach the <code>direnv</code> daemon to trust the <code>.envrc</code> file via <code>direnv allow</code>.
 If you want to reload the devshell (e.g. to reconcile Nixago Pepples), you can just run <code>direnv reload</code>.</p>
-<p>Because I use these commands so often, I've set: <code>alias d=&quot;direnv&quot;</code> in my shell's RC file.</p>
+<p>Because I use these commands so often, I’ve set: <code>alias d=&quot;direnv&quot;</code> in my shell’s RC file.</p>
 <hr />
 
                     </main>
