@@ -1103,7 +1103,7 @@ The role of this script — customarily written in <code>bash</code> — serves 
 As such, Operators will find all the primariy configuration options re-encoded at a glance and in a well-known location.
 In the other direction, Developers will find all the magic ad-hoc warpping that Operators had to engage in, in order to run the application on the target scheduler.</p>
 <p>Through this communication channel, operators take reliably note of configuration drift, while Developers gain a valuable source of backlog to increase the operational robustness of the application.</p>
-<p>Standard includes a <a href="patterns//reference/std/lib/writeShellEntrypoint.html">specific library function</a> that establishes an implementation-site interface for entrypoints and their collaterals which significantly eases working on the following layers.</p>
+<p>Standard includes a <a href="patterns/../reference/std/lib/writeShellEntrypoint.html">specific library function</a> that establishes an implementation-site interface for entrypoints and their collaterals which significantly eases working on the following layers.</p>
 <h3 id="oci-image-layer"><a class="header" href="#oci-image-layer">OCI-Image Layer</a></h3>
 <pre><code class="language-yaml">Organelle: (clades.containers &quot;oci-images&quot;)
 Location:  **/oci-images.nix        # or **/oci-images/
@@ -1117,7 +1117,7 @@ This ensures very fundamentally that nothing is accidentially <em>built</em> on 
 <p>We chose OCI-Images as the binary distribution format.
 It not only fits that purpose through the <a href="https://github.com/opencontainers/distribution-spec">OCI Distribution Specification</a>, but also collaterally procures interoperability for 3rd parties:
 OCI images are the de-facto industry standard for deployment artifacts.</p>
-<p>If the entrypoints have been created via the above mentioned <a href="patterns//reference/std/lib/writeShellEntrypoint.html">library function</a>, the creation of OCI images trivially reduces to:</p>
+<p>If the entrypoints have been created via the above mentioned <a href="patterns/../reference/std/lib/writeShellEntrypoint.html">library function</a>, the creation of OCI images trivially reduces to:</p>
 <pre><code class="language-nix">{ inputs, cell }: {
   image-hard = cell.entrypoints.app.mkOCI &quot;docker.io/my-image-hardened&quot;;
   image = cell.entrypoints.app.mkDebugOCI &quot;docker.io/my-image&quot;;
