@@ -202,7 +202,7 @@ For example: in the transpiled form of a widely used scheduler-specific config s
 [charmed-operator]: https://juju.is/docs/olm
 [charmhub]: https://charmhub.io/
 [nix-superpowers]: ../explain/why-nix.md#nix-superpowers
-[entrypoint-lib]: /reference/std/lib/writeShellEntrypoint.md
+[entrypoint-lib]: ../reference/std/lib/writeShellEntrypoint.md
 [n2c]: https://github.com/nlewo/nix2container
 [helm-charts]: https://helm.sh/docs/topics/charts/
 [distribution-spec]: https://github.com/opencontainers/distribution-spec
