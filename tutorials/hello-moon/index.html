@@ -140,12 +140,12 @@ It also makes use of more advanced functions of <code>std</code>.
 Namely:</p>
 <ul>
 <li><code>std.growOn</code> instead of <code>std.grow</code></li>
-<li><code>std.harvest</code> to provide compatiblitiy layers of &quot;soil&quot;</li>
+<li><code>std.harvest</code> to provide compatibility layers of &quot;soil&quot;</li>
 <li>non-default Organelle definitions</li>
 <li>the input debug facility</li>
 </ul>
 <p>The terms <em>&quot;Clade&quot;</em>, <em>&quot;Cell&quot;</em>, <em>&quot;Organelle&quot;</em>, <em>&quot;Target&quot;</em> and <em>&quot;Action&quot;</em> have special meaning within the context of <code>std</code>.
-With these clear definions, we navigate and communicate the code structure much more easily.
+With these clear definitions, we navigate and communicate the code structure much more easily.
 In order to familiarize yourself with them, please have a quick glance at the <a href="../../glossary.html">glossary</a>.</p>
 <h2 id="file-layout"><a class="header" href="#file-layout">File Layout</a></h2>
 <p>Let's start again with a flake:</p>
@@ -219,7 +219,7 @@ In here, we wire up two tools from the Nix ecosystem: <a href="https://github.co
 <p>A <em>very</em> short refresher:</p>
 <ul>
 <li><strong>Nixago</strong>: Template &amp; render repository (dot-)files with nix. <a href="../../explain/why-nix.html">Why nix?</a></li>
-<li><strong>Devshell</strong>: Friendly &amp; reproducible develompent shells — the original ™.</li>
+<li><strong>Devshell</strong>: Friendly &amp; reproducible development shells — the original ™.</li>
 </ul>
 </blockquote>
 <blockquote>
@@ -299,7 +299,7 @@ in
   }
 </code></pre>
 <p>The <code>nixago = [];</code> option in this definition is a special integration provided by the <a href="../../reference/std/lib/mkShell.html">Standard's <code>devshell</code>-wrapper (<code>std.lib.mkShell</code>)</a>.</p>
-<p><em>This is how <code>std</code> delivers on its promise of being a (horizontal) integration tool that wrapps (vertical) component tools into a polished user story and experience.</em></p>
+<p><em>This is how <code>std</code> delivers on its promise of being a (horizontal) integration tool that wraps (vertical) component tools into a polished user story and experience.</em></p>
 <p>Because we made use of <code>std.harvest</code> in the flake, you now can actually test out the devshell via the Nix CLI compat layer by just running <code>nix develop -c &quot;$SHELL&quot;</code> in the directory of the flake.
 For a more elegant method of entering a development shell read on the <a href="#direnv">direnv</a> section below.</p>
 <h4 id="nixautomationnixagonix"><a class="header" href="#nixautomationnixagonix"><code>./nix/automation/nixago.nix</code></a></h4>
@@ -372,7 +372,7 @@ The way <code>configData</code> is merged upon the existing pebble is via a simp
 <blockquote>
 <p><strong>Background on array merge strategies:</strong></p>
 <p>If you know how a plain data-merge (does not magically) deal with array merge semantics, you noticed:
-We didn't have to annotate our right-hand-side arrays in this exaple because we where not actually ammending or modifying any left-hand-site array type data structure.</p>
+We didn't have to annotate our right-hand-side arrays in this example because we where not actually amending or modifying any left-hand-site array type data structure.</p>
 <p>Would we have done so, we would have had to annotate:</p>
 <ul>
 <li>either with <code>std.dmerge.append [/* ... */]</code>;</li>
@@ -380,10 +380,10 @@ We didn't have to annotate our right-hand-side arrays in this exaple because we 
 </ul>
 <p>But lucky us (this time)!</p>
 </blockquote>
-<h2 id="command-line-sythesis"><a class="header" href="#command-line-sythesis">Command Line Sythesis</a></h2>
+<h2 id="command-line-synthesis"><a class="header" href="#command-line-synthesis">Command Line Synthesis</a></h2>
 <p>With this configuration in place, you have a couple of options on the command line.
 Note, that you can accessor any <code>std</code> cli invocation also via the <code>std</code> TUI by just typing <code>std</code>.
-Just in case you forgot exactly how to accessor one of these repo capabilities.</p>
+Just in case you forgot exactly how to accessor one of these repository capabilities.</p>
 <blockquote>
 <p><strong>Debug Facility:</strong></p>
 <p>Since the debug facility is enabled, you will see some trace output while running these commands.
@@ -402,7 +402,7 @@ trace: {
 <pre><code class="language-bash">nix develop -c &quot;$SHELL&quot;
 </code></pre>
 <p>By quirks of the Nix CLI, if you don't specify <code>-c &quot;$SHELL&quot;</code>, you'll be thrown into an unfamiliar bare <code>bash</code> interactive shell.
-Thats not what you want.</p>
+That's not what you want.</p>
 <p><strong>Invoke the devshell via <code>std</code></strong></p>
 <p>In this case, invoking <code>$SHELL</code> correctly is taken care for you by the Clade's <code>enter</code> Action.</p>
 <pre><code class="language-bash"># fetch `std`
@@ -425,13 +425,13 @@ How about a daemon always does that automatically &amp; efficiently when you <co
 Enter <a href="https://direnv.net"><code>direnv</code></a> — the original (again; and even from the same author) 😊.</p>
 <p>Before you continue, first install direnv according to it's <a href="https://direnv.net/docs/installation.html">install instructions</a>.
 It's super simple &amp; super useful ™ and you should do it <em>right now</em> if you haven't yet.</p>
-<p>Please lern how to enable <code>direnv</code> in this procject by following the <a href="../../guides/envrc.html">direnv how-to</a>.</p>
+<p>Please learn how to enable <code>direnv</code> in this project by following the <a href="../../guides/envrc.html">direnv how-to</a>.</p>
 <p>In this case, you would adapt the relevant line to: <strong><code>use std nix //automation/devshells:default</code></strong>.</p>
 <p>Now, you can simply <code>cd</code> into that directory, and the devshells is being loaded.
 The MOTD will be shown, too.</p>
 <p>The first time, you need to teach the <code>direnv</code> daemon to trust the <code>.envrc</code> file via <code>direnv allow</code>.
-If you want to reload the devshell (e.g. to reconcile Nixago Pepples), you can just trun <code>direnv reload</code>.</p>
-<p>Because I use these commnds so often, I've set: <code>alias d=&quot;direnv&quot;</code> in my shell's RC file.</p>
+If you want to reload the devshell (e.g. to reconcile Nixago Pepples), you can just run <code>direnv reload</code>.</p>
+<p>Because I use these commands so often, I've set: <code>alias d=&quot;direnv&quot;</code> in my shell's RC file.</p>
 <hr />
 
                     </main>
