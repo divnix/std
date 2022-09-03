@@ -59,6 +59,7 @@ in
     };
     just = {
       configData = {};
+      apply = d: {data = d;}; # CUE expects structure to be wrapped with "data"
       format = "text";
       output = ".justfile";
       packages = [nixpkgs.just];
@@ -68,11 +69,7 @@ in
           expression = "rendered";
           out = "text";
         };
-        preHook = ''
-          echo "$(jq -s '{data: .[] }' $jsonPath)" > $jsonPath
-        '';
         postHook = ''
-          cat $out
           ${inputs.nixpkgs.just}/bin/just --unstable --fmt -f $out
         '';
       };
