@@ -21,10 +21,10 @@ use_std() {
   system="$(nix eval --raw --impure --expr builtins.currentSystem)"
   local cellsroot="$1"
   local frgmnts=($(echo "$2" | sed 's#//##' | sed 's#:# #' | sed 's#/# #g'))
-  local clade="${frgmnts[0]}"
+  local block="${frgmnts[0]}"
   local organ="${frgmnts[1]}"
   local target="${frgmnts[2]}"
-  local profile_path="$direnv_layout_dir/$clade/$organ/$target"
+  local profile_path="$direnv_layout_dir/$block/$organ/$target"
 
   local nix_args=(
     "--no-update-lock-file"
@@ -42,28 +42,28 @@ use_std() {
     nix_args+=("${@}")
   fi
 
-  if [[ -f "$cellsroot/$clade/$organ/$target.nix" ]]; then
-    log_status "Watching: $clade/$organ/$target.nix"
-    watch_file "$cellsroot/$clade/$organ/$target.nix"
-  elif [[ -f "$cellsroot/$clade/$organ/default.nix" ]]; then
-    log_status "Watching: $clade/$organ/default.nix"
-    watch_file "$cellsroot/$clade/$organ.nix"
-  elif [[ -f "$cellsroot/$clade/$organ.nix" ]]; then
-    log_status "Watching: $cellsroot/$clade/$organ.nix"
-    watch_file "$cellsroot/$clade/$organ.nix"
+  if [[ -f "$cellsroot/$block/$organ/$target.nix" ]]; then
+    log_status "Watching: $block/$organ/$target.nix"
+    watch_file "$cellsroot/$block/$organ/$target.nix"
+  elif [[ -f "$cellsroot/$block/$organ/default.nix" ]]; then
+    log_status "Watching: $block/$organ/default.nix"
+    watch_file "$cellsroot/$block/$organ.nix"
+  elif [[ -f "$cellsroot/$block/$organ.nix" ]]; then
+    log_status "Watching: $cellsroot/$block/$organ.nix"
+    watch_file "$cellsroot/$block/$organ.nix"
   fi
 
-  if [[ -d "$cellsroot/$clade/$organ/$target" ]]; then
-    log_status "Watching: $cellsroot/$clade/$organ/$target (recursively)"
-    watch_dir "$cellsroot/$clade/$organ/$target"
-  elif [[ -d "$cellsroot/$clade/$organ" ]]; then
-    log_status "Watching: $cellsroot/$clade/$organ (recursively)"
-    watch_dir "$cellsroot/$clade/$organ"
+  if [[ -d "$cellsroot/$block/$organ/$target" ]]; then
+    log_status "Watching: $cellsroot/$block/$organ/$target (recursively)"
+    watch_dir "$cellsroot/$block/$organ/$target"
+  elif [[ -d "$cellsroot/$block/$organ" ]]; then
+    log_status "Watching: $cellsroot/$block/$organ (recursively)"
+    watch_dir "$cellsroot/$block/$organ"
   fi
 
-  mkdir -p "$(direnv_layout_dir)/$clade/$organ/$target"
+  mkdir -p "$(direnv_layout_dir)/$block/$organ/$target"
 
-  nix build "$PWD#$system.$clade.$organ.$target" "${nix_args[@]}" --profile "$profile_path/shell-profile"
+  nix build "$PWD#$system.$block.$organ.$target" "${nix_args[@]}" --profile "$profile_path/shell-profile"
   . "$profile_path/shell-profile/entrypoint"
   # this is not true
   unset IN_NIX_SHELL

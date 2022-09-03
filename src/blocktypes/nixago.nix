@@ -1,7 +1,7 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the Nixago Clade for nixago pebbles.
+  Use the Nixago Blocktype for nixago pebbles.
 
   Use Nixago pebbles to ensure files are present
   or symlinked into your repository. You may typically
@@ -16,7 +16,7 @@
   */
   nixago = name: {
     inherit name;
-    clade = "nixago";
+    type = "nixago";
     actions = {
       system,
       flake,

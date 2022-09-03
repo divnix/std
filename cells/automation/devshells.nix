@@ -66,15 +66,15 @@ in
       ];
       commands = [
         {
-          name = "clade-data";
+          name = "blocktype-data";
           command = "cat $(std //tests/data/example:write)";
         }
         {
-          name = "clade-devshells";
+          name = "blocktype-devshells";
           command = "std //std/devshell/default:enter -- echo OK";
         }
         {
-          name = "clade-runnables";
+          name = "blocktype-runnables";
           command = "std //std/cli/default:run -- std OK";
         }
       ];

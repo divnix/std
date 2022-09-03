@@ -42,7 +42,7 @@ in
       cellsFrom = ./nix;
       cellBlocks = [
         /* ... */
-        (inputs.std.clades.devshells "devshells")
+        (inputs.std.blockTypes.devshells "devshells")
       ];
     }
     # soil for compatiblity ...

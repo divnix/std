@@ -11,7 +11,7 @@ Namely:
 - non-default Cell Block definitions
 - the input debug facility
 
-The terms _"Clade"_, _"Cell"_, _"Cell Block"_, _"Target"_ and _"Action"_ have special meaning within the context of `std`.
+The terms _"Block Type"_, _"Cell"_, _"Cell Block"_, _"Target"_ and _"Action"_ have special meaning within the context of `std`.
 With these clear definitions, we navigate and communicate the code structure much more easily.
 In order to familiarize yourself with them, please have a quick glance at the [glossary][glossary].
 
@@ -137,7 +137,7 @@ That's not what you want.
 
 **Invoke the devshell via `std`**
 
-In this case, invoking `$SHELL` correctly is taken care for you by the Clade's `enter` Action.
+In this case, invoking `$SHELL` correctly is taken care for you by the Block Type's `enter` Action.
 
 ```bash
 # fetch `std`
@@ -145,15 +145,15 @@ $ nix shell github:divnix/std
 $ std //automation/devshells/default:enter
 ```
 
-Since we have declared the devshell Cell Block as a `clades.devshells`, `std` auments it's Targets with the Clade Actions.
+Since we have declared the devshell Cell Block as a `blockTypes.devshells`, `std` auments it's Targets with the Block Type Actions.
 
-See [`clades.devshells`][clades-devshells] for more details on the available Actions and their implementation.
+See [`blockTypes.devshells`][blocktypes-devshells] for more details on the available Actions and their implementation.
 
 Thanks to the `cell.devshells`' `nixago` option, entering the devshell will also automatically reconcile the repository files under Nixago's management.
 
 **Explore a Nixago Pebble via `std`**
 
-You can also explore the nixago configuration via the Nixago Clade's `explore`-Action.
+You can also explore the nixago configuration via the Nixago Block Type's `explore`-Action.
 
 ```bash
 # fetch `std`
@@ -161,7 +161,7 @@ $ nix shell github:divnix/std
 $ std //automation/nixago/treefmt:explore
 ```
 
-See [`clades.nixago`][clades-nixago] for more details on the available Actions and their implementation.
+See [`blockTypes.nixago`][blocktypes-nixago] for more details on the available Actions and their implementation.
 
 ## direnv
 
@@ -191,8 +191,8 @@ Because I use these commands so often, I've set: `alias d="direnv"` in my shell'
 [direnv-sec]: #direnv
 [direnv-install]: https://direnv.net/docs/installation.html
 [direnv-how-to]: ../../guides/envrc.md
-[clades-devshells]: ../../reference/clades/devshells-clade.md
-[clades-nixago]: ../../reference/clades/nixago-clade.md
+[blocktypes-devshells]: ../../reference/blocktypes/devshells-blocktype.md
+[blocktypes-nixago]: ../../reference/blocktypess/nixago-blocktype.md
 [std-nixago]: https://github.com/divnix/std/blob/main/cells/std/nixago.nix
 [direnv]: #direnv
 [hello-world]: ../hello-world

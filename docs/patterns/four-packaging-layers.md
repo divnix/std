@@ -80,7 +80,7 @@ But doing so would defeat the purpose of exposing well defined layered interface
 ### Packaging Layer
 
 ```yaml
-Cell Block: (clades.installables "packages")
+Cell Block: (blockType.installables "packages")
 Location:  **/packages.nix          # or **/packages/
 Actors:
  - Build Expert Panel, Nix- & language-specific
@@ -113,7 +113,7 @@ A Release Manager may decide to provide these artifacts to the general public on
 ### Entrypoint Layer
 
 ```yaml
-Cell Block: (clades.runnables "entrypoints")
+Cell Block: (blockType.runnables "entrypoints")
 Location:  **/entrypoints.nix       # or **/entrypoints/
 Actors:
  - Developer
@@ -132,7 +132,7 @@ Standard includes a [specific library function][entrypoint-lib] that establishes
 ### OCI-Image Layer
 
 ```yaml
-Cell Block: (clades.containers "oci-images")
+Cell Block: (blockType.containers "oci-images")
 Location:  **/oci-images.nix        # or **/oci-images/
 Actors:
  - Operator
@@ -169,7 +169,7 @@ A Release Manager may decide to provide these artifacts to the general public on
 ### Scheduler Chart Layer
 
 ```yaml
-Cell Block: (clades.functions "<sched>Charts")
+Cell Block: (blockType.functions "<sched>Charts")
 Location:  **/<sched>Charts.nix     # or **/<sched>Charts/
 Actors:
  - Operator

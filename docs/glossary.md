@@ -8,9 +8,9 @@
 
 : An Cell Block is the specific _named type_ of a Standard (and hence: Flake) output.
 
-**Clade**
+**Block Type**
 
-: A Clade is the unnamed generic type of an Cell Block and may or may not implement Clade Actions.
+: A Block Type is the unnamed generic type of an Cell Block and may or may not implement Block Type Actions.
 
 **Target**
 
@@ -18,4 +18,4 @@
 
 **Action**
 
-: An Action is a runnable procedure implemented on the generic Clade type. These are abstract procedures that are valuable in any concrete Cell Block of such Clade.
+: An Action is a runnable procedure implemented on the generic Block Type type. These are abstract procedures that are valuable in any concrete Cell Block of such Block Type.

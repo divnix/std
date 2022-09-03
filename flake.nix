@@ -29,7 +29,7 @@
     };
   };
   outputs = inputs: let
-    clades = import ./src/clades.nix {inherit (inputs) nixpkgs;};
+    blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs;};
     incl = import ./src/incl.nix {inherit (inputs) nixpkgs;};
     deSystemize = import ./src/de-systemize.nix;
     grow = import ./src/grow.nix {inherit (inputs) nixpkgs yants;};
@@ -39,11 +39,26 @@
   in
     {
       inherit (inputs) yants dmerge; # convenience re-exports
-      inherit clades;
-      inherit (clades) runnables installables functions data devshells containers files microvms nixago;
+      inherit blockTypes;
+      clades =
+        l.warn ''
+
+          Standard (divnix/std): Screw the wired naming!!! Finally.
+
+          Please rename:
+
+          - sed -i 's/clades/blockTypes/g'
+          - sed -i 's/clade/blockType/g'
+          - sed -i 's/Clades/Block Types/g'
+          - sed -i 's/Clade/Block Type/g'
+
+          see: https://github.com/divnix/std/issues/116
+        ''
+        blockTypes;
+      inherit (blockTypes) runnables installables functions data devshells containers files microvms nixago;
       inherit grow growOn deSystemize incl harvest;
       systems = l.systems.doubles;
     }
     # on our own account ...
-    // (import ./dogfood.nix {inherit inputs growOn clades harvest;});
+    // (import ./dogfood.nix {inherit inputs growOn blockTypes harvest;});
 }

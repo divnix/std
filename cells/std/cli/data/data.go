@@ -16,14 +16,14 @@ type Root struct {
 type Cell struct {
 	Cell   string  `json:"cell"`
 	Readme string  `json:"readme"`
-	Blocks []Block `json:"blocks"`
+	Blocks []Block `json:"cellBlocks"`
 }
 
 type Block struct {
-	Block   string   `json:"block"`
-	Readme  string   `json:"readme"`
-	Clade   string   `json:"clade"`
-	Targets []Target `json:"targets"`
+	Block     string   `json:"cellBlock"`
+	Readme    string   `json:"readme"`
+	Blocktype string   `json:"blockType"`
+	Targets   []Target `json:"targets"`
 }
 
 type Action struct {

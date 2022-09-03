@@ -33,16 +33,16 @@
 
 - [TUI/CLI](reference/cli.md)
 - [Conventions](reference/conventions.md)
-- [Builtin Clades](reference/clades.md)
+- [Builtin Block Types](reference/blocktypes.md)
 
-  - [Data](reference/clades/data-clade.md)
-  - [Functions](reference/clades/functions-clade.md)
-  - [Runnables](reference/clades/runnables-clade.md)
-  - [Installables](reference/clades/installables-clade.md)
-  - [Microvms](reference/clades/microvms-clade.md)
-  - [Devshells](reference/clades/devshells-clade.md)
-  - [Containers](reference/clades/containers-clade.md)
-  - [Nixago](reference/clades/nixago-clade.md)
+  - [Data](reference/blocktypes/data-blocktype.md)
+  - [Functions](reference/blocktypes/functions-blocktype.md)
+  - [Runnables](reference/blocktypes/runnables-blocktype.md)
+  - [Installables](reference/blocktypes/installables-blocktype.md)
+  - [Microvms](reference/blocktypes/microvms-blocktype.md)
+  - [Devshells](reference/blocktypes/devshells-blocktype.md)
+  - [Containers](reference/blocktypes/containers-blocktype.md)
+  - [Nixago](reference/blocktypes/nixago-blocktype.md)
 
 - [`//std`](reference/std/Readme.md)
 

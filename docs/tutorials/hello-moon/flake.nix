@@ -5,7 +5,7 @@
   outputs = {std, ...} @ inputs:
   /*
   brings std attributes into scope
-  namely used here: `growOn`, `harvest` & `clades`
+  namely used here: `growOn`, `harvest` & `blockTypes`
   */
     with std;
     /*
@@ -27,8 +27,8 @@
         custom Cell Blocks (i.e. "typed outputs")
         */
         cellBlocks = [
-          (clades.devshells "devshells")
-          (clades.nixago "nixago")
+          (blockTypes.devshells "devshells")
+          (blockTypes.nixago "nixago")
         ];
 
         /*

@@ -1,7 +1,7 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the Containers Clade for OCI-images built with nix2container.
+  Use the Containers Blocktype for OCI-images built with nix2container.
 
   Available actions:
     - print-image
@@ -11,7 +11,7 @@
   */
   containers = name: {
     inherit name;
-    clade = "containers";
+    type = "containers";
     actions = {
       system,
       flake,

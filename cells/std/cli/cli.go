@@ -13,7 +13,7 @@ import (
 
 type Spec struct {
 	Cell   string `regroup:"cell,required"`
-	Block  string `regroup:"block,required"`
+	Block  string `regroup:"cellBlock,required"`
 	Target string `regroup:"target,required"`
 	Action string `regroup:"action,required"`
 }
