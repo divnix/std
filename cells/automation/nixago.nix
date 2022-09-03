@@ -36,13 +36,7 @@ in {
   };
   just = std.nixago.just {
     configData = {
-      tasks = {
-        fmt = [
-          ''
-            treefmt $(git diff --name-only --cached)
-          ''
-        ];
-      };
+      tasks = import ./tasks.nix;
     };
   };
   mdbook = std.nixago.mdbook {
