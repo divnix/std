@@ -68,6 +68,9 @@ in
           expression = "rendered";
           out = "text";
         };
+        preHook = ''
+          echo "$(jq -s '{data: .[] }' $jsonPath)" > $jsonPath
+        '';
         postHook = ''
           cat $out
           ${inputs.nixpkgs.just}/bin/just --unstable --fmt -f $out
