@@ -7,7 +7,7 @@
   yants,
 }: let
   l = nixpkgs.lib // builtins;
-  inherit (import ./paths.nix) cellPath organellePath;
+  inherit (import ./paths.nix) cellPath cellBlockPath;
   prefixWithCellsFrom = path:
     l.concatStringsSep "/" (
       ["\${cellsFrom}"]
@@ -16,14 +16,14 @@
 in {
   Systems = with yants "std" "grow" "attrs";
     list (enum "system" l.systems.doubles.all);
-  Cell = cellsFrom: organelles: cell: type: let
+  Cell = cellsFrom: cellBlocks: cell: type: let
     cPath = cellPath cellsFrom cell;
-    path = o: organellePath cPath o;
-    atLeastOneOrganelle = l.any (x: x) (
+    path = o: cellBlockPath cPath o;
+    atLeastOneCellBlock = l.any (x: x) (
       l.map (
         o: l.pathExists (path o).file || l.pathExists (path o).dir
       )
-      organelles
+      cellBlocks
     );
   in
     if type != "directory"
@@ -38,37 +38,37 @@ in {
 
         Please remove ${"'"}''${cellsFrom}/${cell}' and don't forget to add the change to version control.
       ''
-    else if !atLeastOneOrganelle
+    else if !atLeastOneCellBlock
     then
       abort ''
 
 
         For Cell '${cell}' to be useful
-        it needs to provide at least one Organelle
+        it needs to provide at least one Cell Block
 
-        In this project, the Organelles of a Cell can be
-        ${l.concatStringsSep ", " (l.map (o: o.name) organelles)}
+        In this project, the Cell Blocks can be
+        ${l.concatStringsSep ", " (l.map (o: o.name) cellBlocks)}
 
 
         ${
           l.concatStringsSep "\n\n" (
             l.map (
-              organelle: let
-                title = "To generate output for Organelle '${organelle.name}', please create:\n";
-                paths = "  - ${prefixWithCellsFrom (path organelle).file}; or\n  - ${prefixWithCellsFrom (path organelle).dir}";
+              cellBlock: let
+                title = "To generate output for Cell Block '${cellBlock.name}', please create:\n";
+                paths = "  - ${prefixWithCellsFrom (path cellBlock).file}; or\n  - ${prefixWithCellsFrom (path cellBlock).dir}";
               in
                 title + paths
             )
-            organelles
+            cellBlocks
           )
         }
 
         Please create at least one of the previous files and don't forget to add them to version control.
       ''
     else cell;
-  Organelles = with yants "std" "grow" "attrs";
+  CellBlocks = with yants "std" "grow" "attrs";
     list (
-      struct "organelle" {
+      struct "cellBlock" {
         name = string;
         clade = string;
         actions = option (functionWithArgs {

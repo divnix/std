@@ -80,19 +80,19 @@ But doing so would defeat the purpose of exposing well defined layered interface
 ### Packaging Layer
 
 ```yaml
-Organelle: (clades.installables "packages")
+Cell Block: (clades.installables "packages")
 Location:  **/packages.nix          # or **/packages/
 Actors:
  - Build Expert Panel, Nix- & language-specific
  - Release Manager
 ```
 
-This Organelle builds, unit-tests & packages the application via the appropriate [Nix primitives][nix-superpowers].
+This Cell Block builds, unit-tests & packages the application via the appropriate [Nix primitives][nix-superpowers].
 Each programming language has a different best practice approach to packaging.
 Therfore, a fair ammount of domain knowledge between Nix and the language's build system is required.
 
 The location of the actual build instructions are secondary.
-At minimum, though, for transparency's and uniformity's sake, they are still proxied via this Organelle.
+At minimum, though, for transparency's and uniformity's sake, they are still proxied via this Cell Block.
 So in the case that upstream already contains appropriate build instructions, the following indirection is perfectly valid (and necessary):
 
 ```nix
@@ -113,14 +113,14 @@ A Release Manager may decide to provide these artifacts to the general public on
 ### Entrypoint Layer
 
 ```yaml
-Organelle: (clades.runnables "entrypoints")
+Cell Block: (clades.runnables "entrypoints")
 Location:  **/entrypoints.nix       # or **/entrypoints/
 Actors:
  - Developer
  - Operator
 ```
 
-This Organelle exclusively defines the runtime environment of the application via the entrypoint script.
+This Cell Block exclusively defines the runtime environment of the application via the entrypoint script.
 The role of this script &mdash; customarily written in `bash` &mdash; serves as a concise and reified communication channel between Developers and Operators.
 As such, Operators will find all the primariy configuration options re-encoded at a glance and in a well-known location.
 In the other direction, Developers will find all the magic ad-hoc warpping that Operators had to engage in, in order to run the application on the target scheduler.
@@ -132,7 +132,7 @@ Standard includes a [specific library function][entrypoint-lib] that establishes
 ### OCI-Image Layer
 
 ```yaml
-Organelle: (clades.containers "oci-images")
+Cell Block: (clades.containers "oci-images")
 Location:  **/oci-images.nix        # or **/oci-images/
 Actors:
  - Operator
@@ -169,7 +169,7 @@ A Release Manager may decide to provide these artifacts to the general public on
 ### Scheduler Chart Layer
 
 ```yaml
-Organelle: (clades.functions "<sched>Charts")
+Cell Block: (clades.functions "<sched>Charts")
 Location:  **/<sched>Charts.nix     # or **/<sched>Charts/
 Actors:
  - Operator

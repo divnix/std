@@ -10,8 +10,8 @@ help us to keep our nix code organized.
 Nix files are imported from either of these two locations, if present, in this order of precedence:
 
 ```
-${cellsFrom}/${cell}/${organelle}.nix
-${cellsFrom}/${cell}/${organelle}/default.nix
+${cellsFrom}/${cell}/${block}.nix
+${cellsFrom}/${cell}/${block}/default.nix
 ```
 
 ## Readme File Locations
@@ -20,13 +20,13 @@ Readme files are picked up by the TUI in the following places:
 
 ```
 ${cellsFrom}/${cell}/Readme.md
-${cellsFrom}/${cell}/${organelle}/Readme.md
-${cellsFrom}/${cell}/${organelle}/${target}.md
+${cellsFrom}/${cell}/${block}/Readme.md
+${cellsFrom}/${cell}/${block}/${target}.md
 ```
 
-## Organelle File Arguments
+## Cell Block File Arguments
 
-Each organelle is a function and expects the following standardized interface for interoperability:
+Each Cell Block is a function and expects the following standardized interface for interoperability:
 
 ```nix
 { inputs, cell }: {}
@@ -48,7 +48,7 @@ The `inputs` argument holds all the de-systemized flake inputs plus a few specia
 
 ## The `cell` argument
 
-The `cell` argument holds all the different organelle targets of the current cell.
+The `cell` argument holds all the different Cell Block targets of the current cell.
 This is the main mechanism by which code organization and separation of concern is enabled.
 
 ## The `deSytemize`d inputs
@@ -92,6 +92,6 @@ The outputs therefore abide by the following "schema":
 
 ```nix
 {
-  ${system}.${cell}.${organelle}.${target} = {};
+  ${system}.${cell}.${block}.${target} = {};
 }
 ```

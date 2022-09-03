@@ -35,7 +35,7 @@ disciplining generic interfaces.
 
 With `std`, you'll learn how to organize your `nix`
 flake outputs ('**Targets**') into **Cells** and
-**Organelles** &mdash; folded into a useful
+**Cell Blocks** &mdash; folded into a useful
 **CLI & TUI** to also make the lives of your
 colleagues easier.
 
@@ -61,7 +61,7 @@ That folder implements:
 - [`std.harvest`][harvest]: harvest your **Targets** into a different shape for compatibility
 - [`std.incl`][incl]: a straight-forward source filter with additive semantics
 - [`std.deSystemize`][de-systemize]: a helper to hide `system` from plain sight
-- [`std.<clade>`][clades]: builtin **Organelle** types that implement **Actions**
+- [`std.<clade>`][clades]: builtin **Cell Block** types that implement **Actions**
 
 _What is this crazy verbiage? &rarr; Unambiguous identifiers on the phone._ ☎️
 
@@ -69,14 +69,14 @@ _What is this crazy verbiage? &rarr; Unambiguous identifiers on the phone._ ☎�
 
 _Dog-fooding? &rarr; [`./cells`][cells]._
 
-- **Cells:** this is no big monorepo, so [`./cells`][cells] only implements a single **Cell**: [`std`][std-cell].
-- **Organelles:** [`std`][std-cell] implements the [`cli`][cli-organelle],
-  [`devshellProfiles`][devshellprofiles-organelle], [`devshells`][devshells-organelle]
-  & [`lib`][lib-organelle] **Organelle**.
-- **Targets:** [`cli`][cli-organelle], [`devshellProfiles`][devshellprofiles-organelle] & [`devshells`][devshells-organelle]
-  each only implement a `default` **Target**. [`lib`][lib-organelle] has more.
-- **Actions:** some **Targets** have **Actions** derived from the **Organelles**. See [`./flake.nix`][flake]
-  for the defined **Organelles**. Not all **Clades** implement **Actions**.
+- **Cells:** this is no big monorepo, so [`./cells`][cells] only implements a single **Cell**: [`std`][cell-std].
+- **Cell Blocks:** [`std`][cell-std] implements the [`cli`][block-cli],
+  [`devshellProfiles`][block-devshellprofiles], [`devshells`][block-devshells]
+  & [`lib`][block-lib] **Cell Block**.
+- **Targets:** [`cli`][block-cli], [`devshellProfiles`][block-devshellprofiles] & [`devshells`][block-devshells]
+  each only implement a `default` **Target**. [`lib`][block-lib] has more.
+- **Actions:** some **Targets** have **Actions** derived from the **Cell Blocks**. See [`./flake.nix`][flake]
+  for the defined **Cell Blocks**. Not all **Clades** implement **Actions**.
 
 ```nix
 {{#include ../dogfood.nix}}
@@ -145,11 +145,11 @@ direnv allow
 
 ---
 
-[std-cell]: https://github.com/divnix/std/tree/main/cells/std
-[cli-organelle]: https://github.com/divnix/std/blob/main/cells/std/cli.nix
-[devshellprofiles-organelle]: https://github.com/divnix/std/blob/main/cells/std/devshellProfiles.nix
-[devshells-organelle]: https://github.com/divnix/std/blob/main/cells/std/devshells.nix
-[lib-organelle]: https://github.com/divnix/std/blob/main/cells/std/lib/default.nix
+[cell-std]: https://github.com/divnix/std/tree/main/cells/std
+[block-cli]: https://github.com/divnix/std/blob/main/cells/std/cli.nix
+[block-devshellprofiles]: https://github.com/divnix/std/blob/main/cells/std/devshellProfiles.nix
+[block-devshells]: https://github.com/divnix/std/blob/main/cells/std/devshells.nix
+[block-lib]: https://github.com/divnix/std/blob/main/cells/std/lib/default.nix
 [cells]: https://github.com/divnix/std/tree/main/cells
 [src]: https://github.com/divnix/std/tree/main/src
 [docs]: https://github.com/divnix/std/tree/main/docs

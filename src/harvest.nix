@@ -3,7 +3,7 @@
   /*
   A function that "up-lifts" your `std` targets.
 
-  The transformation is: system.cell.organelle.target -> system.target
+  The transformation is: system.cell.block.target -> system.target
 
   You can typically use this function in a compatibility layer of soil.
 

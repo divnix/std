@@ -28,7 +28,7 @@ To create one, simply drop a file in:
 
 	${cellsFrom}/%s/Readme.md
 `
-	noOrganelleReadme = `Organelle '//%s/%s' has no readme yet.
+	noBlockReadme = `Block '//%s/%s' has no readme yet.
 
 To create one, simply drop a file in:
 
@@ -76,23 +76,23 @@ var (
 )
 
 type ReadmeModel struct {
-	TargetHelp    markdown.Bubble
-	CellHelp      markdown.Bubble
-	OrganelleHelp markdown.Bubble
-	Cell          string
-	Organelle     string
-	Target        string
-	Width         int
-	Height        int
-	KeyMap        *keys.ReadmeKeyMap
-	Help          help.Model
+	TargetHelp markdown.Bubble
+	CellHelp   markdown.Bubble
+	BlockHelp  markdown.Bubble
+	Cell       string
+	Block      string
+	Target     string
+	Width      int
+	Height     int
+	KeyMap     *keys.ReadmeKeyMap
+	Help       help.Model
 	// Focus
 }
 
 type renderCellMarkdownMsg struct {
 	msg tea.Msg
 }
-type renderOrganelleMarkdownMsg struct {
+type renderBlockMarkdownMsg struct {
 	msg tea.Msg
 }
 type renderTargetMarkdownMsg struct {
@@ -101,7 +101,7 @@ type renderTargetMarkdownMsg struct {
 
 func (m *ReadmeModel) LoadReadme(d *data.Root, ci, oi, ti int) {
 	m.Cell = d.Cell(ci, oi, ti)
-	m.Organelle = d.Organelle(ci, oi, ti)
+	m.Block = d.Block(ci, oi, ti)
 	m.Target = d.Target(ci, oi, ti)
 	if d.HasTargetHelp(ci, oi, ti) {
 		m.TargetHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", d.TargetHelp(ci, oi, ti)))
@@ -113,7 +113,7 @@ func (m *ReadmeModel) LoadReadme(d *data.Root, ci, oi, ti int) {
 				noTargetReadme,
 				d.TargetTitle(ci, oi, ti),
 				d.Cell(ci, oi, ti),
-				d.Organelle(ci, oi, ti),
+				d.Block(ci, oi, ti),
 				d.Target(ci, oi, ti),
 			))
 		m.TargetHelp.Viewport.SetContent(content)
@@ -131,20 +131,20 @@ func (m *ReadmeModel) LoadReadme(d *data.Root, ci, oi, ti int) {
 			))
 		m.CellHelp.Viewport.SetContent(content)
 	}
-	if d.HasOrganelleHelp(ci, oi, ti) {
-		m.OrganelleHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", d.OrganelleHelp(ci, oi, ti)))
+	if d.HasBlockHelp(ci, oi, ti) {
+		m.BlockHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", d.BlockHelp(ci, oi, ti)))
 	} else {
 		content := lipgloss.NewStyle().
 			Width(m.Width).
 			Height(m.Height).
 			Render(fmt.Sprintf(
-				noOrganelleReadme,
+				noBlockReadme,
 				d.Cell(ci, oi, ti),
-				d.Organelle(ci, oi, ti),
+				d.Block(ci, oi, ti),
 				d.Cell(ci, oi, ti),
-				d.Organelle(ci, oi, ti),
+				d.Block(ci, oi, ti),
 			))
-		m.OrganelleHelp.Viewport.SetContent(content)
+		m.BlockHelp.Viewport.SetContent(content)
 	}
 }
 
@@ -158,11 +158,11 @@ func NewReadme() *ReadmeModel {
 	ch.Viewport.KeyMap = keys.ViewportKeyMap()
 	oh.Viewport.KeyMap = keys.ViewportKeyMap()
 	return &ReadmeModel{
-		TargetHelp:    th,
-		CellHelp:      ch,
-		OrganelleHelp: oh,
-		Help:          help.New(),
-		KeyMap:        keys.NewReadmeKeyMap(),
+		TargetHelp: th,
+		CellHelp:   ch,
+		BlockHelp:  oh,
+		Help:       help.New(),
+		KeyMap:     keys.NewReadmeKeyMap(),
 	}
 }
 func (m *ReadmeModel) Init() tea.Cmd {
@@ -186,11 +186,11 @@ func (m *ReadmeModel) RenderMarkdown(d *data.Root, ci, oi, ti int) tea.Cmd {
 		}
 		cmds = append(cmds, cmd)
 	}
-	if d.HasOrganelleHelp(ci, oi, ti) {
+	if d.HasBlockHelp(ci, oi, ti) {
 		cmd = func() tea.Msg {
-			return renderOrganelleMarkdownMsg{
-				m.OrganelleHelp.SetFileName(
-					d.OrganelleHelp(ci, oi, ti),
+			return renderBlockMarkdownMsg{
+				m.BlockHelp.SetFileName(
+					d.BlockHelp(ci, oi, ti),
 				)(),
 			}
 		}
@@ -222,34 +222,34 @@ func (m *ReadmeModel) Update(msg tea.Msg) (*ReadmeModel, tea.Cmd) {
 				m.CellHelp.SetIsActive(true)
 			} else if m.CellHelp.Active {
 				m.CellHelp.SetIsActive(false)
-				m.OrganelleHelp.SetIsActive(true)
-			} else if m.OrganelleHelp.Active {
-				m.OrganelleHelp.SetIsActive(false)
+				m.BlockHelp.SetIsActive(true)
+			} else if m.BlockHelp.Active {
+				m.BlockHelp.SetIsActive(false)
 				m.TargetHelp.SetIsActive(true)
 			}
 			return m, nil
 		case key.Matches(msg, m.KeyMap.ReverseCycleTab):
 			if m.TargetHelp.Active {
 				m.TargetHelp.SetIsActive(false)
-				m.OrganelleHelp.SetIsActive(true)
+				m.BlockHelp.SetIsActive(true)
 			} else if m.CellHelp.Active {
 				m.CellHelp.SetIsActive(false)
 				m.TargetHelp.SetIsActive(true)
-			} else if m.OrganelleHelp.Active {
-				m.OrganelleHelp.SetIsActive(false)
+			} else if m.BlockHelp.Active {
+				m.BlockHelp.SetIsActive(false)
 				m.CellHelp.SetIsActive(true)
 			}
 			return m, nil
 		}
 	case tea.WindowSizeMsg:
 		m.CellHelp.SetSize(m.Width, m.Height)
-		m.OrganelleHelp.SetSize(m.Width, m.Height)
+		m.BlockHelp.SetSize(m.Width, m.Height)
 		m.TargetHelp.SetSize(m.Width, m.Height)
 	case renderCellMarkdownMsg:
 		m.CellHelp, cmd = m.CellHelp.Update(msg.msg)
 		return m, cmd
-	case renderOrganelleMarkdownMsg:
-		m.OrganelleHelp, cmd = m.OrganelleHelp.Update(msg.msg)
+	case renderBlockMarkdownMsg:
+		m.BlockHelp, cmd = m.BlockHelp.Update(msg.msg)
 		return m, cmd
 	case renderTargetMarkdownMsg:
 		m.TargetHelp, cmd = m.TargetHelp.Update(msg.msg)
@@ -259,8 +259,8 @@ func (m *ReadmeModel) Update(msg tea.Msg) (*ReadmeModel, tea.Cmd) {
 		m.TargetHelp, cmd = m.TargetHelp.Update(msg)
 	} else if m.CellHelp.Active {
 		m.CellHelp, cmd = m.CellHelp.Update(msg)
-	} else if m.OrganelleHelp.Active {
-		m.OrganelleHelp, cmd = m.OrganelleHelp.Update(msg)
+	} else if m.BlockHelp.Active {
+		m.BlockHelp, cmd = m.BlockHelp.Update(msg)
 	}
 	return m, cmd
 }
@@ -277,11 +277,11 @@ func (m *ReadmeModel) View() string {
 	} else {
 		tabs = append(tabs, tab.Render(fmt.Sprintf("Cell: %s", m.Cell)))
 	}
-	if m.OrganelleHelp.Active {
-		tabs = append(tabs, activeTab.Render(fmt.Sprintf("Organelle: %s", m.Organelle)))
-		content = m.OrganelleHelp.View()
+	if m.BlockHelp.Active {
+		tabs = append(tabs, activeTab.Render(fmt.Sprintf("Block: %s", m.Block)))
+		content = m.BlockHelp.View()
 	} else {
-		tabs = append(tabs, tab.Render(fmt.Sprintf("Organelle: %s", m.Organelle)))
+		tabs = append(tabs, tab.Render(fmt.Sprintf("Block: %s", m.Block)))
 	}
 	if m.TargetHelp.Active {
 		tabs = append(tabs, activeTab.Render(fmt.Sprintf("Target: %s", m.Target)))

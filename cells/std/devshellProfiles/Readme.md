@@ -1,6 +1,6 @@
 # `std`'s `devshellProfiles`
 
-This organelle only exports a single `default` devshellProfile.
+This Cell Block only exports a single `default` devshellProfile.
 
 Any `std`ized repository should include this into its [`numtide/devshell`][devshell]
 in order to provide any visitor with the fully pre-configured `std` TUI.
@@ -40,7 +40,7 @@ in
     inputs.std.growOn {
       inherit inputs;
       cellsFrom = ./nix;
-      organelles = [
+      cellBlocks = [
         /* ... */
         (inputs.std.clades.devshells "devshells")
       ];

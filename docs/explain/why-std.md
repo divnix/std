@@ -24,18 +24,18 @@ As a consequence, few actually _do_ that. And contracts across internal code bou
 `std` doesn't add language-level typing. But a well-balanced folder layout cut at 3 layers of conceptual
 nesting provides the fundamentals for establishing internal boundaries.
 
-> **Cell &rarr; Organelle &rarr; Target &rarr; [Action]**
+> **Cell &rarr; Cell Block &rarr; Target &rarr; [Action]**
 >
 > Where ...
 >
 > - **Cells** group functionality.
-> - **Organelles** type outputs and implement **Actions**.
+> - **Cell Blocks** type outputs and implement **Actions**.
 > - **Targets** name outputs.
 
 Programmers are really good at pattern-abstraction when looking at two similar but slightly
-different things: _**Cells** and **Organelles** set the stage for code readability._
+different things: _**Cells** and **Cell Blocks** set the stage for code readability._
 
-**Organelles** only allow one possible interface: `{inputs, cell}`:
+**Cell Blocks** only allow one possible interface: `{inputs, cell}`:
 
 - `cell` the local **Cell**, promoting separation of concern
 - `inputs` the `deSystemize`ed flake inputs &mdash; plus:

@@ -13,7 +13,7 @@
   It is good practice to in-scope:
   - inputs by *name*
   - other Cells by their *Cell names*
-  - the local Cell's Organelles by their *Organelle names*.
+  - the local Cell Blocks by their *Block names*.
 
   However, for `std`, we make an exeption and in-scope, despite being an
   input, it's primary Cell with the same name.
