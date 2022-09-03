@@ -61,22 +61,20 @@ That folder implements:
 - [`std.harvest`][harvest]: harvest your **Targets** into a different shape for compatibility
 - [`std.incl`][incl]: a straight-forward source filter with additive semantics
 - [`std.deSystemize`][de-systemize]: a helper to hide `system` from plain sight
-- [`std.<blockType>`][blocktypes]: builtin **Cell Block** types that implement **Actions**
-
-_What is this crazy verbiage? &rarr; Unambiguous identifiers on the phone._ ☎️
+- [`std.<blockType>`][blocktypes]: builtin **(Cell) Block Types** that implement **(Cell Block Type) Actions**
 
 ### Application
 
 _Dog-fooding? &rarr; [`./cells`][cells]._
 
-- **Cells:** this is no big monorepo, so [`./cells`][cells] only implements a single **Cell**: [`std`][cell-std].
-- **Cell Blocks:** [`std`][cell-std] implements the [`cli`][block-cli],
-  [`devshellProfiles`][block-devshellprofiles], [`devshells`][block-devshells]
-  & [`lib`][block-lib] **Cell Block**.
-- **Targets:** [`cli`][block-cli], [`devshellProfiles`][block-devshellprofiles] & [`devshells`][block-devshells]
-  each only implement a `default` **Target**. [`lib`][block-lib] has more.
-- **Actions:** some **Targets** have **Actions** derived from the **Cell Blocks**. See [`./flake.nix`][flake]
-  for the defined **Cell Blocks**. Not all **Block Types** implement **Actions**.
+- **Cells:** [`./cells`][cells] mainly implements [`std`][cell-std].
+- **Cell Blocks:** [`std`][cell-std] implements:
+  - [`cli`][block-cli];
+  - [`devshellProfiles`][block-devshellprofiles];
+  - [`nixago`][block-nixago]; and
+  - [`lib`][block-lib].
+- **Targets:** each Cell Block implements one or various targets.
+- **Block Type Actions:** some **Targets** expose **Actions** inferred from the **Block Type**.
 
 ```nix
 {{#include ../dogfood.nix}}
@@ -148,7 +146,7 @@ direnv allow
 [cell-std]: https://github.com/divnix/std/tree/main/cells/std
 [block-cli]: https://github.com/divnix/std/blob/main/cells/std/cli.nix
 [block-devshellprofiles]: https://github.com/divnix/std/blob/main/cells/std/devshellProfiles.nix
-[block-devshells]: https://github.com/divnix/std/blob/main/cells/std/devshells.nix
+[block-nixago]: https://github.com/divnix/std/blob/main/cells/std/nixago.nix
 [block-lib]: https://github.com/divnix/std/blob/main/cells/std/lib/default.nix
 [cells]: https://github.com/divnix/std/tree/main/cells
 [src]: https://github.com/divnix/std/tree/main/src
