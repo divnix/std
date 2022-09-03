@@ -61,7 +61,7 @@ in
       configData = {};
       apply = d: {data = d;}; # CUE expects structure to be wrapped with "data"
       format = "text";
-      output = ".justfile";
+      output = "Justfile";
       packages = [nixpkgs.just];
       hook = {
         mode = "copy";
