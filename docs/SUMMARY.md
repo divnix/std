@@ -57,6 +57,7 @@
     - [`/adrgen`](reference/std/nixago/adrgen.md)
     - [`/conform`](reference/std/nixago/conform.md)
     - [`/editorconfig`](reference/std/nixago/editorconfig.md)
+    - [`/just`](reference/std/nixago/just.md)
     - [`/lefthook`](reference/std/nixago/lefthook.md)
     - [`/mdbook`](reference/std/nixago/mdbook.md)
     - [`/treefmt`](reference/std/nixago/treefmt.md)
