@@ -1,7 +1,7 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the Microvms Clade for Microvm.nix - https://github.com/astro/microvm.nix
+  Use the Microvms Blocktype for Microvm.nix - https://github.com/astro/microvm.nix
 
   Available actions:
     - microvm
@@ -11,7 +11,7 @@
 
   microvms = name: {
     inherit name;
-    clade = "microvms";
+    type = "microvms";
     actions = {
       system,
       flake,

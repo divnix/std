@@ -5,7 +5,7 @@
   l = nixpkgs.lib // builtins;
   deSystemize = import ./de-systemize.nix;
   paths = import ./paths.nix;
-  clades = import ./clades.nix {inherit nixpkgs;};
+  blockTypes = import ./blocktypes.nix {inherit nixpkgs;};
   validate = import ./validators.nix {inherit yants nixpkgs;};
   /*
   A function that 'grows' Cell Blocks from Cells found in 'cellsFrom'.
@@ -24,7 +24,7 @@
   to improve build caching.
 
   Cell Blocks are the actual typed flake outputs, for convenience, Cell Blocks
-  are grouped into Clades which usually augment an Cell Block with action
+  are grouped into Blocktypes which usually augment an Cell Block with action
   definitions that the std TUI will be able to understand and execute.
 
   The usual dealings with 'system' are greatly reduced in std. Inspired by
@@ -60,10 +60,11 @@
   grow = {
     inputs,
     cellsFrom,
+    organelles ? null,
     cellBlocks ? [
-      (clades.functions "library")
-      (clades.runnables "apps")
-      (clades.installables "packages")
+      (blockTypes.functions "library")
+      (blockTypes.runnables "apps")
+      (blockTypes.installables "packages")
     ],
     systems ? [
       # Tier 1
@@ -78,7 +79,27 @@
     debug ? false,
   }: let
     # Validations ...
-    CellBlocks = validate.CellBlocks cellBlocks;
+    CellBlocks =
+      if organelles != null
+      then
+        l.warn ''
+
+          Standard (divnix/std): Screw the wired naming!!! Finally.
+
+          Please rename:
+
+          - sed -i 's/organelles/cellBlocks/g'
+          - sed -i 's/organelle/cellBlock/g'
+          - sed -i 's/Organelles/Cell Blocks/g'
+          - sed -i 's/Organelle/Cell Block/g'
+
+          (In project: ${toString inputs.self})
+
+          see: https://github.com/divnix/std/issues/116
+        ''
+        validate.CellBlocks
+        organelles
+      else validate.CellBlocks cellBlocks;
     Systems = validate.Systems systems;
     Cells = l.mapAttrsToList (validate.Cell cellsFrom CellBlocks) (l.readDir cellsFrom);
 
@@ -193,12 +214,12 @@
           imported =
             if l.pathExists oPath.file
             then
-              validate.Import cellBlock.clade oPath.file (importedFile (
+              validate.Import cellBlock.type oPath.file (importedFile (
                 args // {cell = res.output;} # recursion on cell
               ))
             else if l.pathExists oPath.dir
             then
-              validate.Import cellBlock.clade oPath.dir (importedDir (
+              validate.Import cellBlock.type oPath.dir (importedDir (
                 args // {cell = res.output;} # recursion on cell
               ))
             else null;
@@ -211,7 +232,7 @@
             # __std meta init (fast)
             {
               cellBlock = cellBlock.name;
-              clade = cellBlock.clade;
+              blockType = cellBlock.type;
               readme =
                 if l.pathExists oPath.readme
                 then oPath.readme

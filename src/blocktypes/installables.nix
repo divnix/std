@@ -1,7 +1,7 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the Installables Clade for targets that you want to
+  Use the Installables Blocktype for targets that you want to
   make availabe for installation into the user's nix profile.
 
   Available actions:
@@ -15,7 +15,7 @@
   */
   installables = name: {
     inherit name;
-    clade = "installables";
+    type = "installables";
     actions = {
       system,
       flake,

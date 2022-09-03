@@ -70,7 +70,7 @@ in {
     list (
       struct "cellBlock" {
         name = string;
-        clade = string;
+        type = string;
         actions = option (functionWithArgs {
           system = false;
           flake = false;
@@ -87,14 +87,14 @@ in {
         inputs = false;
         cell = false;
       };
-  Import = clade: file: let
+  Import = blockType: file: let
     file' = prefixWithCellsFrom file;
   in
-    with yants "std" "import" clade file';
+    with yants "std" "import" blockType file';
     # unfortunately eval during check can cause infinite recursions
-    # if clade == "runnables" || clade == "installables"
+    # if blockType == "runnables" || blockType == "installables"
     # then attrs drv
-    # else if clade == "functions"
+    # else if blockType == "functions"
     # then attrs function
     # else throw "unreachable";
       attrs any;

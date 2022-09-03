@@ -1,14 +1,14 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the Files Clade for any text data.
+  Use the Files Blocktype for any text data.
 
   Available actions:
     - explore
   */
   files = name: {
     inherit name;
-    clade = "files";
+    type = "files";
     actions = {
       system,
       flake,

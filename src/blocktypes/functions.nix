@@ -1,7 +1,7 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the Functions Clade for reusable nix functions that you would
+  Use the Functions Blocktype for reusable nix functions that you would
   call elswhere in the code.
 
   Also use this for all types of modules and profiles, since they are
@@ -11,7 +11,7 @@
   */
   functions = name: {
     inherit name;
-    clade = "functions";
+    type = "functions";
   };
 in
   functions

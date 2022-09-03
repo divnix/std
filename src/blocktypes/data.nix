@@ -1,7 +1,7 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the Data Clade for json serializable data.
+  Use the Data Blocktype for json serializable data.
 
   Available actions:
     - write
@@ -13,7 +13,7 @@
   */
   data = name: {
     inherit name;
-    clade = "data";
+    type = "data";
     actions = {
       system,
       flake,

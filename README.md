@@ -61,7 +61,7 @@ That folder implements:
 - [`std.harvest`][harvest]: harvest your **Targets** into a different shape for compatibility
 - [`std.incl`][incl]: a straight-forward source filter with additive semantics
 - [`std.deSystemize`][de-systemize]: a helper to hide `system` from plain sight
-- [`std.<clade>`][clades]: builtin **Cell Block** types that implement **Actions**
+- [`std.<blockType>`][blocktypes]: builtin **Cell Block** types that implement **Actions**
 
 _What is this crazy verbiage? &rarr; Unambiguous identifiers on the phone._ ☎️
 
@@ -76,7 +76,7 @@ _Dog-fooding? &rarr; [`./cells`][cells]._
 - **Targets:** [`cli`][block-cli], [`devshellProfiles`][block-devshellprofiles] & [`devshells`][block-devshells]
   each only implement a `default` **Target**. [`lib`][block-lib] has more.
 - **Actions:** some **Targets** have **Actions** derived from the **Cell Blocks**. See [`./flake.nix`][flake]
-  for the defined **Cell Blocks**. Not all **Clades** implement **Actions**.
+  for the defined **Cell Blocks**. Not all **Block Types** implement **Actions**.
 
 ```nix
 {{#include ../dogfood.nix}}
@@ -162,7 +162,7 @@ direnv allow
 [harvest]: https://github.com/divnix/std/blob/main/src/harvest.nix
 [incl]: https://github.com/divnix/std/blob/main/src/incl.nix
 [de-systemize]: https://github.com/divnix/std/blob/main/src/de-systemize.nix
-[clades]: https://github.com/divnix/std/blob/main/src/clades.nix
+[blocktypes]: https://github.com/divnix/std/blob/main/src/blocktypes.nix
 [flake]: https://github.com/divnix/std/blob/main/flake.nix
 [yants]: https://github.com/divnix/yants
 [bitte-cells]: https://github.com/input-output-hk/bitte-cells

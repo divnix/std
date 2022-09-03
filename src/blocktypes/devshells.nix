@@ -1,14 +1,14 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the Devshells Clade for devShells.
+  Use the Devshells Blocktype for devShells.
 
   Available actions:
     - enter
   */
   devshells = name: {
     inherit name;
-    clade = "devshells";
+    type = "devshells";
     actions = {
       system,
       flake,
