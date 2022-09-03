@@ -12,16 +12,16 @@ import (
 )
 
 type Spec struct {
-	Cell      string `regroup:"cell,required"`
-	Organelle string `regroup:"organelle,required"`
-	Target    string `regroup:"target,required"`
-	Action    string `regroup:"action,required"`
+	Cell   string `regroup:"cell,required"`
+	Block  string `regroup:"block,required"`
+	Target string `regroup:"target,required"`
+	Action string `regroup:"action,required"`
 }
 
-var re = regroup.MustCompile(`^//(?P<cell>[^/]+)/(?P<organelle>[^/]+)/(?P<target>[^:]+):(?P<action>.+)`)
+var re = regroup.MustCompile(`^//(?P<cell>[^/]+)/(?P<block>[^/]+)/(?P<target>[^:]+):(?P<action>.+)`)
 
 var rootCmd = &cobra.Command{
-	Use:     "std //cell/organelle/target:action",
+	Use:     "std //cell/block/target:action",
 	Version: fmt.Sprintf("%s (%s)", buildVersion, buildCommit),
 	Short:   "std is the CLI / TUI companion for Standard",
 	Long: `std is the CLI / TUI companion for Standard.
@@ -43,7 +43,7 @@ var rootCmd = &cobra.Command{
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		nix, args, err := GetActionEvalCmdArgs(s.Cell, s.Organelle, s.Target, s.Action)
+		nix, args, err := GetActionEvalCmdArgs(s.Cell, s.Block, s.Target, s.Action)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -66,7 +66,7 @@ func ExecuteCli() {
 
 func init() {
 	carapace.Gen(rootCmd).Standalone()
-	// completes: '//cell/organelle/target:action'
+	// completes: '//cell/block/target:action'
 	carapace.Gen(rootCmd).PositionalAnyCompletion(
 		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 			cmd, buf, err := LoadFlakeCmd()
@@ -83,7 +83,7 @@ func init() {
 			}
 			var values = []string{}
 			for ci, c := range root.Cells {
-				for oi, o := range c.Organelles {
+				for oi, o := range c.Blocks {
 					for ti, t := range o.Targets {
 						for ai, a := range t.Actions {
 							values = append(

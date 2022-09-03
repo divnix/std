@@ -23,7 +23,7 @@ std is the CLI / TUI companion for Standard.
 - Invoke with a target spec and action to run a known target's action directly.
 
 Usage:
-std //cell/organelle/target:action [flags]
+std //cell/block/target:action [flags]
 
 Flags:
 -h, --help      help for std

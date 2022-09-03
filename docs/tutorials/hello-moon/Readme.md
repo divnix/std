@@ -2,16 +2,16 @@
 
 _A slightly more complete [hello world][hello-world] tutorial._
 
-This tutorial implements a very typical `automation` Cell and its Organelles for a somewhat bigger project.
+This tutorial implements a very typical `automation` Cell and its Cell Blocks for a somewhat bigger project.
 It also makes use of more advanced functions of `std`.
 Namely:
 
 - `std.growOn` instead of `std.grow`
 - `std.harvest` to provide compatibility layers of "soil"
-- non-default Organelle definitions
+- non-default Cell Block definitions
 - the input debug facility
 
-The terms _"Clade"_, _"Cell"_, _"Organelle"_, _"Target"_ and _"Action"_ have special meaning within the context of `std`.
+The terms _"Clade"_, _"Cell"_, _"Cell Block"_, _"Target"_ and _"Action"_ have special meaning within the context of `std`.
 With these clear definitions, we navigate and communicate the code structure much more easily.
 In order to familiarize yourself with them, please have a quick glance at the [glossary][glossary].
 
@@ -30,7 +30,7 @@ This is gentle so that our colleagues know immediately which files to either loo
 
 We also used `std.growOn` instead of `std.grow` so that we can add compatibility layers of "soil".
 
-Furthermore, we only defined two Organelles: `nixago` & `devshells`. More on them follows...
+Furthermore, we only defined two Cell Blocks: `nixago` & `devshells`. More on them follows...
 
 #### `./nix/automation/*`
 
@@ -59,7 +59,7 @@ In here, we wire up two tools from the Nix ecosystem: [`numtide/devshell`][devsh
 
 #### `./nix/automation/devshells.nix`
 
-Let's start with the `cell.devshells` Organelle and work our way backwards to the `cell.nixago` Organelle below.
+Let's start with the `cell.devshells` Cell Block and work our way backwards to the `cell.nixago` Cell Block below.
 
 > **More semantic background:**
 >
@@ -81,14 +81,14 @@ For a more elegant method of entering a development shell read on the [direnv][d
 
 #### `./nix/automation/nixago.nix`
 
-As we have seen above, the `nixago` option in the `cell.devshells` Organelle references Targets from both `std.nixago` _and_ `cell.nixago`.
+As we have seen above, the `nixago` option in the `cell.devshells` Cell Block references Targets from both `std.nixago` _and_ `cell.nixago`.
 While you can explore `std.nixago` [here][std-nixago], let's now have a closer look at `cell.nixago`:
 
 ```nix
 {{#include ./nix/automation/nixago.nix}}
 ```
 
-In this Organelle, we have been modifying some built-in convenience `std.nixago.*` pebbles.
+In this Cell Block, we have been modifying some built-in convenience `std.nixago.*` pebbles.
 The way `configData` is merged upon the existing pebble is via a simple left-hand-side/right-hand-site `data-merge` (`std.dmerge`).
 
 > **Background on array merge strategies:**
@@ -145,7 +145,7 @@ $ nix shell github:divnix/std
 $ std //automation/devshells/default:enter
 ```
 
-Since we have declared the devshell Organelle as a `clades.devshells`, `std` auments it's Targets with the Clade Actions.
+Since we have declared the devshell Cell Block as a `clades.devshells`, `std` auments it's Targets with the Clade Actions.
 
 See [`clades.devshells`][clades-devshells] for more details on the available Actions and their implementation.
 

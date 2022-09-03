@@ -7,7 +7,7 @@
 growOn {
   inherit inputs;
   cellsFrom = ./cells;
-  organelles = [
+  cellBlocks = [
     (clades.runnables "cli")
     (clades.functions "lib")
     (clades.functions "devshellProfiles")

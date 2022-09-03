@@ -14,16 +14,16 @@ type Root struct {
 }
 
 type Cell struct {
-	Cell       string      `json:"cell"`
-	Readme     string      `json:"readme"`
-	Organelles []Organelle `json:"organelles"`
+	Cell   string  `json:"cell"`
+	Readme string  `json:"readme"`
+	Blocks []Block `json:"blocks"`
 }
 
-type Organelle struct {
-	Organelle string   `json:"organelle"`
-	Readme    string   `json:"readme"`
-	Clade     string   `json:"clade"`
-	Targets   []Target `json:"targets"`
+type Block struct {
+	Block   string   `json:"block"`
+	Readme  string   `json:"readme"`
+	Clade   string   `json:"clade"`
+	Targets []Target `json:"targets"`
 }
 
 type Action struct {
@@ -43,10 +43,10 @@ type Target struct {
 	Actions     []Action `json:"actions"`
 }
 
-func (r *Root) Select(ci, oi, ti int) (Cell, Organelle, Target) {
+func (r *Root) Select(ci, oi, ti int) (Cell, Block, Target) {
 	var (
 		c = r.Cells[ci]
-		o = c.Organelles[oi]
+		o = c.Blocks[oi]
 		t = o.Targets[ti]
 	)
 	return c, o, t
@@ -55,7 +55,7 @@ func (r *Root) Select(ci, oi, ti int) (Cell, Organelle, Target) {
 func (r *Root) ActionArg(ci, oi, ti, ai int) string {
 	c, o, t := r.Select(ci, oi, ti)
 	a := t.Actions[ai]
-	return fmt.Sprintf(actionTemplate, c.Cell, o.Organelle, t.Target, a.Name)
+	return fmt.Sprintf(actionTemplate, c.Cell, o.Block, t.Target, a.Name)
 }
 
 func (r *Root) ActionTitle(ci, oi, ti, ai int) string {
@@ -72,27 +72,27 @@ func (r *Root) ActionDescription(ci, oi, ti, ai int) string {
 
 func (r *Root) TargetTitle(ci, oi, ti int) string {
 	c, o, t := r.Select(ci, oi, ti)
-	return fmt.Sprintf(targetTemplate, c.Cell, o.Organelle, t.Target)
+	return fmt.Sprintf(targetTemplate, c.Cell, o.Block, t.Target)
 }
 
 func (r *Root) TargetDescription(ci, oi, ti int) string {
 	_, _, t := r.Select(ci, oi, ti)
 	return t.Description
 }
-func (r *Root) Cell(ci, oi, ti int) string           { c, _, _ := r.Select(ci, oi, ti); return c.Cell }
-func (r *Root) CellHelp(ci, oi, ti int) string       { c, _, _ := r.Select(ci, oi, ti); return c.Readme }
-func (r *Root) HasCellHelp(ci, oi, ti int) bool      { return r.CellHelp(ci, oi, ti) != "" }
-func (r *Root) Organelle(ci, oi, ti int) string      { _, o, _ := r.Select(ci, oi, ti); return o.Organelle }
-func (r *Root) OrganelleHelp(ci, oi, ti int) string  { _, o, _ := r.Select(ci, oi, ti); return o.Readme }
-func (r *Root) HasOrganelleHelp(ci, oi, ti int) bool { return r.OrganelleHelp(ci, oi, ti) != "" }
-func (r *Root) Target(ci, oi, ti int) string         { _, _, t := r.Select(ci, oi, ti); return t.Target }
-func (r *Root) TargetHelp(ci, oi, ti int) string     { _, _, t := r.Select(ci, oi, ti); return t.Readme }
-func (r *Root) HasTargetHelp(ci, oi, ti int) bool    { return r.TargetHelp(ci, oi, ti) != "" }
+func (r *Root) Cell(ci, oi, ti int) string        { c, _, _ := r.Select(ci, oi, ti); return c.Cell }
+func (r *Root) CellHelp(ci, oi, ti int) string    { c, _, _ := r.Select(ci, oi, ti); return c.Readme }
+func (r *Root) HasCellHelp(ci, oi, ti int) bool   { return r.CellHelp(ci, oi, ti) != "" }
+func (r *Root) Block(ci, oi, ti int) string       { _, o, _ := r.Select(ci, oi, ti); return o.Block }
+func (r *Root) BlockHelp(ci, oi, ti int) string   { _, o, _ := r.Select(ci, oi, ti); return o.Readme }
+func (r *Root) HasBlockHelp(ci, oi, ti int) bool  { return r.BlockHelp(ci, oi, ti) != "" }
+func (r *Root) Target(ci, oi, ti int) string      { _, _, t := r.Select(ci, oi, ti); return t.Target }
+func (r *Root) TargetHelp(ci, oi, ti int) string  { _, _, t := r.Select(ci, oi, ti); return t.Readme }
+func (r *Root) HasTargetHelp(ci, oi, ti int) bool { return r.TargetHelp(ci, oi, ti) != "" }
 
 func (r *Root) Len() int {
 	sum := 0
 	for _, c := range r.Cells {
-		for _, o := range c.Organelles {
+		for _, o := range c.Blocks {
 			sum += len(o.Targets)
 		}
 	}

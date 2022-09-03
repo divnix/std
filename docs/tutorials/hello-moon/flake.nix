@@ -14,7 +14,7 @@
       growOn {
         /*
         we always inherit inputs and expose a deSystemized version
-        via {inputs, cell} during import of organelles.
+        via {inputs, cell} during import of Cell Blocks.
         */
         inherit inputs;
 
@@ -24,9 +24,9 @@
         cellsFrom = ./nix;
 
         /*
-        custom organelles (i.e. "typed outputs")
+        custom Cell Blocks (i.e. "typed outputs")
         */
-        organelles = [
+        cellBlocks = [
           (clades.devshells "devshells")
           (clades.nixago "nixago")
         ];

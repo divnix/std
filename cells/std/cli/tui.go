@@ -43,33 +43,33 @@ func (s Focus) String() string {
 type Targets = list.Model
 
 type TargetItem struct {
-	r            *data.Root
-	CellIdx      int
-	OrganelleIdx int
-	TargetIdx    int
+	r         *data.Root
+	CellIdx   int
+	BlockIdx  int
+	TargetIdx int
 }
 
-func (i TargetItem) Title() string { return i.r.TargetTitle(i.CellIdx, i.OrganelleIdx, i.TargetIdx) }
+func (i TargetItem) Title() string { return i.r.TargetTitle(i.CellIdx, i.BlockIdx, i.TargetIdx) }
 func (i TargetItem) Description() string {
-	return i.r.TargetDescription(i.CellIdx, i.OrganelleIdx, i.TargetIdx)
+	return i.r.TargetDescription(i.CellIdx, i.BlockIdx, i.TargetIdx)
 }
 func (i TargetItem) FilterValue() string { return i.Title() }
 
 type Actions = list.Model
 
 type ActionItem struct {
-	r            *data.Root
-	CellIdx      int
-	OrganelleIdx int
-	TargetIdx    int
-	ActionIdx    int
+	r         *data.Root
+	CellIdx   int
+	BlockIdx  int
+	TargetIdx int
+	ActionIdx int
 }
 
 func (i ActionItem) Title() string {
-	return i.r.ActionTitle(i.CellIdx, i.OrganelleIdx, i.TargetIdx, i.ActionIdx)
+	return i.r.ActionTitle(i.CellIdx, i.BlockIdx, i.TargetIdx, i.ActionIdx)
 }
 func (i ActionItem) Description() string {
-	return i.r.ActionDescription(i.CellIdx, i.OrganelleIdx, i.TargetIdx, i.ActionIdx)
+	return i.r.ActionDescription(i.CellIdx, i.BlockIdx, i.TargetIdx, i.ActionIdx)
 }
 func (i ActionItem) FilterValue() string { return i.Title() }
 
@@ -100,7 +100,7 @@ func (m *Tui) LoadTargets() tea.Cmd {
 	// Make list of actions
 	items := make([]list.Item, numItems)
 	for ci, c := range m.r.Cells {
-		for oi, o := range c.Organelles {
+		for oi, o := range c.Blocks {
 			for ti, _ := range o.Targets {
 				items[counter] = &TargetItem{m.r, ci, oi, ti}
 				counter += 1
@@ -116,12 +116,12 @@ func (m *Tui) LoadTargets() tea.Cmd {
 }
 
 func (m *Tui) LoadActions(i *TargetItem) tea.Cmd {
-	_, _, t := m.r.Select(i.CellIdx, i.OrganelleIdx, i.TargetIdx)
+	_, _, t := m.r.Select(i.CellIdx, i.BlockIdx, i.TargetIdx)
 	var numItems = len(t.Actions)
 	// Make list of actions
 	items := make([]list.Item, numItems)
 	for j := 0; j < numItems; j++ {
-		items[j] = &ActionItem{m.r, i.CellIdx, i.OrganelleIdx, i.TargetIdx, j}
+		items[j] = &ActionItem{m.r, i.CellIdx, i.BlockIdx, i.TargetIdx, j}
 	}
 	return m.Right.SetItems(items)
 }
@@ -166,10 +166,10 @@ type cellLoadingFatalErrMsg struct{ err error }
 
 func (m *Tui) GetActionCmd(i *ActionItem) ([]string, tea.Msg) {
 	nix, args, err := GetActionEvalCmdArgs(
-		i.r.Cell(i.CellIdx, i.OrganelleIdx, i.TargetIdx),
-		i.r.Organelle(i.CellIdx, i.OrganelleIdx, i.TargetIdx),
-		i.r.Target(i.CellIdx, i.OrganelleIdx, i.TargetIdx),
-		i.r.ActionTitle(i.CellIdx, i.OrganelleIdx, i.TargetIdx, i.ActionIdx),
+		i.r.Cell(i.CellIdx, i.BlockIdx, i.TargetIdx),
+		i.r.Block(i.CellIdx, i.BlockIdx, i.TargetIdx),
+		i.r.Target(i.CellIdx, i.BlockIdx, i.TargetIdx),
+		i.r.ActionTitle(i.CellIdx, i.BlockIdx, i.TargetIdx, i.ActionIdx),
 	)
 	if err != nil {
 		return nil, cellLoadingFatalErrMsg{err}
@@ -262,7 +262,7 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.Focus == Left {
 				m.Focus = Readme
 				var t = m.Left.SelectedItem().(*TargetItem)
-				cmd = m.Readme.RenderMarkdown(m.r, t.CellIdx, t.OrganelleIdx, t.TargetIdx)
+				cmd = m.Readme.RenderMarkdown(m.r, t.CellIdx, t.BlockIdx, t.TargetIdx)
 				return m, cmd
 			}
 			if m.Focus == Right {
@@ -274,7 +274,7 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.Focus == Readme {
 				m.Focus = Left
 				m.Readme.CellHelp.SetIsActive(false)
-				m.Readme.OrganelleHelp.SetIsActive(false)
+				m.Readme.BlockHelp.SetIsActive(false)
 				m.Readme.TargetHelp.SetIsActive(false)
 				return m, nil
 			}

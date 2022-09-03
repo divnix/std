@@ -32,7 +32,7 @@
       inputs.std.growOn {
         inherit inputs;
         cellsFrom = ./cells;
-        organelles = [
+        cellBlocks = [
           # ...
         ];
       }

@@ -8,7 +8,7 @@
   clades = import ./clades.nix {inherit nixpkgs;};
   validate = import ./validators.nix {inherit yants nixpkgs;};
   /*
-  A function that 'grows' 'organells' from 'cells' found in 'cellsFrom'.
+  A function that 'grows' Cell Blocks from Cells found in 'cellsFrom'.
 
   This figurative glossary is so non-descriptive, yet fitting, that
   it will be easy to reason about this nomenclature even in a casual
@@ -23,8 +23,8 @@
   code from other repo boilerplate or documentation as a first line measure
   to improve build caching.
 
-  Organelles are the actual typed flake outputs, for convenience, organelles
-  are grouped into Clades which usually augment an organelle with action
+  Cell Blocks are the actual typed flake outputs, for convenience, Cell Blocks
+  are grouped into Clades which usually augment an Cell Block with action
   definitions that the std TUI will be able to understand and execute.
 
   The usual dealings with 'system' are greatly reduced in std. Inspired by
@@ -52,7 +52,7 @@
 
   Overlays? Go home or file an upstream bug. They are possible, but so heavily
   discouraged that you gotta find out for yourself if you really need to use
-  them in an organelle. Hint: `.extend`.
+  them in an Cell Block. Hint: `.extend`.
 
   Yes, std is opinionated. Make sure to also meet `alejandra`. 😎
 
@@ -60,7 +60,7 @@
   grow = {
     inputs,
     cellsFrom,
-    organelles ? [
+    cellBlocks ? [
       (clades.functions "library")
       (clades.runnables "apps")
       (clades.installables "packages")
@@ -78,9 +78,9 @@
     debug ? false,
   }: let
     # Validations ...
-    Organelles = validate.Organelles organelles;
+    CellBlocks = validate.CellBlocks cellBlocks;
     Systems = validate.Systems systems;
-    Cells = l.mapAttrsToList (validate.Cell cellsFrom Organelles) (l.readDir cellsFrom);
+    Cells = l.mapAttrsToList (validate.Cell cellsFrom CellBlocks) (l.readDir cellsFrom);
 
     # Helpers ...
     accumulate =
@@ -144,21 +144,21 @@
       );
       loadCellFor = cellName: let
         cPath = paths.cellPath cellsFrom cellName;
-        loadOrganelle = organelle: let
-          oPath = paths.organellePath cPath organelle;
+        loadCellBlock = cellBlock: let
+          oPath = paths.cellBlockPath cPath cellBlock;
           importedFile = validate.FileSignature oPath.file (import oPath.file);
           importedDir = validate.FileSignature oPath.dir (import oPath.dir);
           # minimum data for initializing TUI / CLI completion
           extractInitMeta = name: target: let
             tPath = paths.targetPath oPath name;
             actions =
-              if organelle ? actions
+              if cellBlock ? actions
               then
-                organelle.actions {
+                cellBlock.actions {
                   inherit system;
                   flake = inputs.self.sourceInfo.outPath;
-                  fragment = ''"${system}"."${cellName}"."${organelle.name}"."${name}"'';
-                  fragmentRelPath = "${cellName}/${organelle.name}/${name}";
+                  fragment = ''"${system}"."${cellName}"."${cellBlock.name}"."${name}"'';
+                  fragmentRelPath = "${cellName}/${cellBlock.name}/${name}";
                 }
               else [];
           in {
@@ -175,13 +175,13 @@
           # lazy action command renedering (slow)
           extractActionsMeta = name: target: let
             actions =
-              if organelle ? actions
+              if cellBlock ? actions
               then
-                organelle.actions {
+                cellBlock.actions {
                   inherit system;
                   flake = inputs.self.sourceInfo.outPath;
-                  fragment = ''"${system}"."${cellName}"."${organelle.name}"."${name}"'';
-                  fragmentRelPath = "${cellName}/${organelle.name}/${name}";
+                  fragment = ''"${system}"."${cellName}"."${cellBlock.name}"."${name}"'';
+                  fragmentRelPath = "${cellName}/${cellBlock.name}/${name}";
                 }
               else [];
           in
@@ -193,25 +193,25 @@
           imported =
             if l.pathExists oPath.file
             then
-              validate.Import organelle.clade oPath.file (importedFile (
+              validate.Import cellBlock.clade oPath.file (importedFile (
                 args // {cell = res.output;} # recursion on cell
               ))
             else if l.pathExists oPath.dir
             then
-              validate.Import organelle.clade oPath.dir (importedDir (
+              validate.Import cellBlock.clade oPath.dir (importedDir (
                 args // {cell = res.output;} # recursion on cell
               ))
             else null;
         in
           optionalLoad (imported != null)
           [
-            {${organelle.name} = imported;}
+            {${cellBlock.name} = imported;}
             # __std meta actions (slow)
-            {${organelle.name} = l.mapAttrs extractActionsMeta imported;}
+            {${cellBlock.name} = l.mapAttrs extractActionsMeta imported;}
             # __std meta init (fast)
             {
-              organelle = organelle.name;
-              clade = organelle.clade;
+              cellBlock = cellBlock.name;
+              clade = cellBlock.clade;
               readme =
                 if l.pathExists oPath.readme
                 then oPath.readme
@@ -219,7 +219,7 @@
               targets = l.mapAttrsToList extractInitMeta imported;
             }
           ];
-        res = accumulate (l.map loadOrganelle Organelles);
+        res = accumulate (l.map loadCellBlock CellBlocks);
       in
         optionalLoad (res != {})
         [
@@ -233,7 +233,7 @@
               if l.pathExists cPath.readme
               then cPath.readme
               else "";
-            organelles = res.init; # []
+            cellBlocks = res.init; # []
           }
         ]; # };
       res = accumulate (l.map loadCellFor Cells);
