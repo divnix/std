@@ -8,7 +8,6 @@
 result
 
 # nixago: ignore-linked-files
-.justfile
 adrgen.config.yml
 .conform.yaml
 treefmt.toml
