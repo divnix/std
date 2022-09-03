@@ -17,6 +17,7 @@ in
         (std.nixago.conform {configData = {inherit (inputs) cells;};})
         cell.nixago.treefmt
         cell.nixago.editorconfig
+        cell.nixago.just
         cell.nixago.mdbook
         std.nixago.lefthook
         std.nixago.adrgen

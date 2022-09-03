@@ -57,6 +57,23 @@ in
           });
       };
     };
+    just = {
+      configData = {};
+      format = "text";
+      output = ".justfile";
+      packages = [nixpkgs.just];
+      engine = inputs.nixago.engines.cue {
+        files = [./nixago/just.cue];
+        flags = {
+          expression = "rendered";
+          out = "text";
+        };
+        postHook = ''
+          cat $out
+          ${inputs.nixpkgs.just}/bin/just --unstable --fmt -f $out
+        '';
+      };
+    };
     lefthook = {
       configData = import ./nixago/lefthook.nix;
       format = "yaml";
