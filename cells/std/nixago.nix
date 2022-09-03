@@ -63,6 +63,9 @@ in
       format = "text";
       output = ".justfile";
       packages = [nixpkgs.just];
+      hook = {
+        mode = "copy";
+      };
       engine = inputs.nixago.engines.cue {
         files = [./nixago/just.cue];
         flags = {
