@@ -34,6 +34,19 @@ in {
       };
     };
   };
+  just = std.nixago.just {
+    configData = {
+      data = {
+        tasks = {
+          fmt = [
+            ''
+              treefmt $(git diff --name-only --cached)
+            ''
+          ];
+        };
+      };
+    };
+  };
   mdbook = std.nixago.mdbook {
     configData = {
       book.title = "The Standard Book";
