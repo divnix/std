@@ -3,7 +3,10 @@ import "text/template"
 
 #Config: {
 	head: string | *""
-	tasks: [string]: [...string]
+	tasks: [string]: {
+        description: string
+        steps: [...string]
+    }
 }
 
 data: #Config
@@ -11,8 +14,8 @@ data: #Config
 _final: {
     head: data.head
     tasks: {
-        for task, steps in data.tasks {
-            "\(task)": strings.Join(steps, "\n    ")
+        for name, task in data.tasks {
+            "# \(task.description)\n\(name)": strings.Join(task.steps, "\n    ")
         }
     }
 }
