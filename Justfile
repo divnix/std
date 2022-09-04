@@ -4,5 +4,6 @@
 # NOTE: Without Nix, you are responsible for having all task dependencies
 # available locally!
 
+# Formats all changed source files
 fmt:
     treefmt $(git diff --name-only --cached)

@@ -1,7 +1,8 @@
 {
-  fmt = [
-    ''
-      treefmt $(git diff --name-only --cached)
-    ''
-  ];
+  fmt = {
+    description = "Formats all changed source files";
+    steps = [
+      "treefmt $(git diff --name-only --cached)"
+    ];
+  };
 }
