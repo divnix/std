@@ -1102,8 +1102,8 @@ Actors:
 </code></pre>
 <p>This Cell Block exclusively defines the runtime environment of the application via the entrypoint script.
 The role of this script — customarily written in <code>bash</code> — serves as a concise and reified communication channel between Developers and Operators.
-As such, Operators will find all the primariy configuration options re-encoded at a glance and in a well-known location.
-In the other direction, Developers will find all the magic ad-hoc warpping that Operators had to engage in, in order to run the application on the target scheduler.</p>
+As such, Operators will find all the primary configuration options re-encoded at a glance and in a well-known location.
+In the other direction, Developers will find all the magic ad-hoc wrapping that Operators had to engage in, in order to run the application on the target scheduler.</p>
 <p>Through this communication channel, operators take reliably note of configuration drift, while Developers gain a valuable source of backlog to increase the operational robustness of the application.</p>
 <p>Standard includes a <a href="patterns/../reference/std/lib/writeShellEntrypoint.html">specific library function</a> that establishes an implementation-site interface for entrypoints and their collaterals which significantly eases working on the following layers.</p>
 <h3 id="oci-image-layer"><a class="header" href="#oci-image-layer">OCI-Image Layer</a></h3>
@@ -1868,11 +1868,11 @@ Solution Architect extra happy: <a href="https://github.com/joelcourtney/mdbook-
 <p><strong>Cell</strong></p>
 <p>: A Cell is the folder name of the first level under <code>${cellsFrom}</code>. They represent a coherent semantic collection of functionality.</p>
 <p><strong>Cell Block</strong></p>
-<p>: An Cell Block is the specific <em>named type</em> of a Standard (and hence: Flake) output.</p>
+<p>: A Cell Block is the specific <em>named type</em> of a Standard (and hence: Flake) output.</p>
 <p><strong>Block Type</strong></p>
-<p>: A Block Type is the unnamed generic type of an Cell Block and may or may not implement Block Type Actions.</p>
+<p>: A Block Type is the unnamed generic type of a Cell Block and may or may not implement Block Type Actions.</p>
 <p><strong>Target</strong></p>
-<p>: A Target is the actual output of an Cell Block. If there is only one intended output, it is called <code>default</code> by convention.</p>
+<p>: A Target is the actual output of a Cell Block. If there is only one intended output, it is called <code>default</code> by convention.</p>
 <p><strong>Action</strong></p>
 <p>: An Action is a runnable procedure implemented on the generic Block Type type. These are abstract procedures that are valuable in any concrete Cell Block of such Block Type.</p>
 
