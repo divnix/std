@@ -5,6 +5,7 @@ import "text/template"
 	tasks: [string]: {
         description: string | *""
         args: [...string] | *[]
+        interpreter: string | *""
         content: string
     }
 }
@@ -23,7 +24,7 @@ tmpl:
 {{ range $name, $task := .tasks }}
 {{ if $task.description }}# {{ $task.description }}{{ end }}
 {{ $name }}{{ range $task.args }} {{ . }}{{ end }}:
-    {{ $task.content }}
+    {{ if $task.interpreter }}#!{{ $task.interpreter }}\n{{ end }}    {{ $task.content }}
 {{- end }}
 """
 
