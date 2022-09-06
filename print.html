@@ -1269,6 +1269,11 @@ anyways.</p>
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="builtin-block-types"><a class="header" href="#builtin-block-types">Builtin Block Types</a></h1>
+<p>A few Block Types are packaged with <code>std</code>.</p>
+<p>In practical terms, Block Types distinguish themselves through the
+actions they provide to a particular Cell Block.</p>
+<p>It is entirely possible to define custom Block Types with custom
+Actions according to the needs of your project.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="data"><a class="header" href="#data">Data</a></h1>
 <pre><code class="language-nix">{nixpkgs}: let
   l = nixpkgs.lib // builtins;
