@@ -1,24 +1,14 @@
-import "strings"
 import "text/template"
 
 #Config: {
 	head: string | *""
 	tasks: [string]: {
-        description: string
-        steps: [...string]
+        description: string | *""
+        content: string
     }
 }
 
 data: #Config
-
-_final: {
-    head: data.head
-    tasks: {
-        for name, task in data.tasks {
-            "# \(task.description)\n\(name)": strings.Join(task.steps, "\n    ")
-        }
-    }
-}
 
 tmpl:
 """
@@ -29,10 +19,11 @@ tmpl:
 # available locally!
 
 {{ .head -}}
-{{ range $name, $steps := .tasks }}
+{{ range $name, $task := .tasks }}
+{{ if $task.description }}# {{ $task.description }}{{ end }}
 {{ $name }}:
-    {{ $steps }}
+    {{ $task.content }}
 {{- end }}
 """
 
-rendered: template.Execute(tmpl, _final)
+rendered: template.Execute(tmpl, data)
