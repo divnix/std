@@ -21,20 +21,37 @@ in
     /* ... */
     nixago = [
       (std.nixago.just {
-        packages = [nixpkgs.treefmt];
+        packages = [ nixpkgs.treefmt ];
         configData = {
           tasks = {
-            fmt = [
-              ''
+            fmt = {
+              description = "Formats all changed source files";
+              content = ''
                 treefmt $(git diff --name-only --cached)
-              ''
-            ];
+              '';
+            };
           };
         };
       })
     ];
   };
 }
+```
+
+It's also possible to override the interpreter for a task:
+
+```nix
+{
+# ...
+  hello = {
+    description = "Prints hello world";
+    interpreter = nixpkgs.python3;
+    content = ''
+      print("Hello, world!")
+    '';
+  };
+}
+# ...
 ```
 
 [just]: https://github.com/casey/just
