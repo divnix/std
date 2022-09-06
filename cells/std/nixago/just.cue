@@ -4,6 +4,7 @@ import "text/template"
 	head: string | *""
 	tasks: [string]: {
         description: string | *""
+        args: [...string] | *[]
         content: string
     }
 }
@@ -21,7 +22,7 @@ tmpl:
 {{ .head -}}
 {{ range $name, $task := .tasks }}
 {{ if $task.description }}# {{ $task.description }}{{ end }}
-{{ $name }}:
+{{ $name }}{{ range $task.args }} {{ . }}{{ end }}:
     {{ $task.content }}
 {{- end }}
 """
