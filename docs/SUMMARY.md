@@ -20,10 +20,6 @@
 - [Why `std`?](explain/why-std.md)
 
 - [Architecture Decisions](explain/architecture-decision-records/Readme.md)
-  - [0001 Drop `as-nix-cli-epiphyte` flag](explain/architecture-decision-records/0003-drop-as-nix-cli-epiphyte-flag.md)
-  - [0002 Wire Up Documentation Instrumentation](explain/architecture-decision-records/0002-wire-up-documentation-instrumentation.md)
-  - [0003 Increase Repo Discoverability With a Tui](explain/architecture-decision-records/0001-increase-repo-discoverability-with-a-tui.md)
-  - [0004 Add Nixago Instrumentation](explain/architecture-decision-records/0004-add-nixago-instrumentation.md)
 
 # Patterns
 
