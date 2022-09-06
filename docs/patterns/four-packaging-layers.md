@@ -122,8 +122,8 @@ Actors:
 
 This Cell Block exclusively defines the runtime environment of the application via the entrypoint script.
 The role of this script &mdash; customarily written in `bash` &mdash; serves as a concise and reified communication channel between Developers and Operators.
-As such, Operators will find all the primariy configuration options re-encoded at a glance and in a well-known location.
-In the other direction, Developers will find all the magic ad-hoc warpping that Operators had to engage in, in order to run the application on the target scheduler.
+As such, Operators will find all the primary configuration options re-encoded at a glance and in a well-known location.
+In the other direction, Developers will find all the magic ad-hoc wrapping that Operators had to engage in, in order to run the application on the target scheduler.
 
 Through this communication channel, operators take reliably note of configuration drift, while Developers gain a valuable source of backlog to increase the operational robustness of the application.
 

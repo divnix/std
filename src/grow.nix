@@ -24,7 +24,7 @@
   to improve build caching.
 
   Cell Blocks are the actual typed flake outputs, for convenience, Cell Blocks
-  are grouped into Blocktypes which usually augment an Cell Block with action
+  are grouped into Block Types which usually augment a Cell Block with action
   definitions that the std TUI will be able to understand and execute.
 
   The usual dealings with 'system' are greatly reduced in std. Inspired by
@@ -52,7 +52,7 @@
 
   Overlays? Go home or file an upstream bug. They are possible, but so heavily
   discouraged that you gotta find out for yourself if you really need to use
-  them in an Cell Block. Hint: `.extend`.
+  them in a Cell Block. Hint: `.extend`.
 
   Yes, std is opinionated. Make sure to also meet `alejandra`. 😎
 

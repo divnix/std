@@ -6,15 +6,15 @@
 
 **Cell Block**
 
-: An Cell Block is the specific _named type_ of a Standard (and hence: Flake) output.
+: A Cell Block is the specific _named type_ of a Standard (and hence: Flake) output.
 
 **Block Type**
 
-: A Block Type is the unnamed generic type of an Cell Block and may or may not implement Block Type Actions.
+: A Block Type is the unnamed generic type of a Cell Block and may or may not implement Block Type Actions.
 
 **Target**
 
-: A Target is the actual output of an Cell Block. If there is only one intended output, it is called `default` by convention.
+: A Target is the actual output of a Cell Block. If there is only one intended output, it is called `default` by convention.
 
 **Action**
 
