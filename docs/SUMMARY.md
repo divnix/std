@@ -30,6 +30,8 @@
 
 - [The 4 Packaging Layers](patterns/four-packaging-layers.md)
 
+- [CI/CD &mdash; 10000ft flight height](patterns/ci-cd-10000-feet.md)
+
 # Templates
 
 - [Minimal](templates/minimal.md)
