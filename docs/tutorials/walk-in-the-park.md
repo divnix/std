@@ -11,5 +11,7 @@ Enjoy!
 ---
 
 1. [Introduction to the Nix std Framework][std-blog-1]
+1. [Development Shells with the Nix std Framework][std-blog-2]
 
 [std-blog-1]: https://blog.jmgilman.com/an-introduction-to-nix-std/
+[std-blog-2]: https://blog.jmgilman.com/development-shells-with-nix-std/
