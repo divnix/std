@@ -66,19 +66,29 @@ in {
         Please create at least one of the previous files and don't forget to add them to version control.
       ''
     else cell;
-  CellBlocks = with yants "std" "grow" "attrs";
-    list (
-      struct "cellBlock" {
-        name = string;
-        type = string;
-        actions = option (functionWithArgs {
-          system = false;
-          flake = false;
-          fragment = false;
-          fragmentRelPath = false;
-        });
-      }
-    );
+  CellBlocks = with yants "std" "grow" "attrs"; let
+    cellBlock = struct "cellBlock" {
+      name = string;
+      type = string;
+      actions = option (functionWithArgs {
+        system = false;
+        flake = false;
+        fragment = false;
+        fragmentRelPath = false;
+      });
+    };
+    organelle = l.warn "`clade` nomenclature is deprecated, rename to `type`" (struct "organelle" {
+      name = string;
+      clade = string;
+      actions = option (functionWithArgs {
+        system = false;
+        flake = false;
+        fragment = false;
+        fragmentRelPath = false;
+      });
+    });
+  in
+    list (either cellBlock organelle);
   FileSignature = file: let
     file' = prefixWithCellsFrom file;
   in
