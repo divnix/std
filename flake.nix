@@ -34,7 +34,8 @@
     deSystemize = import ./src/de-systemize.nix;
     grow = import ./src/grow.nix {inherit (inputs) nixpkgs yants;};
     growOn = import ./src/grow-on.nix {inherit (inputs) nixpkgs yants;};
-    harvest = import ./src/harvest.nix {inherit (inputs) nixpkgs;};
+    harvest = import ./src/harvest.nix {inherit winnow;};
+    winnow = import ./src/winnow.nix {inherit (inputs) nixpkgs;};
     l = inputs.nixpkgs.lib // builtins;
   in
     {
@@ -56,7 +57,7 @@
         ''
         blockTypes;
       inherit (blockTypes) runnables installables functions data devshells containers files microvms nixago;
-      inherit grow growOn deSystemize incl harvest;
+      inherit grow growOn deSystemize incl harvest winnow;
       systems = l.systems.doubles;
     }
     # on our own account ...
