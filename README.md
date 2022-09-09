@@ -59,6 +59,7 @@ That folder implements:
 - [`std.grow`][grow]: the "smart" importer
 - [`std.growOn`][grow-on]: `std.grow`-variant that recursively merges all additional variadic arguments
 - [`std.harvest`][harvest]: harvest your **Targets** into a different shape for compatibility
+- [`std.winnow`][winnow]: when more advanced harvesting is required, use this to harvest _and_ filter the output
 - [`std.incl`][incl]: a straight-forward source filter with additive semantics
 - [`std.deSystemize`][de-systemize]: a helper to hide `system` from plain sight
 - [`std.<blockType>`][blocktypes]: builtin **(Cell) Block Types** that implement **(Cell Block Type) Actions**
@@ -158,6 +159,7 @@ direnv allow
 [grow]: https://github.com/divnix/std/blob/main/src/grow.nix
 [grow-on]: https://github.com/divnix/std/blob/main/src/grow-on.nix
 [harvest]: https://github.com/divnix/std/blob/main/src/harvest.nix
+[winnow]: https://github.com/divnix/std/blob/main/src/winnow.nix
 [incl]: https://github.com/divnix/std/blob/main/src/incl.nix
 [de-systemize]: https://github.com/divnix/std/blob/main/src/de-systemize.nix
 [blocktypes]: https://github.com/divnix/std/blob/main/src/blocktypes.nix
