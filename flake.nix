@@ -32,8 +32,11 @@
     blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs;};
     incl = import ./src/incl.nix {inherit (inputs) nixpkgs;};
     deSystemize = import ./src/de-systemize.nix;
-    grow = import ./src/grow.nix {inherit (inputs) nixpkgs yants;};
-    growOn = import ./src/grow-on.nix {inherit (inputs) nixpkgs yants;};
+    grow = import ./src/grow.nix {inherit (inputs) nixpkgs yants flake-utils;};
+    growOn = import ./src/grow-on.nix {
+      inherit (inputs) nixpkgs yants;
+      inherit grow;
+    };
     harvest = import ./src/harvest.nix {inherit (inputs) nixpkgs;};
     l = inputs.nixpkgs.lib // builtins;
   in

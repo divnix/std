@@ -1,9 +1,9 @@
 {
   nixpkgs,
   yants,
+  grow,
 }: let
   l = nixpkgs.lib // builtins;
-  grow = import ./grow.nix {inherit nixpkgs yants;};
   /*
     A variant of `std.grow` that let's you pass an arbitraty
     (variadic) amount of arguments after "growing" the flake.

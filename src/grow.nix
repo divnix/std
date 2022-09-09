@@ -1,8 +1,9 @@
 {
   nixpkgs,
   yants,
+  flake-utils,
 }: let
-  l = nixpkgs.lib // builtins;
+  l = nixpkgs.lib // builtins // flake-utils.lib;
   deSystemize = import ./de-systemize.nix;
   paths = import ./paths.nix;
   blockTypes = import ./blocktypes.nix {inherit nixpkgs;};
@@ -110,7 +111,7 @@
         car = l.head new;
         cdr = l.tail new;
       in {
-        output = acc.output // car;
+        output = acc.output // (car // {recurseForDerivations = true;});
         actions = acc.actions // (l.head cdr);
         init = acc.init ++ (l.tail cdr);
       })
@@ -281,9 +282,22 @@
     #     text = l.toJSON (l.attrValues acc.__std.${system}.targets);
     #   };
     // {
-      __std.init = l.listToAttrs res.init;
-      __std.actions = res.actions;
-      __std.direnv_lib = ../direnv_lib.sh;
+      __std = let
+        checks = l.eachSystem systems (
+          system: {
+            checks = let
+              checks' = l.flattenTree res.output.${system};
+            in
+              l.filterAttrs (_: v: !v ? noStdCheck || !v.noStdCheck) checks';
+          }
+        );
+      in
+        checks
+        // {
+          init = l.listToAttrs res.init;
+          actions = res.actions;
+          direnv_lib = ../direnv_lib.sh;
+        };
     };
 in
   grow
