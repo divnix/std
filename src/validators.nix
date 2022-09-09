@@ -77,23 +77,24 @@ in {
         fragmentRelPath = false;
       });
     };
-    organelle =
-      l.warn ''
-        `clade` nomenclature is deprecated.
+    organelle = struct "organelle" {
+      name = string;
+      clade =
+        l.warn ''
+          `clade` nomenclature is deprecated.
 
-        There seems to be an old revision of `std` in the evaluation path,
-        likely in one of your flake inputs. Please inform downstream to
-        update their version of standard ASAP.
-      '' (struct "organelle" {
-        name = string;
-        clade = string;
-        actions = option (functionWithArgs {
-          system = false;
-          flake = false;
-          fragment = false;
-          fragmentRelPath = false;
-        });
+          There seems to be an old revision of `std` in the evaluation path,
+          likely in one of your flake inputs. Please inform downstream to
+          update their version of standard ASAP.
+        ''
+        string;
+      actions = option (functionWithArgs {
+        system = false;
+        flake = false;
+        fragment = false;
+        fragmentRelPath = false;
       });
+    };
   in
     list (either cellBlock organelle);
   FileSignature = file: let
