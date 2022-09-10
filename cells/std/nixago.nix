@@ -12,12 +12,6 @@ in
       format = "yaml";
       commands = [{package = cell.packages.adrgen;}];
     };
-    treefmt = {
-      configData = {};
-      output = "treefmt.toml";
-      format = "toml";
-      commands = [{package = nixpkgs.treefmt;}];
-    };
     editorconfig = {
       configData = {};
       output = ".editorconfig";
@@ -137,5 +131,11 @@ in
         fi
       '';
       commands = [{package = nixpkgs.mdbook;}];
+    };
+    treefmt = {
+      configData = {};
+      output = "treefmt.toml";
+      format = "toml";
+      commands = [{package = nixpkgs.treefmt;}];
     };
   }
