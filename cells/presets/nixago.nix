@@ -15,8 +15,6 @@ in {
   };
   conform = std.nixago.conform {
     configData = import ./nixago/conform.nix;
-    format = "yaml";
-    output = ".conform.yaml";
   };
   lefthook = std.nixago.lefthook {
     configData = import ./nixago/lefthook.nix;
