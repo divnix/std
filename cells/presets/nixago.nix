@@ -21,27 +21,6 @@ in {
   };
   mdbook = std.nixago.mdbook {
     configData = import ./nixago/mdbook.nix;
-    hook.extra = let
-      sentinel = "nixago-auto-created: mdbook-build-folder";
-      file = "docs/.gitignore";
-      str = ''
-        # ${sentinel}
-        book/**
-      '';
-    in ''
-      # Configure gitignore
-      create() {
-        echo -n "${str}" > "${file}"
-      }
-      append() {
-        echo -en "\n${str}" >> "${file}"
-      }
-      if ! test -f "${file}"; then
-        create
-      elif ! grep -qF "${sentinel}" "${file}"; then
-        append
-      fi
-    '';
     packages = [std.packages.mdbook-kroki-preprocessor];
   };
   treefmt = std.nixago.treefmt {
