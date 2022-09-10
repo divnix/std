@@ -46,6 +46,7 @@ in {
     configuration' =
       configuration
       // {
+        hook = configuration.hook or {};
         packages = configuration.packages or [];
         commands = configuration.commands or [];
         devshell = configuration.devshell or {};
@@ -53,6 +54,7 @@ in {
     # transparently extend config data with a functor
     __functor = self: {
       configData ? {},
+      hook ? {},
       packages ? [],
       commands ? [],
       devshell ? {},
@@ -62,6 +64,7 @@ in {
         __passthru
         // {
           configData = dmerge.merge __passthru.configData configData;
+          hook = l.recursiveUpdate __passthru.hook hook;
           packages = __passthru.packages ++ packages;
           commands = __passthru.commands ++ commands;
           devshell = l.recursiveUpdate __passthru.devshell devshell;
@@ -120,5 +123,8 @@ in {
       ''
     ); inputs';
   in
-    import ./writeShellEntrypoint.nix { inputs = inputsChecked; inherit cell;};
+    import ./writeShellEntrypoint.nix {
+      inputs = inputsChecked;
+      inherit cell;
+    };
 }

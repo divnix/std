@@ -8,6 +8,7 @@
 result
 
 # nixago: ignore-linked-files
+.editorconfig
 Justfile
 adrgen.config.yml
 .conform.yaml
