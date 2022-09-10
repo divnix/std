@@ -9,7 +9,7 @@ in {
   adrgen = std.nixago.adrgen {
     configData = import ./nixago/adrgen.nix;
   };
-  editorconfig = inputs.cells.std.nixago.editorconfig {
+  editorconfig = std.nixago.editorconfig {
     configData = import ./nixago/editorconfig.nix;
     hook.mode = "copy"; # already useful before entering the devshell
   };
