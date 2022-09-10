@@ -105,7 +105,7 @@ in
       '';
     };
     mdbook = {
-      configData = {};
+      configData = import ./nixago/mdbook.nix;
       output = "book.toml";
       format = "toml";
       hook.mode = "copy"; # let CI pick it up outside of devshell
