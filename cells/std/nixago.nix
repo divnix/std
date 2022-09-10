@@ -6,31 +6,26 @@
   l = nixpkgs.lib // builtins;
 in
   l.mapAttrs (_: cell.lib.mkNixago) {
+    adrgen = {
+      configData = {};
+      output = "adrgen.config.yml";
+      format = "yaml";
+      commands = [{package = cell.packages.adrgen;}];
+    };
     treefmt = {
-      configData = import ./nixago/treefmt.nix;
+      configData = {};
       output = "treefmt.toml";
       format = "toml";
-      packages = [
-        nixpkgs.alejandra
-        nixpkgs.nodePackages.prettier
-        nixpkgs.nodePackages.prettier-plugin-toml
-        nixpkgs.shfmt
-        nixpkgs.treefmt
-      ];
       commands = [{package = nixpkgs.treefmt;}];
-      devshell.startup.prettier-plugin-toml = l.stringsWithDeps.noDepEntry ''
-        export NODE_PATH=${nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules:$NODE_PATH
-      '';
     };
     editorconfig = {
-      configData = import ./nixago/editorconfig.nix;
+      configData = {};
       output = ".editorconfig";
       format = "ini";
-      hook.mode = "copy"; # already useful before entering the devshell
       packages = [nixpkgs.editorconfig-checker];
     };
     conform = {
-      configData = import ./nixago/conform.nix;
+      configData = {};
       format = "yaml";
       output = ".conform.yaml";
       packages = [nixpkgs.conform];
@@ -93,7 +88,7 @@ in
       };
     };
     lefthook = {
-      configData = import ./nixago/lefthook.nix;
+      configData = {};
       format = "yaml";
       output = "lefthook.yml";
       packages = [nixpkgs.lefthook];
@@ -116,7 +111,7 @@ in
       '';
     };
     mdbook = {
-      configData = import ./nixago/mdbook.nix;
+      configData = {};
       output = "book.toml";
       format = "toml";
       hook.mode = "copy"; # let CI pick it up outside of devshell
@@ -141,13 +136,6 @@ in
           append
         fi
       '';
-      packages = [cell.packages.mdbook-kroki-preprocessor];
       commands = [{package = nixpkgs.mdbook;}];
-    };
-    adrgen = {
-      configData = import ./nixago/adrgen.nix;
-      output = "adrgen.config.yml";
-      format = "yaml";
-      commands = [{package = cell.packages.adrgen;}];
     };
   }

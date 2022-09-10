@@ -3,9 +3,9 @@
   cell,
 }: let
   inherit (inputs) nixpkgs;
-  inherit (inputs.cells) std;
+  inherit (inputs.cells) std presets;
 in {
-  treefmt = std.nixago.treefmt {
+  treefmt = presets.nixago.treefmt {
     configData.formatter = {
       go = {
         command = "gofmt";
@@ -18,7 +18,7 @@ in {
     };
     packages = [nixpkgs.go];
   };
-  editorconfig = std.nixago.editorconfig {
+  editorconfig = presets.nixago.editorconfig {
     configData = {
       "*.xcf" = {
         charset = "unset";
@@ -39,7 +39,7 @@ in {
       tasks = import ./tasks.nix;
     };
   };
-  mdbook = std.nixago.mdbook {
+  mdbook = presets.nixago.mdbook {
     configData = {
       book.title = "The Standard Book";
       preprocessor.mermaid.command = "mdbook-mermaid";
