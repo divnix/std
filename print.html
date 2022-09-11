@@ -1962,33 +1962,10 @@ is used inside its <code>config.nixago</code>-option.</p>
   };
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-nixago-pebbles"><a class="header" href="#the-std-nixago-pebbles">The <code>std</code> Nixago Pebbles</a></h1>
-<p>Standard comes packages with some <a href="https://github.com/nix-community/nixago">Nixago</a> Pebbles for easy
-downstream re-use.</p>
-<p>Some Pebbles may have a special integration for <code>std</code>.</p>
-<p>For example, the <code>conform</code> Pebble can undestand <code>inputs.cells</code>
-and add each Cell as a so called “scope” to its
-<a href="https://www.conventionalcommits.org/">Conventional Commit</a> configuration.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="adrgen"><a class="header" href="#adrgen"><a href="https://github.com/asiermarques/adrgen"><code>adrgen</code></a></a></h1>
-<p>A great tool to manage Architecture Decision Records.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="conform"><a class="header" href="#conform"><a href="https://github.com/siderolabs/conform"><code>conform</code></a></a></h1>
-<p>Conform your code to policies, e.g. in a pre-commit hook.</p>
-<p>This version is wrapped, it can auto-enhance the conventional
-commit scopes with your <code>cells</code> as follows:</p>
-<pre><code class="language-nix">{ inputs, cell}: let
-  inherit (inputs.std) std;
-in {
-
-  default = std.lib.mkShell {
-    /* ... */
-    nixago = [
-      (std.nixago.conform {configData = {inherit (inputs) cells;};})
-    ];
-  };
-}
-</code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="editorconfig"><a class="header" href="#editorconfig"><a href="https://github.com/editorconfig/"><code>editorconfig</code></a></a></h1>
-<p>Most editors understand this file and autoconfigure themselves accordingly.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="nixago-1"><a class="header" href="#nixago-1">/nixago</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="adrgen"><a class="header" href="#adrgen">/adrgen</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="conform"><a class="header" href="#conform">/conform</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="editorconfig"><a class="header" href="#editorconfig">/editorconfig</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="just"><a class="header" href="#just"><a href="https://github.com/casey/just"><code>just</code></a></a></h1>
 <p>Just is a general purpose command runner with syntax inspired by <code>make</code>.</p>
 <p>Tasks are configured via an attribute set where the name is the name of the task
@@ -2036,14 +2013,12 @@ in
 }
 # ...
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="lefthook"><a class="header" href="#lefthook"><a href="https://github.com/evilmartians/lefthook"><code>lefthook</code></a></a></h1>
-<p>A fast (parallel execution) and elegant git hook manager.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="lefthook"><a class="header" href="#lefthook">/lefthook</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mdbook"><a class="header" href="#mdbook"><a href="https://github.com/rust-lang/mdBook"><code>mdbook</code></a></a></h1>
 <p>Write clean docs for humans.</p>
 <p>This version comes preset with this gem to make any
 Solution Architect extra happy: <a href="https://github.com/joelcourtney/mdbook-kroki-preprocessor"><code>mdbook-kroki-preprocessor</code></a></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="treefmt"><a class="header" href="#treefmt"><a href="https://github.com/numtide/treefmt"><code>treefmt</code></a></a></h1>
-<p>A code formatter to fromat the entire code tree extremly fast (in parallel and with a smart cache).</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="treefmt"><a class="header" href="#treefmt">/treefmt</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="devshells-1"><a class="header" href="#devshells-1">Devshells</a></h1>
 <ul>
 <li>The <code>default</code> devshell implements the development environment for the <code>std</code> TUI/CLI.</li>

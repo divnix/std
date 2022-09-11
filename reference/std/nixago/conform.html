@@ -133,22 +133,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="conform"><a class="header" href="#conform"><a href="https://github.com/siderolabs/conform"><code>conform</code></a></a></h1>
-<p>Conform your code to policies, e.g. in a pre-commit hook.</p>
-<p>This version is wrapped, it can auto-enhance the conventional
-commit scopes with your <code>cells</code> as follows:</p>
-<pre><code class="language-nix">{ inputs, cell}: let
-  inherit (inputs.std) std;
-in {
-
-  default = std.lib.mkShell {
-    /* ... */
-    nixago = [
-      (std.nixago.conform {configData = {inherit (inputs) cells;};})
-    ];
-  };
-}
-</code></pre>
+                        <h1 id="conform"><a class="header" href="#conform">/conform</a></h1>
 
                     </main>
 
