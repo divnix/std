@@ -105,16 +105,16 @@ in
       '';
     };
     mdbook = {
-      configData = import ./nixago/mdbook.nix;
+      configData = {};
       output = "book.toml";
       format = "toml";
       hook.mode = "copy"; # let CI pick it up outside of devshell
-      hook.extra = let
+      hook.extra = d: let
         sentinel = "nixago-auto-created: mdbook-build-folder";
-        file = "docs/.gitignore";
+        file = ".gitignore";
         str = ''
           # ${sentinel}
-          book/**
+          ${d.build.build-dir or "book"}/**
         '';
       in ''
         # Configure gitignore
