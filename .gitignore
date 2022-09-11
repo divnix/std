@@ -12,3 +12,6 @@ adrgen.config.yml
 .conform.yaml
 treefmt.toml
 lefthook.yml
+
+# nixago-auto-created: mdbook-build-folder
+docs/book/**
