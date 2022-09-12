@@ -66,6 +66,43 @@
             fi
           '';
       }
+      {
+        name = "deploy";
+        description = "Deploy the job to Nomad";
+        command =
+          # bash
+          ''
+            set -e
+            # act from the top-level
+            REPO_DIR="$(git rev-parse --show-toplevel)"
+            cd "$REPO_DIR"
+
+            job_path="jobs/${baseNameOf fragmentRelPath}.json"
+
+            if ! [[ -h "$job_path" ]]; then
+              std "//${fragmentRelPath}:render"
+            fi
+
+            if ! plan_results=$(nomad plan -force-color "$job_path"); then
+              echo "$plan_results"
+
+              cmd="$(echo "$plan_results" | grep 'nomad job run -check-index')"
+
+              read -rp "Deploy this job? (y/N)" deploy
+
+              case "$deploy" in
+              [Yy])
+                eval "$cmd"
+                ;;
+              *)
+                echo "Exiting without deploying"
+                ;;
+              esac
+            else
+              echo "Job hasn't changed since last deployment, nothing to deploy"
+            fi
+          '';
+      }
     ];
   };
 in
