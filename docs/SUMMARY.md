@@ -63,6 +63,16 @@
     - [`/mdbook`](reference/std/nixago/mdbook.md)
     - [`/treefmt`](reference/std/nixago/treefmt.md)
 
+- [`//presets`](reference/presets/Readme.md)
+
+  - [`/nixago`](reference/presets/nixago/Readme.md)
+    - [`/adrgen`](reference/presets/nixago/adrgen.md)
+    - [`/conform`](reference/presets/nixago/conform.md)
+    - [`/editorconfig`](reference/presets/nixago/editorconfig.md)
+    - [`/lefthook`](reference/presets/nixago/lefthook.md)
+    - [`/mdbook`](reference/presets/nixago/mdbook.md)
+    - [`/treefmt`](reference/presets/nixago/treefmt.md)
+
 - [`//automation`]()
 
   - [`/devshells`](reference/automation/devshells/Readme.md)

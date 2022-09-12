@@ -55,3 +55,11 @@ It's also possible to override the interpreter for a task:
 ```
 
 [just]: https://github.com/casey/just
+
+---
+
+#### Definition:
+
+```nix
+{{#include ./../../../../cells/std/nixago/just.nix}}
+```

@@ -1,14 +1,13 @@
-# The `std` Nixago Pebbles
+# Nixago Presets
 
-Standard comes packages with some [Nixago][nixago] Pebbles for easy
-downstream re-use.
+These are out-of-the-box configurations of Nixago Pebbles.
 
-Some Pebbles may have a special integration for `std`.
+You can amend them the same way they, themeselves, amend the base Nixago Pebbles:
 
-For example, the `conform` Pebble can undestand `inputs.cells`
-and add each Cell as a so called "scope" to its
-[Conventional Commit][conventional-commit] configuration.
+```nix
+{{#include ./../../../../cells/presets/nixago.nix}}
+```
 
-[nixago]: https://github.com/nix-community/nixago
-[conform]: conform.md
-[conventional-commit]: https://www.conventionalcommits.org/
+`just` doesn't have a preset: for a task runner, it wouldn't make a lot of sense.
+
+_If you have a good idea how to make these presets more useful, please consider to submit a PR._

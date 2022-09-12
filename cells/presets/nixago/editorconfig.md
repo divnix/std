@@ -1,5 +1,7 @@
-# [`editorconfig`][editorconfig]
+# `editorconfig` Nixago Presets
 
-Most editors understand this file and autoconfigure themselves accordingly.
+```nix
+{{#include ./../../../../cells/presets/nixago/editorconfig.nix}}
+```
 
-[editorconfig]: https://github.com/editorconfig/
+_If you have a good idea how to make these presets more useful, please consider to submit a PR._

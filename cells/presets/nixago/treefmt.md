@@ -1,5 +1,7 @@
-# [`treefmt`][treefmt]
+# `treefmt` Nixago Presets
 
-A code formatter to fromat the entire code tree extremly fast (in parallel and with a smart cache).
+```nix
+{{#include ./../../../../cells/presets/nixago/treefmt.nix}}
+```
 
-[treefmt]: https://github.com/numtide/treefmt
+_If you have a good idea how to make these presets more useful, please consider to submit a PR._

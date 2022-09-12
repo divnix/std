@@ -1,22 +1,7 @@
-# [`conform`][conform]
-
-Conform your code to policies, e.g. in a pre-commit hook.
-
-This version is wrapped, it can auto-enhance the conventional
-commit scopes with your `cells` as follows:
+# `conform` Nixago Presets
 
 ```nix
-{ inputs, cell}: let
-  inherit (inputs.std) std;
-in {
-
-  default = std.lib.mkShell {
-    /* ... */
-    nixago = [
-      (std.nixago.conform {configData = {inherit (inputs) cells;};})
-    ];
-  };
-}
+{{#include ./../../../../cells/presets/nixago/conform.nix}}
 ```
 
-[conform]: https://github.com/siderolabs/conform
+_If you have a good idea how to make these presets more useful, please consider to submit a PR._

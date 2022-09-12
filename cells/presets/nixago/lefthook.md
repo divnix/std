@@ -1,5 +1,7 @@
-# [`lefthook`][lefthook]
+# `lefthook` Nixago Presets
 
-A fast (parallel execution) and elegant git hook manager.
+```nix
+{{#include ./../../../../cells/presets/nixago/lefthook.nix}}
+```
 
-[lefthook]: https://github.com/evilmartians/lefthook
+_If you have a good idea how to make these presets more useful, please consider to submit a PR._

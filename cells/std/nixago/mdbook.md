@@ -7,3 +7,11 @@ Solution Architect extra happy: [`mdbook-kroki-preprocessor`][mdbook-kroki-prepr
 
 [mdbook]: https://github.com/rust-lang/mdBook
 [mdbook-kroki-preprocessor]: https://github.com/joelcourtney/mdbook-kroki-preprocessor
+
+---
+
+#### Definition:
+
+```nix
+{{#include ./../../../../cells/std/nixago/mdbook.nix}}
+```
