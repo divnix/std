@@ -56,7 +56,7 @@
           see: https://github.com/divnix/std/issues/116
         ''
         blockTypes;
-      inherit (blockTypes) runnables installables functions data devshells containers files microvms nixago;
+      inherit (blockTypes) runnables installables functions data devshells containers files microvms nixago nomadEnvs;
       inherit grow growOn deSystemize incl harvest winnow;
       systems = l.systems.doubles;
     }
