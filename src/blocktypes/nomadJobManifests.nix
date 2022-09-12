@@ -103,6 +103,30 @@
             fi
           '';
       }
+      {
+        name = "explore";
+        description = "interactively explore the Job defintion";
+        command = let
+          fx = "${nixpkgs.legacyPackages.${system}.fx}/bin";
+        in
+          # bash
+          ''
+            set -e
+            # act from the top-level
+            REPO_DIR="$(git rev-parse --show-toplevel)"
+            cd "$REPO_DIR"
+
+            job_path="jobs/${baseNameOf fragmentRelPath}.json"
+
+            if ! [[ -h "$job_path" ]]; then
+              std "//${fragmentRelPath}:render"
+            fi
+
+            PATH=$PATH:${fx}
+
+            fx "$job_path"
+          '';
+      }
     ];
   };
 in
