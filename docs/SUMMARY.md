@@ -65,6 +65,7 @@
 
 - [`//presets`](reference/presets/Readme.md)
 
+  - [`/templates`](reference/presets/templates/Readme.md)
   - [`/nixago`](reference/presets/nixago/Readme.md)
     - [`/adrgen`](reference/presets/nixago/adrgen.md)
     - [`/conform`](reference/presets/nixago/conform.md)
