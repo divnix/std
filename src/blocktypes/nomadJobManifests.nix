@@ -53,7 +53,11 @@
             job_path="jobs/${baseNameOf fragmentRelPath}.json"
             echo "Rendering to $job_path..."
 
-            out="$(nix eval --raw .\#${fragment} --apply "${nixExpr}")"
+            # use `.` instead of ${flake} to capture dirty state
+            if ! out="$(nix eval --no-allow-dirty --raw .\#${fragment} --apply "${nixExpr}")"; then
+              >&2 echo "error: Will not render jobs from a dirty tree, otherwise we cannot keep good track of deployment history."
+              exit 1
+            fi
 
             nix build "$out" --out-link "$job_path" 2>/dev/null
 
