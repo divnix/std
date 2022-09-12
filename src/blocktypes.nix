@@ -8,4 +8,5 @@
   files = import ./blocktypes/files.nix {inherit nixpkgs;};
   microvms = import ./blocktypes/microvms.nix {inherit nixpkgs;};
   nixago = import ./blocktypes/nixago.nix {inherit nixpkgs;};
+  nomadJobManifests = import ./blocktypes/nomadJobManifests.nix {inherit nixpkgs;};
 }
