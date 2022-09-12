@@ -25,9 +25,16 @@
         description = "build the JSON job files for this Nomad Namespace";
         command = let
           nomad = "${nixpkgs.legacyPackages.${system}.nomad}/bin";
+          nixExpr = ''
+            x: let
+              job = builtins.mapAttrs (_: v: v // {meta = v.meta or {} // {rev = "\"$(git rev-parse --short HEAD)\"";};}) x.job;
+            in
+              builtins.toFile \"$job.json\" (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}))
+          '';
         in
           # bash
           ''
+            set -e
             # act from the top-level
             REPO_DIR="$(git rev-parse --show-toplevel)"
             cd "$REPO_DIR"
@@ -53,7 +60,7 @@
                 job_path="jobs/${baseNameOf fragmentRelPath}.$job.json"
                 echo "Rendering to $job_path..."
 
-                out="$(nix eval --raw .\#${fragment}."$job" --apply "x: builtins.toFile \"$job.json\" (builtins.unsafeDiscardStringContext (builtins.toJSON x))" 2>/dev/null)"
+                out="$(nix eval --raw .\#${fragment}."$job" --apply "${nixExpr}")"
 
                 nix build "$out" --out-link "$job_path" 2>/dev/null
 
