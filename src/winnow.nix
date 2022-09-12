@@ -28,7 +28,7 @@
           attr = l.getAttrFromPath path v;
         in
           # skip overhead if filtering is not needed
-          if pred
+          if pred == true
           then attr
           else l.filterAttrs pred attr
       )
