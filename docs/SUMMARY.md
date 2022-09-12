@@ -26,6 +26,10 @@
 
 - [The 4 Packaging Layers](patterns/four-packaging-layers.md)
 
+# Templates
+
+- [Rust](templates/rust.md)
+
 # Reference
 
 - [TUI/CLI](reference/cli.md)
