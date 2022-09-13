@@ -23,7 +23,7 @@ type Spec struct {
 var re = regroup.MustCompile(`^//(?P<cell>[^/]+)/(?P<block>[^/]+)/(?P<target>[^:]+):(?P<action>.+)`)
 
 var rootCmd = &cobra.Command{
-	Use:                   "std //[cell]/[block]/[target]:[action]",
+	Use:                   "std //[cell]/[block]/[target]:[action] [args...]",
 	DisableFlagsInUseLine: true,
 	Version:               fmt.Sprintf("%s (%s)", buildVersion, buildCommit),
 	Short:                 "std is the CLI / TUI companion for Standard",
@@ -32,11 +32,9 @@ var rootCmd = &cobra.Command{
 - Invoke without any arguments to start the TUI.
 - Invoke with a target spec and action to run a known target's action directly.`,
 	Args: func(cmd *cobra.Command, args []string) error {
-		for _, arg := range args {
-			s := &Spec{}
-			if err := re.MatchToTarget(arg, s); err != nil {
-				return fmt.Errorf("invalid argument format: %s", arg)
-			}
+		s := &Spec{}
+		if err := re.MatchToTarget(args[0], s); err != nil {
+			return fmt.Errorf("invalid argument format: %s", args[0])
 		}
 		return nil
 	},
@@ -46,13 +44,14 @@ var rootCmd = &cobra.Command{
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		nix, args, err := GetActionEvalCmdArgs(s.Cell, s.Block, s.Target, s.Action)
+		nix, nixargs, err := GetActionEvalCmdArgs(s.Cell, s.Block, s.Target, s.Action)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		// fmt.Printf("%+v\n", append([]string{nix}, args...))
-		if err = bashExecve(append([]string{nix}, args...)); err != nil {
+		// fmt.Printf("%+v\n", append([]string{nix}, nixargs...))
+		// fmt.Printf("%+v\n", args)
+		if err = bashExecve(append([]string{nix}, nixargs...), args[1:]); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -89,7 +88,7 @@ func init() {
 	rootCmd.AddCommand(reCacheCmd)
 	carapace.Gen(rootCmd).Standalone()
 	// completes: '//cell/block/target:action'
-	carapace.Gen(rootCmd).PositionalAnyCompletion(
+	carapace.Gen(rootCmd).PositionalCompletion(
 		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 			cache, key, _, _, err := LoadFlakeCmd()
 			if err != nil {
