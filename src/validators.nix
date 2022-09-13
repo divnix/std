@@ -79,15 +79,7 @@ in {
     };
     organelle = struct "organelle" {
       name = string;
-      clade =
-        l.warn ''
-          `clade` nomenclature is deprecated.
-
-          There seems to be an old revision of `std` in the evaluation path,
-          likely in one of your flake inputs. Please inform downstream to
-          update their version of standard ASAP.
-        ''
-        string;
+      clade = (import ../deprecation.nix nixpkgs).warnClade "block type attribute '.clade' used" string;
       actions = option (functionWithArgs {
         system = false;
         flake = false;

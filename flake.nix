@@ -41,21 +41,7 @@
     {
       inherit (inputs) yants dmerge; # convenience re-exports
       inherit blockTypes;
-      clades =
-        l.warn ''
-
-          Standard (divnix/std): Screw the wired naming!!! Finally.
-
-          Please rename:
-
-          - sed -i 's/clades/blockTypes/g'
-          - sed -i 's/clade/blockType/g'
-          - sed -i 's/Clades/Block Types/g'
-          - sed -i 's/Clade/Block Type/g'
-
-          see: https://github.com/divnix/std/issues/116
-        ''
-        blockTypes;
+      clades = (import ./deprecation.nix inputs.nixpkgs).warnClade "std flake output '.clades' used" blockTypes;
       inherit (blockTypes) runnables installables functions data devshells containers files microvms nixago nomadJobManifests;
       inherit grow growOn deSystemize incl harvest winnow;
       systems = l.systems.doubles;
