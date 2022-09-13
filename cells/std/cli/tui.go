@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
@@ -18,12 +20,17 @@ import (
 )
 
 type Focus int64
+type Loaded int64
 
 const (
 	Left Focus = iota
 	Right
 	Readme
 	Inspect
+
+	FromFlake Loaded = iota
+	FromCache
+	Loading
 )
 
 const (
@@ -85,8 +92,8 @@ type Tui struct {
 	InspectAction string
 	ExecveCommand []string
 	Spinner       spinner.Model
-	Loading       bool
 	FatalError    error
+	Loaded
 	Focus
 	Width  int
 	Height int
@@ -161,7 +168,8 @@ func (m *Tui) SetInspect() (tea.Model, tea.Cmd) {
 	}
 }
 
-type cellLoadedMsg = data.Root
+type cellLoadedFromCacheMsg struct{ root *data.Root }
+type cellLoadedMsg struct{ root *data.Root }
 type cellLoadingFatalErrMsg struct{ err error }
 
 func (m *Tui) GetActionCmd(i *ActionItem) ([]string, tea.Msg) {
@@ -178,23 +186,57 @@ func (m *Tui) GetActionCmd(i *ActionItem) ([]string, tea.Msg) {
 }
 
 func (m *Tui) Init() tea.Cmd {
-	cmd, buf, err := LoadFlakeCmd()
+	var cmds []tea.Cmd
+	c, key, cmd, buf, err := LoadFlakeCmd()
 	if err != nil {
 		return func() tea.Msg { return cellLoadingFatalErrMsg{err} }
 	}
-	return tea.Batch(
-		tea.ExecProcess(cmd, func(err error) tea.Msg {
+	cached, _, err := c.GetBytes(*key)
+	if err == nil {
+		// a cache hit ...
+		// ... load the cache
+		cmds = append(cmds, func() tea.Msg {
+			root, err := LoadJson(bytes.NewReader(cached))
 			if err != nil {
 				return cellLoadingFatalErrMsg{err}
 			}
-			root, err := LoadJson(buf)
+			return cellLoadedFromCacheMsg{root}
+		})
+		// ... re-load the flake with non-blocking i/o
+		cmds = append(cmds, func() tea.Msg {
+			err = cmd.Run()
 			if err != nil {
 				return cellLoadingFatalErrMsg{err}
 			}
-			return cellLoadedMsg{root.Cells}
-		}),
-		m.Spinner.Tick,
-	)
+			bufA := &bytes.Buffer{}
+			r := io.TeeReader(buf, bufA)
+			root, err := LoadJson(r)
+			// renew cache under all circumstances (might have updated)
+			c.PutBytes(*key, bufA.Bytes())
+			if err != nil {
+				return cellLoadingFatalErrMsg{err}
+			}
+			return cellLoadedMsg{root}
+		})
+	} else {
+		// on cache miss ...
+		// ... load the flake with blocking i/o
+		cmds = append(cmds, tea.ExecProcess(cmd, func(err error) tea.Msg {
+			if err != nil {
+				return cellLoadingFatalErrMsg{err}
+			}
+			bufA := &bytes.Buffer{}
+			r := io.TeeReader(buf, bufA)
+			root, err := LoadJson(r)
+			c.PutBytes(*key, bufA.Bytes())
+			if err != nil {
+				return cellLoadingFatalErrMsg{err}
+			}
+			return cellLoadedMsg{root}
+		}))
+	}
+	cmds = append(cmds, m.Spinner.Tick)
+	return tea.Batch(cmds...)
 }
 
 func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -205,8 +247,16 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	)
 	switch msg := msg.(type) {
 	case cellLoadedMsg:
-		m.r = &msg
-		m.Loading = false
+		m.r = msg.root
+		m.Loaded = FromFlake
+		return m, tea.Batch(
+			m.LoadTargets(),
+			m.Left.StartSpinner(),
+		)
+
+	case cellLoadedFromCacheMsg:
+		m.r = msg.root
+		m.Loaded = FromCache
 		return m, tea.Batch(
 			m.LoadTargets(),
 			m.Left.StartSpinner(),
@@ -217,7 +267,7 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Quit
 
 	case spinner.TickMsg:
-		if m.Loading {
+		if m.Loaded != Loading {
 			m.Spinner, cmd = m.Spinner.Update(msg)
 			return m, cmd
 		}
@@ -344,9 +394,13 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m *Tui) View() string {
 	var title string
-	if m.Loading {
+	var cacheWarning string
+	if m.Loaded == Loading {
 		title = styles.TitleStyle.Render("Loading  " + m.Spinner.View())
-	} else {
+	} else if m.Loaded == FromCache {
+		title = styles.TitleStyle.Render(m.Title)
+		cacheWarning = styles.CacheWarning.Render("Using cache, refreshing: " + m.Spinner.View())
+	} else if m.Loaded == FromFlake {
 		title = styles.TitleStyle.Render(m.Title)
 	}
 
@@ -360,7 +414,7 @@ func (m *Tui) View() string {
 		)
 	}
 
-	if m.Loading {
+	if m.Loaded == Loading {
 		return placementClosure(title)
 	}
 	if m.Focus == Readme {
@@ -384,7 +438,11 @@ func (m *Tui) View() string {
 					styles.ActionInspectionStyle.Width(m.Left.Width()).Height(m.Left.Height()).Render(m.InspectAction),
 					styles.ActionStyle.Render(m.Right.View()),
 				),
-				styles.LegendStyle.Render(m.Legend.View(m)),
+				lipgloss.JoinHorizontal(
+					lipgloss.Center,
+					styles.LegendStyle.Render(m.Legend.View(m)),
+					cacheWarning,
+				),
 			),
 		)
 	}
@@ -398,7 +456,11 @@ func (m *Tui) View() string {
 				styles.TargetStyle.Width(m.Left.Width()).Height(m.Left.Height()).Render(m.Left.View()),
 				styles.ActionStyle.Width(m.Right.Width()).Height(m.Right.Height()).Render(m.Right.View()),
 			),
-			styles.LegendStyle.Render(m.Legend.View(m)),
+			lipgloss.JoinHorizontal(
+				lipgloss.Center,
+				styles.LegendStyle.Render(m.Legend.View(m)),
+				cacheWarning,
+			),
 		),
 	)
 }
@@ -451,7 +513,7 @@ func InitialPage() *Tui {
 		Focus:   Left,
 		Readme:  models.NewReadme(),
 		Legend:  help.New(),
-		Loading: true,
+		Loaded:  Loading,
 		Spinner: spin,
 	}
 }

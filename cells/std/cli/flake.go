@@ -5,11 +5,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/TylerBrock/colorjson"
 
+	"github.com/divnix/std/cache"
 	"github.com/divnix/std/data"
 )
 
@@ -93,14 +96,14 @@ func GetActionEvalCmdArgs(c, o, t, a string) (string, []string, error) {
 		flakeBuild, fmt.Sprintf(flakeActionsFragment, ".", currentSystem, c, o, t, a)), nil
 }
 
-func LoadJson(buf *bytes.Buffer) (*data.Root, error) {
+func LoadJson(r io.Reader) (*data.Root, error) {
 	var root = &data.Root{}
 
-	var out = buf.Bytes()
+	var dec = json.NewDecoder(r)
 
-	if err := json.Unmarshal(out, &root.Cells); err != nil {
+	if err := dec.Decode(&root.Cells); err != nil {
 		var obj interface{}
-		json.Unmarshal(out, &obj)
+		dec.Decode(&obj)
 		f := colorjson.NewFormatter()
 		f.Indent = 2
 		s, _ := f.Marshal(obj)
@@ -117,15 +120,15 @@ func LoadJson(buf *bytes.Buffer) (*data.Root, error) {
 	return root, nil
 }
 
-func LoadFlakeCmd() (*exec.Cmd, *bytes.Buffer, error) {
+func LoadFlakeCmd() (*cache.Cache, *cache.ActionID, *exec.Cmd, *bytes.Buffer, error) {
 
 	nix, args, err := GetInitEvalCmdArgs()
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 	devNull, err := os.Open(os.DevNull)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 
 	// load the std metadata from the flake
@@ -134,5 +137,17 @@ func LoadFlakeCmd() (*exec.Cmd, *bytes.Buffer, error) {
 	cmd.Stdin = devNull
 	cmd.Stdout = buf
 
-	return cmd, buf, nil
+	// initialize cache
+	path := ".std/cache"
+	err = os.MkdirAll(path, os.ModePerm)
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+	c, err := cache.Open(path)
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+	key := cache.NewActionID([]byte(strings.Join(args, "")))
+
+	return c, &key, cmd, buf, nil
 }
