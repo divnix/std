@@ -143,7 +143,7 @@ func init() {
 					return carapace.ActionMessage(fmt.Sprintf("%v\n", err))
 				}
 			} else {
-				return carapace.ActionMessage(fmt.Sprint("No completion cache: please initialize by running 'std'."))
+				return carapace.ActionMessage(fmt.Sprint("No completion cache: please initialize by running 'std re-cache'."))
 			}
 			var values = []string{}
 			for ci, c := range root.Cells {
