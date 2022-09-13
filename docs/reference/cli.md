@@ -8,6 +8,8 @@ std
 
 # CLI
 std //<TAB>
+std re-cache # refresh the CLI cache
+std list     # show a list of all targets
 
 # Version
 std -v
@@ -23,9 +25,16 @@ std is the CLI / TUI companion for Standard.
 - Invoke with a target spec and action to run a known target's action directly.
 
 Usage:
-std //cell/block/target:action [flags]
+  std //[cell]/[block]/[target]:[action] [args...]
+  std [command]
+
+Available Commands:
+  list        List available targets.
+  re-cache    Refresh the CLI cache.
 
 Flags:
--h, --help      help for std
--v, --version   version for std
+  -h, --help      help for std
+  -v, --version   version for std
+
+Use "std [command] --help" for more information about a command.
 ```
