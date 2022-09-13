@@ -3,7 +3,9 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"os"
+	"text/tabwriter"
 
 	"github.com/oriser/regroup"
 
@@ -76,6 +78,44 @@ The TUI does this automatically, but the command completion needs manual initial
 		os.Exit(0)
 	},
 }
+var listCmd = &cobra.Command{
+	Use:   "list",
+	Short: "List available targets.",
+	Long: `List available targets.
+Shows a list of all available targets. Can be used as an alternative to the TUI.
+Also loads the CLI cache, if no cache is found. Reads the cache, otherwise.`,
+	Args: cobra.NoArgs,
+	Run: func(cmd *cobra.Command, args []string) {
+		cache, key, loadCmd, buf, err := LoadFlakeCmd()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		cached, _, err := cache.GetBytes(*key)
+		var root *data.Root
+		if err == nil {
+			root, _ = LoadJson(bytes.NewReader(cached))
+		} else {
+			loadCmd.Run()
+			bufA := &bytes.Buffer{}
+			r := io.TeeReader(buf, bufA)
+			root, _ = LoadJson(r)
+			cache.PutBytes(*key, bufA.Bytes())
+		}
+		w := tabwriter.NewWriter(os.Stdout, 5, 2, 4, ' ', 0)
+		for _, c := range root.Cells {
+			for _, o := range c.Blocks {
+				for _, t := range o.Targets {
+					for _, a := range t.Actions {
+						fmt.Fprintln(w, fmt.Sprintf("//%s/%s/%s:%s\t--\t%s:  %s", c.Cell, o.Block, t.Target, a.Name, t.Description, a.Descr))
+					}
+				}
+			}
+		}
+		w.Flush()
+		os.Exit(0)
+	},
+}
 
 func ExecuteCli() {
 	if err := rootCmd.Execute(); err != nil {
@@ -86,6 +126,7 @@ func ExecuteCli() {
 
 func init() {
 	rootCmd.AddCommand(reCacheCmd)
+	rootCmd.AddCommand(listCmd)
 	carapace.Gen(rootCmd).Standalone()
 	// completes: '//cell/block/target:action'
 	carapace.Gen(rootCmd).PositionalCompletion(
