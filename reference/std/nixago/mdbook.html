@@ -148,7 +148,6 @@ in {
   configData = {};
   output = &quot;book.toml&quot;;
   format = &quot;toml&quot;;
-  hook.mode = &quot;copy&quot;; # let CI pick it up outside of devshell
   hook.extra = d: let
     sentinel = &quot;nixago-auto-created: mdbook-build-folder&quot;;
     file = &quot;.gitignore&quot;;

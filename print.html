@@ -2364,7 +2364,6 @@ in {
   configData = {};
   output = &quot;book.toml&quot;;
   format = &quot;toml&quot;;
-  hook.mode = &quot;copy&quot;; # let CI pick it up outside of devshell
   hook.extra = d: let
     sentinel = &quot;nixago-auto-created: mdbook-build-folder&quot;;
     file = &quot;.gitignore&quot;;
@@ -2441,6 +2440,7 @@ in {
   };
   mdbook = std.nixago.mdbook {
     configData = import ./nixago/mdbook.nix;
+    hook.mode = &quot;copy&quot;; # let CI pick it up outside of devshell
     packages = [std.packages.mdbook-kroki-preprocessor];
   };
   treefmt = std.nixago.treefmt {
