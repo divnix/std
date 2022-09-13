@@ -1,17 +1,16 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the `nomadJobsManifest` Blocktype for rendering job descriptions for the Nomad Cluster scheduler.
-  Each named attribtute-set under the block contains a valid Nomad job description, written in Nix.
-
-  i.e: `nomadJobManifests.<job-name>.<valid-job-description>`.
+  Use the `nomadJobsManifest` Blocktype for rendering job descriptions
+  for the Nomad Cluster scheduler. Each named attribtute-set under the
+  block contains a valid Nomad job description, written in Nix.
 
   Available actions:
     - render
     - deploy
     - explore
   */
-  functions = name: {
+  nomadJobManifests = name: {
     inherit name;
     type = "nomadJobManifests";
 
@@ -53,8 +52,9 @@
       '';
     in [
       /*
-      The `render` action will take this Nix job descrition, convert it to JSON, inject the git revision
-      validate the manifest, after which it can be run or planned with the Nomad cli or the `deploy` action.
+      The `render` action will take this Nix job descrition, convert it to JSON,
+      inject the git revision validate the manifest, after which it can be run or
+      planned with the Nomad cli or the `deploy` action.
       */
       {
         name = "render";
@@ -130,4 +130,4 @@
     ];
   };
 in
-  functions
+  nomadJobManifests
