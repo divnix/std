@@ -214,12 +214,12 @@
           imported =
             if l.pathExists oPath.file
             then
-              validate.Import cellBlock.type oPath.file (importedFile (
+              validate.Import (cellBlock.type or cellBlock.clade) oPath.file (importedFile (
                 args // {cell = res.output;} # recursion on cell
               ))
             else if l.pathExists oPath.dir
             then
-              validate.Import cellBlock.type oPath.dir (importedDir (
+              validate.Import (cellBlock.type or cellBlock.clade) oPath.dir (importedDir (
                 args // {cell = res.output;} # recursion on cell
               ))
             else null;
@@ -232,7 +232,7 @@
             # __std meta init (fast)
             {
               cellBlock = cellBlock.name;
-              blockType = cellBlock.type;
+              blockType = cellBlock.type or cellBlock.clade;
               readme =
                 if l.pathExists oPath.readme
                 then oPath.readme
