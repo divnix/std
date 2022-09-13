@@ -1804,17 +1804,16 @@ in
 <pre><code class="language-nix">{nixpkgs}: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the `nomadJobsManifest` Blocktype for rendering job descriptions for the Nomad Cluster scheduler.
-  Each named attribtute-set under the block contains a valid Nomad job description, written in Nix.
-
-  i.e: `nomadJobManifests.&lt;job-name&gt;.&lt;valid-job-description&gt;`.
+  Use the `nomadJobsManifest` Blocktype for rendering job descriptions
+  for the Nomad Cluster scheduler. Each named attribtute-set under the
+  block contains a valid Nomad job description, written in Nix.
 
   Available actions:
     - render
     - deploy
     - explore
   */
-  functions = name: {
+  nomadJobManifests = name: {
     inherit name;
     type = &quot;nomadJobManifests&quot;;
 
@@ -1856,8 +1855,9 @@ in
       '';
     in [
       /*
-      The `render` action will take this Nix job descrition, convert it to JSON, inject the git revision
-      validate the manifest, after which it can be run or planned with the Nomad cli or the `deploy` action.
+      The `render` action will take this Nix job descrition, convert it to JSON,
+      inject the git revision validate the manifest, after which it can be run or
+      planned with the Nomad cli or the `deploy` action.
       */
       {
         name = &quot;render&quot;;
@@ -1933,7 +1933,7 @@ in
     ];
   };
 in
-  functions
+  nomadJobManifests
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-cell"><a class="header" href="#the-std-cell">The <code>std</code> Cell</a></h1>
 <p>… is the only cell in <code>divnix/std</code> and provides only very limited functionality.</p>
