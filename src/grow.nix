@@ -82,21 +82,7 @@
     CellBlocks =
       if organelles != null
       then
-        l.warn ''
-
-          Standard (divnix/std): Screw the wired naming!!! Finally.
-
-          Please rename:
-
-          - sed -i 's/organelles/cellBlocks/g'
-          - sed -i 's/organelle/cellBlock/g'
-          - sed -i 's/Organelles/Cell Blocks/g'
-          - sed -i 's/Organelle/Cell Block/g'
-
-          (In project: ${toString inputs.self})
-
-          see: https://github.com/divnix/std/issues/116
-        ''
+        (import ../deprecation.nix nixpkgs).warnOrganelles inputs.self
         validate.CellBlocks
         organelles
       else validate.CellBlocks cellBlocks;
@@ -214,12 +200,12 @@
           imported =
             if l.pathExists oPath.file
             then
-              validate.Import (cellBlock.type or cellBlock.clade) oPath.file (importedFile (
+              validate.Import (cellBlock.type or (import ../deprecation.nix nixpkgs).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) oPath.file (importedFile (
                 args // {cell = res.output;} # recursion on cell
               ))
             else if l.pathExists oPath.dir
             then
-              validate.Import (cellBlock.type or cellBlock.clade) oPath.dir (importedDir (
+              validate.Import (cellBlock.type or (import ../deprecation.nix nixpkgs).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) oPath.dir (importedDir (
                 args // {cell = res.output;} # recursion on cell
               ))
             else null;

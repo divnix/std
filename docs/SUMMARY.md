@@ -34,6 +34,7 @@
 
 - [TUI/CLI](reference/cli.md)
 - [Conventions](reference/conventions.md)
+- [Deprecations](reference/deprecations.md)
 - [Builtin Block Types](reference/blocktypes.md)
 
   - [Data](reference/blocktypes/data-blocktype.md)
