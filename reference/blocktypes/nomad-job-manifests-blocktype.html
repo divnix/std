@@ -158,6 +158,7 @@
     }: let
       fx = &quot;${nixpkgs.legacyPackages.${system}.fx}/bin&quot;;
       nomad = &quot;${nixpkgs.legacyPackages.${system}.nomad}/bin&quot;;
+      jq = &quot;${nixpkgs.legacyPackages.${system}.jq}/bin&quot;;
       nixExpr = ''
         x: let
           job = builtins.mapAttrs (_: v: v // {meta = v.meta or {} // {rev = &quot;\&quot;$(git rev-parse --short HEAD)\&quot;&quot;;};}) x.job;
@@ -215,8 +216,11 @@
 
             ${layout}
 
-            if ! [[ -h &quot;$job_path&quot; ]]; then
-            ${render}
+            PATH=$PATH:${jq}
+
+            if ! [[ -h &quot;$job_path&quot; ]] \
+              || [[ &quot;$(jq -r '.job[].meta.rev' &quot;$job_path&quot;)&quot; != &quot;$(git rev-parse --short HEAD)&quot; ]]
+            then ${render}
             fi
 
             if ! plan_results=$(nomad plan -force-color &quot;$job_path&quot;); then
