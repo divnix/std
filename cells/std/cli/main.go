@@ -34,7 +34,7 @@ var extraNixConfig = strings.Join([]string{
 	// write-lock-file = false,
 }, "\n")
 
-func bashExecve(command []string) error {
+func bashExecve(command []string, cmdArgs []string) error {
 	binary, err := exec.LookPath("bash")
 	if err != nil {
 		return err
@@ -62,7 +62,13 @@ func bashExecve(command []string) error {
 		os.Setenv(NIX_CONFIG, fmt.Sprintf("%s\n%s", nixConfigEnv, extraNixConfig))
 	}
 	env := os.Environ()
-	args := []string{"bash", "-c", fmt.Sprintf("%s && %s/.std/last-action", strings.Join(command, " "), prjRoot)}
+	args := []string{"bash", "-c", fmt.Sprintf(
+			"%s && %s/.std/last-action %s",
+			strings.Join(command, " "),
+			prjRoot,
+			strings.Join(cmdArgs, " "),
+	),
+	}
 	if err := syscall.Exec(binary, args, env); err != nil {
 		return err
 	}
@@ -80,7 +86,8 @@ func main() {
 		} else if err := model.(*Tui).FatalError; err != nil {
 			log.Fatal(err)
 		} else if command := model.(*Tui).ExecveCommand; command != nil {
-			if err := bashExecve(command); err != nil {
+			// TUI can't pass arguments to (task-runner type) actions
+			if err := bashExecve(command, []string{}); err != nil {
 				log.Fatal(err)
 			}
 		}
