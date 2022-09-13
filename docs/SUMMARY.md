@@ -44,6 +44,7 @@
   - [Devshells](reference/blocktypes/devshells-blocktype.md)
   - [Containers](reference/blocktypes/containers-blocktype.md)
   - [Nixago](reference/blocktypes/nixago-blocktype.md)
+  - [Nomad Job Manifests](reference/blocktypes/nomad-job-manifests-blocktype.md)
 
 - [`//std`](reference/std/Readme.md)
 
