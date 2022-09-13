@@ -88,16 +88,21 @@
 
               cmd="$(echo "$plan_results" | grep 'nomad job run -check-index')"
 
-              read -rp "Deploy this job? (y/N)" deploy
+              # prompt user interactiely except in CI
+              if ! [[ -v CI ]]; then
+                read -rp "Deploy this job? (y/N)" deploy
 
-              case "$deploy" in
-              [Yy])
+                case "$deploy" in
+                [Yy])
+                  eval "$cmd"
+                  ;;
+                *)
+                  echo "Exiting without deploying"
+                  ;;
+                esac
+              else
                 eval "$cmd"
-                ;;
-              *)
-                echo "Exiting without deploying"
-                ;;
-              esac
+              fi
             else
               echo "Job hasn't changed since last deployment, nothing to deploy"
             fi
