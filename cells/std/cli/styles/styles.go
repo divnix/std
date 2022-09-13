@@ -33,4 +33,7 @@ var (
 	TitleStyle = lipgloss.NewStyle().
 			Foreground(Highlight).Bold(true).
 			Padding(1, 1)
+
+	CacheWarning = lipgloss.NewStyle().
+			Foreground(Highlight).Bold(true).MarginLeft(4)
 )

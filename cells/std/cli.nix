@@ -23,7 +23,7 @@ in {
 
       src = ./cli;
 
-      vendorSha256 = "sha256-xPmEf8JBdhkgKWa0Uve6/G9lKnsYSyuDVjIAqz6VSUE=";
+      vendorSha256 = "sha256-BItgUplYODKpQ3cwwl/5drErX8rbgzDbexZ+ycmcq+8=";
 
       nativeBuildInputs = [nixpkgs.installShellFiles];
 

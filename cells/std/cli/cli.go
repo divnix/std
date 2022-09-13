@@ -1,14 +1,16 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/oriser/regroup"
 
 	"github.com/rsteube/carapace"
 	"github.com/spf13/cobra"
+
+	"github.com/divnix/std/data"
 )
 
 type Spec struct {
@@ -21,9 +23,10 @@ type Spec struct {
 var re = regroup.MustCompile(`^//(?P<cell>[^/]+)/(?P<block>[^/]+)/(?P<target>[^:]+):(?P<action>.+)`)
 
 var rootCmd = &cobra.Command{
-	Use:     "std //cell/block/target:action",
-	Version: fmt.Sprintf("%s (%s)", buildVersion, buildCommit),
-	Short:   "std is the CLI / TUI companion for Standard",
+	Use:                   "std //[cell]/[block]/[target]:[action]",
+	DisableFlagsInUseLine: true,
+	Version:               fmt.Sprintf("%s (%s)", buildVersion, buildCommit),
+	Short:                 "std is the CLI / TUI companion for Standard",
 	Long: `std is the CLI / TUI companion for Standard.
 
 - Invoke without any arguments to start the TUI.
@@ -56,6 +59,24 @@ var rootCmd = &cobra.Command{
 
 	},
 }
+var reCacheCmd = &cobra.Command{
+	Use:   "re-cache",
+	Short: "Refresh the CLI cache.",
+	Long: `Refresh the CLI cache.
+Use this command to cold-start or refresh the CLI cache.
+The TUI does this automatically, but the command completion needs manual initialization of the CLI cache.`,
+	Args: cobra.NoArgs,
+	Run: func(cmd *cobra.Command, args []string) {
+		c, key, loadCmd, buf, err := LoadFlakeCmd()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		loadCmd.Run()
+		c.PutBytes(*key, buf.Bytes())
+		os.Exit(0)
+	},
+}
 
 func ExecuteCli() {
 	if err := rootCmd.Execute(); err != nil {
@@ -65,21 +86,24 @@ func ExecuteCli() {
 }
 
 func init() {
+	rootCmd.AddCommand(reCacheCmd)
 	carapace.Gen(rootCmd).Standalone()
 	// completes: '//cell/block/target:action'
 	carapace.Gen(rootCmd).PositionalAnyCompletion(
 		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
-			cmd, buf, err := LoadFlakeCmd()
+			cache, key, _, _, err := LoadFlakeCmd()
 			if err != nil {
 				return carapace.ActionMessage(fmt.Sprintf("%v\n", err))
 			}
-			err = cmd.Run()
-			if err != nil {
-				return carapace.ActionMessage(fmt.Sprintf("%v\n", err))
-			}
-			root, err := LoadJson(buf)
-			if err != nil {
-				return carapace.ActionMessage(fmt.Sprintf("%v\n", err))
+			cached, _, err := cache.GetBytes(*key)
+			var root *data.Root
+			if err == nil {
+				root, err = LoadJson(bytes.NewReader(cached))
+				if err != nil {
+					return carapace.ActionMessage(fmt.Sprintf("%v\n", err))
+				}
+			} else {
+				return carapace.ActionMessage(fmt.Sprint("No completion cache: please initialize by running 'std'."))
 			}
 			var values = []string{}
 			for ci, c := range root.Cells {
@@ -97,7 +121,7 @@ func init() {
 			}
 			return carapace.ActionValuesDescribed(
 				values...,
-			).Cache(30*time.Second).Invoke(c).ToMultiPartsA("/", ":")
+			).Invoke(c).ToMultiPartsA("/", ":")
 		}),
 	)
 }
