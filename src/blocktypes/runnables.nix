@@ -17,7 +17,7 @@
         name = "run";
         description = "exec this target";
         command = ''
-          nix run ${flake}#${fragment}
+          nix run ${flake}#${fragment} -- "$@"
         '';
       }
     ];
