@@ -1615,7 +1615,7 @@ in
         name = &quot;run&quot;;
         description = &quot;exec this target&quot;;
         command = ''
-          nix run ${flake}#${fragment}
+          nix run ${flake}#${fragment} -- &quot;$@&quot;
         '';
       }
     ];
