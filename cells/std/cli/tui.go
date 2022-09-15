@@ -6,6 +6,7 @@ import (
 	"io"
 	"strings"
 
+	"github.com/aymanbagabas/go-osc52"
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
@@ -303,6 +304,18 @@ func (m *Tui) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.ExecveCommand = args
 				return m, tea.Quit
 			}
+		case m.Focus == Right && key.Matches(msg, actionKeys.Copy):
+			if _, ok := m.Right.SelectedItem().(*ActionItem); ok {
+				osc52.Copy(fmt.Sprintf(
+					cmdTemplate,
+					m.Left.SelectedItem().(*TargetItem).Title(),
+					m.Right.SelectedItem().(*ActionItem).Title(),
+				))
+				return m, nil
+			}
+		case m.Focus == Inspect && key.Matches(msg, actionKeys.Copy):
+			osc52.Copy(m.InspectAction)
+			return m, nil
 		// toggle the help
 		case key.Matches(msg, m.Keys.ShowReadme):
 			if m.Focus == Left {
@@ -534,7 +547,7 @@ func NewActions() Actions {
 
 		d.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd { return nil }
 
-		help := []key.Binding{keys.Exec}
+		help := []key.Binding{keys.Exec, keys.Copy}
 		d.ShortHelpFunc = func() []key.Binding { return help }
 		d.FullHelpFunc = func() [][]key.Binding { return [][]key.Binding{} }
 

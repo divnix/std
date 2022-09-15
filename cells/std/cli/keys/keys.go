@@ -18,6 +18,7 @@ var (
 	home            = key.NewBinding(key.WithKeys("home"), key.WithHelp("home", "go to start"))
 	end             = key.NewBinding(key.WithKeys("end"), key.WithHelp("end", "go to end"))
 	enter           = key.NewBinding(key.WithKeys("enter"), key.WithHelp("⏎", "execute"))
+	textcopy        = key.NewBinding(key.WithKeys("c", "ctrl+c"), key.WithHelp("c", "copy cmd"))
 	search          = key.NewBinding(key.WithKeys("/"), key.WithHelp("/", "filter"))
 	showReadme      = key.NewBinding(key.WithKeys("?"), key.WithHelp("?", "inspect"))
 	closeReadme     = key.NewBinding(key.WithKeys("?", "esc"), key.WithHelp("?", "close"))
@@ -100,6 +101,7 @@ func DefaultListKeyMap() list.KeyMap {
 
 type ActionDelegateKeyMap struct {
 	Exec        key.Binding
+	Copy        key.Binding
 	Inspect     key.Binding
 	QuitInspect key.Binding
 }
@@ -109,6 +111,7 @@ type ActionDelegateKeyMap struct {
 func (d ActionDelegateKeyMap) ShortHelp() []key.Binding {
 	return []key.Binding{
 		d.Exec,
+		d.Copy,
 		d.Inspect,
 		d.QuitInspect,
 	}
@@ -117,6 +120,7 @@ func (d ActionDelegateKeyMap) ShortHelp() []key.Binding {
 func NewActionDelegateKeyMap() *ActionDelegateKeyMap {
 	return &ActionDelegateKeyMap{
 		Exec:        enter,
+		Copy:        textcopy,
 		Inspect:     showReadme,
 		QuitInspect: closeReadme,
 	}
