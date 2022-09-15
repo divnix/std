@@ -156,11 +156,7 @@ func (m *Tui) SetInspect() (tea.Model, tea.Cmd) {
 		}
 		m.InspectAction = strings.Join(args[:2], " ") +
 			" \\\n  " + strings.Join(args[2:4], " ") +
-			" \\\n  " + strings.Join(args[4:5], " ") +
-			" \\\n  " + strings.Join(args[5:6], " ") +
-			" \\\n  " + strings.Join(args[6:7], " ") +
-			" \\\n  " + strings.Join(args[7:8], " ") +
-			" \\\n  " + args[8]
+			" \\\n  " + strings.Join(args[4:], " \\\n  ")
 		return m, nil
 	} else {
 		m.InspectAction = ""
