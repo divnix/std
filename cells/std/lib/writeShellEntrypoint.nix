@@ -182,7 +182,8 @@
         text = ''
           ${prelude}
 
-          sleep "''${DEBUG_SLEEP:-0}"
+          echo "Snore ..."
+          ${l.getExe nixpkgs.snore} "''${DEBUG_SLEEP:-0}"
           ${entrypoint}
         '';
         meta = {
