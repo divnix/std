@@ -204,8 +204,8 @@
   in
     inner
     // {
-      mkOCI = name: n2c.buildImage (mkOCI inner name);
-      mkDebugOCI = name: n2c.buildImage (mkDebugOCI inner name);
+      mkOCI = { name, options ? {}}: l.recursiveUpdate (n2c.buildImage (mkOCI inner name)) options;
+      mkDebugOCI = { name, options ? {}}: l.recursiveUpdate (n2c.buildImage (mkDebugOCI inner name)) options;
       inherit
         (inner)
         package
