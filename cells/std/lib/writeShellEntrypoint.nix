@@ -125,7 +125,7 @@
       set -o nounset
       set -o pipefail
 
-      export PATH="${l.makeBinPath runtimeInputs}:$PATH"
+      export PATH="${l.makeBinPath ([package] ++ runtimeInputs)}:$PATH"
 
       ${l.optionalString (nixpkgs.stdenv.hostPlatform.libc == "glibc") "export LOCALE_ARCHIVE=${locales}/lib/locale/locale-archive"}
       ${l.concatStringsSep "\n" (l.mapAttrsToList (n: v: "export ${n}=${''"$''}{${n}:-${toString v}}${''"''}") env)}
