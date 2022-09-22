@@ -80,14 +80,16 @@ in {
     __functor configuration' {};
 
   fromMakesWith = inputs': let
-    inputsChecked = assert l.assertMsg (builtins.hasAttr "makes" inputs') (
+    inputsChecked = assert l.assertMsg (builtins.hasAttr "makes" inputs')
+    (
       l.traceSeqN 1 inputs' ''
 
         In order to be able to use 'std.std.lib.fromMakesWith', an input
         named 'makes' must be defined in the flake. See inputs above.
       ''
     );
-    assert l.assertMsg (builtins.hasAttr "nixpkgs" inputs') (
+    assert l.assertMsg (builtins.hasAttr "nixpkgs" inputs')
+    (
       l.traceSeqN 1 inputs' ''
 
         In order to be able to use 'std.std.lib.fromMakesWith', an input
@@ -95,7 +97,8 @@ in {
       ''
     ); inputs';
     makes = l.fix (
-      l.extends (
+      l.extends
+      (
         _: _: {
           inherit (inputsChecked.nixpkgs) system;
           inputs = inputsChecked;
@@ -114,7 +117,8 @@ in {
   fromMicrovmWith = import ./fromMicrovmWith.nix {inherit nixpkgs;};
 
   writeShellEntrypoint = inputs': let
-    inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "n2c" inputs') (
+    inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "n2c" inputs')
+    (
       nixpkgs.lib.traceSeqN 1 inputs' ''
 
         In order to be able to use 'std.std.lib.writeShellEntrypoint', an input
@@ -124,6 +128,26 @@ in {
     ); inputs';
   in
     import ./writeShellEntrypoint.nix {
+      inputs = inputsChecked;
+      inherit cell;
+    };
+
+  mkOperable = import ./mkOperable.nix {inherit inputs cell;};
+  mkSetup = import ./mkSetup.nix {inherit inputs cell;};
+  mkUser = import ./mkUser.nix {inherit inputs cell;};
+
+  mkOCI = inputs': let
+    inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "n2c" inputs')
+    (
+      nixpkgs.lib.traceSeqN 1 inputs' ''
+
+        In order to be able to use 'std.std.lib.mkOCI', an input
+        named 'n2c' (representing 'nlewo/nix2container') must be defined in the flake.
+        See inputs above.
+      ''
+    ); inputs';
+  in
+    import ./mkOCI.nix {
       inputs = inputsChecked;
       inherit cell;
     };
