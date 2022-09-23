@@ -12,14 +12,19 @@ in
     runtimeEnv ? {},
     runtimeShell ? nixpkgs.runtimeShell,
     checkPhase ? null,
-  }:
+  }: let
+    runtimeShell' =
+      if runtimeShell != nixpkgs.runtimeShell
+      then (l.getExe runtimeShell)
+      else runtimeShell;
+  in
     nixpkgs.writeTextFile {
       inherit name;
       executable = true;
       destination = "/bin/${name}";
       text =
         ''
-          #!${runtimeShell}
+          #!${runtimeShell'}
           # shellcheck shell=bash
           set -o errexit
           set -o pipefail
