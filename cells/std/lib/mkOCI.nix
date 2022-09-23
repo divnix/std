@@ -36,7 +36,6 @@ in
     perms ? [],
     labels ? {},
     debug ? false,
-    debugInputs ? [],
     options ? {},
   }: let
     # Links liveness and readiness probes (if present) to /bin/* for
@@ -52,7 +51,7 @@ in
       name = "debug";
       runtimeInputs =
         [nixpkgs.bashInteractive nixpkgs.coreutils]
-        ++ debugInputs
+        ++ operable.passthru.debugInputs
         ++ operable.passthru.runtimeInputs;
       text = ''
         cat ${debug-banner}
