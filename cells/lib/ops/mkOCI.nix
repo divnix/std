@@ -50,7 +50,7 @@ in
     debugShell = cell.lib.writeScript {
       name = "debug";
       runtimeInputs =
-        [nixpkgs.bashInteractive nixpkgs.coreutils]
+        [nixpkgs.coreutils]
         ++ operable.passthru.debugInputs
         ++ operable.passthru.runtimeInputs;
       text = ''
