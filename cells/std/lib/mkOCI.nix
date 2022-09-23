@@ -48,7 +48,7 @@ in
     debug-banner = nixpkgs.runCommandNoCC "debug-banner" {} ''
       ${nixpkgs.figlet}/bin/figlet -f banner "STD Debug" > $out
     '';
-    debugShell = nixpkgs.writeShellApplication {
+    debugShell = cell.lib.writeScript {
       name = "debug";
       runtimeInputs =
         [nixpkgs.bashInteractive nixpkgs.coreutils]

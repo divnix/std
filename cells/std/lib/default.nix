@@ -135,6 +135,7 @@ in {
   mkOperable = import ./mkOperable.nix {inherit inputs cell;};
   mkSetup = import ./mkSetup.nix {inherit inputs cell;};
   mkUser = import ./mkUser.nix {inherit inputs cell;};
+  writeScript = import ./writeScript.nix {inherit inputs cell;};
 
   mkOCI = inputs': let
     inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "n2c" inputs')
