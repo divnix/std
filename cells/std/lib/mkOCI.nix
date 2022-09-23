@@ -17,10 +17,10 @@ in
   gid: The group ID to run the container as.
   perms: A list of permissions to set for the container.
   labels: An attribute set of labels to set for the container. The keys are
-    automatically prefixed with "org.opencontainers.image".
+  automatically prefixed with "org.opencontainers.image".
   debug: Whether to include debug tools in the container (bash, coreutils).
   debugInputs: Additional packages to include in the container if debug is
-    enabled.
+  enabled.
   options: Additional options to pass to nix2container.
 
   Returns:
@@ -40,8 +40,8 @@ in
   }: let
     # Links liveness and readiness probes (if present) to /bin/* for
     # convenience
-    livenessLink = l.optionalString (operable.passthru.livenessProbe != null) "ln -s ${l.getExe operable.passthru.livenessProbe} $out/bin/live";
-    readinessLink = l.optionalString (operable.passthru.readinessProbe != null) "ln -s ${l.getExe operable.passthru.readinessProbe} $out/bin/ready";
+    livenessLink = l.optionalString (operable.passthru ? livenessProbe) "ln -s ${l.getExe operable.passthru.livenessProbe} $out/bin/live";
+    readinessLink = l.optionalString (operable.passthru ? readinessProbe) "ln -s ${l.getExe operable.passthru.readinessProbe} $out/bin/ready";
 
     # Configure debug shell
     debug-banner = nixpkgs.runCommandNoCC "debug-banner" {} ''
