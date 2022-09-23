@@ -84,6 +84,7 @@ in
       name = "debug-operable";
       runtimeInputs = [nixpkgs.coreutils];
       text = ''
+        set -x
         sleep "''${DEBUG_SLEEP:-0}"
         ${l.getExe operable} "$@"
       '';
@@ -118,14 +119,13 @@ in
           (n2c.buildLayer {
             copyToRoot = [operable.passthru.package];
             maxLayers = 50;
-            layers =
-              [
-                # Runtime inputs layer
-                (n2c.buildLayer {
-                  deps = operable.passthru.runtimeInputs;
-                  maxLayers = 10;
-                })
-              ];
+            layers = [
+              # Runtime inputs layer
+              (n2c.buildLayer {
+                deps = operable.passthru.runtimeInputs;
+                maxLayers = 10;
+              })
+            ];
           })
           # Liveness and readiness probe layer
           (n2c.buildLayer {
