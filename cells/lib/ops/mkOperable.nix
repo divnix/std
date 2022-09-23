@@ -24,19 +24,23 @@ in
     runtimeScript,
     runtimeEnv ? {},
     runtimeInputs ? [],
+    runtimeShell ? null,
     debugInputs ? [],
     livenessProbe ? null,
     readinessProbe ? null,
   }:
     (cell.lib.writeScript
-      {
-        inherit runtimeInputs runtimeEnv;
-        name = "operable-${package.name}";
-        text = ''
-          ${l.getExe nixpkgs.snore} "''${DEBUG_SLEEP:-0}"
-          ${runtimeScript}
-        '';
-      })
+      ({
+          inherit runtimeInputs runtimeEnv;
+          name = "operable-${package.name}";
+          text = ''
+            ${l.getExe nixpkgs.snore} "''${DEBUG_SLEEP:-0}"
+            ${runtimeScript}
+          '';
+        }
+        // l.optionalAttrs (runtimeShell != null) {
+          inherit runtimeShell;
+        }))
     // {
       # The livenessProbe and readinessProbe are picked up in later stages
       passthru =
