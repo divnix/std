@@ -24,6 +24,7 @@ in
     runtimeScript,
     runtimeEnv ? {},
     runtimeInputs ? [],
+    debugInputs ? [],
     livenessProbe ? null,
     readinessProbe ? null,
   }:
@@ -37,7 +38,7 @@ in
       # The livenessProbe and readinessProbe are picked up in later stages
       passthru =
         {
-          inherit package runtimeInputs;
+          inherit package runtimeInputs debugInputs;
         }
         // l.optionalAttrs (livenessProbe != null) {
           inherit livenessProbe;
