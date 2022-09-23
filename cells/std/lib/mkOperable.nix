@@ -34,7 +34,6 @@ in
           inherit runtimeInputs runtimeEnv;
           name = "operable-${package.name}";
           text = ''
-            ${l.getExe nixpkgs.snore} "''${DEBUG_SLEEP:-0}"
             ${runtimeScript}
           '';
         }
