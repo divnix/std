@@ -117,19 +117,12 @@ in
           # Primary layer is the package layer
           (n2c.buildLayer {
             copyToRoot = [operable.passthru.package];
-            maxLayers = 40;
+            maxLayers = 50;
             layers =
               [
                 # Runtime inputs layer
                 (n2c.buildLayer {
                   deps = operable.passthru.runtimeInputs;
-                  maxLayers = 10;
-                })
-              ]
-              # Optional debug layer
-              ++ l.optionals debug [
-                (n2c.buildLayer {
-                  deps = [debugShell];
                   maxLayers = 10;
                 })
               ];
