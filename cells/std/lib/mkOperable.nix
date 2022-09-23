@@ -52,5 +52,8 @@ in
         }
         // l.optionalAttrs (readinessProbe != null) {
           inherit readinessProbe;
+        }
+        // l.optionalAttrs (runtimeShell != null) {
+          inherit runtimeShell;
         };
     }

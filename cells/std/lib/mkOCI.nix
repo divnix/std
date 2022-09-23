@@ -47,25 +47,36 @@ in
     debug-banner = nixpkgs.runCommandNoCC "debug-banner" {} ''
       ${nixpkgs.figlet}/bin/figlet -f banner "STD Debug" > $out
     '';
-    debugShell = cell.lib.writeScript {
-      name = "debug";
-      runtimeInputs =
-        [nixpkgs.coreutils]
-        ++ operable.passthru.debugInputs
-        ++ operable.passthru.runtimeInputs;
-      text = ''
-        cat ${debug-banner}
-        echo
-        echo "=========================================================="
-        echo "This debug shell contains the runtime environment and "
-        echo "debug dependencies of the entrypoint."
-        echo "To inspect the entrypoint run:"
-        echo "cat /bin/entrypoint"
-        echo "=========================================================="
-        echo
-        exec bash "$@"
-      '';
-    };
+    debugShell = let
+      runtimeShell =
+        if operable.passthru ? runtimeShell
+        then operable.passthru.runtimeShell
+        else nixpkgs.runtimeShell;
+      runtimeShellBin =
+        if operable.passthru ? runtimeShell
+        then (l.getExe operable.passthru.runtimeShell)
+        else nixpkgs.runtimeShell;
+    in
+      cell.lib.writeScript {
+        inherit runtimeShell;
+        name = "debug";
+        runtimeInputs =
+          [nixpkgs.coreutils]
+          ++ operable.passthru.debugInputs
+          ++ operable.passthru.runtimeInputs;
+        text = ''
+          cat ${debug-banner}
+          echo
+          echo "=========================================================="
+          echo "This debug shell contains the runtime environment and "
+          echo "debug dependencies of the entrypoint."
+          echo "To inspect the entrypoint run:"
+          echo "cat /bin/entrypoint"
+          echo "=========================================================="
+          echo
+          exec ${runtimeShellBin} "$@"
+        '';
+      };
     debugShellLink = l.optionalString debug "ln -s ${l.getExe debugShell} $out/bin/debug";
 
     setupLinks = mkSetup "links" {} ''
