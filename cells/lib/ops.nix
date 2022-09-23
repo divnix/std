@@ -15,6 +15,7 @@ in {
   mkOperable = import ./ops/mkOperable.nix {inherit inputs cell;};
   mkSetup = import ./ops/mkSetup.nix {inherit inputs cell;};
   mkUser = import ./ops/mkUser.nix {inherit inputs cell;};
+  writeScript = import ./ops/writeScript.nix {inherit inputs cell;};
 
   mkOCI =   import ./ops/mkOCI.nix {
     inherit cell;
