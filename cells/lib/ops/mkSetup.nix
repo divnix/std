@@ -17,7 +17,7 @@ in
     A setup task.
   */
   name: perms: contents: let
-    setup = nixpkgs.runCommand "oci-setup-${name}" {} contents;
+    setup = nixpkgs.runCommandNoCC "oci-setup-${name}" {} contents;
   in
     setup
     // l.optionalAttrs (perms != {})
