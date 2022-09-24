@@ -6,7 +6,7 @@
   l = nixpkgs.lib // builtins;
   n2c = inputs.n2c.packages.nix2container;
 
-  stdImageDocs = "https://divnix.github.io/std/reference/std/lib/writeShellEntrypoint.html";
+  stdImageDocs = "https://std.divnix.com/reference/std/lib/writeShellEntrypoint.html";
   locales = nixpkgs.glibcLocales.override {allLocales = false;};
 
   mkOCI = entrypoint: name: {
