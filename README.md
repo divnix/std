@@ -152,7 +152,7 @@ direnv allow
 [cells]: https://github.com/divnix/std/tree/main/cells
 [src]: https://github.com/divnix/std/tree/main/src
 [docs]: https://github.com/divnix/std/tree/main/docs
-[book]: https://divnix.github.io/std
+[book]: https://std.divnix.com
 [releases]: https://github.com/divnix/std/releases
 [licensing]: https://github.com/divnix/std/blob/main/.reuse/dep5
 [licenses]: https://github.com/divnix/std/tree/main/LICENSES
@@ -175,5 +175,5 @@ direnv allow
 [nix-flakes]: https://nixos.wiki/wiki/Flakes
 [nix]: https://nixos.org/manual/nix/unstable
 [std]: https://github.com/divnix/std
-[why-std]: https://divnix.github.io/std/explain/why-std.html
-[why-nix]: https://divnix.github.io/std/explain/why-nix.html
+[why-std]: https://std.divnix.com/explain/why-std.html
+[why-nix]: https://std.divnix.com/explain/why-nix.html

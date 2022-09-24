@@ -11,4 +11,4 @@ $ nix flake init -t github:divnix/std#<template-name>
 
 Please consult the template section in the [docs][docs] for an overview.
 
-[docs]: https://divnix.github.io/std/
+[docs]: https://std.divnix.com/
