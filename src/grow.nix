@@ -153,8 +153,6 @@
         cPath = paths.cellPath cellsFrom cellName;
         loadCellBlock = cellBlock: let
           oPath = paths.cellBlockPath cPath cellBlock;
-          importedFile = validate.FileSignature oPath.file (import oPath.file);
-          importedDir = validate.FileSignature oPath.dir (import oPath.dir);
           # minimum data for initializing TUI / CLI completion
           extractInitMeta = name: target: let
             tPath = paths.targetPath oPath name;
@@ -197,18 +195,39 @@
                 value = nixpkgs.legacyPackages.${system}.writeShellScript a.name a.command;
               })
               actions);
-          imported =
-            if l.pathExists oPath.file
-            then
-              validate.Import (cellBlock.type or (import ../deprecation.nix nixpkgs).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) oPath.file (importedFile (
-                args // {cell = res.output;} # recursion on cell
-              ))
-            else if l.pathExists oPath.dir
-            then
-              validate.Import (cellBlock.type or (import ../deprecation.nix nixpkgs).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) oPath.dir (importedDir (
-                args // {cell = res.output;} # recursion on cell
-              ))
-            else null;
+          imported = let
+            Import = path: let
+              api = {
+                inherit (args) inputs;
+                cell = res.output; # recursion on cell
+              };
+              block =
+                if blockType == "set"
+                then scopedImport api path
+                else builtins.seq (validate.FileSignature path signature) (import path api);
+            in
+              validate.Import (cellBlock.type or (import ../deprecation.nix nixpkgs).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) path block;
+
+            path =
+              if l.pathExists oPath.file
+              then oPath.file
+              else if l.pathExists oPath.dir
+              then oPath.dir
+              else null;
+
+            signature =
+              scopedImport {
+                # empty api to satisy lazy eval
+                inputs = {};
+                cell = {};
+              }
+              path;
+
+            blockType = builtins.typeOf signature;
+          in
+            if path == null
+            then path
+            else Import path;
         in
           optionalLoad (imported != null)
           [
