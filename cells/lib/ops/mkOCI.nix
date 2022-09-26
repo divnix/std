@@ -91,7 +91,7 @@ in
     debugEntryLink = l.optionalString debug "ln -s ${l.getExe debugEntry} $out/bin/debug";
 
     # Wrap the operable with sleep if debug is enabled
-    debugOperable = writeScript {
+    debugOperable = cell.lib.writeScript {
       name = "debug-operable";
       runtimeInputs = [nixpkgs.coreutils];
       text = ''
@@ -105,7 +105,7 @@ in
       then debugOperable
       else operable;
 
-    setupLinks = mkSetup "links" {} ''
+    setupLinks = cell.lib.mkSetup "links" {} ''
       mkdir -p $out/bin
       ln -s ${l.getExe operable'} $out/bin/entrypoint
       ${runtimeEntryLink}
