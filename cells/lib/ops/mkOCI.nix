@@ -7,10 +7,11 @@
   n2c = inputs.n2c.packages.nix2container;
 in
   /*
-  Creates an OCI container image using the given operable.
+  Creates an OCI container image
 
   Args:
   name: The name of the image.
+  entrypoint: The entrypoint of the image. Must be a derivation.
   tag: Optional tag of the image (defaults to output hash)
   setup: A list of setup tasks to run to configure the container.
   uid: The user ID to run the container as.
@@ -18,94 +19,52 @@ in
   perms: A list of permissions to set for the container.
   labels: An attribute set of labels to set for the container. The keys are
   automatically prefixed with "org.opencontainers.image".
-  debug: Whether to include debug tools in the container (bash, coreutils).
-  debugInputs: Additional packages to include in the container if debug is
-  enabled.
-  options: Additional options to pass to nix2container.
+  options: Additional options to pass to nix2container.buildImage.
 
   Returns:
   An OCI container image (created with nix2container).
   */
   {
     name,
-    operable,
+    entrypoint,
     tag ? "",
     setup ? [],
+    layers ? [],
+    runtimeInputs ? [],
     uid ? "65534",
     gid ? "65534",
     perms ? [],
     labels ? {},
-    debug ? false,
     options ? {},
   }: let
-    # Links useful paths into the container.
-    runtimeEntryLink = "ln -s ${l.getExe operable.passthru.runtime} $out/bin/runtime";
-    debugEntryLink = l.optionalString debug "ln -s ${l.getExe operable.passthru.debug} $out/bin/debug";
-    livenessLink = l.optionalString (operable.passthru ? livenessProbe) "ln -s ${l.getExe operable.passthru.livenessProbe} $out/bin/live";
-    readinessLink = l.optionalString (operable.passthru ? readinessProbe) "ln -s ${l.getExe operable.passthru.readinessProbe} $out/bin/ready";
-
-    # Wrap the operable with sleep if debug is enabled
-    debugOperable = cell.lib.writeScript {
-      name = "debug-operable";
-      runtimeInputs = [nixpkgs.coreutils];
-      text = ''
-        set -x
-        sleep "''${DEBUG_SLEEP:-0}"
-        ${l.getExe operable} "$@"
-      '';
-    };
-    operable' =
-      if debug
-      then debugOperable
-      else operable;
-
     setupLinks = cell.lib.mkSetup "links" {} ''
       mkdir -p $out/bin
-      ln -s ${l.getExe operable'} $out/bin/entrypoint
-      ${runtimeEntryLink}
-      ${debugEntryLink}
-      ${livenessLink}
-      ${readinessLink}
+      ln -s ${l.getExe entrypoint} $out/bin/entrypoint
     '';
-
-    # The root layer contains all of the setup tasks
-    rootLayer = [setupLinks] ++ setup;
-
-    # This is what get passed to nix2container.buildImage
     config =
       {
-        inherit name;
-
-        # Setup tasks can include permissions via the passthru.perms attribute
-        perms = (l.map (s: l.optionalAttrs (s ? passthru && s.passthru ? perms) s.passthru.perms) setup) ++ perms;
+        inherit name perms;
 
         # Layers are nested to reduce duplicate paths in the image
-        layers = [
-          # Primary layer is the package layer
-          (n2c.buildLayer {
-            copyToRoot = [operable.passthru.package];
-            maxLayers = 50;
-            layers = [
-              # Runtime inputs layer
-              (n2c.buildLayer {
-                deps = operable.passthru.runtimeInputs;
-                maxLayers = 10;
-              })
-            ];
-          })
-          # Liveness and readiness probe layer
-          (n2c.buildLayer {
-            deps =
-              []
-              ++ (l.optionals (operable.passthru ? livenessProbe) [(n2c.buildLayer {deps = [operable.passthru.livenessProbe];})])
-              ++ (l.optionals (operable.passthru ? readinessProbe) [(n2c.buildLayer {deps = [operable.passthru.readinessProbe];})]);
-            maxLayers = 10;
-          })
-        ];
+        layers =
+          [
+            # Primary layer is the entrypoint layer
+            (n2c.buildLayer {
+              deps = [entrypoint];
+              maxLayers = 50;
+              layers = [
+                # Runtime inputs layer
+                (n2c.buildLayer {
+                  deps = runtimeInputs;
+                  maxLayers = 10;
+                })
+              ];
+            })
+          ]
+          ++ layers;
 
-        # Max layers is 127, we only go up to 120
-        maxLayers = 50;
-        copyToRoot = rootLayer;
+        maxLayers = 25;
+        copyToRoot = [setupLinks] ++ setup;
 
         config = {
           User = uid;

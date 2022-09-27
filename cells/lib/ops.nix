@@ -21,4 +21,9 @@ in {
     inherit cell;
     inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkOCI";
   };
+
+  mkOpsOCI =   import ./ops/mkOpsOCI.nix {
+    inherit cell;
+    inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkOpsOCI";
+  };
 }
