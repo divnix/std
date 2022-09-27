@@ -24,11 +24,49 @@ in
     runtimeScript,
     runtimeEnv ? {},
     runtimeInputs ? [],
-    runtimeShell ? null,
+    runtimeShell ? nixpkgs.runtimeShell,
     debugInputs ? [],
     livenessProbe ? null,
     readinessProbe ? null,
-  }:
+  }: let
+    # nixpkgs.runtimeShell is a path to the shell, not a derivation
+    runtimeShellBin =
+      if runtimeShell != nixpkgs.runtimeShell
+      then (l.getExe runtimeShell)
+      else nixpkgs.runtimeShell;
+
+    # Create runtime environment
+    runtime = cell.lib.writeScript {
+      inherit runtimeEnv runtimeInputs runtimeShell;
+      name = "runtime";
+      text = ''
+        exec ${runtimeShellBin}
+      '';
+    };
+
+    # Configure debug environment
+    banner = nixpkgs.runCommandNoCC "debug-banner" {} ''
+      ${nixpkgs.figlet}/bin/figlet -f banner "STD Debug" > $out
+    '';
+    debug = cell.lib.writeScript {
+      inherit runtimeEnv runtimeShell;
+      name = "debug";
+      runtimeInputs =
+        [nixpkgs.coreutils]
+        ++ debugInputs
+        ++ runtimeInputs;
+      text = ''
+        cat ${banner}
+        echo
+        echo "=========================================================="
+        echo "This debug shell contains the runtime environment and all"
+        echo "debug dependencies."
+        echo "=========================================================="
+        echo
+        exec ${runtimeShellBin}
+      '';
+    };
+  in
     (cell.lib.writeScript
       ({
           inherit runtimeInputs runtimeEnv;
@@ -41,18 +79,16 @@ in
           inherit runtimeShell;
         }))
     // {
-      # The livenessProbe and readinessProbe are picked up in later stages
       passthru =
+        # These attributes are useful for informing later stages
         {
-          inherit package runtimeInputs debugInputs;
+          inherit debug debugInputs package runtime runtimeInputs runtimeShell;
         }
+        # The livenessProbe and readinessProbe are picked up in later stages
         // l.optionalAttrs (livenessProbe != null) {
           inherit livenessProbe;
         }
         // l.optionalAttrs (readinessProbe != null) {
           inherit readinessProbe;
-        }
-        // l.optionalAttrs (runtimeShell != null) {
-          inherit runtimeShell;
         };
     }
