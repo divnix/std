@@ -6,6 +6,22 @@
   nixpkgs = inputs.nixpkgs;
 
   l = nixpkgs.lib // builtins;
+
+  checkOCI = fun: inputs': let
+    inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "n2c" inputs')
+    (
+      nixpkgs.lib.traceSeqN 1 inputs' ''
+
+        In order to be able to use 'std.std.lib.${fun}', an input
+        named 'n2c' (representing 'nlewo/nix2container') must be defined in the flake.
+        See inputs above.
+      ''
+    ); inputs';
+  in
+    import (./. + "/${fun}.nix") {
+      inputs = inputsChecked;
+      inherit cell;
+    };
 in {
   mkShell = configuration: let
     nixagoModule = {
@@ -137,19 +153,6 @@ in {
   mkUser = import ./mkUser.nix {inherit inputs cell;};
   writeScript = import ./writeScript.nix {inherit inputs cell;};
 
-  mkOCI = inputs': let
-    inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "n2c" inputs')
-    (
-      nixpkgs.lib.traceSeqN 1 inputs' ''
-
-        In order to be able to use 'std.std.lib.mkOCI', an input
-        named 'n2c' (representing 'nlewo/nix2container') must be defined in the flake.
-        See inputs above.
-      ''
-    ); inputs';
-  in
-    import ./mkOCI.nix {
-      inputs = inputsChecked;
-      inherit cell;
-    };
+  mkOCI = checkOCI "mkOCI";
+  mkOpOCI = checkOCI "mkOpOCI";
 }
