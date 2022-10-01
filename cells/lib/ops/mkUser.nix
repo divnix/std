@@ -25,14 +25,14 @@ in
     gid,
     withHome ? false,
   }: let
-    perms = l.optionalAttrs withHome {
+    perms = l.optionals withHome [{
       regex = "/home/${user}";
       mode = "0744";
       uid = l.toInt uid;
       gid = l.toInt gid;
       uname = user;
       gname = group;
-    };
+    }];
   in
     # https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/docker/default.nix#L177-L199
     cell.lib.mkSetup "users" perms (''
