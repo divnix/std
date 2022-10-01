@@ -67,7 +67,7 @@ in
     '';
   in
     cell.lib.mkOCI inputs {
-      inherit name tag uid gid labels options;
+      inherit name tag uid gid labels options perms;
       entrypoint = operable';
       setup = [setupLinks] ++ setup;
       runtimeInputs = operable.passthru.runtimeInputs;
@@ -82,7 +82,4 @@ in
           maxLayers = 10;
         })
       ];
-
-      # Setup tasks can include permissions via the passthru.perms attribute
-      perms = (l.map (s: l.optionalAttrs (s ? passthru && s.passthru ? perms) s.passthru.perms) setup) ++ perms;
     }

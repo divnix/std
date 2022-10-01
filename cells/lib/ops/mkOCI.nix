@@ -43,7 +43,7 @@ in
     '';
     config =
       {
-        inherit name perms;
+        inherit name;
 
         # Layers are nested to reduce duplicate paths in the image
         layers =
@@ -72,6 +72,9 @@ in
           Entrypoint = ["/bin/entrypoint"];
           Labels = l.mapAttrs' (n: v: l.nameValuePair "org.opencontainers.image.${n}" v) labels;
         };
+
+        # Setup tasks can include permissions via the passthru.perms attribute
+        perms = (l.map (s: l.optionalAttrs (s ? passthru && s.passthru ? perms) s.passthru.perms) setup) ++ perms;
       }
       // l.optionalAttrs (tag != "") {inherit tag;};
   in
