@@ -10,7 +10,7 @@ in
 
   Args:
     name: A name for the task.
-    perms: An attribute set of permissions to set for this task.
+    perms: A list of permissions to set for this task.
     contents: The contents of the setup task. This is a bash script.
 
   Returns:
@@ -18,9 +18,7 @@ in
   */
   name: perms: contents: let
     setup = nixpkgs.runCommandNoCC "oci-setup-${name}" {} contents;
+    perms' = l.map (p: p // { path = setup; }) perms;
   in
     setup
-    // l.optionalAttrs (perms != {})
-    (
-      l.recursiveUpdate {passthru.perms = perms;} {passthru.perms.path = setup;}
-    )
+    // l.optionalAttrs (perms != []) { passthru.perms = perms'; }

@@ -58,7 +58,7 @@ in
       then debugOperable
       else operable;
 
-    setupLinks = cell.lib.mkSetup "links" {} ''
+    setupLinks = cell.lib.mkSetup "links" [ ] ''
       mkdir -p $out/bin
       ${runtimeEntryLink}
       ${debugEntryLink}
