@@ -4,20 +4,16 @@
 }: let
   l = nixpkgs.lib // builtins;
   nixpkgs = inputs.nixpkgs;
+
+  inherit (import "${inputs.self}/deprecation.nix" inputs.nixpkgs) warnRemovedDevshellOptionAdr warnRemovedDevshellOptionDocs;
 in {
   default = {config, ...}: let
     cfg = config.std;
   in {
     imports = [
       (nixpkgs.path + "/nixos/modules/misc/assertions.nix")
-      (l.mkRemovedOptionModule ["std" "adr" "enable"] ''
-        The std.adr.enable option has been removed from the std shell.
-        Please look for something like "adr.enable = false" and drop it.
-      '')
-      (l.mkRemovedOptionModule ["std" "docs" "enable"] ''
-        The std.docs.enable option has been removed from the std shell.
-        Please look for something like "docs.enable = false" and drop it.
-      '')
+      (l.mkRemovedOptionModule ["std" "adr" "enable"] (warnRemovedDevshellOptionAdr "Hurry up!"))
+      (l.mkRemovedOptionModule ["std" "docs" "enable"] (warnRemovedDevshellOptionDocs "Hurry up!"))
     ];
     config = {
       motd = ''
