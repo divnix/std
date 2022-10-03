@@ -11,7 +11,7 @@ without some minimal conscious effort of decision making and recording? 😅
 # Usage Example
 
 ```nix
-# ./nix/automation/devshells.nix
+# ./nix/_automation/devshells.nix
 {
   inputs,
   cell,

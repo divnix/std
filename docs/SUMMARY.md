@@ -76,8 +76,8 @@
     - [`/mdbook`](reference/presets/nixago/mdbook.md)
     - [`/treefmt`](reference/presets/nixago/treefmt.md)
 
-- [`//automation`]()
+- [`//_automation`]()
 
-  - [`/devshells`](reference/automation/devshells/Readme.md)
+  - [`/devshells`](reference/_automation/devshells/Readme.md)
 
 - [Glossary](glossary.md)
