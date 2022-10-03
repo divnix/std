@@ -79,13 +79,31 @@
     debug ? false,
   }: let
     # Validations ...
-    CellBlocks =
-      if organelles != null
-      then
-        (import ../deprecation.nix nixpkgs).warnOrganelles inputs.self
-        validate.CellBlocks
-        organelles
-      else validate.CellBlocks cellBlocks;
+    CellBlocks = let
+      unique =
+        l.foldl' (
+          acc: e:
+            if l.elem e.name acc.visited
+            then acc
+            else {
+              visited = acc.visited ++ [e.name];
+              result = acc.result ++ [e];
+            }
+        ) {
+          visited = [];
+          result = [];
+        };
+    in
+      (unique
+        (
+          if organelles != null
+          then
+            (import ../deprecation.nix nixpkgs).warnOrganelles inputs.self
+            validate.CellBlocks
+            organelles
+          else validate.CellBlocks cellBlocks
+        ))
+      .result;
     Systems = validate.Systems systems;
     Cells = l.mapAttrsToList (validate.Cell cellsFrom CellBlocks) (l.readDir cellsFrom);
 

@@ -8,15 +8,29 @@ growOn {
   inherit inputs;
   cellsFrom = ./cells;
   cellBlocks = [
+    ## For downstream use
+
+    # std
     (blockTypes.runnables "cli")
-    (blockTypes.functions "lib")
     (blockTypes.functions "devshellProfiles")
-    (blockTypes.devshells "devshells")
-    (blockTypes.installables "packages")
+    (blockTypes.functions "lib")
     (blockTypes.nixago "nixago")
+    (blockTypes.installables "packages")
+
+    # presets
+    (blockTypes.data "templates")
+    (blockTypes.nixago "nixago")
+
+    ## For local use in the Standard repository
+
+    # _automation
+    (blockTypes.devshells "devshells")
+    (blockTypes.nixago "nixago")
+    # (blockTypes.tasks "tasks") # TODO: implement properly
+
+    # _tests
     (blockTypes.data "data")
     (blockTypes.files "files")
-    (blockTypes.data "templates")
   ];
 } {
   devShells = harvest inputs.self ["_automation" "devshells"];
