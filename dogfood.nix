@@ -19,7 +19,7 @@ growOn {
     (blockTypes.data "templates")
   ];
 } {
-  devShells = harvest inputs.self ["automation" "devshells"];
+  devShells = harvest inputs.self ["_automation" "devshells"];
   packages = harvest inputs.self [["std" "cli"] ["std" "packages"]];
   templates = let
     r = harvest inputs.self ["presets" "templates"];

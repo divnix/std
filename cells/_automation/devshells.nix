@@ -68,11 +68,11 @@ in
       commands = [
         {
           name = "blocktype-data";
-          command = "cat $(std //tests/data/example:write)";
+          command = "cat $(std //_tests/data/example:write)";
         }
         {
           name = "blocktype-devshells";
-          command = "std //std/devshell/default:enter -- echo OK";
+          command = "std //_automation/devshell/default:enter -- echo OK";
         }
         {
           name = "blocktype-runnables";

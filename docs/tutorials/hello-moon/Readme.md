@@ -2,7 +2,7 @@
 
 _A slightly more complete [hello world][hello-world] tutorial._
 
-This tutorial implements a very typical `automation` Cell and its Cell Blocks for a somewhat bigger project.
+This tutorial implements a very typical `_automation` Cell and its Cell Blocks for a somewhat bigger project.
 It also makes use of more advanced functions of `std`.
 Namely:
 
@@ -32,9 +32,9 @@ We also used `std.growOn` instead of `std.grow` so that we can add compatibility
 
 Furthermore, we only defined two Cell Blocks: `nixago` & `devshells`. More on them follows...
 
-#### `./nix/automation/*`
+#### `./nix/_automation/*`
 
-Next, we define a `automation` cell.
+Next, we define a `_automation` cell.
 Each project will have some amount of automation.
 This can be repository automation, such as code generation.
 Or it can be a CI/CD specification.
@@ -57,19 +57,19 @@ In here, we wire up two tools from the Nix ecosystem: [`numtide/devshell`][devsh
 >
 > The Nix ecosystem is very rich in _component tools_, however only few _integration tools_ exist at the time of writing.
 
-#### `./nix/automation/devshells.nix`
+#### `./nix/_automation/devshells.nix`
 
 Let's start with the `cell.devshells` Cell Block and work our way backwards to the `cell.nixago` Cell Block below.
 
 > **More semantic background:**
 >
-> I could also reference them as `inputs.cells.automation.devshells` & `inputs.cells.automation.nixago`.
+> I could also reference them as `inputs.cells._automation.devshells` & `inputs.cells._automation.nixago`.
 >
 > But, because we are sticking with the local Cell context, we don't want to confuse the future code reader.
 > Instead, we gently hint at the locality by just referring them via the `cell` context.
 
 ```nix
-{{#include ./nix/automation/devshells.nix}}
+{{#include ./nix/_automation/devshells.nix}}
 ```
 
 The `nixago = [];` option in this definition is a special integration provided by the [Standard's `devshell`-wrapper (`std.lib.mkShell`)][devshell-wrapper].
@@ -79,13 +79,13 @@ _This is how `std` delivers on its promise of being a (horizontal) integration t
 Because we made use of `std.harvest` in the flake, you now can actually test out the devshell via the Nix CLI compat layer by just running `nix develop -c "$SHELL"` in the directory of the flake.
 For a more elegant method of entering a development shell read on the [direnv][direnv-sec] section below.
 
-#### `./nix/automation/nixago.nix`
+#### `./nix/_automation/nixago.nix`
 
 As we have seen above, the `nixago` option in the `cell.devshells` Cell Block references Targets from both `std.nixago` _and_ `cell.nixago`.
 While you can explore `std.nixago` [here][std-nixago], let's now have a closer look at `cell.nixago`:
 
 ```nix
-{{#include ./nix/automation/nixago.nix}}
+{{#include ./nix/_automation/nixago.nix}}
 ```
 
 In this Cell Block, we have been modifying some built-in convenience `std.nixago.*` pebbles.
@@ -142,7 +142,7 @@ In this case, invoking `$SHELL` correctly is taken care for you by the Block Typ
 ```bash
 # fetch `std`
 $ nix shell github:divnix/std
-$ std //automation/devshells/default:enter
+$ std //_automation/devshells/default:enter
 ```
 
 Since we have declared the devshell Cell Block as a `blockTypes.devshells`, `std` auments it's Targets with the Block Type Actions.
@@ -158,7 +158,7 @@ You can also explore the nixago configuration via the Nixago Block Type's `explo
 ```bash
 # fetch `std`
 $ nix shell github:divnix/std
-$ std //automation/nixago/treefmt:explore
+$ std //_automation/nixago/treefmt:explore
 ```
 
 See [`blockTypes.nixago`][blocktypes-nixago] for more details on the available Actions and their implementation.
@@ -174,7 +174,7 @@ It's super simple & super useful ™ and you should do it _right now_ if you hav
 
 Please learn how to enable `direnv` in this project by following the [direnv how-to][direnv-how-to].
 
-In this case, you would adapt the relevant line to: **`use std nix //automation/devshells:default`**.
+In this case, you would adapt the relevant line to: **`use std nix //_automation/devshells:default`**.
 
 Now, you can simply `cd` into that directory, and the devshells is being loaded.
 The MOTD will be shown, too.
