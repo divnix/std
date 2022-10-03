@@ -68,4 +68,13 @@ in {
 
       see: https://github.com/divnix/std/issues/116
     '';
+
+  warnRemovedDevshellOptionAdr = during "December" ''
+    The std.adr.enable option has been removed from the std shell.
+    Please look for something like "adr.enable = false" and drop it.
+  '';
+  warnRemovedDevshellOptionDocs = during "December" ''
+    The std.docs.enable option has been removed from the std shell.
+    Please look for something like "docs.enable = false" and drop it.
+  '';
 }
