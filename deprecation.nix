@@ -1,32 +1,8 @@
-nixpkgs: let
-  l = nixpkgs.lib // builtins;
-
-  during = month: body: let
-    pad = l.concatStringsSep "" (l.genList (_: " ") (16 - (l.stringLength month)));
-  in
-    l.warn ''
-
-
-      ===============================================
-      !!!  🔥️  STANDARD DEPRECATION WARNING  🔥️   !!!
-      -----------------------------------------------
-      !!! Action required until scheduled removal !!!
-      !!! Sheduled Removal: ${pad}${month} 2022 !!!
-      -----------------------------------------------
-      On schedule, deprecated facilities will be
-      removed from Standard without further warning.
-      -----------------------------------------------
-      ${body}
-      ===============================================
-
-      ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳
-
-
-
-    '';
+inputs: let
+  removeBy = import ./cells/std/errors/removeBy.nix {inherit inputs;};
 in {
   warnClade = variant:
-    during "October" ''
+    removeBy "October 2022" ''
 
       "clade" nomenclature is deprecated.
 
@@ -49,7 +25,7 @@ in {
     '';
 
   warnOrganelles = project:
-    during "October" ''
+    removeBy "October 2022" ''
 
       "organelle" nomenclature is deprecated.
 
@@ -69,11 +45,11 @@ in {
       see: https://github.com/divnix/std/issues/116
     '';
 
-  warnRemovedDevshellOptionAdr = during "December" ''
+  warnRemovedDevshellOptionAdr = removeBy "December 2022" ''
     The std.adr.enable option has been removed from the std shell.
     Please look for something like "adr.enable = false" and drop it.
   '';
-  warnRemovedDevshellOptionDocs = during "December" ''
+  warnRemovedDevshellOptionDocs = removeBy "December 2022" ''
     The std.docs.enable option has been removed from the std shell.
     Please look for something like "docs.enable = false" and drop it.
   '';

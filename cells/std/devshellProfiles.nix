@@ -5,7 +5,7 @@
   l = nixpkgs.lib // builtins;
   nixpkgs = inputs.nixpkgs;
 
-  inherit (import "${inputs.self}/deprecation.nix" inputs.nixpkgs) warnRemovedDevshellOptionAdr warnRemovedDevshellOptionDocs;
+  inherit (import "${inputs.self}/deprecation.nix" inputs) warnRemovedDevshellOptionAdr warnRemovedDevshellOptionDocs;
 in {
   default = {config, ...}: let
     cfg = config.std;
