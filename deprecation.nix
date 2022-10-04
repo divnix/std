@@ -53,4 +53,16 @@ in {
     The std.docs.enable option has been removed from the std shell.
     Please look for something like "docs.enable = false" and drop it.
   '';
+  warnMkMakes = removeBy "December 2022" ''
+    std.lib.fromMakesWith has been refactored to std.lib.mkMakes.
+
+    It furthermore doesn't take 'inputs' as its first argument
+    anymore.
+  '';
+  warnMkMicrovm = removeBy "December 2022" ''
+    std.lib.fromMicrovmWith has been refactored to std.lib.mkMicrovm.
+
+    It furthermore doesn't take 'inputs' as its first argument
+    anymore.
+  '';
 }
