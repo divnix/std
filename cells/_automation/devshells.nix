@@ -6,7 +6,7 @@
   inherit (inputs) nixpkgs;
   inherit (inputs.cells) std;
 in
-  l.mapAttrs (_: std.lib.mkShell) {
+  l.mapAttrs (_: std.lib.mkShell) rec {
     default = {...}: {
       name = "Standard";
       nixago = [
@@ -47,22 +47,16 @@ in
             category = "cli-dev";
           }
         ];
-      imports = [
-        std.devshellProfiles.default
-        cell.devshells.book
-      ];
+      imports = [std.devshellProfiles.default book];
     };
 
     book = {...}: {
-      name = "Standard Book";
       nixago = [cell.nixago.mdbook];
     };
 
     checks = {...}: {
       name = "checks";
-      imports = [
-        std.devshellProfiles.default
-      ];
+      imports = [std.devshellProfiles.default];
       commands = [
         {
           name = "blocktype-data";
