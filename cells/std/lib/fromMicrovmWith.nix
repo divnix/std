@@ -1,37 +1,20 @@
-{nixpkgs}: inputs': let
-  inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "microvm" inputs') (
-    nixpkgs.lib.traceSeqN 1 inputs' ''
-
-      In order to be able to use 'std.std.lib.fromMicrovmWith', an input
-      named 'microvm' must be defined in the flake. See inputs above.
-
-      microvm.url = "github:astro/microvm.nix";
-    ''
-  );
-  assert nixpkgs.lib.assertMsg (builtins.hasAttr "nixpkgs" inputs') (
-    nixpkgs.lib.traceSeqN 1 inputs' ''
-
-      In order to be able to use 'std.std.lib.fromMicrovmWith', an input
-      named 'nixpkgs' must be defined in the flake. See inputs above.
-    ''
-  ); inputs';
-  microvm = module: let
-    nixosSystem = args:
-      import "${inputsChecked.nixpkgs.path}/nixos/lib/eval-config.nix" (args
-        // {
-          modules = args.modules;
-        });
-  in
+{inputs}: let
+  inherit (inputs) nixpkgs microvm;
+  nixosSystem = args:
+    import "${nixpkgs.path}/nixos/lib/eval-config.nix" (args
+      // {
+        modules = args.modules;
+      });
+in
+  module:
     nixosSystem {
-      inherit (inputsChecked.nixpkgs) system;
+      inherit (nixpkgs) system;
       modules = [
         # for declarative MicroVM management
-        inputsChecked.microvm.nixosModules.host
+        microvm.nixosModules.host
         # this runs as a MicroVM that nests MicroVMs
-        inputsChecked.microvm.nixosModules.microvm
+        microvm.nixosModules.microvm
         # your custom module
         module
       ];
-    };
-in
-  microvm
+    }
