@@ -3,12 +3,13 @@
   cell,
 }: let
   inherit (inputs.cells.std.errors) requireInput;
+  inherit (import "${inputs.self}/deprecation.nix" inputs) warnWriteShellEntrypoint;
 in {
   mkMicrovm = import ./ops/mkMicrovm.nix {
     inputs = requireInput "microvm" "github:astro/microvm.nix" "std.lib.ops.mkMicrovm";
   };
 
-  writeShellEntrypoint = import ./ops/writeShellEntrypoint.nix {
+  writeShellEntrypoint = warnWriteShellEntrypoint import ./ops/writeShellEntrypoint.nix {
     inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.writeShellEntrypoint";
   };
 
@@ -17,13 +18,13 @@ in {
   mkUser = import ./ops/mkUser.nix {inherit inputs cell;};
   writeScript = import ./ops/writeScript.nix {inherit inputs cell;};
 
-  mkOCI =   import ./ops/mkOCI.nix {
+  mkOCI = import ./ops/mkOCI.nix {
     inherit cell;
     inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkOCI";
   };
 
-  mkOpsOCI =   import ./ops/mkOpsOCI.nix {
+  mkStandardOCI = import ./ops/mkStandardOCI.nix {
     inherit cell;
-    inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkOpsOCI";
+    inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkStandardOCI";
   };
 }
