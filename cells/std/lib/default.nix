@@ -6,64 +6,22 @@
   nixpkgs = inputs.nixpkgs;
 
   l = nixpkgs.lib // builtins;
+
+  requireInput = import ../errors/requireInput.nix;
 in {
   mkShell = import ./mkShell.nix {inherit inputs cell;};
   mkNixago = import ./mkNixago.nix {inherit inputs cell;};
 
-  fromMakesWith = inputs': let
-    inputsChecked = assert l.assertMsg (builtins.hasAttr "makes" inputs') (
-      l.traceSeqN 1 inputs' ''
-
-        In order to be able to use 'std.std.lib.fromMakesWith', an input
-        named 'makes' must be defined in the flake. See inputs above.
-      ''
-    );
-    assert l.assertMsg (builtins.hasAttr "nixpkgs" inputs') (
-      l.traceSeqN 1 inputs' ''
-
-        In order to be able to use 'std.std.lib.fromMakesWith', an input
-        named 'nixpkgs' must be defined in the flake. See inputs above.
-      ''
-    ); inputs';
-  in
-    import ./fromMakesWith.nix {
-      inputs = inputsChecked;
-    };
-
-  fromMicrovmWith = inputs': let
-    inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "microvm" inputs') (
-      nixpkgs.lib.traceSeqN 1 inputs' ''
-
-        In order to be able to use 'std.std.lib.fromMicrovmWith', an input
-        named 'microvm' must be defined in the flake. See inputs above.
-
-        microvm.url = "github:astro/microvm.nix";
-      ''
-    );
-    assert nixpkgs.lib.assertMsg (builtins.hasAttr "nixpkgs" inputs') (
-      nixpkgs.lib.traceSeqN 1 inputs' ''
-
-        In order to be able to use 'std.std.lib.fromMicrovmWith', an input
-        named 'nixpkgs' must be defined in the flake. See inputs above.
-      ''
-    ); inputs';
-  in
+  fromMicrovmWith = inputs':
     import ./fromMicrovmWith.nix {
-      inputs = inputsChecked;
+      inputs = requireInput {inputs = inputs';} "microvm" "github:astro/microvm.nix" "std.std.lib.fromMicrovmWith";
     };
-
-  writeShellEntrypoint = inputs': let
-    inputsChecked = assert nixpkgs.lib.assertMsg (builtins.hasAttr "n2c" inputs') (
-      nixpkgs.lib.traceSeqN 1 inputs' ''
-
-        In order to be able to use 'std.std.lib.writeShellEntrypoint', an input
-        named 'n2c' (representing 'nlewo/nix2container') must be defined in the flake.
-        See inputs above.
-      ''
-    ); inputs';
-  in
+  writeShellEntrypoint = inputs':
     import ./writeShellEntrypoint.nix {
-      inputs = inputsChecked;
-      inherit cell;
+      inputs = requireInput {inputs = inputs';} "n2c" "github:nlewo/nix2container" "std.std.lib.writeShellEntrypoint";
+    };
+  fromMakesWith = inputs':
+    import ./fromMakesWith.nix {
+      inputs = requireInput {inputs = inputs';} "makes" "github:fluidattacks/makes" "std.std.lib.fromMakesWith";
     };
 }

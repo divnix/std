@@ -98,7 +98,7 @@
         (
           if organelles != null
           then
-            (import ../deprecation.nix nixpkgs).warnOrganelles inputs.self
+            (import ../deprecation.nix {inherit nixpkgs;}).warnOrganelles inputs.self
             validate.CellBlocks
             organelles
           else validate.CellBlocks cellBlocks
@@ -218,12 +218,12 @@
           imported =
             if l.pathExists oPath.file
             then
-              validate.Import (cellBlock.type or (import ../deprecation.nix nixpkgs).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) oPath.file (importedFile (
+              validate.Import (cellBlock.type or (import ../deprecation.nix {inherit nixpkgs;}).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) oPath.file (importedFile (
                 args // {cell = res.output;} # recursion on cell
               ))
             else if l.pathExists oPath.dir
             then
-              validate.Import (cellBlock.type or (import ../deprecation.nix nixpkgs).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) oPath.dir (importedDir (
+              validate.Import (cellBlock.type or (import ../deprecation.nix {inherit nixpkgs;}).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) oPath.dir (importedDir (
                 args // {cell = res.output;} # recursion on cell
               ))
             else null;
