@@ -22,7 +22,7 @@ jobs:
             system-features = nixos-test benchmark big-parallel kvm recursive-nix
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
-      - run: nix develop -c mdbook build
+      - run: nix develop .#book -c mdbook build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

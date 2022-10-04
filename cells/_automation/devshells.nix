@@ -7,18 +7,13 @@
   inherit (inputs.cells) std;
 in
   l.mapAttrs (_: std.lib.mkShell) {
-    default = {
-      extraModulesPath,
-      pkgs,
-      ...
-    }: {
+    default = {...}: {
       name = "Standard";
       nixago = [
         (std.nixago.conform {configData = {inherit (inputs) cells;};})
         cell.nixago.treefmt
         cell.nixago.editorconfig
         cell.nixago.just
-        cell.nixago.mdbook
         std.nixago.lefthook
         std.nixago.adrgen
       ];
@@ -54,13 +49,16 @@ in
         ];
       imports = [
         std.devshellProfiles.default
+        cell.devshells.book
       ];
     };
-    checks = {
-      pkgs,
-      config,
-      ...
-    }: {
+
+    book = {...}: {
+      name = "Standard Book";
+      nixago = [cell.nixago.mdbook];
+    };
+
+    checks = {...}: {
       name = "checks";
       imports = [
         std.devshellProfiles.default
