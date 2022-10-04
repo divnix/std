@@ -51,12 +51,6 @@
 
   - [`/cli`](reference/std/cli/Readme.md)
   - [`/devshellProfiles`](reference/std/devshellProfiles/Readme.md)
-  - [`/lib`](reference/std/lib/Readme.md)
-    - [`/mkMakes`](reference/std/lib/mkMakes.md)
-    - [`/mkMicrovm`](reference/std/lib/mkMicrovm.md)
-    - [`/mkShell`](reference/std/lib/mkShell.md)
-    - [`/writeShellEntrypoint`](reference/std/lib/writeShellEntrypoint.md)
-    - [`/mkNixago`](reference/std/lib/mkNixago.md)
   - [`/nixago`](reference/std/nixago/Readme.md)
     - [`/adrgen`](reference/std/nixago/adrgen.md)
     - [`/conform`](reference/std/nixago/conform.md)
@@ -68,6 +62,18 @@
   - [`/errors`](reference/std/errors/Readme.md)
     - [`/removeBy`](reference/std/errors/removeBy.md)
     - [`/requireInput`](reference/std/errors/requireInput.md)
+
+- [`//lib`](reference/lib/Readme.md)
+
+  - [`/dev`](reference/lib/dev/Readme.md)
+
+    - [`/mkMakes`](reference/lib/dev/mkMakes.md)
+    - [`/mkShell`](reference/lib/dev/mkShell.md)
+    - [`/mkNixago`](reference/lib/dev/mkNixago.md)
+
+  - [`/ops`](reference/lib/ops/Readme.md)
+    - [`/mkMicrovm`](reference/lib/ops/mkMicrovm.md)
+    - [`/writeShellEntrypoint`](reference/lib/ops/writeShellEntrypoint.md)
 
 - [`//presets`](reference/presets/Readme.md)
 

@@ -27,7 +27,7 @@ It's output wraps utility functions to generate size-optimized OCI-images:
 
 ```nix
 rec {
-  entrypoint = std.std.lib.writeShellEntrypoint inputs { /* ... */ };
+  entrypoint = std.lib.ops.writeShellEntrypoint inputs { /* ... */ };
   oci-image = entrypoint.mkOCI "docker.io/my-oci-image";
   oci-debug-image = entrypoint.mkDebugOCI "docker.io/my-oci-image-debug";
 }

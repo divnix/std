@@ -2,12 +2,12 @@
   inputs,
   cell,
 }: let
-  inherit (inputs.std) std;
+  inherit (inputs.std) std lib;
   inherit (inputs) nixpkgs fenix;
   inherit (inputs.cells) rust hello;
 
   l = nixpkgs.lib // builtins;
-  dev = std.lib.mkShell {
+  dev = lib.dev.mkShell {
     packages = [
       nixpkgs.pkg-config
     ];

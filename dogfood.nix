@@ -18,6 +18,10 @@ growOn {
     (blockTypes.nixago "nixago")
     (blockTypes.installables "packages")
 
+    # lib
+    (blockTypes.functions "dev")
+    (blockTypes.functions "ops")
+
     # presets
     (blockTypes.data "templates")
     (blockTypes.nixago "nixago")
