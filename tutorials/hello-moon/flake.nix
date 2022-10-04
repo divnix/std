@@ -46,7 +46,7 @@
       # Soil ...
       # 1) layer for compat with the nix CLI
       {
-        devShells = harvest inputs.self ["automation" "devshells"];
+        devShells = harvest inputs.self ["_automation" "devshells"];
       }
       # 2) there can be various layers; `growOn` is a variadic function
       {};
