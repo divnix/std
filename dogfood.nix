@@ -14,6 +14,7 @@ growOn {
     (blockTypes.runnables "cli")
     (blockTypes.functions "devshellProfiles")
     (blockTypes.functions "lib")
+    (blockTypes.functions "errors")
     (blockTypes.nixago "nixago")
     (blockTypes.installables "packages")
 

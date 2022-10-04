@@ -64,6 +64,9 @@
     - [`/lefthook`](reference/std/nixago/lefthook.md)
     - [`/mdbook`](reference/std/nixago/mdbook.md)
     - [`/treefmt`](reference/std/nixago/treefmt.md)
+  - [`/errors`](reference/std/errors/Readme.md)
+    - [`/removeBy`](reference/std/errors/removeBy.md)
+    - [`/requireInput`](reference/std/errors/requireInput.md)
 
 - [`//presets`](reference/presets/Readme.md)
 
