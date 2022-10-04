@@ -180,7 +180,7 @@ Now, you can simply `cd` into that directory, and the devshells is being loaded.
 The MOTD will be shown, too.
 
 The first time, you need to teach the `direnv` daemon to trust the `.envrc` file via `direnv allow`.
-If you want to reload the devshell (e.g. to reconcile Nixago Pepples), you can just run `direnv reload`.
+If you want to reload the devshell (e.g. to reconcile Nixago Pebbles), you can just run `direnv reload`.
 
 Because I use these commands so often, I've set: `alias d="direnv"` in my shell's RC file.
 
