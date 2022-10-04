@@ -10,8 +10,10 @@ A version that has this [patch][patch] is a prerequisite.
 {
   inputs,
   cell,
-}: {
-  task = inputs.std.std.lib.mkMakes ./path/to/make/task/main.nix {};
+}: let
+  inherit (inputs.std.lib) dev;
+in {
+  task = ops.mkMakes ./path/to/make/task//main.nix {};
 }
 ```
 

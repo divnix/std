@@ -1,0 +1,1 @@
+../../../../cells/lib/ops/writeShellEntrypoint.md

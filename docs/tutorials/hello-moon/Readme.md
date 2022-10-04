@@ -196,7 +196,7 @@ Because I use these commands so often, I've set: `alias d="direnv"` in my shell'
 [std-nixago]: https://github.com/divnix/std/blob/main/cells/std/nixago.nix
 [direnv]: #direnv
 [hello-world]: ../hello-world
-[devshell-wrapper]: ../../reference/std/lib/mkShell.md
+[devshell-wrapper]: ../../reference/lib/dev/mkShell.md
 [devshell]: https://github.com/numtide/devshell
 [nixago]: https://github.com/nix-community/nixago
 [glossary]: ../../glossary.md

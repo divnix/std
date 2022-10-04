@@ -10,7 +10,7 @@ is used inside its `config.nixago`-option.
 
 ```nix
 { inputs, cell }: {
-  foo = inputs.std.std.lib.mkNixago {
+  foo = inputs.std.lib.dev.mkNixago {
     /* ... */
     packages = [ /* ... */ ];
     commands = [ /* ... */ ];

@@ -8,9 +8,11 @@ This is an integration for [`astro/microvm.nix`][microvm].
 {
   inputs,
   cell,
-}: {
+}: let
+  inherit (inputs.std.lib) ops;
+in {
   # microvm <module>
-  myhost = inputs.std.std.lib.mkMicrovm ({ pkgs, lib, ... }: { networking.hostName = "microvms-host";});
+  myhost = ops.mkMicrovm ({ pkgs, lib, ... }: { networking.hostName = "microvms-host";});
 }
 ```
 

@@ -65,4 +65,20 @@ in {
     It furthermore doesn't take 'inputs' as its first argument
     anymore.
   '';
+
+  warnNewLibCell = removeBy "December 2022" ''
+
+    'std.std.lib' has been distributed into its own cell 'std.lib'
+
+    Please access functions via their new location:
+
+    ... moved to 'std.lib.ops':
+    - 'std.std.lib.mkMicrovm' -> 'std.lib.ops.mkMicrovm'
+    - 'std.std.lib.writeShellEntrypoint' -> 'std.lib.ops.writeShellEntrypoint'
+
+    ... moved to 'std.lib.dev':
+    - 'std.std.lib.mkShell' -> 'std.lib.dev.mkShell'
+    - 'std.std.lib.mkNixago' -> 'std.lib.dev.mkNixago'
+    - 'std.std.lib.mkMakes' -> 'std.lib.dev.mkMakes'
+  '';
 }

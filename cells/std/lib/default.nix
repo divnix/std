@@ -2,39 +2,40 @@
   inputs,
   cell,
 }: let
-  inherit (inputs) dmerge devshell nixago;
-  nixpkgs = inputs.nixpkgs;
+  inherit (inputs.cells.lib) dev ops;
 
-  l = nixpkgs.lib // builtins;
+  l = inputs.nixpkgs.lib // builtins;
 
   requireInput = import ../errors/requireInput.nix;
 
-  inherit (import "${inputs.self}/deprecation.nix" inputs) warnMkMakes warnMkMicrovm;
-in {
-  mkShell = import ./mkShell.nix {inherit inputs cell;};
-  mkNixago = import ./mkNixago.nix {inherit inputs cell;};
+  inherit (import "${inputs.self}/deprecation.nix" inputs) warnMkMakes warnMkMicrovm warnNewLibCell;
+in
+  l.mapAttrs (_: warnNewLibCell) {
+    inherit
+      (dev)
+      mkShell
+      mkNixago
+      mkMakes
+      ;
+    inherit
+      (ops)
+      mkMicrovm
+      ;
 
-  mkMicrovm = import ./mkMicrovm.nix {
-    inputs = cell.errors.requireInput "microvm" "github:astro/microvm.nix" "std.std.lib.mkMicrovm";
-  };
-  writeShellEntrypoint = inputs':
-    import ./writeShellEntrypoint.nix {
-      inputs = requireInput {inputs = inputs';} "n2c" "github:nlewo/nix2container" "std.std.lib.writeShellEntrypoint";
-    };
-  mkMakes = import ./mkMakes.nix {
-    inputs = cell.errors.requireInput "makes" "github:fluidattacks/makes" "std.std.lib.mkMakes";
-  };
-
-  fromMicrovmWith = inputs':
-    warnMkMicrovm
-    import
-    ./mkMicrovm.nix {
-      inputs = requireInput {inputs = inputs';} "microvm" "github:astro/microvm.nix" "std.std.lib.fromMicrovmWith";
-    };
-  fromMakesWith = inputs':
-    warnMkMakes
-    import
-    ./mkMakes.nix {
-      inputs = requireInput {inputs = inputs';} "makes" "github:fluidattacks/makes" "std.std.lib.fromMakesWith";
-    };
-}
+    writeShellEntrypoint = inputs':
+      import ../lib/ops/writeShellEntrypoint.nix {
+        inputs = requireInput {inputs = inputs';} "n2c" "github:nlewo/nix2container" "std.std.lib.writeShellEntrypoint";
+      };
+    fromMicrovmWith = inputs':
+      warnMkMicrovm
+      import
+      ../lib/ops/mkMakes.nix {
+        inputs = requireInput {inputs = inputs';} "microvm" "github:astro/microvm.nix" "std.std.lib.fromMicrovmWith";
+      };
+    fromMakesWith = inputs':
+      warnMkMakes
+      import
+      ../lib/ops/mkMicrovm.nix {
+        inputs = requireInput {inputs = inputs';} "makes" "github:fluidattacks/makes" "std.std.lib.fromMakesWith";
+      };
+  }

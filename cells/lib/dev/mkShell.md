@@ -6,7 +6,7 @@ It is enriched with a tight integration for `std` [Nixago][nixago] pebbles:
 
 ```nix
 { inputs, cell}: {
-  default = inputs.std.std.lib.mkShell {
+  default = inputs.std.lib.dev.mkShell {
     /* ... */
     nixago = [
       (cell.nixago.foo {
