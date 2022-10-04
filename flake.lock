@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "blank": {
+      "locked": {
+        "lastModified": 1625557891,
+        "narHash": "sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=",
+        "owner": "divnix",
+        "repo": "blank",
+        "rev": "5a5d2684073d9f563072ed07c871d577a6c614a8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "divnix",
+        "repo": "blank",
+        "type": "github"
+      }
+    },
     "devshell": {
       "inputs": {
         "flake-utils": [
@@ -82,7 +97,9 @@
         "flake-utils": [
           "flake-utils"
         ],
-        "nixago-exts": "nixago-exts",
+        "nixago-exts": [
+          "blank"
+        ],
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -98,21 +115,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixago",
-        "type": "github"
-      }
-    },
-    "nixago-exts": {
-      "locked": {
-        "lastModified": 1625557891,
-        "narHash": "sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=",
-        "owner": "divnix",
-        "repo": "blank",
-        "rev": "5a5d2684073d9f563072ed07c871d577a6c614a8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "nixago-extensions",
         "type": "github"
       }
     },
@@ -134,10 +136,20 @@
     },
     "root": {
       "inputs": {
+        "blank": "blank",
         "devshell": "devshell",
         "dmerge": "dmerge",
         "flake-utils": "flake-utils",
+        "makes": [
+          "blank"
+        ],
         "mdbook-kroki-preprocessor": "mdbook-kroki-preprocessor",
+        "microvm": [
+          "blank"
+        ],
+        "n2c": [
+          "blank"
+        ],
         "nixago": "nixago",
         "nixpkgs": "nixpkgs",
         "yants": "yants"

@@ -11,6 +11,7 @@
   inputs.dmerge.url = "github:divnix/data-merge";
   inputs.dmerge.inputs.nixlib.follows = "nixpkgs";
   inputs.dmerge.inputs.yants.follows = "yants";
+  inputs.blank.url = "github:divnix/blank";
   /*
   Auxiliar inputs used in builtin libraries or for the dev environment.
   */
@@ -21,12 +22,17 @@
     devshell.inputs.flake-utils.follows = "flake-utils";
     nixago.url = "github:nix-community/nixago";
     nixago.inputs.nixpkgs.follows = "nixpkgs";
-    nixago.inputs.nixago-exts.url = "github:divnix/blank";
+    nixago.inputs.nixago-exts.follows = "blank";
     nixago.inputs.flake-utils.follows = "flake-utils";
     mdbook-kroki-preprocessor = {
       url = "github:JoelCourtney/mdbook-kroki-preprocessor";
       flake = false;
     };
+
+    # Placeholder inputs that can be overloaded via follows
+    microvm.follows = "blank";
+    n2c.follows = "blank";
+    makes.follows = "blank";
   };
   outputs = inputs: let
     blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs;};
