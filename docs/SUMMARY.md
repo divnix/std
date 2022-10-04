@@ -73,7 +73,6 @@
 
   - [`/ops`](reference/lib/ops/Readme.md)
     - [`/mkMicrovm`](reference/lib/ops/mkMicrovm.md)
-    - [`/writeShellEntrypoint`](reference/lib/ops/writeShellEntrypoint.md)
     - [`/mkOperable`](reference/lib/ops/mkOperable.md)
     - [`/mkOCI`](reference/lib/ops/mkOCI.md)
     - [`/mkStandardOCI`](reference/lib/ops/mkStandardOCI.md)

@@ -50,15 +50,15 @@ She can do so through manual or automatic (CI) means.
 ```mermaid
 flowchart TD
     packaging([Packaging])
-    entrypoint([Entrypoint])
+    operable([Operable])
     image([OCI-Image])
     scheduler([Scheduler Chart])
-    packaging --> entrypoint
-    entrypoint --> image
+    packaging --> operable
+    operable --> image
     image --> scheduler
 
     click packaging href "#packaging-layer" "Jump to the packaging layer section"
-    click entrypoint href "#entrypoint-layer" "Jump to the entrypoint layer section"
+    click operable href "#operable-layer" "Jump to the operable layer section"
     click image href "#oci-image-layer" "Jump to the OCI image layer section"
     click scheduler href "#scheduler-chart-layer" "Jump to the scheduler chart layer section"
 ```
@@ -70,7 +70,7 @@ There is one very important factoring & interoperability rule about these layers
 _A domain concern of a higher layer **must not** bleed into previous layers._
 
 Observing this very simple rule ensures long term interoperability and maintainability of the stack.
-For example, not presuming a particular scheduler in the entrypoint gives contributors a chance to easily add another scheduler target without painful refactoring.
+For example, not presuming a particular scheduler in the operable gives contributors a chance to easily add another scheduler target without painful refactoring.
 
 > _**Future Work:** depending on how you count, there may be actually a 5th layer: the **operator** layer. But we may cover this in a future version of this article in further detail. If you don't want to wait, you may have a conceptual look at the [Charmed Operator Framework][charmed-operator] and [Charmehub][charmhub]._
 
@@ -110,24 +110,24 @@ A Release Manager may decide to provide these artifacts to the general public on
 >
 > Fetching binary artifacts and incorporating them at this layer as a temporary work-around for non-production enviornments is acceptable.
 
-### Entrypoint Layer
+### Operable Layer
 
 ```yaml
-Cell Block: (blockType.runnables "entrypoints")
-Location:  **/entrypoints.nix       # or **/entrypoints/
+Cell Block: (blockType.runnables "operables")
+Location:  **/operables.nix       # or **/operables/
 Actors:
  - Developer
  - Operator
 ```
 
-This Cell Block exclusively defines the runtime environment of the application via the entrypoint script.
+This Cell Block exclusively defines the runtime environment of the application via the operable script.
 The role of this script &mdash; customarily written in `bash` &mdash; serves as a concise and reified communication channel between Developers and Operators.
 As such, Operators will find all the primary configuration options re-encoded at a glance and in a well-known location.
 In the other direction, Developers will find all the magic ad-hoc wrapping that Operators had to engage in, in order to run the application on the target scheduler.
 
 Through this communication channel, operators take reliably note of configuration drift, while Developers gain a valuable source of backlog to increase the operational robustness of the application.
 
-Standard includes a [specific library function][entrypoint-lib] that establishes an implementation-site interface for entrypoints and their collaterals which significantly eases working on the following layers.
+Standard includes a [specific library function][operable-lib] that establishes an implementation-site interface for operables and their collaterals which significantly eases working on the following layers.
 
 ### OCI-Image Layer
 
@@ -147,18 +147,28 @@ We chose OCI-Images as the binary distribution format.
 It not only fits that purpose through the [OCI Distribution Specification][distribution-spec], but also collaterally procures interoperability for 3rd parties:
 OCI images are the de-facto industry standard for deployment artifacts.
 
-If the entrypoints have been created via the above mentioned [library function][entrypoint-lib], the creation of OCI images trivially reduces to:
+If the operables have been created via the above mentioned [library function][operable-lib].
+Using the [Standard OCI image library function][std-oci-lib], the creation of OCI images trivially reduces to:
 
 ```nix
-{ inputs, cell }: {
-  image-hard = cell.entrypoints.app.mkOCI "docker.io/my-image-hardened";
-  image = cell.entrypoints.app.mkDebugOCI "docker.io/my-image";
+{ inputs, cell }: let
+  inherit (inputs.std.lib) ops;
+in {
+  image-hard = ops.mkStandardOCI {
+    name = "docker.io/my-image-hardened";
+    operable = cell.operables.app;
+  };
+  image = ops.mkStandardOCI {
+    name = "docker.io/my-image";
+    operable = cell.operables.app;
+    debug = true;
+  };
 }
 ```
 
 Alternatively, any of the avaible Nix-based OCI generation mini-frameworks can be used;
 [`nlewo/nix2container`][n2c] being the recommended one.
-Hence, this mini-framework is internally used by the entrypoints library function.
+Hence, this mini-framework is internally used by the operables library function.
 
 A Release Manager may decide to provide these artifacts to the general public on tagged releases.
 
@@ -202,7 +212,8 @@ For example: in the transpiled form of a widely used scheduler-specific config s
 [charmed-operator]: https://juju.is/docs/olm
 [charmhub]: https://charmhub.io/
 [nix-superpowers]: ../explain/why-nix.md#nix-superpowers
-[entrypoint-lib]: ../reference/lib/ops/writeShellEntrypoint.md
+[operable-lib]: ../reference/lib/ops/mkOperable.md
+[std-oci-lib]: ../reference/lib/ops/mkStandardOCI.md
 [n2c]: https://github.com/nlewo/nix2container
 [helm-charts]: https://helm.sh/docs/topics/charts/
 [distribution-spec]: https://github.com/opencontainers/distribution-spec
