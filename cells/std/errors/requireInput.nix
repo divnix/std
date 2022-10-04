@@ -1,7 +1,9 @@
 {inputs}: input: url: target: let
   l = inputs.nixpkgs.lib // builtins;
 
-  condition = l.hasAttr input inputs;
+  # other than `divnix/blank`
+  condition = inputs.${input}.sourceInfo.narHash != "sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=";
+
   trace = l.traceSeqN 1 inputs;
 in
   assert l.assertMsg condition (trace ''
