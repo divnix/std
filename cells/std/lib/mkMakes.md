@@ -1,4 +1,4 @@
-# `fromMakesWith` provides an interface to `makes` tasks
+# `mkMakes` provides an interface to `makes` tasks
 
 This is an integration for [`fluidattacks/makes`][makes].
 
@@ -10,10 +10,8 @@ A version that has this [patch][patch] is a prerequisite.
 {
   inputs,
   cell,
-}: let
-  make = inputs.std.std.lib.fromMakesWith inputs;
-in {
-  task = make ./path/to/make/task//main.nix {};
+}: {
+  task = inputs.std.std.lib.mkMakes ./path/to/make/task/main.nix {};
 }
 ```
 
