@@ -81,4 +81,14 @@ in {
     - 'std.std.lib.mkNixago' -> 'std.lib.dev.mkNixago'
     - 'std.std.lib.mkMakes' -> 'std.lib.dev.mkMakes'
   '';
+
+  warnWriteShellEntrypoint = removeBy "December 2022" ''
+
+    'std.lib.ops.writeShellEntrypoint' is deprecated.
+
+    Instead, use 'std.lib.ops.mkOperable' together
+    with 'std.lib.ops.mkStandardOCI'.
+
+    Please consult its documentation.
+  '';
 }
