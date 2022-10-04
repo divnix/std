@@ -22,7 +22,7 @@ in {
       options = ["-w"];
       includes = ["*.go"];
     };
-    # for the `std.lib.mkShell` integration with nixago,
+    # for the `std.lib.dev.mkShell` integration with nixago,
     # we also hint which packages should be made available
     # in the environment for this "Nixago Pebble"
     packages = [nixpkgs.go];
@@ -34,7 +34,7 @@ in {
   editorconfig = std.nixago.editorconfig {
     configData = {
       # the actual target data structure depends on the
-      # Nixago Pepple, and ultimately, on the tool to configure
+      # Nixago Pebble, and ultimately, on the tool to configure
       "*.xcf" = {
         charset = "unset";
         end_of_line = "unset";

@@ -16,14 +16,15 @@
   - the local Cell Blocks by their *Block names*.
 
   However, for `std`, we make an exeption and in-scope, despite being an
-  input, it's primary Cell with the same name.
+  input, its primary Cell with the same name as well as the dev lib.
   */
   inherit (inputs) nixpkgs;
   inherit (inputs.std) std;
+  inherit (inputs.std.lib) dev;
   inherit (cell) nixago;
 in
   # we use Standard's mkShell wrapper for its Nixago integration
-  l.mapAttrs (_: std.lib.mkShell) {
+  l.mapAttrs (_: dev.mkShell) {
     default = {...}: {
       name = "My Devshell";
       # This `nixago` option is a courtesy of the `std` horizontal
