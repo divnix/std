@@ -37,7 +37,7 @@ in
     labels ? {},
     options ? {},
   }: let
-    setupLinks = cell.lib.mkSetup "links" [ ] ''
+    setupLinks = cell.ops.mkSetup "links" [ ] ''
       mkdir -p $out/bin
       ln -s ${l.getExe entrypoint} $out/bin/entrypoint
     '';
