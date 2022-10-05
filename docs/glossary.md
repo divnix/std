@@ -19,3 +19,7 @@
 **Action**
 
 : An Action is a runnable procedure implemented on the generic Block Type type. These are abstract procedures that are valuable in any concrete Cell Block of such Block Type.
+
+**The Registry**
+
+: The Registry, in the context of Standard and if it doesn't refer to a well-known external concept, means the `.#__std` flake output. This Registry holds different Registers that serve different discovery purposes. For example, the CLI can discover relevant metadata or a CI can discover desired pipeline targets.
