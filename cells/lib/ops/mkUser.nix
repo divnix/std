@@ -35,7 +35,7 @@ in
     }];
   in
     # https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/docker/default.nix#L177-L199
-    cell.lib.mkSetup "users" perms (''
+    cell.ops.mkSetup "users" perms (''
         mkdir -p $out/etc/pam.d
 
         echo "${user}:x:${uid}:${gid}::" > $out/etc/passwd

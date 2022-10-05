@@ -44,7 +44,7 @@ in
     readinessLink = l.optionalString (operable.passthru ? readinessProbe) "ln -s ${l.getExe operable.passthru.readinessProbe} $out/bin/ready";
 
     # Wrap the operable with sleep if debug is enabled
-    debugOperable = cell.lib.writeScript {
+    debugOperable = cell.ops.writeScript {
       name = "debug-operable";
       runtimeInputs = [nixpkgs.coreutils];
       text = ''
@@ -58,7 +58,7 @@ in
       then debugOperable
       else operable;
 
-    setupLinks = cell.lib.mkSetup "links" [ ] ''
+    setupLinks = cell.ops.mkSetup "links" [ ] ''
       mkdir -p $out/bin
       ${runtimeEntryLink}
       ${debugEntryLink}
@@ -66,7 +66,7 @@ in
       ${readinessLink}
     '';
   in
-    cell.lib.mkOCI inputs {
+    cell.ops.mkOCI {
       inherit name tag uid gid labels options perms;
       entrypoint = operable';
       setup = [setupLinks] ++ setup;

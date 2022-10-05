@@ -36,7 +36,7 @@ in
       else nixpkgs.runtimeShell;
 
     # Create runtime environment
-    runtime = cell.lib.writeScript {
+    runtime = cell.ops.writeScript {
       inherit runtimeEnv runtimeInputs runtimeShell;
       name = "runtime";
       text = ''
@@ -48,7 +48,7 @@ in
     banner = nixpkgs.runCommandNoCC "debug-banner" {} ''
       ${nixpkgs.figlet}/bin/figlet -f banner "STD Debug" > $out
     '';
-    debug = cell.lib.writeScript {
+    debug = cell.ops.writeScript {
       inherit runtimeEnv runtimeShell;
       name = "debug";
       runtimeInputs =
@@ -67,7 +67,7 @@ in
       '';
     };
   in
-    (cell.lib.writeScript
+    (cell.ops.writeScript
       ({
           inherit runtimeInputs runtimeEnv;
           name = "operable-${package.name}";
