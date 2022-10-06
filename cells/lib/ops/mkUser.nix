@@ -24,6 +24,7 @@ in
     group,
     gid,
     withHome ? false,
+    withRoot ? false,
   }: let
     perms = l.optionals withHome [{
       regex = "/home/${user}";
@@ -33,9 +34,18 @@ in
       uname = user;
       gname = group;
     }];
+    withHomeStr = l.optionalString withHome "mkdir -p $out/home/${user}";
+    withRootStr = l.optionalString withRoot ''
+      echo "root:x:0:0::" >> $out/etc/passwd
+      echo "root:!x:::::::" >> $out/etc/shadow
+      echo "root:x:0:" >> $out/etc/group
+      echo "root:x::" >> $out/etc/gshadow
+
+      mkdir $out/root
+    '';
   in
     # https://github.com/NixOS/nixpkgs/blob/master/pkgs/build-support/docker/default.nix#L177-L199
-    cell.ops.mkSetup "users" perms (''
+    cell.ops.mkSetup "users" perms ''
         mkdir -p $out/etc/pam.d
 
         echo "${user}:x:${uid}:${gid}::" > $out/etc/passwd
@@ -43,6 +53,8 @@ in
 
         echo "${group}:x:${gid}:" > $out/etc/group
         echo "${group}:x::" > $out/etc/gshadow
+
+        ${withRootStr}
 
         cat > $out/etc/pam.d/other <<EOF
         account sufficient pam_unix.so
@@ -52,5 +64,6 @@ in
         EOF
 
         touch $out/etc/login.defs
+
+        ${withHomeStr}
       ''
-      + l.optionalString withHome "\nmkdir -p $out/home/${user}")
