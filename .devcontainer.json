@@ -1,5 +1,5 @@
 {
-    "image": "std-dev",
+    "image": "std-vscode",
     "settings": {
         "terminal.integrated.shell.linux": "/bin/bash"
     }

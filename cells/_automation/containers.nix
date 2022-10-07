@@ -1,11 +1,10 @@
-{ inputs
-, cell
-}:
-let
+{
+  inputs,
+  cell,
+}: let
   inherit (inputs.cells) nixpkgs lib;
   l = nixpkgs.lib // builtins;
-in
-{
+in {
   dev = lib.ops.mkDevOCI {
     name = "docker.io/std-dev";
     tag = "latest";
