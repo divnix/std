@@ -1,0 +1,6 @@
+{
+    "image": "std-dev",
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    }
+}
