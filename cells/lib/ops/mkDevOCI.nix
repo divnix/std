@@ -116,6 +116,7 @@ in
       nixpkgs.gawk
       nixpkgs.gnugrep
       nixpkgs.gnused
+      nixpkgs.diffutils
     ];
 
     # These packages are required by vscode
