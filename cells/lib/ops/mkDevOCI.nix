@@ -21,16 +21,8 @@ in
     # Only bash/zsh are supported currently
     shellName = builtins.unsafeDiscardStringContext (l.baseNameOf (l.getExe runtimeShell));
     shellConfigs = {
-      bash = ''
-        cat >$out/etc/bashrc << EOF
-        eval "\$(direnv hook bash)"
-        EOF
-      '';
-      zsh = ''
-        cat >$out/etc/zshrc << EOF
-        eval "\$(direnv hook zsh)"
-        EOF
-      '';
+      bash = "bashrc";
+      zsh = "zshrc";
     };
 
     # Configure local user
@@ -80,7 +72,12 @@ in
         EOF
 
         # Add direnv shim
-        ${shellConfigs.${shellName}}
+        cat >$out/etc/${shellConfigs.${shellName}} << EOF
+        eval "\$(direnv hook ${shellName})"
+        EOF
+
+        # Put local profile in path
+        echo 'export PATH="$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"' >> $out/etc/${shellConfigs.${shellName}}
 
         # Disable git safe directory
         cat >$out/etc/gitconfig <<EOF
@@ -100,7 +97,7 @@ in
         ln -s ${nixpkgs.coreutils}/bin/env $out/usr/bin/env
       '';
 
-    # These packages are required by nix and its direnv integration
+    # These packages are required by nix and its direnv integration test
     nixDeps = [
       nixpkgs.direnv
       nixpkgs.git
@@ -197,6 +194,8 @@ in
             "NIX_PAGER=cat"
             # This file is created when nixpkgs.cacert is copied to the root
             "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
+            # Pin <nixpkgs> to the version used to build the container
+            "NIX_PATH=nixpkgs=${nixpkgs.path}"
             # Nix expects a user to be set
             "USER=${user}"
             # vscode ships with its own nodejs binary that it uploads when the
