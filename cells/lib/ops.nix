@@ -23,6 +23,11 @@ in {
     inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkOCI";
   };
 
+  mkDevOCI = import ./ops/mkDevOCI.nix {
+    inherit cell;
+    inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkDevOCI";
+  };
+
   mkStandardOCI = import ./ops/mkStandardOCI.nix {
     inherit cell;
     inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkStandardOCI";
