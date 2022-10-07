@@ -77,6 +77,11 @@ let
         # Put local profile in path
         echo 'export PATH="$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"' >> $out/etc/${shellConfigs.${shellName}}
 
+        # Optionally configure starship
+        cat >>$out/etc/${shellConfigs.${shellName}} << EOF
+        ${l.optionalString (! slim) ''eval "\$(starship init ${shellName})"''}
+        EOF
+
         # Disable git safe directory
         cat >$out/etc/gitconfig <<EOF
           [safe]
@@ -128,6 +133,7 @@ let
     nixpkgs.nano
     nixpkgs.gnupg
     nixpkgs.openssh
+    nixpkgs.starship
   ];
 
   # These packages are required by vscode
