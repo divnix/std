@@ -40,23 +40,22 @@ var rootCmd = &cobra.Command{
 		}
 		return nil
 	},
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		s := &Spec{}
 		if err := re.MatchToTarget(args[0], s); err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			return err
 		}
 		nix, nixargs, err := GetActionEvalCmdArgs(s.Cell, s.Block, s.Target, s.Action)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			// TODO: remove non relevant nix fragment search paths from error msg
+			return err
 		}
 		// fmt.Printf("%+v\n", append([]string{nix}, nixargs...))
 		// fmt.Printf("%+v\n", args)
 		if err = bashExecve(append([]string{nix}, nixargs...), args[1:]); err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			return err
 		}
+		return nil
 
 	},
 }
@@ -67,15 +66,14 @@ var reCacheCmd = &cobra.Command{
 Use this command to cold-start or refresh the CLI cache.
 The TUI does this automatically, but the command completion needs manual initialization of the CLI cache.`,
 	Args: cobra.NoArgs,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		c, key, loadCmd, buf, err := LoadFlakeCmd()
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			return err
 		}
 		loadCmd.Run()
 		c.PutBytes(*key, buf.Bytes())
-		os.Exit(0)
+		return nil
 	},
 }
 var listCmd = &cobra.Command{
@@ -85,21 +83,26 @@ var listCmd = &cobra.Command{
 Shows a list of all available targets. Can be used as an alternative to the TUI.
 Also loads the CLI cache, if no cache is found. Reads the cache, otherwise.`,
 	Args: cobra.NoArgs,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		cache, key, loadCmd, buf, err := LoadFlakeCmd()
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			return err
 		}
 		cached, _, err := cache.GetBytes(*key)
 		var root *data.Root
 		if err == nil {
-			root, _ = LoadJson(bytes.NewReader(cached))
+			root, err = LoadJson(bytes.NewReader(cached))
+			if err != nil {
+				return err
+			}
 		} else {
 			loadCmd.Run()
 			bufA := &bytes.Buffer{}
 			r := io.TeeReader(buf, bufA)
-			root, _ = LoadJson(r)
+			root, err = LoadJson(r)
+			if err != nil {
+				return err
+			}
 			cache.PutBytes(*key, bufA.Bytes())
 		}
 		w := tabwriter.NewWriter(os.Stdout, 5, 2, 4, ' ', 0)
@@ -113,7 +116,7 @@ Also loads the CLI cache, if no cache is found. Reads the cache, otherwise.`,
 			}
 		}
 		w.Flush()
-		os.Exit(0)
+		return nil
 	},
 }
 
