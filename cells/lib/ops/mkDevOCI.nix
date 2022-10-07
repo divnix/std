@@ -22,14 +22,12 @@ in
     shellName = builtins.unsafeDiscardStringContext (l.baseNameOf (l.getExe runtimeShell));
     shellConfigs = {
       bash = ''
-        mkdir -p $out/home/${user}
-        cat >$out/home/${user}/.bashrc << EOF
+        cat >$out/etc/bashrc << EOF
         eval "\$(direnv hook bash)"
         EOF
       '';
       zsh = ''
-        mkdir -p $out/home/${user}
-        cat >$out/home/${user}/.zshrc << EOF
+        cat >$out/etc/zshrc << EOF
         eval "\$(direnv hook zsh)"
         EOF
       '';
@@ -59,12 +57,6 @@ in
         {
           regex = "/tmp";
           mode = "0777";
-        }
-        {
-          regex = "/home/${user}";
-          mode = "0744";
-          uid = 1000;
-          gid = 1000;
         }
       ]
       ''
