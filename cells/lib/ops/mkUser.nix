@@ -23,6 +23,7 @@ in
     uid,
     group,
     gid,
+    shell ? "",
     withHome ? false,
     withRoot ? false,
   }: let
@@ -48,7 +49,7 @@ in
     cell.ops.mkSetup "users" perms ''
         mkdir -p $out/etc/pam.d
 
-        echo "${user}:x:${uid}:${gid}::" > $out/etc/passwd
+        echo "${user}:x:${uid}:${gid}::${l.optionalString withHome "/home/${user}"}:${shell}" > $out/etc/passwd
         echo "${user}:!x:::::::" > $out/etc/shadow
 
         echo "${group}:x:${gid}:" > $out/etc/group

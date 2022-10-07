@@ -31,6 +31,7 @@ in
       group = user;
       uid = "1000";
       gid = "1000";
+      shell = l.getExe runtimeShell;
       withHome = true;
       withRoot = true;
     };
@@ -118,6 +119,7 @@ in
     commonDeps = [
       nixpkgs.nano
       nixpkgs.gnupg
+      nixpkgs.openssh
     ];
 
     # The entrypoint should be long-running by default
