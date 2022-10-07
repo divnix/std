@@ -117,6 +117,7 @@ in
     # These are common packages that are useful for development
     commonDeps = [
       nixpkgs.nano
+      nixpkgs.gnupg
     ];
 
     # The entrypoint should be long-running by default
