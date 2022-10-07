@@ -31,6 +31,7 @@ growOn {
     # _automation
     (blockTypes.devshells "devshells")
     (blockTypes.nixago "nixago")
+    (blockTypes.containers "containers")
     # (blockTypes.tasks "tasks") # TODO: implement properly
 
     # _tests
