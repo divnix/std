@@ -69,7 +69,7 @@ The TUI does this automatically, but the command completion needs manual initial
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, key, loadCmd, buf, err := LoadFlakeCmd()
 		if err != nil {
-			return err
+			return fmt.Errorf("while loading flake (cmd '%v'): %w", loadCmd, err)
 		}
 		loadCmd.Run()
 		c.PutBytes(*key, buf.Bytes())
@@ -86,14 +86,14 @@ Also loads the CLI cache, if no cache is found. Reads the cache, otherwise.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cache, key, loadCmd, buf, err := LoadFlakeCmd()
 		if err != nil {
-			return err
+			return fmt.Errorf("while loading flake (cmd '%v'): %w", loadCmd, err)
 		}
 		cached, _, err := cache.GetBytes(*key)
 		var root *data.Root
 		if err == nil {
 			root, err = LoadJson(bytes.NewReader(cached))
 			if err != nil {
-				return err
+				return fmt.Errorf("while loading cached json: %w", err)
 			}
 		} else {
 			loadCmd.Run()
@@ -101,7 +101,7 @@ Also loads the CLI cache, if no cache is found. Reads the cache, otherwise.`,
 			r := io.TeeReader(buf, bufA)
 			root, err = LoadJson(r)
 			if err != nil {
-				return err
+				return fmt.Errorf("while loading json (cmd: '%v'): %w", loadCmd, err)
 			}
 			cache.PutBytes(*key, bufA.Bytes())
 		}
