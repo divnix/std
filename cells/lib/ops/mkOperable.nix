@@ -45,7 +45,7 @@ in
     };
 
     # Configure debug environment
-    banner = nixpkgs.runCommandNoCC "debug-banner" {} ''
+    banner = nixpkgs.runCommand "debug-banner" {} ''
       ${nixpkgs.figlet}/bin/figlet -f banner "STD Debug" > $out
     '';
     debug = cell.ops.writeScript {

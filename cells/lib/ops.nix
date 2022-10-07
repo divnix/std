@@ -18,18 +18,7 @@ in {
   mkUser = import ./ops/mkUser.nix {inherit inputs cell;};
   writeScript = import ./ops/writeScript.nix {inherit inputs cell;};
 
-  mkOCI = import ./ops/mkOCI.nix {
-    inherit cell;
-    inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkOCI";
-  };
-
-  mkDevOCI = import ./ops/mkDevOCI.nix {
-    inherit cell;
-    inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkDevOCI";
-  };
-
-  mkStandardOCI = import ./ops/mkStandardOCI.nix {
-    inherit cell;
-    inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkStandardOCI";
-  };
+  mkOCI = import ./ops/mkOCI.nix {inherit inputs cell;};
+  mkDevOCI = import ./ops/mkDevOCI.nix {inherit inputs cell;};
+  mkStandardOCI = import ./ops/mkStandardOCI.nix {inherit inputs cell;};
 }
