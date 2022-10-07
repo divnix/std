@@ -12,6 +12,7 @@ in
 , runtimeShell ? nixpkgs.bashInteractive
 , user ? "user"
 , vscode ? false
+, slim ? false
 , tag ? ""
 , setup ? [ ]
 , perms ? [ ]
@@ -174,8 +175,8 @@ cell.ops.mkOCI {
                 devshell
                 runtimeShell
               ]
-              ++ commonDeps
               ++ nixDeps
+              ++ (l.optionals (! slim) commonDeps)
               ++ (l.optionals vscode vscodeDeps);
 
             pathsToLink = [ "/bin" ];
