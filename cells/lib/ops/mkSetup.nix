@@ -17,7 +17,7 @@ in
     A setup task.
   */
   name: perms: contents: let
-    setup = nixpkgs.runCommandNoCC "oci-setup-${name}" {} contents;
+    setup = nixpkgs.runCommand "oci-setup-${name}" {} contents;
     perms' = l.map (p: p // { path = setup; }) perms;
   in
     setup

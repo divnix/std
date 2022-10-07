@@ -11,6 +11,8 @@
   inputs.dmerge.url = "github:divnix/data-merge";
   inputs.dmerge.inputs.nixlib.follows = "nixpkgs";
   inputs.dmerge.inputs.yants.follows = "yants";
+  inputs.n2c.url = "github:nlewo/nix2container";
+  inputs.n2c.inputs.nixpkgs.follows = "nixpkgs";
   inputs.blank.url = "github:divnix/blank";
   /*
   Auxiliar inputs used in builtin libraries or for the dev environment.
@@ -31,7 +33,6 @@
 
     # Placeholder inputs that can be overloaded via follows
     microvm.follows = "blank";
-    n2c.follows = "blank";
     makes.follows = "blank";
   };
   outputs = inputs: let

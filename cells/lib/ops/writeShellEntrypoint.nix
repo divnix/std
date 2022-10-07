@@ -44,7 +44,7 @@
   };
 
   mkDebugOCI = entrypoint: name: let
-    debug-banner = nixpkgs.runCommandNoCC "debug-banner" {} ''
+    debug-banner = nixpkgs.runCommand "debug-banner" {} ''
       ${nixpkgs.figlet}/bin/figlet -f banner "STD Debug" > $out
     '';
     debug-tools = with nixpkgs.pkgsStatic; [busybox];
