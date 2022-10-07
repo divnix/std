@@ -218,6 +218,7 @@ cell.ops.mkOCI {
         "LD_LIBRARY_PATH=${nixpkgs.stdenv.cc.cc.lib}/lib"
       ]);
       Volumes = (l.optionalAttrs vscode { "/vscode" = { }; });
-    };
+    }
+    // (l.optionalAttrs (! vscode) { WorkingDir = "/work"; });
   };
 }
