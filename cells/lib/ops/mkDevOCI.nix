@@ -120,7 +120,7 @@ let
   # These packages are required by nix and its direnv integration test
   nixDeps = [
     nixpkgs.direnv
-    nixpkgs.git
+    nixpkgs.gitMinimal
     nixpkgs.nix
     nixpkgs.gawk
     nixpkgs.gnugrep
@@ -214,8 +214,6 @@ cell.ops.mkOCI {
         "NIX_PAGER=cat"
         # This file is created when nixpkgs.cacert is copied to the root
         "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
-        # Pin <nixpkgs> to the version used to build the container
-        "NIX_PATH=nixpkgs=${nixpkgs.path}"
         # Nix expects a user to be set
         "USER=${user'}"
       ] ++ (l.optionals vscode [
@@ -223,6 +221,9 @@ cell.ops.mkOCI {
         # container is started. It is, unfortunately, dynamically linked and
         # we need to resort to some hackery to get it to run.
         "LD_LIBRARY_PATH=${nixpkgs.stdenv.cc.cc.lib}/lib"
+      ]) ++ (l.optionals (! slim) [
+        # Include <nixpkgs> to support installing additional packages
+        "NIX_PATH=nixpkgs=${nixpkgs.path}"
       ]);
       Volumes = (l.optionalAttrs vscode { "/vscode" = { }; });
     }
