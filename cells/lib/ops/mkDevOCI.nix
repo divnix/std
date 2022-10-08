@@ -17,6 +17,7 @@ in
   vscode: If true, makes this image compatible with vscode devcontainers
   slim: If true, omits including nixpkgs and some common development tools
   tag: Optional tag of the image (defaults to output hash)
+  pkgs: Additional pkgs to include in the image (symlinked to /bin)
   setup: A list of additional setup tasks to run to configure the container.
   perms: A list of permissions to set for the container.
   labels: An attribute set of labels to set for the container. The keys are
@@ -30,10 +31,11 @@ in
     name,
     devshell,
     runtimeShell ? nixpkgs.bashInteractive,
-    user ? "user",
     vscode ? false,
     slim ? false,
+    user ? "user",
     tag ? "",
+    pkgs ? [],
     setup ? [],
     perms ? [],
     labels ? {},
@@ -204,6 +206,7 @@ in
                     runtimeShell
                   ]
                   ++ nixDeps
+                  ++ pkgs
                   ++ (l.optionals (! slim) commonDeps)
                   ++ (l.optionals vscode vscodeDeps);
 
