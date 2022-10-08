@@ -47,7 +47,7 @@ in
       then "vscode"
       else user;
 
-    # Apply the correct hook based on the given runtime shell
+    # Determine proper shell configuration file based on runtime shell
     # Only bash/zsh are supported currently
     shellName = builtins.unsafeDiscardStringContext (l.baseNameOf (l.getExe runtimeShell));
     shellConfigs = {
@@ -140,7 +140,7 @@ in
         ln -s ${nixpkgs.coreutils}/bin/env $out/usr/bin/env
       '';
 
-    # These packages are required by nix and its direnv integration test
+    # These packages are required by nix and its direnv integration
     nixDeps = [
       nixpkgs.direnv
       nixpkgs.gitMinimal
