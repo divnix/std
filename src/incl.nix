@@ -55,44 +55,33 @@
 
   mkInclusive = paths:
     l.foldl' (
-      sum: path: let
-        parts = pathToParts path;
-        parts' =
-          l.traceIf debug "node for \"${path}\": ${pretty parts}"
-          parts;
-      in {
-        tree = l.recursiveUpdate (l.setAttrByPath parts' true) sum.tree;
+      sum: path: {
         prefixes = sum.prefixes ++ [path];
       }
     ) {
-      tree = {};
       prefixes = [];
     }
     paths;
 
-  pathToParts = path: (l.splitString "/" path);
-
   isIncluded = patterns: _path: _type: let
-    parts =
-      l.traceIf debug "candidate ${_type}: ${_path}"
-      pathToParts
-      (toString _path);
+    traceCandidate = l.traceIf debug "candidate ${_type}: ${_path}";
   in
-    if _type == "directory"
-    then # recurse into node ?
-      let
-        hit = l.hasAttrByPath parts patterns.tree;
-      in
-        l.traceIf (debug && hit) "recurse on node: ${pretty parts}" hit
-    else if _type == "regular"
-    then # add file ?
+    traceCandidate (
+      # add file or recurse into node ?
       l.any (
         pre: let
           hit = l.hasPrefix pre _path;
         in
-          l.traceIf (debug && hit) "include on prefix: ${pre}" hit
+          l.traceIf (debug && hit) (
+            if _type == "directory"
+            then "recurse on prefix: ${pre}"
+            else if _type == "regular"
+            then "include on prefix: ${pre}"
+            else "file type '${_type}' - will fail"
+          )
+          hit
       )
       patterns.prefixes
-    else true;
+    );
 in
   incl
