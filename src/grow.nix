@@ -215,20 +215,22 @@
                 value = nixpkgs.legacyPackages.${system}.writeShellScript a.name a.command;
               })
               actions);
+          isFile = l.pathExists oPath.file;
+          isDir = l.pathExists oPath.dir;
           imported =
-            if l.pathExists oPath.file
+            if isFile
             then
               validate.Import (cellBlock.type or (import ../deprecation.nix {inherit nixpkgs;}).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) oPath.file (importedFile (
                 args // {cell = res.output;} # recursion on cell
               ))
-            else if l.pathExists oPath.dir
+            else if isDir
             then
               validate.Import (cellBlock.type or (import ../deprecation.nix {inherit nixpkgs;}).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) oPath.dir (importedDir (
                 args // {cell = res.output;} # recursion on cell
               ))
             else null;
         in
-          optionalLoad (imported != null)
+          optionalLoad (isFile || isDir)
           [
             {${cellBlock.name} = imported;}
             # __std meta actions (slow)
