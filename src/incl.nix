@@ -5,6 +5,9 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
 
+  debug = false;
+  pretty = l.generators.toPretty {};
+
   /*
   A source inclusion helper.
 
@@ -22,77 +25,74 @@
   You can use this function independently of the rest of std.
   */
 
-  incl = root: allowedPaths: let
-    verifiedPaths = requireAllPathsExist allowedPaths;
-    patterns = mkInclusive verifiedPaths;
-    filter = isIncluded patterns;
+  incl = src: allowedPaths: let
+    src' = l.unsafeDiscardStringContext (toString src);
+    normalizedPaths =
+      l.map (
+        path: let
+          path' = l.unsafeDiscardStringContext (toString path);
+        in
+          if l.hasPrefix l.storeDir path'
+          then path'
+          else src' + "/${path'}"
+      )
+      allowedPaths;
+    patterns =
+      l.traceIf debug "allowedPaths: ${pretty normalizedPaths}"
+      l.traceIf
+      debug "src: \"${src'}\""
+      mkInclusive
+      normalizedPaths;
+    filter =
+      l.traceIf debug "patterns: ${pretty patterns}"
+      isIncluded
+      patterns;
   in
-    l.path {
+    l.cleanSourceWith {
       name = "incl";
-      path = root;
-      filter = filter;
+      inherit src filter;
     };
 
-  # NOTE: find a way to handle duplicates better, atm they may override each
-  # other without warning
-  mkInclusive = verifiedPaths:
+  mkInclusive = paths:
     l.foldl' (
-      sum: verified: let
-        verified' = l.unsafeDiscardStringContext verified;
-      in
-        if (l.pathIsDirectory verified')
-        then {
-          tree = l.recursiveUpdate sum.tree (l.setAttrByPath (pathToParts verified') true);
-          prefixes = sum.prefixes ++ [verified'];
-        }
-        else {
-          tree = l.recursiveUpdate sum.tree (l.setAttrByPath (pathToParts verified') false);
-          prefixes = sum.prefixes;
-        }
+      sum: path: let
+        parts = pathToParts path;
+        parts' =
+          l.traceIf debug "node for \"${path}\": ${pretty parts}"
+          parts;
+      in {
+        tree = l.recursiveUpdate (l.setAttrByPath parts' true) sum.tree;
+        prefixes = sum.prefixes ++ [path];
+      }
     ) {
       tree = {};
       prefixes = [];
     }
-    verifiedPaths;
+    paths;
 
-  pathToParts = path: (l.tail (l.splitString "/" (toString path)));
+  pathToParts = path: (l.splitString "/" path);
 
-  # Require that every path specified does exist.
-  #
-  # By default, Nix won't complain if you refer to a missing file
-  # if you don't actually use it:
-  #
-  #     nix-repl> ./bogus
-  #     /home/grahamc/playground/bogus
-  #
-  #     nix-repl> toString ./bogus
-  #     "/home/grahamc/playground/bogus"
-  #
-  # so in order for this interface to be *exact*, we must
-  # specifically require every provided path exists:
-  #
-  #     nix-repl> "${./bogus}"
-  #     error: getting attributes of path
-  #     '/home/grahamc/playground/bogus': No such file or
-  #     directory
-  requireAllPathsExist = paths: let
-    validation =
-      l.map (
-        path:
-          l.path {
-            name = "verify";
-            path = path;
-          }
+  isIncluded = patterns: _path: _type: let
+    parts =
+      l.traceIf debug "candidate ${_type}: ${_path}"
+      pathToParts
+      (toString _path);
+  in
+    if _type == "directory"
+    then # recurse into node ?
+      let
+        hit = l.hasAttrByPath parts patterns.tree;
+      in
+        l.traceIf (debug && hit) "recurse on node: ${pretty parts}" hit
+    else if _type == "regular"
+    then # add file ?
+      l.any (
+        pre: let
+          hit = l.hasPrefix pre _path;
+        in
+          l.traceIf (debug && hit) "include on prefix: ${pre}" hit
       )
-      paths;
-  in
-    l.deepSeq validation paths;
-
-  isIncluded = patterns: name: type: let
-    parts = pathToParts name;
-    matchesTree = l.hasAttrByPath parts patterns.tree;
-    matchesPrefix = l.any (pre: l.hasPrefix pre name) patterns.prefixes;
-  in
-    matchesTree || matchesPrefix;
+      patterns.prefixes
+    else true;
 in
   incl
