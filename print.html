@@ -1470,7 +1470,7 @@ anyways.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="deprecations"><a class="header" href="#deprecations">Deprecations</a></h1>
 <pre><code class="language-nix">{inputs}: time: body: let
   l = inputs.nixpkgs.lib // builtins;
-  pad = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (21 - (l.stringLength time)));
+  pad = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (20 - (l.stringLength time)));
 in
   l.warn ''
 
@@ -1479,7 +1479,7 @@ in
     !!!  🔥️  STANDARD DEPRECATION WARNING  🔥️   !!!
     -----------------------------------------------
     !!! Action required until scheduled removal !!!
-    !!! Sheduled Removal: ${pad}${time} !!!
+    !!! Scheduled Removal: ${pad}${time} !!!
     -----------------------------------------------
     On schedule, deprecated facilities will be
     removed from Standard without further warning.
@@ -2437,7 +2437,7 @@ in {
 <div style="break-before: page; page-break-before: always;"></div><h1 id="removeby"><a class="header" href="#removeby"><code>removeBy</code></a></h1>
 <pre><code class="language-nix">{inputs}: time: body: let
   l = inputs.nixpkgs.lib // builtins;
-  pad = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (21 - (l.stringLength time)));
+  pad = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (20 - (l.stringLength time)));
 in
   l.warn ''
 
@@ -2446,7 +2446,7 @@ in
     !!!  🔥️  STANDARD DEPRECATION WARNING  🔥️   !!!
     -----------------------------------------------
     !!! Action required until scheduled removal !!!
-    !!! Sheduled Removal: ${pad}${time} !!!
+    !!! Scheduled Removal: ${pad}${time} !!!
     -----------------------------------------------
     On schedule, deprecated facilities will be
     removed from Standard without further warning.
