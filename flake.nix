@@ -11,8 +11,6 @@
   inputs.dmerge.url = "github:divnix/data-merge";
   inputs.dmerge.inputs.nixlib.follows = "nixpkgs";
   inputs.dmerge.inputs.yants.follows = "yants";
-  inputs.n2c.url = "github:nlewo/nix2container";
-  inputs.n2c.inputs.nixpkgs.follows = "nixpkgs";
   inputs.blank.url = "github:divnix/blank";
   /*
   Auxiliar inputs used in builtin libraries or for the dev environment.
@@ -26,6 +24,9 @@
     nixago.inputs.nixpkgs.follows = "nixpkgs";
     nixago.inputs.nixago-exts.follows = "blank";
     nixago.inputs.flake-utils.follows = "flake-utils";
+    n2c.url = "github:nlewo/nix2container";
+    n2c.inputs.nixpkgs.follows = "nixpkgs";
+    n2c.inputs.flake-utils.follows = "flake-utils";
     mdbook-kroki-preprocessor = {
       url = "github:JoelCourtney/mdbook-kroki-preprocessor";
       flake = false;
