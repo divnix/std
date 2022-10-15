@@ -21,14 +21,16 @@ cd my-project
 nix flake init -t github:divnix/std#rust
 
 # do some inititialization
-git init
-cargo init # pass --lib for library projects
-cargo build # to generate Cargo.lock
-git add .
-g commit -m "init"
+git init && git add .
 
 # enter the devshell
 direnv allow || nix develop
+
+# continue some inititialization
+cargo init # pass --lib for library projects
+cargo build # to generate Cargo.lock
+
+git add . && git commit -m "init"
 ```
 
 [std]: https://github.com/divnix/std#readme

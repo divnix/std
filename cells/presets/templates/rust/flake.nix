@@ -25,7 +25,7 @@
         (std.installables "packages")
       ];
     } {
-      devShells = std.harvest self ["automation" "devshells"];
+      devShells = std.harvest self ["_automation" "devshells"];
       packages = std.harvest self ["hello" "packages"];
     };
 
