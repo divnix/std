@@ -348,7 +348,7 @@ the inputs of your project.</p>
 }
 </code></pre>
 <pre><code class="language-bash">$ cd /tmp/play-with-std/hello-world/
-$ git init &amp; git add . &amp; git commit -m&quot;nix flakes only can see files under version control&quot;
+$ git init &amp;&amp; git add . &amp;&amp; git commit -m&quot;nix flakes only can see files under version control&quot;
 # fetch `std`
 $ nix shell github:divnix/std
 $ std //hello/apps/default:run
@@ -1343,14 +1343,16 @@ cd my-project
 nix flake init -t github:divnix/std#rust
 
 # do some inititialization
-git init
-cargo init # pass --lib for library projects
-cargo build # to generate Cargo.lock
-git add .
-g commit -m &quot;init&quot;
+git init &amp;&amp; git add .
 
 # enter the devshell
 direnv allow || nix develop
+
+# continue some inititialization
+cargo init # pass --lib for library projects
+cargo build # to generate Cargo.lock
+
+git add . &amp;&amp; git commit -m &quot;init&quot;
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tuicli"><a class="header" href="#tuicli">TUI/CLI</a></h1>
 <h4 id="tuicli-1"><a class="header" href="#tuicli-1">TUI/CLI:</a></h4>

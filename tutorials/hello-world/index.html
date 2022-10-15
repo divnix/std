@@ -174,7 +174,7 @@ the inputs of your project.</p>
 }
 </code></pre>
 <pre><code class="language-bash">$ cd /tmp/play-with-std/hello-world/
-$ git init &amp; git add . &amp; git commit -m&quot;nix flakes only can see files under version control&quot;
+$ git init &amp;&amp; git add . &amp;&amp; git commit -m&quot;nix flakes only can see files under version control&quot;
 # fetch `std`
 $ nix shell github:divnix/std
 $ std //hello/apps/default:run
