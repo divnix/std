@@ -1,17 +1,17 @@
 # A walk in the park
 
-This is an excellent tutorial series by Joshua Gilman on his blog.
+This is an excellent tutorial series by Joshua Gilman in the form of The Standard Book.
 
 It is ideal for people with prior Nix and Nix Flakes experience.
 
 They are written in a way that feels like a walk in the park, hence the nickname.
 
+They are also often used to dogfood some new `std` functionality and document it alongside in a palatable (non-terse) writing style.
+
 Enjoy!
 
 ---
 
-1. [Introduction to the Nix std Framework][std-blog-1]
-1. [Development Shells with the Nix std Framework][std-blog-2]
+[The Standard Book][book]
 
-[std-blog-1]: https://blog.jmgilman.com/an-introduction-to-nix-std/
-[std-blog-2]: https://blog.jmgilman.com/development-shells-with-nix-std/
+[book]: https://jmgilman.github.io/std-book/

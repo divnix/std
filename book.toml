@@ -2,7 +2,7 @@
 language = "en"
 multilingual = false
 src = "docs"
-title = "The Standard Book"
+title = "The Standard Documentation"
 
 [build]
 build-dir = "docs/book"

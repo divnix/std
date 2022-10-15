@@ -41,7 +41,7 @@ in {
   };
   mdbook = presets.nixago.mdbook {
     configData = {
-      book.title = "The Standard Book";
+      book.title = "The Standard Documentation";
       preprocessor.mermaid.command = "mdbook-mermaid";
       output.html.additional-js = ["static/mermaid.min.js" "static/mermaid-init.js"];
     };
