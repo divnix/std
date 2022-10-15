@@ -316,7 +316,11 @@ that we are creating an Application.
 <code>flake.nix</code> is in charge
 of explicitly defining
 the inputs of your project.</p>
-<h4 id="flakenix"><a class="header" href="#flakenix"><code>./flake.nix</code></a></h4>
+<blockquote>
+<p><em>Btw, you can can copy * the following files from <a href="https://github.com/divnix/std/tree/main/docs/tutorials/hello-world">here</a>.</em></p>
+<p>* <em>don’t just clone the <code>std</code> repo: flakes in subfolders don’t work that way.</em></p>
+</blockquote>
+<h4 id="tmpplay-with-stdhello-worldflakenix"><a class="header" href="#tmpplay-with-stdhello-worldflakenix"><code>/tmp/play-with-std/hello-world/flake.nix</code></a></h4>
 <pre><code class="language-nix">{
   inputs.std.url = &quot;github:divnix/std&quot;;
   inputs.nixpkgs.url = &quot;nixpkgs&quot;;
@@ -328,7 +332,7 @@ the inputs of your project.</p>
     };
 }
 </code></pre>
-<h4 id="cellshelloappsnix"><a class="header" href="#cellshelloappsnix"><code>./cells/hello/apps.nix</code></a></h4>
+<h4 id="tmpplay-with-stdhello-worldcellshelloappsnix"><a class="header" href="#tmpplay-with-stdhello-worldcellshelloappsnix"><code>/tmp/play-with-std/hello-world/cells/hello/apps.nix</code></a></h4>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -343,7 +347,8 @@ the inputs of your project.</p>
   };
 }
 </code></pre>
-<pre><code class="language-bash">$ cd hello-world
+<pre><code class="language-bash">$ cd /tmp/play-with-std/hello-world/
+$ git init &amp; git add . &amp; git commit -m&quot;nix flakes only can see files under version control&quot;
 # fetch `std`
 $ nix shell github:divnix/std
 $ std //hello/apps/default:run
@@ -355,15 +360,14 @@ in just a few seconds ✨</p>
 <h2 id="assumptions"><a class="header" href="#assumptions">Assumptions</a></h2>
 <p>This example consumes the following defaults or builtins:</p>
 <h3 id="default-cellblocks"><a class="header" href="#default-cellblocks"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L63-L67">Default <code>cellBlocks</code></a></a></h3>
-<pre><code class="language-nix">    organelles ? null,
-    cellBlocks ? [
+<pre><code class="language-nix">    cellBlocks ? [
       (blockTypes.functions &quot;library&quot;)
       (blockTypes.runnables &quot;apps&quot;)
       (blockTypes.installables &quot;packages&quot;)
+    ],
 </code></pre>
 <h3 id="default-systems"><a class="header" href="#default-systems"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L68-L77">Default <code>systems</code></a></a></h3>
-<pre><code class="language-nix">    ],
-    systems ? [
+<pre><code class="language-nix">    systems ? [
       # Tier 1
       &quot;x86_64-linux&quot;
       # Tier 2
@@ -372,6 +376,7 @@ in just a few seconds ✨</p>
       # Other platforms with sufficient support in stdenv which is not formally
       # mandated by their platform tier.
       &quot;aarch64-darwin&quot; # a lot of apple M1 already out there
+    ],
 </code></pre>
 <hr />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-moon"><a class="header" href="#hello-moon">Hello Moon</a></h1>
@@ -390,7 +395,7 @@ With these clear definitions, we navigate and communicate the code structure muc
 In order to familiarize yourself with them, please have a quick glance at the <a href="tutorials/hello-moon/../../glossary.html">glossary</a>.</p>
 <h2 id="file-layout"><a class="header" href="#file-layout">File Layout</a></h2>
 <p>Let’s start again with a flake:</p>
-<h4 id="flakenix-1"><a class="header" href="#flakenix-1"><code>./flake.nix</code></a></h4>
+<h4 id="flakenix"><a class="header" href="#flakenix"><code>./flake.nix</code></a></h4>
 <pre><code class="language-nix">{
   inputs.std.url = &quot;github:divnix/std&quot;;
   inputs.nixpkgs.url = &quot;nixpkgs&quot;;
