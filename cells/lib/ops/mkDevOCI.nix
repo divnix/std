@@ -5,6 +5,13 @@
   inherit (inputs) nixpkgs std;
   l = nixpkgs.lib // builtins;
   n2c = inputs.n2c.packages.nix2container;
+
+  envToList = {...} @ args:
+    if args.value != null
+    then "${args.name}=${l.escapeShellArg (toString args.value)}"
+    else if args.eval != null
+    then "${args.name}=${args.eval}"
+    else "";
 in
   /*
   Creates a "development" OCI image from a devshell
@@ -253,7 +260,8 @@ in
               ++ (l.optionals (! slim) [
                 # Include <nixpkgs> to support installing additional packages
                 "NIX_PATH=nixpkgs=${nixpkgs.path}"
-              ]);
+              ])
+              ++ (map envToList devshell.passthru.config.env);
             Volumes = l.optionalAttrs vscode {"/vscode" = {};};
           }
           // (l.optionalAttrs (! vscode) {WorkingDir = "/work";});
