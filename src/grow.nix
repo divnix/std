@@ -164,7 +164,7 @@
           cells = deSystemize system cells';
         }
         // l.optionalAttrs (inputs ? nixpkgs) {
-          nixpkgs = deSystemize system nixpkgs.legacyPackages;
+          nixpkgs = (deSystemize system nixpkgs.legacyPackages) // { inherit (nixpkgs) sourceInfo;};
         }
       );
       loadCellFor = cellName: let
