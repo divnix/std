@@ -77,6 +77,7 @@
       "aarch64-darwin" # a lot of apple M1 already out there
     ],
     debug ? false,
+    nixpkgsConfig ? {},
   }: let
     # Validations ...
     CellBlocks = let
@@ -164,7 +165,10 @@
           cells = deSystemize system cells';
         }
         // l.optionalAttrs (inputs ? nixpkgs) {
-          nixpkgs = (deSystemize system nixpkgs.legacyPackages) // { inherit (nixpkgs) sourceInfo;};
+          nixpkgs = let
+            config = nixpkgsConfig;
+          in
+            (import nixpkgs {inherit system config;}) // {inherit (nixpkgs) sourceInfo;};
         }
       );
       loadCellFor = cellName: let
