@@ -2828,8 +2828,7 @@ in {
   pre-commit = {
     commands = {
       treefmt = {
-        run = &quot;treefmt {staged_files}&quot;;
-        glob = &quot;*&quot;;
+        run = &quot;treefmt --fail-on-change {staged_files}&quot;;
         skip = [&quot;merge&quot; &quot;rebase&quot;];
       };
     };
