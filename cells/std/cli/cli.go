@@ -22,7 +22,7 @@ type Spec struct {
 	Action string `regroup:"action,required"`
 }
 
-var re = regroup.MustCompile(`^//(?P<cell>[^/]+)/(?P<block>[^/]+)/(?P<target>[^:]+):(?P<action>.+)`)
+var re = regroup.MustCompile(`^//(?P<cell>[^/]+)/(?P<block>[^/]+)/(?P<target>.+):(?P<action>[^:]+)`)
 
 var rootCmd = &cobra.Command{
 	Use:                   "std //[cell]/[block]/[target]:[action] [args...]",
