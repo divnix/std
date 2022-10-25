@@ -11,6 +11,7 @@ build-dir = "docs/book"
 additional-js = ["static/mermaid.min.js", "static/mermaid-init.js"]
 
 [preprocessor]
+
 [preprocessor.kroki-preprocessor]
 command = "mdbook-kroki-preprocessor"
 

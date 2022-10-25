@@ -63,10 +63,10 @@ func bashExecve(command []string, cmdArgs []string) error {
 	}
 	env := os.Environ()
 	args := []string{"bash", "-c", fmt.Sprintf(
-			"%s && %s/.std/last-action %s",
-			strings.Join(command, " "),
-			prjRoot,
-			strings.Join(cmdArgs, " "),
+		"%s && %s/.std/last-action %s",
+		strings.Join(command, " "),
+		prjRoot,
+		strings.Join(cmdArgs, " "),
 	),
 	}
 	if err := syscall.Exec(binary, args, env); err != nil {

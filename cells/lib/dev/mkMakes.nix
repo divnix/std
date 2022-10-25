@@ -1,4 +1,7 @@
-{l, inputs}: let
+{
+  l,
+  inputs,
+}: let
   inherit (inputs) nixpkgs makes;
 
   makes' = l.fix (
@@ -16,4 +19,5 @@
     )
     .__unfix__
   );
-in l.customisation.callPackageWith makes'
+in
+  l.customisation.callPackageWith makes'

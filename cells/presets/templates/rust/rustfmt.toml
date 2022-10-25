@@ -23,7 +23,6 @@ use_try_shorthand = true
 use_field_init_shorthand = true
 force_explicit_abi = true
 disable_all_formatting = false
-
 # --- unstable settings ---
 # indent_style = "Block"
 # wrap_comments = false

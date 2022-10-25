@@ -37,7 +37,7 @@ in
     labels ? {},
     options ? {},
   }: let
-    setupLinks = cell.ops.mkSetup "links" [ ] ''
+    setupLinks = cell.ops.mkSetup "links" [] ''
       mkdir -p $out/bin
       ln -s ${l.getExe entrypoint} $out/bin/entrypoint
     '';
@@ -74,7 +74,7 @@ in
         };
 
         # Setup tasks can include permissions via the passthru.perms attribute
-        perms = l.flatten(((l.map (s: l.optionalAttrs (s ? passthru && s.passthru ? perms) s.passthru.perms)) setup)) ++ perms;
+        perms = l.flatten ((l.map (s: l.optionalAttrs (s ? passthru && s.passthru ? perms) s.passthru.perms)) setup) ++ perms;
       }
       // l.optionalAttrs (tag != "") {inherit tag;};
   in
