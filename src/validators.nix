@@ -77,18 +77,8 @@ in {
         fragmentRelPath = false;
       });
     };
-    organelle = struct "organelle" {
-      name = string;
-      clade = (import ../deprecation.nix {inherit nixpkgs;}).warnClade "block type attribute '.clade' used" string;
-      actions = option (functionWithArgs {
-        system = false;
-        flake = false;
-        fragment = false;
-        fragmentRelPath = false;
-      });
-    };
   in
-    list (either cellBlock organelle);
+    list cellBlock;
   FileSignature = file: let
     file' = prefixWithCellsFrom file;
   in

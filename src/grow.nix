@@ -60,7 +60,6 @@
   grow = {
     inputs,
     cellsFrom,
-    organelles ? null,
     cellBlocks ? [
       (blockTypes.functions "library")
       (blockTypes.runnables "apps")
@@ -96,14 +95,7 @@
         };
     in
       (unique
-        (
-          if organelles != null
-          then
-            (import ../deprecation.nix {inherit nixpkgs;}).warnOrganelles inputs.self
-            validate.CellBlocks
-            organelles
-          else validate.CellBlocks cellBlocks
-        ))
+        (validate.CellBlocks cellBlocks))
       .result;
     Systems = validate.Systems systems;
     Cells = l.mapAttrsToList (validate.Cell cellsFrom CellBlocks) (l.readDir cellsFrom);
@@ -224,12 +216,12 @@
           imported =
             if isFile
             then
-              validate.Import (cellBlock.type or (import ../deprecation.nix {inherit nixpkgs;}).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) oPath.file (importedFile (
+              validate.Import cellBlock.type oPath.file (importedFile (
                 args // {cell = res.output;} # recursion on cell
               ))
             else if isDir
             then
-              validate.Import (cellBlock.type or (import ../deprecation.nix {inherit nixpkgs;}).warnClade "cell block type attribute '.clade' accessed" cellBlock.clade) oPath.dir (importedDir (
+              validate.Import cellBlock.type oPath.dir (importedDir (
                 args // {cell = res.output;} # recursion on cell
               ))
             else null;
