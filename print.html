@@ -360,15 +360,14 @@ in just a few seconds ✨</p>
 <h2 id="assumptions"><a class="header" href="#assumptions">Assumptions</a></h2>
 <p>This example consumes the following defaults or builtins:</p>
 <h3 id="default-cellblocks"><a class="header" href="#default-cellblocks"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L63-L67">Default <code>cellBlocks</code></a></a></h3>
-<pre><code class="language-nix">    cellBlocks ? [
-      (blockTypes.functions &quot;library&quot;)
+<pre><code class="language-nix">      (blockTypes.functions &quot;library&quot;)
       (blockTypes.runnables &quot;apps&quot;)
       (blockTypes.installables &quot;packages&quot;)
     ],
+    systems ? [
 </code></pre>
 <h3 id="default-systems"><a class="header" href="#default-systems"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L68-L77">Default <code>systems</code></a></a></h3>
-<pre><code class="language-nix">    systems ? [
-      # Tier 1
+<pre><code class="language-nix">      # Tier 1
       &quot;x86_64-linux&quot;
       # Tier 2
       &quot;aarch64-linux&quot;
@@ -377,6 +376,7 @@ in just a few seconds ✨</p>
       # mandated by their platform tier.
       &quot;aarch64-darwin&quot; # a lot of apple M1 already out there
     ],
+    debug ? false,
 </code></pre>
 <hr />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-moon"><a class="header" href="#hello-moon">Hello Moon</a></h1>
@@ -1502,29 +1502,6 @@ in
 <pre><code class="language-nix">inputs: let
   removeBy = import ./cells/std/errors/removeBy.nix {inherit inputs;};
 in {
-  warnClade = variant:
-    removeBy &quot;October 2022&quot; ''
-
-      &quot;clade&quot; nomenclature is deprecated.
-
-      Please rename:
-
-      - sed -i 's/clades/blockTypes/g'
-      - sed -i 's/clade/blockType/g'
-      - sed -i 's/Clades/Block Types/g'
-      - sed -i 's/Clade/Block Type/g'
-
-      There is an old revision of `std` in the evaluation path,
-      possibly in one of your flake inputs.
-
-      Detected in: ${variant}
-
-      Please review your code base and/or inform upstream to
-      update their version of Standard ASAP.
-
-      see: https://github.com/divnix/std/issues/116
-    '';
-
   warnOrganelles = project:
     removeBy &quot;October 2022&quot; ''
 
