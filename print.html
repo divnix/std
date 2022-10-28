@@ -2797,7 +2797,10 @@ in {
   commit-msg = {
     commands = {
       conform = {
-        run = &quot;conform enforce --commit-msg-file {1}&quot;;
+        # allow WIP, fixup!/squash! commits locally
+        run = ''
+          [[ &quot;$(head -n 1 {1})&quot; =~ ^WIP(:.*)?$|^wip(:.*)?$|fixup\!.*|squash\!.* ]] ||
+          conform enforce --commit-msg-file {1}'';
         skip = [&quot;merge&quot; &quot;rebase&quot;];
       };
     };
