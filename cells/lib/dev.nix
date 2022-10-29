@@ -11,4 +11,9 @@ in {
     l = inputs.nixpkgs.lib // builtins;
     inputs = requireInput "makes" "github:fluidattacks/makes" "std.lib.dev.mkMakes";
   };
+
+  mkArion = import ./dev/mkArion.nix {
+    l = inputs.nixpkgs.lib // builtins;
+    inputs = requireInput "arion" "github:hercules-ci/arion" "std.lib.dev.mkArion";
+  };
 }

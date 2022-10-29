@@ -45,6 +45,7 @@
   - [Devshells](reference/blocktypes/devshells-blocktype.md)
   - [Containers](reference/blocktypes/containers-blocktype.md)
   - [Nixago](reference/blocktypes/nixago-blocktype.md)
+  - [Arion](reference/blocktypes/arion-blocktype.md)
   - [Nomad Job Manifests](reference/blocktypes/nomad-job-manifests-blocktype.md)
 
 - [`//std`](reference/std/Readme.md)
@@ -70,6 +71,7 @@
     - [`/mkMakes`](reference/lib/dev/mkMakes.md)
     - [`/mkShell`](reference/lib/dev/mkShell.md)
     - [`/mkNixago`](reference/lib/dev/mkNixago.md)
+    - [`/mkArion`](reference/lib/dev/mkArion.md)
 
   - [`/ops`](reference/lib/ops/Readme.md)
     - [`/mkMicrovm`](reference/lib/ops/mkMicrovm.md)
