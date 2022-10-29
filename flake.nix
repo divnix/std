@@ -35,6 +35,7 @@
     # Placeholder inputs that can be overloaded via follows
     microvm.follows = "blank";
     makes.follows = "blank";
+    arion.follows = "blank";
   };
   outputs = inputs: let
     blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs;};
