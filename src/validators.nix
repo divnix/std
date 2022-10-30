@@ -83,10 +83,10 @@ in {
     file' = prefixWithCellsFrom file;
   in
     with yants "std" "import" file';
-      functionWithArgs {
+      either (attrs any) (functionWithArgs {
         inputs = false;
         cell = false;
-      };
+      });
   Import = blockType: file: let
     file' = prefixWithCellsFrom file;
   in

@@ -167,8 +167,6 @@
         cPath = paths.cellPath cellsFrom cellName;
         loadCellBlock = cellBlock: let
           oPath = paths.cellBlockPath cPath cellBlock;
-          importedFile = validate.FileSignature oPath.file (import oPath.file);
-          importedDir = validate.FileSignature oPath.dir (import oPath.dir);
           # minimum data for initializing TUI / CLI completion
           extractInitMeta = name: target: let
             tPath = paths.targetPath oPath name;
@@ -213,18 +211,21 @@
               actions);
           isFile = l.pathExists oPath.file;
           isDir = l.pathExists oPath.dir;
+          import' = path: let
+            # since we're not really importing files within the framework
+            # the non-memoization of scopedImport doesn't have practical penalty
+            block = validate.FileSignature path (l.scopedImport signature path);
+            signature = args // {cell = res.output;}; # recursion on cell
+          in
+            if l.typeOf block == "set"
+            then block
+            else block signature;
           imported =
             if isFile
-            then
-              validate.Import cellBlock.type oPath.file (importedFile (
-                args // {cell = res.output;} # recursion on cell
-              ))
+            then validate.Import cellBlock.type oPath.file (import' oPath.file)
             else if isDir
-            then
-              validate.Import cellBlock.type oPath.dir (importedDir (
-                args // {cell = res.output;} # recursion on cell
-              ))
-            else null;
+            then validate.Import cellBlock.type oPath.dir (import' oPath.dir)
+            else throw "unreachable!";
         in
           optionalLoad (isFile || isDir)
           [
