@@ -214,7 +214,7 @@
           import' = path: let
             # since we're not really importing files within the framework
             # the non-memoization of scopedImport doesn't have practical penalty
-            block = validate.FileSignature path (l.scopedImport signature path);
+            block = validate.BlockSignature path (l.scopedImport signature path);
             signature = args // {cell = res.output;}; # recursion on cell
           in
             if l.typeOf block == "set"

@@ -79,14 +79,18 @@ in {
     };
   in
     list cellBlock;
-  FileSignature = file: let
+  BlockSignature = file: block: let
     file' = prefixWithCellsFrom file;
   in
     with yants "std" "import" file';
-      either (attrs any) (functionWithArgs {
-        inputs = false;
-        cell = false;
-      });
+      if l.typeOf block == "set"
+      then attrs any block
+      else
+        functionWithArgs {
+          inputs = false;
+          cell = false;
+        }
+        block;
   Import = blockType: file: let
     file' = prefixWithCellsFrom file;
   in
