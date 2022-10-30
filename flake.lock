@@ -159,6 +159,9 @@
     },
     "root": {
       "inputs": {
+        "arion": [
+          "blank"
+        ],
         "blank": "blank",
         "devshell": "devshell",
         "dmerge": "dmerge",
