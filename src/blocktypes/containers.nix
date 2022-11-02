@@ -10,6 +10,7 @@
     - copy-to-docker
   */
   containers = name: {
+    __functor = import ./__functor.nix;
     inherit name;
     type = "containers";
     actions = {
@@ -18,12 +19,20 @@
       fragment,
       fragmentRelPath,
     }: [
+      (import ./actions/build.nix flake fragment)
       {
         name = "print-image";
         description = "print out the image name & tag";
         command = ''
           echo
           echo "$(nix eval --raw ${flake}#${fragment}.imageName):$(nix eval --raw ${flake}#${fragment}.imageTag)"
+        '';
+      }
+      {
+        name = "publish";
+        description = "copy the image to its remote registry";
+        command = ''
+          nix run ${flake}#${fragment}.copyToRegistry
         '';
       }
       {
