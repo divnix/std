@@ -235,7 +235,7 @@
             # __std meta init (fast)
             {
               cellBlock = cellBlock.name;
-              blockType = cellBlock.type or cellBlock.clade;
+              blockType = cellBlock.type;
               readme =
                 if l.pathExists oPath.readme
                 then oPath.readme
