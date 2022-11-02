@@ -141,6 +141,7 @@
   make accessible with a 'run' action on the TUI.
   */
   runnables = name: {
+    __functor = import ./__functor.nix;
     inherit name;
     type = &quot;runnables&quot;;
     actions = {
@@ -149,6 +150,7 @@
       fragment,
       fragmentRelPath,
     }: [
+      (import ./actions/build.nix flake fragment)
       {
         name = &quot;run&quot;;
         description = &quot;exec this target&quot;;

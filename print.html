@@ -216,12 +216,12 @@ growOn {
     ## For downstream use
 
     # std
-    (blockTypes.runnables &quot;cli&quot;)
+    (blockTypes.runnables &quot;cli&quot; {ci.build = true;})
     (blockTypes.functions &quot;devshellProfiles&quot;)
     (blockTypes.functions &quot;lib&quot;)
     (blockTypes.functions &quot;errors&quot;)
     (blockTypes.nixago &quot;nixago&quot;)
-    (blockTypes.installables &quot;packages&quot;)
+    (blockTypes.installables &quot;packages&quot; {ci.build = true;})
 
     # lib
     (blockTypes.functions &quot;dev&quot;)
@@ -234,9 +234,9 @@ growOn {
     ## For local use in the Standard repository
 
     # _automation
-    (blockTypes.devshells &quot;devshells&quot;)
+    (blockTypes.devshells &quot;devshells&quot; {ci.build = true;})
     (blockTypes.nixago &quot;nixago&quot;)
-    (blockTypes.containers &quot;containers&quot;)
+    (blockTypes.containers &quot;containers&quot; {ci.publish = true;})
     # (blockTypes.tasks &quot;tasks&quot;) # TODO: implement properly
 
     # _tests
@@ -1657,6 +1657,7 @@ in
   make accessible with a 'run' action on the TUI.
   */
   runnables = name: {
+    __functor = import ./__functor.nix;
     inherit name;
     type = &quot;runnables&quot;;
     actions = {
@@ -1665,6 +1666,7 @@ in
       fragment,
       fragmentRelPath,
     }: [
+      (import ./actions/build.nix flake fragment)
       {
         name = &quot;run&quot;;
         description = &quot;exec this target&quot;;
@@ -1694,6 +1696,7 @@ in
     - bundleAppImage
   */
   installables = name: {
+    __functor = import ./__functor.nix;
     inherit name;
     type = &quot;installables&quot;;
     actions = {
@@ -1702,6 +1705,7 @@ in
       fragment,
       fragmentRelPath,
     }: [
+      (import ./actions/build.nix flake fragment)
       {
         name = &quot;install&quot;;
         description = &quot;install this target&quot;;
@@ -1721,13 +1725,6 @@ in
         description = &quot;remove this target&quot;;
         command = ''
           nix profile remove ${flake}#${fragment}
-        '';
-      }
-      {
-        name = &quot;build&quot;;
-        description = &quot;build this target&quot;;
-        command = ''
-          nix build ${flake}#${fragment}
         '';
       }
       {
@@ -1800,9 +1797,11 @@ in
   Use the Devshells Blocktype for devShells.
 
   Available actions:
+    - build
     - enter
   */
   devshells = name: {
+    __functor = import ./__functor.nix;
     inherit name;
     type = &quot;devshells&quot;;
     actions = {
@@ -1811,6 +1810,7 @@ in
       fragment,
       fragmentRelPath,
     }: [
+      (import ./actions/build.nix flake fragment)
       {
         name = &quot;enter&quot;;
         description = &quot;enter this devshell&quot;;
@@ -1850,6 +1850,7 @@ in
     - copy-to-docker
   */
   containers = name: {
+    __functor = import ./__functor.nix;
     inherit name;
     type = &quot;containers&quot;;
     actions = {
@@ -1858,12 +1859,20 @@ in
       fragment,
       fragmentRelPath,
     }: [
+      (import ./actions/build.nix flake fragment)
       {
         name = &quot;print-image&quot;;
         description = &quot;print out the image name &amp; tag&quot;;
         command = ''
           echo
           echo &quot;$(nix eval --raw ${flake}#${fragment}.imageName):$(nix eval --raw ${flake}#${fragment}.imageTag)&quot;
+        '';
+      }
+      {
+        name = &quot;publish&quot;;
+        description = &quot;copy the image to its remote registry&quot;;
+        command = ''
+          nix run ${flake}#${fragment}.copyToRegistry
         '';
       }
       {

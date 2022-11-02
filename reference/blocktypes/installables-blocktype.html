@@ -150,6 +150,7 @@
     - bundleAppImage
   */
   installables = name: {
+    __functor = import ./__functor.nix;
     inherit name;
     type = &quot;installables&quot;;
     actions = {
@@ -158,6 +159,7 @@
       fragment,
       fragmentRelPath,
     }: [
+      (import ./actions/build.nix flake fragment)
       {
         name = &quot;install&quot;;
         description = &quot;install this target&quot;;
@@ -177,13 +179,6 @@
         description = &quot;remove this target&quot;;
         command = ''
           nix profile remove ${flake}#${fragment}
-        '';
-      }
-      {
-        name = &quot;build&quot;;
-        description = &quot;build this target&quot;;
-        command = ''
-          nix build ${flake}#${fragment}
         '';
       }
       {
