@@ -70,6 +70,8 @@ in {
     cellBlock = struct "cellBlock" {
       name = string;
       type = string;
+      __functor = option function;
+      ci = option (attrs bool);
       actions = option (functionWithArgs {
         system = false;
         flake = false;
