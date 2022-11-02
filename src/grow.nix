@@ -181,11 +181,14 @@
                 }
               else [];
           in {
-            actions = l.listToAttrs (map (a: {
-                inherit (a) name;
-                value = nixpkgs.legacyPackages.${system}.writeShellScript a.name a.command;
-              })
-              actions);
+            actions = {
+              inherit name;
+              value = l.listToAttrs (map (a: {
+                  inherit (a) name;
+                  value = nixpkgs.legacyPackages.${system}.writeShellScript a.name a.command;
+                })
+                actions);
+            };
             init = {
               inherit name;
               deps = target.meta.after or target.after or [];
@@ -221,7 +224,7 @@
             # top level output
             {${cellBlock.name} = imported;}
             # __std.actions (slow)
-            {${cellBlock.name} = (l.mapAttrs extract imported).actions;}
+            {${cellBlock.name} = l.listToAttrs (map (x: x.actions) (l.mapAttrsToList extract imported));}
             # __std.init (fast)
             {
               cellBlock = cellBlock.name;
