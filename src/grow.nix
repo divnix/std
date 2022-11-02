@@ -103,24 +103,53 @@
     # Helpers ...
     accumulate =
       l.foldl'
-      (acc: new: let
-        car = l.head new;
-        cdr = l.tail new;
-      in {
-        output = acc.output // car;
-        actions = acc.actions // (l.head cdr);
-        init = acc.init ++ (l.tail cdr);
-      })
+      (
+        acc: new: let
+          first = l.head new;
+          second = l.head cdr;
+          third = l.head cdr';
+          tail = l.tail cdr';
+
+          cdr = l.tail new;
+          cdr' = l.tail cdr;
+        in
+          (
+            if first == null
+            then {inherit (acc) output;}
+            else {output = acc.output // first;}
+          )
+          // (
+            if second == null
+            then {inherit (acc) actions;}
+            else {actions = acc.actions // second;}
+          )
+          // (
+            if third == null
+            then {inherit (acc) init;}
+            else {init = acc.init ++ [third];}
+          )
+          // (
+            if tail == [null]
+            then {inherit (acc) ci;}
+            else {ci = acc.ci ++ (l.flatten tail);}
+          )
+      )
       {
         output = {};
         actions = {};
         init = [];
+        ci = [];
       };
 
     optionalLoad = cond: elem:
       if cond
       then elem
-      else [{} {} {}];
+      else [
+        null # empty output
+        null # empty action
+        null # empty init
+        null # empty ci
+      ];
 
     _debug = s: attrs: let
       traceString = l.trace s;
@@ -170,17 +199,44 @@
           # extractor instatiates actions and extracts metadata for the __std registry
           extract = name: target: let
             tPath = paths.targetPath oPath name;
+            targetFragment = ''"${system}"."${cellName}"."${cellBlock.name}"."${name}"'';
+            actionFragment = action: {
+              actionFragment = ''"__std"."actions"."${system}"."${cellName}"."${cellBlock.name}"."${name}"."${action}'';
+            };
             actions =
               if cellBlock ? actions
               then
                 cellBlock.actions {
                   inherit system;
                   flake = inputs.self.sourceInfo.outPath;
-                  fragment = ''"${system}"."${cellName}"."${cellBlock.name}"."${name}"'';
+                  fragment = targetFragment;
                   fragmentRelPath = "${cellName}/${cellBlock.name}/${name}";
                 }
               else [];
+            ci =
+              if cellBlock ? ci
+              then
+                l.mapAttrsToList (action: _:
+                  if ! l.any (a: a.name == action) actions
+                  then
+                    throw ''
+                      divnix/std(ci-integration): Block Type '${cellBlock.type}' has no '${action}' Action defined.
+                      ---
+                      ${l.generators.toPretty {} (l.removeAttrs cellBlock ["__functor"])}
+                    ''
+                  else {
+                    inherit name;
+                    cell = cellName;
+                    block = cellBlock.name;
+                    blockType = cellBlock.type;
+                    inherit action;
+                    inherit targetFragment;
+                    inherit (actionFragment action) actionFragment;
+                  })
+                cellBlock.ci
+              else [];
           in {
+            inherit ci;
             actions = {
               inherit name;
               value = l.listToAttrs (map (a: {
@@ -218,13 +274,14 @@
             else if isDir
             then validate.Import cellBlock.type oPath.dir (import' oPath.dir)
             else throw "unreachable!";
+          extracted = l.mapAttrsToList extract imported;
         in
           optionalLoad (isFile || isDir)
           [
             # top level output
             {${cellBlock.name} = imported;}
             # __std.actions (slow)
-            {${cellBlock.name} = l.listToAttrs (map (x: x.actions) (l.mapAttrsToList extract imported));}
+            {${cellBlock.name} = l.listToAttrs (map (x: x.actions) extracted);}
             # __std.init (fast)
             {
               cellBlock = cellBlock.name;
@@ -233,8 +290,10 @@
                 if l.pathExists oPath.readme
                 then oPath.readme
                 else "";
-              targets = map (x: x.init) (l.mapAttrsToList extract imported);
+              targets = map (x: x.init) extracted;
             }
+            # __std.ci
+            (map (x: x.ci) extracted)
           ];
         res = accumulate (l.map loadCellBlock CellBlocks);
       in
@@ -253,6 +312,8 @@
               else "";
             cellBlocks = res.init; # []
           }
+          # __std.ci
+          res.ci
         ]; # };
       res = accumulate (l.map loadCellFor Cells);
     in
@@ -267,11 +328,17 @@
           name = system;
           value = res.init;
         }
+        # __std.ci
+        {
+          name = system;
+          value = res.ci;
+        }
       ];
     res = accumulate (l.map loadOutputFor Systems);
   in
     res.output
     // {
+      __std.ci = l.listToAttrs res.ci;
       __std.init = l.listToAttrs res.init;
       __std.actions = res.actions;
       __std.direnv_lib = ../direnv_lib.sh;
