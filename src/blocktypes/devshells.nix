@@ -4,9 +4,11 @@
   Use the Devshells Blocktype for devShells.
 
   Available actions:
+    - build
     - enter
   */
   devshells = name: {
+    __functor = import ./__functor.nix;
     inherit name;
     type = "devshells";
     actions = {
@@ -15,6 +17,7 @@
       fragment,
       fragmentRelPath,
     }: [
+      (import ./actions/build.nix flake fragment)
       {
         name = "enter";
         description = "enter this devshell";

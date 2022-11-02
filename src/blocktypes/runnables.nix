@@ -5,6 +5,7 @@
   make accessible with a 'run' action on the TUI.
   */
   runnables = name: {
+    __functor = import ./__functor.nix;
     inherit name;
     type = "runnables";
     actions = {
@@ -13,6 +14,7 @@
       fragment,
       fragmentRelPath,
     }: [
+      (import ./actions/build.nix flake fragment)
       {
         name = "run";
         description = "exec this target";
