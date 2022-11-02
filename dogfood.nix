@@ -11,12 +11,12 @@ growOn {
     ## For downstream use
 
     # std
-    (blockTypes.runnables "cli")
+    (blockTypes.runnables "cli" {ci.build = true;})
     (blockTypes.functions "devshellProfiles")
     (blockTypes.functions "lib")
     (blockTypes.functions "errors")
     (blockTypes.nixago "nixago")
-    (blockTypes.installables "packages")
+    (blockTypes.installables "packages" {ci.build = true;})
 
     # lib
     (blockTypes.functions "dev")
@@ -29,9 +29,9 @@ growOn {
     ## For local use in the Standard repository
 
     # _automation
-    (blockTypes.devshells "devshells")
+    (blockTypes.devshells "devshells" {ci.build = true;})
     (blockTypes.nixago "nixago")
-    (blockTypes.containers "containers")
+    (blockTypes.containers "containers" {ci.publish = true;})
     # (blockTypes.tasks "tasks") # TODO: implement properly
 
     # _tests
