@@ -167,8 +167,8 @@
         cPath = paths.cellPath cellsFrom cellName;
         loadCellBlock = cellBlock: let
           oPath = paths.cellBlockPath cPath cellBlock;
-          # minimum data for initializing TUI / CLI completion
-          extractInitMeta = name: target: let
+          # extractor instatiates actions and extracts metadata for the __std registry
+          extract = name: target: let
             tPath = paths.targetPath oPath name;
             actions =
               if cellBlock ? actions
@@ -181,34 +181,23 @@
                 }
               else [];
           in {
-            inherit name;
-            deps = target.meta.after or target.after or [];
-            description = target.meta.description or target.description or "n/a";
-            readme =
-              if l.pathExists tPath.readme
-              then tPath.readme
-              else "";
-            # for speed only extract name & description, the bare minimum for display
-            actions = map (a: {inherit (a) name description;}) actions;
-          };
-          # lazy action command renedering (slow)
-          extractActionsMeta = name: target: let
-            actions =
-              if cellBlock ? actions
-              then
-                cellBlock.actions {
-                  inherit system;
-                  flake = inputs.self.sourceInfo.outPath;
-                  fragment = ''"${system}"."${cellName}"."${cellBlock.name}"."${name}"'';
-                  fragmentRelPath = "${cellName}/${cellBlock.name}/${name}";
-                }
-              else [];
-          in
-            l.listToAttrs (map (a: {
+            actions = l.listToAttrs (map (a: {
                 inherit (a) name;
                 value = nixpkgs.legacyPackages.${system}.writeShellScript a.name a.command;
               })
               actions);
+            init = {
+              inherit name;
+              deps = target.meta.after or target.after or [];
+              description = target.meta.description or target.description or "n/a";
+              readme =
+                if l.pathExists tPath.readme
+                then tPath.readme
+                else "";
+              # for speed only extract name & description, the bare minimum for display
+              actions = map (a: {inherit (a) name description;}) actions;
+            };
+          };
           isFile = l.pathExists oPath.file;
           isDir = l.pathExists oPath.dir;
           import' = path: let
@@ -229,10 +218,11 @@
         in
           optionalLoad (isFile || isDir)
           [
+            # top level output
             {${cellBlock.name} = imported;}
-            # __std meta actions (slow)
-            {${cellBlock.name} = l.mapAttrs extractActionsMeta imported;}
-            # __std meta init (fast)
+            # __std.actions (slow)
+            {${cellBlock.name} = (l.mapAttrs extract imported).actions;}
+            # __std.init (fast)
             {
               cellBlock = cellBlock.name;
               blockType = cellBlock.type;
@@ -240,17 +230,18 @@
                 if l.pathExists oPath.readme
                 then oPath.readme
                 else "";
-              targets = l.mapAttrsToList extractInitMeta imported;
+              targets = map (x: x.init) (l.mapAttrsToList extract imported);
             }
           ];
         res = accumulate (l.map loadCellBlock CellBlocks);
       in
         optionalLoad (res != {})
         [
+          # top level output
           {${cellName} = res.output;}
-          # __std meta actions (slow)
+          # __std.actions (slow)
           {${cellName} = res.actions;}
-          # __std meta init (fast)
+          # __std.init (fast)
           {
             cell = cellName;
             readme =
@@ -264,10 +255,11 @@
     in
       optionalLoad (res != {})
       [
+        # top level output
         {${system} = res.output;}
-        # __std meta actions (slow)
+        # __std.actions (slow)
         {${system} = res.actions;}
-        # __std meta init (fast)
+        # __std.init (fast)
         {
           name = system;
           value = res.init;
@@ -276,13 +268,6 @@
     res = accumulate (l.map loadOutputFor Systems);
   in
     res.output
-    # meta = {
-    #   # materialize meta & also realize all implicit runtime dependencies
-    #   __std.${system}.targets = nixpkgs.legacyPackages.${system}.writeTextFile {
-    #     name = "__std-${system}-targets.json";
-    #     # flatten meta for easier ingestion by the std cli
-    #     text = l.toJSON (l.attrValues acc.__std.${system}.targets);
-    #   };
     // {
       __std.init = l.listToAttrs res.init;
       __std.actions = res.actions;
