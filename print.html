@@ -746,7 +746,8 @@ source &quot;$(
   --no-write-lock-file \
   --no-warn-dirty \
   --accept-flake-config \
-  .#__std.direnv_lib 2&gt;/dev/null
+  .#__std.direnv_lib 2&gt;/dev/null \
+  || nix eval .#__std.direnv_lib # show the errors
 )&quot;
 use std cells //_automation/devshells:default
 </code></pre>
