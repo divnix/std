@@ -131,7 +131,7 @@
           // (
             if tail == [null]
             then {inherit (acc) ci;}
-            else {ci = acc.ci ++ (l.flatten tail);}
+            else {ci = acc.ci ++ (l.concatMap (t: l.flatten t.ci) tail);}
           )
       )
       {
@@ -293,7 +293,9 @@
               targets = map (x: x.init) extracted;
             }
             # __std.ci
-            (map (x: x.ci) extracted)
+            {
+              ci = map (x: x.ci) extracted;
+            }
           ];
         res = accumulate (l.map loadCellBlock CellBlocks);
       in
@@ -313,7 +315,9 @@
             cellBlocks = res.init; # []
           }
           # __std.ci
-          res.ci
+          {
+            inherit (res) ci;
+          }
         ]; # };
       res = accumulate (l.map loadCellFor Cells);
     in
@@ -330,8 +334,12 @@
         }
         # __std.ci
         {
-          name = system;
-          value = res.ci;
+          ci = [
+            {
+              name = system;
+              value = res.ci;
+            }
+          ];
         }
       ];
     res = accumulate (l.map loadOutputFor Systems);
