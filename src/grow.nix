@@ -1,9 +1,9 @@
 {
   nixpkgs,
   yants,
+  deSystemize,
 }: let
   l = nixpkgs.lib // builtins;
-  deSystemize = import ./de-systemize.nix;
   paths = import ./paths.nix;
   blockTypes = import ./blocktypes.nix {inherit nixpkgs;};
   validate = import ./validators.nix {inherit yants nixpkgs;};

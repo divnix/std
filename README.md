@@ -161,7 +161,7 @@ direnv allow
 [harvest]: https://github.com/divnix/std/blob/main/src/harvest.nix
 [winnow]: https://github.com/divnix/std/blob/main/src/winnow.nix
 [incl]: https://github.com/divnix/std/blob/main/src/incl.nix
-[de-systemize]: https://github.com/divnix/std/blob/main/src/de-systemize.nix
+[de-systemize]: https://github.com/divnix/nosys/blob/master/flake.nix
 [blocktypes]: https://github.com/divnix/std/blob/main/src/blocktypes.nix
 [flake]: https://github.com/divnix/std/blob/main/flake.nix
 [yants]: https://github.com/divnix/yants

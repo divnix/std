@@ -71,12 +71,6 @@ cross-compilation scenarios.
 }
 ```
 
-#### `deSystemize`'s implementation
-
-```nix
-{{#include ../../src/de-systemize.nix}}
-```
-
 ## Top-level `system`-scoping of outputs
 
 Contrary to the upstream flake schema, all outputs are `system` spaced at the top-level.
