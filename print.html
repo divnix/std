@@ -185,7 +185,7 @@ your team and community will finally find a
 <li><a href="https://github.com/divnix/std/blob/main/src/harvest.nix"><code>std.harvest</code></a>: harvest your <strong>Targets</strong> into a different shape for compatibility</li>
 <li><a href="https://github.com/divnix/std/blob/main/src/winnow.nix"><code>std.winnow</code></a>: when more advanced harvesting is required, use this to harvest <em>and</em> filter the output</li>
 <li><a href="https://github.com/divnix/std/blob/main/src/incl.nix"><code>std.incl</code></a>: a straight-forward source filter with additive semantics</li>
-<li><a href="https://github.com/divnix/std/blob/main/src/de-systemize.nix"><code>std.deSystemize</code></a>: a helper to hide <code>system</code> from plain sight</li>
+<li><a href="https://github.com/divnix/nosys/blob/master/flake.nix"><code>std.deSystemize</code></a>: a helper to hide <code>system</code> from plain sight</li>
 <li><a href="https://github.com/divnix/std/blob/main/src/blocktypes.nix"><code>std.&lt;blockType&gt;</code></a>: builtin <strong>(Cell) Block Types</strong> that implement <strong>(Cell Block Type) Actions</strong></li>
 </ul>
 <h3 id="application"><a class="header" href="#application">Application</a></h3>
@@ -1435,30 +1435,6 @@ cross-compilation scenarios.</p>
   inputs.a.packages.${system}.pkgs2 = {};
   /* ... */
 }
-</code></pre>
-<h4 id="desystemizes-implementation"><a class="header" href="#desystemizes-implementation"><code>deSystemize</code>’s implementation</a></h4>
-<pre><code class="language-nix">let
-  l = builtins;
-  /*
-  A helper function which hides the complexities of dealing
-  with 'system' properly from you, while still providing
-  escape hatches when dealing with cross-compilation.
-
-  You can use this function independently of the rest of std.
-  */
-  deSystemize = let
-    iteration = cutoff: system: fragment:
-      if ! (l.isAttrs fragment) || cutoff == 0
-      then fragment
-      else if l.hasAttr &quot;${system}&quot; fragment &amp;&amp; ! l.isFunction fragment.${system}
-      then fragment // fragment.${system}
-      else if l.hasAttr &quot;${system}&quot; fragment &amp;&amp; l.isFunction fragment.${system}
-      then fragment // {__functor = _: fragment.${system};}
-      else l.mapAttrs (_: iteration (cutoff - 1) system) fragment;
-  in
-    iteration 3;
-in
-  deSystemize
 </code></pre>
 <h2 id="top-level-system-scoping-of-outputs"><a class="header" href="#top-level-system-scoping-of-outputs">Top-level <code>system</code>-scoping of outputs</a></h2>
 <p>Contrary to the upstream flake schema, all outputs are <code>system</code> spaced at the top-level.

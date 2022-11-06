@@ -180,30 +180,6 @@ cross-compilation scenarios.</p>
   /* ... */
 }
 </code></pre>
-<h4 id="desystemizes-implementation"><a class="header" href="#desystemizes-implementation"><code>deSystemize</code>’s implementation</a></h4>
-<pre><code class="language-nix">let
-  l = builtins;
-  /*
-  A helper function which hides the complexities of dealing
-  with 'system' properly from you, while still providing
-  escape hatches when dealing with cross-compilation.
-
-  You can use this function independently of the rest of std.
-  */
-  deSystemize = let
-    iteration = cutoff: system: fragment:
-      if ! (l.isAttrs fragment) || cutoff == 0
-      then fragment
-      else if l.hasAttr &quot;${system}&quot; fragment &amp;&amp; ! l.isFunction fragment.${system}
-      then fragment // fragment.${system}
-      else if l.hasAttr &quot;${system}&quot; fragment &amp;&amp; l.isFunction fragment.${system}
-      then fragment // {__functor = _: fragment.${system};}
-      else l.mapAttrs (_: iteration (cutoff - 1) system) fragment;
-  in
-    iteration 3;
-in
-  deSystemize
-</code></pre>
 <h2 id="top-level-system-scoping-of-outputs"><a class="header" href="#top-level-system-scoping-of-outputs">Top-level <code>system</code>-scoping of outputs</a></h2>
 <p>Contrary to the upstream flake schema, all outputs are <code>system</code> spaced at the top-level.
 This allows us to uniformly select on the <em>current</em> system and forget about it for most
