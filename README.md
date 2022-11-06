@@ -160,7 +160,7 @@ direnv allow
 [grow-on]: https://github.com/divnix/std/blob/main/src/grow-on.nix
 [harvest]: https://github.com/divnix/std/blob/main/src/harvest.nix
 [winnow]: https://github.com/divnix/std/blob/main/src/winnow.nix
-[incl]: https://github.com/divnix/std/blob/main/src/incl.nix
+[incl]: https://github.com/divnix/incl
 [de-systemize]: https://github.com/divnix/nosys/blob/master/flake.nix
 [blocktypes]: https://github.com/divnix/std/blob/main/src/blocktypes.nix
 [flake]: https://github.com/divnix/std/blob/main/flake.nix

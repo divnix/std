@@ -13,6 +13,8 @@
   inputs.dmerge.inputs.yants.follows = "yants";
   inputs.blank.url = "github:divnix/blank";
   inputs.nosys.url = "github:divnix/nosys";
+  inputs.incl.url = "github:divnix/incl";
+  inputs.incl.inputs.nixlib.follows = "nixpkgs";
   /*
   Auxiliar inputs used in builtin libraries or for the dev environment.
   */
@@ -40,7 +42,6 @@
   };
   outputs = inputs: let
     blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs;};
-    incl = import ./src/incl.nix {inherit (inputs) nixpkgs;};
     deSystemize = inputs.nosys.lib.deSys;
     grow = import ./src/grow.nix {
       inherit (inputs) nixpkgs yants;
@@ -55,10 +56,10 @@
     l = inputs.nixpkgs.lib // builtins;
   in
     {
-      inherit (inputs) yants dmerge; # convenience re-exports
+      inherit (inputs) yants dmerge incl; # convenience re-exports
       inherit blockTypes;
       inherit (blockTypes) runnables installables functions data devshells containers files microvms nixago nomadJobManifests;
-      inherit grow growOn deSystemize incl harvest winnow;
+      inherit grow growOn deSystemize harvest winnow;
       systems = l.systems.doubles;
     }
     # on our own account ...
