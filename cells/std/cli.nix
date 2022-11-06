@@ -7,9 +7,7 @@
   nixpkgs = inputs.nixpkgs;
 in {
   default = let
-    commit = inputs.self.shortRev or "dirty";
-    date = inputs.self.lastModifiedDate or inputs.self.lastModified or "19700101";
-    version = "0.9.0+${builtins.substring 0 8 date}.${commit}";
+    version = "0.10.0+dev";
   in
     nixpkgs.buildGoModule rec {
       inherit version;
@@ -38,7 +36,6 @@ in {
         "-s"
         "-w"
         "-X main.buildVersion=${version}"
-        "-X main.buildCommit=${commit}"
       ];
     };
 }
