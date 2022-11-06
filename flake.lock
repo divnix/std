@@ -76,6 +76,26 @@
         "type": "github"
       }
     },
+    "incl": {
+      "inputs": {
+        "nixlib": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1667701840,
+        "narHash": "sha256-Nib6hrSFvZWO+20A/8vHtbSEi8YHdnOFXg/52Ff3R8w=",
+        "owner": "divnix",
+        "repo": "incl",
+        "rev": "bb3a06f5dd32738fa02999bd1e1c0b41cc4a234e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "divnix",
+        "repo": "incl",
+        "type": "github"
+      }
+    },
     "mdbook-kroki-preprocessor": {
       "flake": false,
       "locked": {
@@ -181,6 +201,7 @@
         "devshell": "devshell",
         "dmerge": "dmerge",
         "flake-utils": "flake-utils",
+        "incl": "incl",
         "makes": [
           "blank"
         ],
