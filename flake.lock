@@ -157,6 +157,21 @@
         "type": "github"
       }
     },
+    "nosys": {
+      "locked": {
+        "lastModified": 1667698628,
+        "narHash": "sha256-6Q/aeHNCXTsGGb0yoc6CEmyK+9aaMnZkmw2/6jCV39s=",
+        "owner": "divnix",
+        "repo": "nosys",
+        "rev": "cef00e1e6d372874c976cabcee52ab89a0ab1ced",
+        "type": "github"
+      },
+      "original": {
+        "owner": "divnix",
+        "repo": "nosys",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "arion": [
@@ -176,6 +191,7 @@
         "n2c": "n2c",
         "nixago": "nixago",
         "nixpkgs": "nixpkgs",
+        "nosys": "nosys",
         "yants": "yants"
       }
     },
