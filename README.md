@@ -6,7 +6,7 @@ SPDX-License-Identifier: Unlicense
 -->
 
 <div align="center">
-  <img src="https://github.com/divnix/std/raw/main/artwork/logo.png" width="250" />
+  <img src="https://github.com/divnix/std/raw/main/artwork/logo.svg" width="250" />
   <h1>Standard</h1>
   <p>Ship today.</span>
 </div>

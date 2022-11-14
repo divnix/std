@@ -1,0 +1,20 @@
+{
+  "std": {
+    "org": "divnix",
+    "repo": "std",
+    "aperture": 2,
+    "length": 3,
+    "clipr": 7,
+    "colors": [
+      "#0000c6",
+      "#006400",
+      "#c6c600",
+      "#c68000",
+      "#c60000",
+      "#c600c6"
+    ],
+    "gaps": 1,
+    "num": 6,
+    "unit": 40
+  }
+}
