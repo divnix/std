@@ -189,7 +189,7 @@
           nixpkgs = let
             config = nixpkgsConfig;
           in
-            (import nixpkgs {inherit system config;}) // {inherit (nixpkgs) sourceInfo;};
+            (import inputs.nixpkgs {inherit system config;}) // {inherit (inputs.nixpkgs) sourceInfo;};
         }
       );
       loadCellFor = cellName: let
