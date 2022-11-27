@@ -1,5 +1,5 @@
 {
-  # root = true;
+  root = true;
 
   "*" = {
     end_of_line = "lf";
