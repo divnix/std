@@ -60,6 +60,7 @@ That folder implements:
 - [`std.growOn`][grow-on]: `std.grow`-variant that recursively merges all additional variadic arguments
 - [`std.harvest`][harvest]: harvest your **Targets** into a different shape for compatibility
 - [`std.winnow`][winnow]: when more advanced harvesting is required, use this to harvest _and_ filter the output
+- [`std.pick`][pick]: pick your **Targets** into a different shape without system scope
 - [`std.incl`][incl]: a straight-forward source filter with additive semantics
 - [`std.deSystemize`][de-systemize]: a helper to hide `system` from plain sight
 - [`std.<blockType>`][blocktypes]: builtin **(Cell) Block Types** that implement **(Cell Block Type) Actions**
@@ -160,6 +161,7 @@ direnv allow
 [grow-on]: https://github.com/divnix/std/blob/main/src/grow-on.nix
 [harvest]: https://github.com/divnix/std/blob/main/src/harvest.nix
 [winnow]: https://github.com/divnix/std/blob/main/src/winnow.nix
+[pick]: https://github.com/divnix/std/blob/main/src/pick.nix
 [incl]: https://github.com/divnix/incl
 [de-systemize]: https://github.com/divnix/nosys/blob/master/flake.nix
 [blocktypes]: https://github.com/divnix/std/blob/main/src/blocktypes.nix
