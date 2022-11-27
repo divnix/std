@@ -2,6 +2,7 @@
   growOn,
   inputs,
   blockTypes,
+  pick,
   harvest,
 }:
 growOn {
@@ -41,9 +42,5 @@ growOn {
 } {
   devShells = harvest inputs.self ["_automation" "devshells"];
   packages = harvest inputs.self [["std" "cli"] ["std" "packages"]];
-  templates = let
-    r = harvest inputs.self ["presets" "templates"];
-    r' = builtins.head (builtins.attrNames r);
-  in
-    r.${r'};
+  templates = pick inputs.self ["presets" "templates"];
 }

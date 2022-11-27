@@ -51,6 +51,7 @@
       inherit (inputs) nixpkgs yants;
       inherit deSystemize;
     };
+    pick = import ./src/pick.nix {inherit harvest;};
     harvest = import ./src/harvest.nix {inherit winnow;};
     winnow = import ./src/winnow.nix {inherit (inputs) nixpkgs;};
     l = inputs.nixpkgs.lib // builtins;
@@ -59,9 +60,9 @@
       inherit (inputs) yants dmerge incl; # convenience re-exports
       inherit blockTypes;
       inherit (blockTypes) runnables installables functions data devshells containers files microvms nixago nomadJobManifests;
-      inherit grow growOn deSystemize harvest winnow;
+      inherit grow growOn deSystemize pick harvest winnow;
       systems = l.systems.doubles;
     }
     # on our own account ...
-    // (import ./dogfood.nix {inherit inputs growOn blockTypes harvest;});
+    // (import ./dogfood.nix {inherit inputs growOn blockTypes pick harvest;});
 }
