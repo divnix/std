@@ -2282,11 +2282,20 @@ in {
   inputs,
   cell,
 }: let
+  l = nixpkgs.lib // builtins;
   inherit (inputs) nixpkgs;
 in {
   configData = {};
   output = &quot;.editorconfig&quot;;
-  format = &quot;ini&quot;;
+  engine = request: let
+    inherit (request) configData output;
+    name = l.baseNameOf output;
+    value = {
+      globalSection = {root = configData.root or true;};
+      sections = l.removeAttrs configData [&quot;root&quot;];
+    };
+  in
+    nixpkgs.writeText name (l.generators.toINIWithGlobalSection {} value);
   packages = [nixpkgs.editorconfig-checker];
 }
 </code></pre>
@@ -2823,7 +2832,7 @@ in {
 <p><em>If you have a good idea how to make these presets more useful, please consider to submit a PR.</em></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="editorconfig-nixago-presets"><a class="header" href="#editorconfig-nixago-presets"><code>editorconfig</code> Nixago Presets</a></h1>
 <pre><code class="language-nix">{
-  # root = true;
+  root = true;
 
   &quot;*&quot; = {
     end_of_line = &quot;lf&quot;;

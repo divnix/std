@@ -141,11 +141,20 @@
   inputs,
   cell,
 }: let
+  l = nixpkgs.lib // builtins;
   inherit (inputs) nixpkgs;
 in {
   configData = {};
   output = &quot;.editorconfig&quot;;
-  format = &quot;ini&quot;;
+  engine = request: let
+    inherit (request) configData output;
+    name = l.baseNameOf output;
+    value = {
+      globalSection = {root = configData.root or true;};
+      sections = l.removeAttrs configData [&quot;root&quot;];
+    };
+  in
+    nixpkgs.writeText name (l.generators.toINIWithGlobalSection {} value);
   packages = [nixpkgs.editorconfig-checker];
 }
 </code></pre>
