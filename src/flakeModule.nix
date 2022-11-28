@@ -1,5 +1,5 @@
 {
-  validators,
+  types,
   grow,
   pick,
   winnow,
@@ -67,7 +67,7 @@
     name = "cellBlocks";
     description = "list of cell block";
     descriptionClass = "noun";
-    inherit (validators.CellBlocks) check;
+    inherit (types.BlockTypes) check;
   };
 
   opt = options.std;
