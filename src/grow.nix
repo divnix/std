@@ -108,10 +108,12 @@
           first = l.head new;
           second = l.head cdr;
           third = l.head cdr';
-          tail = l.tail cdr';
+          fourth = l.head cdr_;
+          tail = l.tail cdr_;
 
           cdr = l.tail new;
           cdr' = l.tail cdr;
+          cdr_ = l.tail cdr';
         in
           (
             if first == null
@@ -129,9 +131,14 @@
             else {init = acc.init ++ [third];}
           )
           // (
-            if tail == [null]
+            if fourth == null
             then {inherit (acc) ci;}
-            else {ci = acc.ci ++ (l.concatMap (t: l.flatten t.ci) tail);}
+            else {ci = acc.ci ++ (l.concatMap (t: l.flatten t.ci) [fourth]);}
+          )
+          // (
+            if tail == [null]
+            then {inherit (acc) ci';}
+            else {ci' = acc.ci' ++ (l.concatMap (t: l.flatten t.ci') tail);}
           )
       )
       {
@@ -139,6 +146,7 @@
         actions = {};
         init = [];
         ci = [];
+        ci' = []; # with drv (eval-costly)
       };
 
     optionalLoad = cond: elem:
@@ -235,8 +243,17 @@
                   })
                 cellBlock.ci
               else [];
+            ci' = let
+              f = set:
+                set
+                // {
+                  targetDrv = inputs.self.${system}.${set.cell}.${set.block}.${set.name}.drvPath or null;
+                  actionDrv = inputs.self.__std.actions.${system}.${set.cell}.${set.block}.${set.name}.${set.action}.drvPath or null;
+                };
+            in
+              map f ci;
           in {
-            inherit ci;
+            inherit ci ci';
             actions = {
               inherit name;
               value = l.listToAttrs (map (a: {
@@ -296,6 +313,10 @@
             {
               ci = map (x: x.ci) extracted;
             }
+            # __std.ci'
+            {
+              ci' = map (x: x.ci') extracted;
+            }
           ];
         res = accumulate (l.map loadCellBlock CellBlocks);
       in
@@ -317,6 +338,10 @@
           # __std.ci
           {
             inherit (res) ci;
+          }
+          # __std.ci'
+          {
+            inherit (res) ci';
           }
         ]; # };
       res = accumulate (l.map loadCellFor Cells);
@@ -341,12 +366,22 @@
             }
           ];
         }
+        # __std.ci'
+        {
+          ci' = [
+            {
+              name = system;
+              value = res.ci';
+            }
+          ];
+        }
       ];
     res = accumulate (l.map loadOutputFor Systems);
   in
     res.output
     // {
       __std.ci = l.listToAttrs res.ci;
+      __std.ci' = l.listToAttrs res.ci';
       __std.init = l.listToAttrs res.init;
       __std.actions = res.actions;
       __std.direnv_lib = ../direnv_lib.sh;
