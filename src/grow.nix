@@ -371,6 +371,11 @@
       __std.init = l.listToAttrs res.init;
       __std.actions = res.actions;
       __std.direnv_lib = ../direnv_lib.sh;
+      __std.nixConfig = let
+        nixConfig = (import "${inputs.self}/flake.nix").nixConfig or {};
+        compatFunc = import ./nix.conf.nix l;
+      in
+        compatFunc nixConfig;
     });
 in
   grow
