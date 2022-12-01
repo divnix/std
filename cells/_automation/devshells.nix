@@ -4,9 +4,9 @@
 }: let
   l = nixpkgs.lib // builtins;
   inherit (inputs) nixpkgs;
-  inherit (inputs.cells) std;
+  inherit (inputs.cells) std lib;
 in
-  l.mapAttrs (_: std.lib.mkShell) rec {
+  l.mapAttrs (_: lib.dev.mkShell) rec {
     default = {...}: {
       name = "Standard";
       nixago = [
