@@ -385,6 +385,18 @@
       __std.init = l.listToAttrs res.init;
       __std.actions = res.actions;
       __std.direnv_lib = ../direnv_lib.sh;
+      __std.nixConfig = let
+        # FIXME: refactor when merged NixOS/nixpkgs#203999
+        nixConfig = l.generators.toKeyValue {
+          mkKeyValue = l.generators.mkKeyValueDefault {
+            mkValueString = v:
+              if l.isList v
+              then l.concatStringsSep " " v
+              else l.generators.mkValueStringDefault {} v;
+          } " = ";
+        };
+      in
+        nixConfig (import "${inputs.self}/flake.nix").nixConfig or {};
     };
 in
   grow
