@@ -76,6 +76,27 @@ The TUI does this automatically, but the command completion needs manual initial
 		return nil
 	},
 }
+var checkCmd = &cobra.Command{
+	Use:   "check",
+	Short: "Validate the repository.",
+	Long: `Validates that the repository conforms to Standard.
+Returns a non-zero exit code and an error message if the repository is not a valid Standard repository.
+The TUI does this automatically.`,
+	Args: cobra.NoArgs,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		_, _, loadCmd, _, err := LoadFlakeCmd()
+		if err != nil {
+			return fmt.Errorf("while loading flake (cmd '%v'): %w", loadCmd, err)
+		}
+		loadCmd.Stderr = os.Stderr
+		if err := loadCmd.Run(); err != nil {
+			os.Exit(1)
+		}
+		fmt.Println("Valid Standard repository ✓")
+
+		return nil
+	},
+}
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List available targets.",
@@ -130,6 +151,7 @@ func ExecuteCli() {
 func init() {
 	rootCmd.AddCommand(reCacheCmd)
 	rootCmd.AddCommand(listCmd)
+	rootCmd.AddCommand(checkCmd)
 	carapace.Gen(rootCmd).Standalone()
 	// completes: '//cell/block/target:action'
 	carapace.Gen(rootCmd).PositionalCompletion(
