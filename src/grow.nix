@@ -392,6 +392,8 @@
             mkValueString = v:
               if l.isList v
               then l.concatStringsSep " " v
+              else if (l.isPath v || v ? __toString)
+              then toString v
               else l.generators.mkValueStringDefault {} v;
           } " = ";
         };
