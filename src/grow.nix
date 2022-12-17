@@ -257,13 +257,7 @@
               inherit name;
               value = l.listToAttrs (map (a: {
                   inherit (a) name;
-                  value = nixpkgs.legacyPackages.${system}.writeShellScript a.name ''
-                    if test -z "$PRJ_ROOT"; then
-                      echo "PRJ_ROOT is not set. Action aborting."
-                      exit 1
-                    fi
-                    ${a.command}
-                  '';
+                  value = a.command;
                 })
                 actions);
             };

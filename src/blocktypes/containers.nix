@@ -1,5 +1,4 @@
-{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+deSystemize: nixpkgs': let
   /*
   Use the Containers Blocktype for OCI-images built with nix2container.
 
@@ -17,12 +16,15 @@
       system,
       fragment,
       fragmentRelPath,
-    }: [
-      (import ./actions/build.nix fragment)
+    }: let
+      l = nixpkgs.lib // builtins;
+      nixpkgs = deSystemize system nixpkgs'.legacyPackages;
+    in [
+      (import ./actions/build.nix nixpkgs.writeShellScriptWithPrjRoot fragment)
       {
         name = "print-image";
         description = "print out the image name & tag";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "print-image" ''
           echo
           echo "$(nix eval --raw "$PRJ_ROOT#${fragment}.imageName):$(nix eval --raw "$PRJ_ROOT#${fragment}.imageTag)"
         '';
@@ -30,28 +32,28 @@
       {
         name = "publish";
         description = "copy the image to its remote registry";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "publish" ''
           nix run "$PRJ_ROOT#${fragment}.copyToRegistry
         '';
       }
       {
         name = "copy-to-registry";
         description = "copy the image to its remote registry";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "copy-to-registry" ''
           nix run "$PRJ_ROOT#${fragment}.copyToRegistry
         '';
       }
       {
         name = "copy-to-docker";
         description = "copy the image to the local docker registry";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "copy-to-docker" ''
           nix run "$PRJ_ROOT#${fragment}.copyToDockerDaemon
         '';
       }
       {
         name = "copy-to-podman";
         description = "copy the image to the local podman registry";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "copy-to-podman" ''
           nix run "$PRJ_ROOT#${fragment}.copyToPodman
         '';
       }

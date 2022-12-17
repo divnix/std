@@ -1,5 +1,4 @@
-{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+deSystemize: nixpkgs': let
   /*
   Use the Files Blocktype for any text data.
 
@@ -14,14 +13,16 @@
       fragment,
       fragmentRelPath,
     }: let
+      l = nixpkgs.lib // builtins;
+      nixpkgs = deSystemize system nixpkgs'.legacyPackages;
       builder = ["nix" "build" "--impure" "--json" "--no-link" "$PRJ_ROOT#${fragment}"];
-      jq = ["|" "${nixpkgs.legacyPackages.${system}.jq}/bin/jq" "-r" "'.[].outputs.out'"];
-      bat = ["${nixpkgs.legacyPackages.${system}.bat}/bin/bat"];
+      jq = ["|" "${nixpkgs.jq}/bin/jq" "-r" "'.[].outputs.out'"];
+      bat = ["${nixpkgs.bat}/bin/bat"];
     in [
       {
         name = "explore";
         description = "interactively explore with bat";
-        command = l.concatStringsSep "\t" (bat ++ ["$("] ++ builder ++ jq ++ [")"]);
+        command = nixpkgs.writeShellScriptWithPrjRoot "explore" (l.concatStringsSep "\t" (bat ++ ["$("] ++ builder ++ jq ++ [")"]));
       }
     ];
   };

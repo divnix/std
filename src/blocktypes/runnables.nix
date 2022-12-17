@@ -1,5 +1,4 @@
-{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+deSystemize: nixpkgs': let
   /*
   Use the Runnables Blocktype for targets that you want to
   make accessible with a 'run' action on the TUI.
@@ -12,12 +11,14 @@
       system,
       fragment,
       fragmentRelPath,
-    }: [
-      (import ./actions/build.nix fragment)
+    }: let
+      nixpkgs = deSystemize system nixpkgs'.legacyPackages;
+    in [
+      (import ./actions/build.nix nixpkgs.writeShellScriptWithPrjRoot fragment)
       {
         name = "run";
         description = "exec this target";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "run" ''
           nix run "$PRJ_ROOT#${fragment} -- "$@"
         '';
       }

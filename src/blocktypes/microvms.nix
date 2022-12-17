@@ -1,5 +1,4 @@
-{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+deSystemize: nixpkgs': let
   /*
   Use the Microvms Blocktype for Microvm.nix - https://github.com/astro/microvm.nix
 
@@ -17,16 +16,19 @@
       fragment,
       fragmentRelPath,
     }: let
+      l = nixpkgs.lib // builtins;
+      nixpkgs = deSystemize system nixpkgs'.legacyPackages;
       run = ["nix" "run" "$PRJ_ROOT#${fragment}.config.microvm.runner"];
     in [
       {
         name = "microvm";
         description = "exec this microvm";
-        command =
+        command = nixpkgs.writeShellScriptWithPrjRoot "microvm" (
           (l.concatStringsSep "\t" run)
           + ".$(nix eval --json --option warn-dirty false\ "
           + "$PRJ_ROOT#${fragment}.config.microvm.hypervisor)"
-          + "\ ${substituters} ${keys}";
+          + "\ ${substituters} ${keys}"
+        );
       }
     ];
   };

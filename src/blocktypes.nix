@@ -1,13 +1,16 @@
-{nixpkgs}: {
-  runnables = import ./blocktypes/runnables.nix {inherit nixpkgs;};
-  installables = import ./blocktypes/installables.nix {inherit nixpkgs;};
-  functions = import ./blocktypes/functions.nix {inherit nixpkgs;};
-  data = import ./blocktypes/data.nix {inherit nixpkgs;};
-  devshells = import ./blocktypes/devshells.nix {inherit nixpkgs;};
-  containers = import ./blocktypes/containers.nix {inherit nixpkgs;};
-  files = import ./blocktypes/files.nix {inherit nixpkgs;};
-  microvms = import ./blocktypes/microvms.nix {inherit nixpkgs;};
-  nixago = import ./blocktypes/nixago.nix {inherit nixpkgs;};
-  arion = import ./blocktypes/arion.nix {inherit nixpkgs;};
-  nomadJobManifests = import ./blocktypes/nomadJobManifests.nix {inherit nixpkgs;};
+{
+  nixpkgs,
+  deSystemize,
+}: {
+  runnables = import ./blocktypes/runnables.nix deSystemize nixpkgs;
+  installables = import ./blocktypes/installables.nix deSystemize nixpkgs;
+  functions = import ./blocktypes/functions.nix deSystemize nixpkgs;
+  data = import ./blocktypes/data.nix deSystemize nixpkgs;
+  devshells = import ./blocktypes/devshells.nix deSystemize nixpkgs;
+  containers = import ./blocktypes/containers.nix deSystemize nixpkgs;
+  files = import ./blocktypes/files.nix deSystemize nixpkgs;
+  microvms = import ./blocktypes/microvms.nix deSystemize nixpkgs;
+  nixago = import ./blocktypes/nixago.nix deSystemize nixpkgs;
+  arion = import ./blocktypes/arion.nix deSystemize nixpkgs;
+  nomadJobManifests = import ./blocktypes/nomadJobManifests.nix deSystemize nixpkgs;
 }

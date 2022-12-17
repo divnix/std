@@ -1,5 +1,4 @@
-{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+deSystemize: nixpkgs': let
   /*
   Use the Devshells Blocktype for devShells.
 
@@ -15,12 +14,15 @@
       system,
       fragment,
       fragmentRelPath,
-    }: [
-      (import ./actions/build.nix fragment)
+    }: let
+      l = nixpkgs.lib // builtins;
+      nixpkgs = deSystemize system nixpkgs'.legacyPackages;
+    in [
+      (import ./actions/build.nix nixpkgs.writeShellScriptWithPrjRoot fragment)
       {
         name = "enter";
         description = "enter this devshell";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "enter" ''
           std_layout_dir=$PRJ_ROOT/.std
           profile_path="$std_layout_dir/${fragmentRelPath}"
           mkdir -p "$profile_path"

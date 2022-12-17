@@ -1,5 +1,4 @@
-{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+deSystemize: nixpkgs': let
   /*
   Use the Data Blocktype for json serializable data.
 
@@ -19,12 +18,14 @@
       fragment,
       fragmentRelPath,
     }: let
+      l = nixpkgs.lib // builtins;
+      nixpkgs = deSystemize system nixpkgs'.legacyPackages;
       builder = ["nix" "build" "--impure" "--json" "--no-link" "--expr" expr];
-      jq = ["|" "${nixpkgs.legacyPackages.${system}.jq}/bin/jq" "-r" "'.[].outputs.out'"];
-      fx = ["|" "xargs" "cat" "|" "${nixpkgs.legacyPackages.${system}.fx}/bin/fx"];
+      jq = ["|" "${nixpkgs.jq}/bin/jq" "-r" "'.[].outputs.out'"];
+      fx = ["|" "xargs" "cat" "|" "${nixpkgs.fx}/bin/fx"];
       expr = l.strings.escapeShellArg ''
         let
-          pkgs = (builtins.getFlake "${nixpkgs.sourceInfo.outPath}").legacyPackages.${system};
+          pkgs = (builtins.getFlake "${nixpkgs.path}").legacyPackages.${nixpkgs.system};
           this = (builtins.getFlake "$PRJ_ROOT").${fragment};
         in
           pkgs.writeTextFile {
@@ -36,12 +37,12 @@
       {
         name = "write";
         description = "write to file";
-        command = l.concatStringsSep "\t" (builder ++ jq);
+        command = nixpkgs.writeShellScriptWithPrjRoot "write" (l.concatStringsSep "\t" (builder ++ jq));
       }
       {
         name = "explore";
         description = "interactively explore";
-        command = l.concatStringsSep "\t" (builder ++ jq ++ fx);
+        command = nixpkgs.writeShellScriptWithPrjRoot "explore" (l.concatStringsSep "\t" (builder ++ jq ++ fx));
       }
     ];
   };

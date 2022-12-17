@@ -1,5 +1,4 @@
-{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+deSystemize: nixpkgs': let
   /*
   Use the arion for arionCompose Jobs - https://docs.hercules-ci.com/arion/
 
@@ -19,47 +18,49 @@
       fragment,
       fragmentRelPath,
     }: let
+      l = nixpkgs.lib // builtins;
+      nixpkgs = deSystemize system nixpkgs'.legacyPackages;
       cmd = "arion --prebuilt-file $(nix build $PRJ_ROOT#${fragment}.config.out.dockerComposeYaml --print-out-paths)";
     in [
       {
         name = "up";
         description = "arion up";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "up" ''
           ${cmd} up "$@"
         '';
       }
       {
         name = "ps";
         description = "exec this arion task to ps";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "ps" ''
           ${cmd} ps "$@"
         '';
       }
       {
         name = "stop";
         description = "arion stop";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "stop" ''
           ${cmd} stop "$@"
         '';
       }
       {
         name = "rm";
         description = "arion rm";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "rm" ''
           ${cmd} rm "$@"
         '';
       }
       {
         name = "config";
         description = "check the docker-compose yaml file";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "config" ''
           ${cmd} config "$@"
         '';
       }
       {
         name = "arion";
         description = "pass any command to arion";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "arion" ''
           ${cmd} "$@"
         '';
       }

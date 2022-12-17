@@ -1,5 +1,4 @@
-{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+deSystemize: nixpkgs': let
   /*
   Use the `nomadJobsManifest` Blocktype for rendering job descriptions
   for the Nomad Cluster scheduler. Each named attribtute-set under the
@@ -19,9 +18,11 @@
       fragment,
       fragmentRelPath,
     }: let
-      fx = "${nixpkgs.legacyPackages.${system}.fx}/bin";
-      nomad = "${nixpkgs.legacyPackages.${system}.nomad}/bin";
-      jq = "${nixpkgs.legacyPackages.${system}.jq}/bin";
+      l = nixpkgs.lib // builtins;
+      nixpkgs = deSystemize system nixpkgs'.legacyPackages;
+      fx = "${nixpkgs.fx}/bin";
+      nomad = "${nixpkgs.nomad}/bin";
+      jq = "${nixpkgs.jq}/bin";
       nixExpr = ''
         x: let
           job = builtins.mapAttrs (_: v: v // {meta = v.meta or {} // {rev = "\"$(git rev-parse --short HEAD)\"";};}) x.job;
@@ -60,6 +61,7 @@
         name = "render";
         description = "build the JSON job description";
         command =
+          nixpkgs.writeShellScriptWithPrjRoot "render"
           # bash
           ''
             set -e
@@ -73,6 +75,7 @@
         name = "deploy";
         description = "Deploy the job to Nomad";
         command =
+          nixpkgs.writeShellScriptWithPrjRoot "deploy"
           # bash
           ''
             set -e
@@ -115,6 +118,7 @@
         name = "explore";
         description = "interactively explore the Job defintion";
         command =
+          nixpkgs.writeShellScriptWithPrjRoot "explore"
           # bash
           ''
             set -e

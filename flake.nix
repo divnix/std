@@ -41,7 +41,22 @@
     arion.follows = "blank";
   };
   outputs = inputs: let
-    blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs;};
+    blockTypes = import ./src/blocktypes.nix {
+      inherit deSystemize;
+      nixpkgs = builtins.mapAttrs (system: pkgs:
+        pkgs
+        // {
+          writeShellScriptWithPrjRoot = name: content:
+            pkgs.writeShellScript name ''
+              if test -z "$PRJ_ROOT"; then
+                echo "PRJ_ROOT is not set. Action aborting."
+                exit 1
+              fi
+              ${content}
+            '';
+        }
+        inputs.nixpkgs.legacyPackages);
+    };
     deSystemize = inputs.nosys.lib.deSys;
     grow = import ./src/grow.nix {
       inherit (inputs) nixpkgs yants;

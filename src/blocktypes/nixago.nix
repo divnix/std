@@ -1,5 +1,4 @@
-{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+deSystemize: nixpkgs': let
   /*
   Use the Nixago Blocktype for nixago pebbles.
 
@@ -21,19 +20,22 @@
       system,
       fragment,
       fragmentRelPath,
-    }: [
+    }: let
+      l = nixpkgs.lib // builtins;
+      nixpkgs = deSystemize system nixpkgs'.legacyPackages;
+    in [
       {
         name = "populate";
         description = "populate this nixago file into the repo";
-        command = ''
+        command = nixpkgs.writeShellScriptWithPrjRoot "populate" ''
           nix run "$PRJ_ROOT#${fragment}.install
         '';
       }
       {
         name = "explore";
         description = "interactively explore the nixago file";
-        command = ''
-          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat "$(nix build --no-link --print-out-paths "$PRJ_ROOT#${fragment}.configFile)"
+        command = nixpkgs.writeShellScriptWithPrjRoot "explore" ''
+          ${nixpkgs.bat}/bin/bat "$(nix build --no-link --print-out-paths "$PRJ_ROOT#${fragment}.configFile)"
         '';
       }
     ];
