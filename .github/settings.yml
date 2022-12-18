@@ -1,0 +1,65 @@
+labels:
+- color: '#000000'
+  description: This issue has been abdandoned
+  name: ':running: Status: Abdandoned'
+- color: '#4CAF50'
+  description: This issue has been accepted
+  name: ':ok: Status: Accepted'
+- color: '#F44336'
+  description: This issue is in a blocking state
+  name: ':x: Status: Blocked'
+- color: '#A6A6A6'
+  description: This issue is actively being worked on
+  name: ':construction: Status: In Progress'
+- color: '#F44336'
+  description: This issue is not currently being worked on
+  name: ':golf: Status: On Hold'
+- color: '#FDD835'
+  description: This issue is pending a review
+  name: ':eyes: Status: Review Needed'
+- color: '#F44336'
+  description: This issue targets a bug
+  name: ':bug: Type: Bug'
+- color: '#FB8C00'
+  description: This issue targets general maintenance
+  name: ':wrench: Type: Maintenance'
+- color: '#AB47BC'
+  description: This issue contains a question
+  name: ':grey_question: Type: Question'
+- color: '#F44336'
+  description: This issue targets a security vulnerability
+  name: ':cop: Type: Security'
+- color: '#64B5F6'
+  description: This issue targets a new feature through a story
+  name: ':scroll: Type: Story'
+- color: '#F44336'
+  description: This issue is prioritized as critical
+  name: ':boom: Priority: Critical'
+- color: '#FB8C00'
+  description: This issue is prioritized as high
+  name: ':fire: Priority: High'
+- color: '#4CAF50'
+  description: This issue is prioritized as low
+  name: ':low_brightness: Priority: Low'
+- color: '#FFEE58'
+  description: This issue is prioritized as medium
+  name: ':star2: Priority: Medium'
+- color: '#4CAF50'
+  description: This issue is of low complexity or very well understood
+  name: ':muscle: Effort: 1'
+- color: '#FFEE58'
+  description: This issue is of medium complexity or only partly well understood
+  name: ':muscle: :muscle: :muscle: Effort: 3'
+- color: '#F44336'
+  description: This issue is of high complexity or just not yet well understood
+  name: ':muscle: :muscle: :muscle: :muscle: :muscle: Effort: 5'
+repository:
+  allow_merge_commit: false
+  allow_rebase_merge: true
+  allow_squash_merge: true
+  default_branch: main
+  delete_branch_on_merge: true
+  description: The Nix Flakes framework for perfectionists with deadlines [maintainer=@blaggacao]
+  homepage: https://std.divnix.com
+  name: std
+  topics: nix, nix-flakes, devops

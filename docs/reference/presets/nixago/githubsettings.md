@@ -1,0 +1,1 @@
+../../../../cells/presets/nixago/githubsettings.md
