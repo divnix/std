@@ -216,7 +216,6 @@
               then
                 cellBlock.actions {
                   inherit system;
-                  flake = inputs.self.sourceInfo.outPath;
                   fragment = targetFragment;
                   fragmentRelPath = "${cellName}/${cellBlock.name}/${name}";
                 }

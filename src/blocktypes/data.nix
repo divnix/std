@@ -16,7 +16,6 @@
     type = "data";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
     }: let
@@ -26,7 +25,7 @@
       expr = l.strings.escapeShellArg ''
         let
           pkgs = (builtins.getFlake "${nixpkgs.sourceInfo.outPath}").legacyPackages.${system};
-          this = (builtins.getFlake "${flake}").${fragment};
+          this = (builtins.getFlake "$PRJ_ROOT").${fragment};
         in
           pkgs.writeTextFile {
             name = "data.json";

@@ -16,7 +16,6 @@
 
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
     }: let
@@ -39,7 +38,7 @@
       render = ''
         echo "Rendering to $job_path..."
 
-        # use `.` instead of ${flake} to capture dirty state
+        # use `.` instead of "$PRJ_ROOT to capture dirty state
         if ! out="$(nix eval --no-allow-dirty --raw .\#${fragment} --apply "${nixExpr}")"; then
           >&2 echo "error: Will not render jobs from a dirty tree, otherwise we cannot keep good track of deployment history."
           exit 1

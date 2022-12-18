@@ -1,7 +1,7 @@
-flake: fragment: {
+fragment: {
   name = "build";
   description = "build this target";
   command = ''
-    nix build ${flake}#${fragment}
+    nix build "$PRJ_ROOT#${fragment}
   '';
 }

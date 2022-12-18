@@ -19,7 +19,6 @@
     type = "nixago";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
     }: [
@@ -27,14 +26,14 @@
         name = "populate";
         description = "populate this nixago file into the repo";
         command = ''
-          nix run ${flake}#${fragment}.install
+          nix run "$PRJ_ROOT#${fragment}.install
         '';
       }
       {
         name = "explore";
         description = "interactively explore the nixago file";
         command = ''
-          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat "$(nix build --no-link --print-out-paths ${flake}#${fragment}.configFile)"
+          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat "$(nix build --no-link --print-out-paths "$PRJ_ROOT#${fragment}.configFile)"
         '';
       }
     ];

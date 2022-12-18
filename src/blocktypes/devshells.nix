@@ -13,11 +13,10 @@
     type = "devshells";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix fragment)
       {
         name = "enter";
         description = "enter this devshell";

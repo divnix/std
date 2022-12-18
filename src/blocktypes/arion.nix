@@ -16,11 +16,10 @@
     type = "arion";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
     }: let
-      cmd = "arion --prebuilt-file $(nix build ${flake}#${fragment}.config.out.dockerComposeYaml --print-out-paths)";
+      cmd = "arion --prebuilt-file $(nix build $PRJ_ROOT#${fragment}.config.out.dockerComposeYaml --print-out-paths)";
     in [
       {
         name = "up";

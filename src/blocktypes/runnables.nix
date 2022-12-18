@@ -10,16 +10,15 @@
     type = "runnables";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix fragment)
       {
         name = "run";
         description = "exec this target";
         command = ''
-          nix run ${flake}#${fragment} -- "$@"
+          nix run "$PRJ_ROOT#${fragment} -- "$@"
         '';
       }
     ];

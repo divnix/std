@@ -15,45 +15,44 @@
     type = "containers";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix fragment)
       {
         name = "print-image";
         description = "print out the image name & tag";
         command = ''
           echo
-          echo "$(nix eval --raw ${flake}#${fragment}.imageName):$(nix eval --raw ${flake}#${fragment}.imageTag)"
+          echo "$(nix eval --raw "$PRJ_ROOT#${fragment}.imageName):$(nix eval --raw "$PRJ_ROOT#${fragment}.imageTag)"
         '';
       }
       {
         name = "publish";
         description = "copy the image to its remote registry";
         command = ''
-          nix run ${flake}#${fragment}.copyToRegistry
+          nix run "$PRJ_ROOT#${fragment}.copyToRegistry
         '';
       }
       {
         name = "copy-to-registry";
         description = "copy the image to its remote registry";
         command = ''
-          nix run ${flake}#${fragment}.copyToRegistry
+          nix run "$PRJ_ROOT#${fragment}.copyToRegistry
         '';
       }
       {
         name = "copy-to-docker";
         description = "copy the image to the local docker registry";
         command = ''
-          nix run ${flake}#${fragment}.copyToDockerDaemon
+          nix run "$PRJ_ROOT#${fragment}.copyToDockerDaemon
         '';
       }
       {
         name = "copy-to-podman";
         description = "copy the image to the local podman registry";
         command = ''
-          nix run ${flake}#${fragment}.copyToPodman
+          nix run "$PRJ_ROOT#${fragment}.copyToPodman
         '';
       }
     ];

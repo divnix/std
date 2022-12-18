@@ -14,11 +14,10 @@
     type = "microvms";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
     }: let
-      run = ["nix" "run" "${flake}#${fragment}.config.microvm.runner"];
+      run = ["nix" "run" "$PRJ_ROOT#${fragment}.config.microvm.runner"];
     in [
       {
         name = "microvm";
@@ -26,7 +25,7 @@
         command =
           (l.concatStringsSep "\t" run)
           + ".$(nix eval --json --option warn-dirty false\ "
-          + "${flake}#${fragment}.config.microvm.hypervisor)"
+          + "$PRJ_ROOT#${fragment}.config.microvm.hypervisor)"
           + "\ ${substituters} ${keys}";
       }
     ];
