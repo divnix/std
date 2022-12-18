@@ -36,4 +36,7 @@ in {
       export NODE_PATH=${nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules:$NODE_PATH
     '';
   };
+  githubsettings = std.nixago.githubsettings {
+    configData = import ./nixago/githubsettings.nix;
+  };
 }

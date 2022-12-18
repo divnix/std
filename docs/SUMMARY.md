@@ -60,6 +60,7 @@
     - [`/lefthook`](reference/std/nixago/lefthook.md)
     - [`/mdbook`](reference/std/nixago/mdbook.md)
     - [`/treefmt`](reference/std/nixago/treefmt.md)
+    - [`/githubsettings`](reference/std/nixago/githubsettings.md)
   - [`/errors`](reference/std/errors/Readme.md)
     - [`/removeBy`](reference/std/errors/removeBy.md)
     - [`/requireInput`](reference/std/errors/requireInput.md)
@@ -89,6 +90,7 @@
     - [`/lefthook`](reference/presets/nixago/lefthook.md)
     - [`/mdbook`](reference/presets/nixago/mdbook.md)
     - [`/treefmt`](reference/presets/nixago/treefmt.md)
+    - [`/githubsettings`](reference/presets/nixago/githubsettings.md)
 
 - [`//_automation`]()
 

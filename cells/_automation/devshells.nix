@@ -14,6 +14,7 @@ in
         cell.nixago.treefmt
         cell.nixago.editorconfig
         cell.nixago.just
+        cell.nixago.githubsettings
         std.nixago.lefthook
         std.nixago.adrgen
       ];
