@@ -30,6 +30,7 @@
         name = "install";
         description = "install this target";
         command = ''
+          # ${target}
           nix profile install ${flake}#${fragment}
         '';
       }
@@ -37,6 +38,7 @@
         name = "upgrade";
         description = "upgrade this target";
         command = ''
+          # ${target}
           nix profile upgrade ${flake}#${fragment}
         '';
       }
@@ -44,6 +46,7 @@
         name = "remove";
         description = "remove this target";
         command = ''
+          # ${target}
           nix profile remove ${flake}#${fragment}
         '';
       }
@@ -52,6 +55,7 @@
         name = "bundle";
         description = "bundle this target";
         command = ''
+          # ${target}
           nix bundle --bundler github:Ninlives/relocatable.nix --refresh ${flake}#${fragment}
         '';
       }
@@ -59,6 +63,7 @@
         name = "bundleImage";
         description = "bundle this target to image";
         command = ''
+          # ${target}
           nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh ${flake}#${fragment}
         '';
       }
@@ -66,6 +71,7 @@
         name = "bundleAppImage";
         description = "bundle this target to AppImage";
         command = ''
+          # ${target}
           nix bundle --bundler github:ralismark/nix-appimage --refresh ${flake}#${fragment}
         '';
       }
