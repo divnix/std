@@ -38,4 +38,6 @@ in
       ../lib/ops/mkMicrovm.nix {
         inputs = requireInput {inputs = inputs';} "makes" "github:fluidattacks/makes" "std.std.lib.fromMakesWith";
       };
+
+    mkDevelopDrv = import "${inputs.self}/src/devshell-drv.nix";
   }
