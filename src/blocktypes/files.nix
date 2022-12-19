@@ -14,6 +14,7 @@
       flake,
       fragment,
       fragmentRelPath,
+      target,
     }: let
       builder = ["nix" "build" "--impure" "--json" "--no-link" "${flake}#${fragment}"];
       jq = ["|" "${nixpkgs.legacyPackages.${system}.jq}/bin/jq" "-r" "'.[].outputs.out'"];

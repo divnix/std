@@ -22,6 +22,7 @@
       flake,
       fragment,
       fragmentRelPath,
+      target,
     }: [
       (import ./actions/build.nix flake fragment)
       {
