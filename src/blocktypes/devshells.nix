@@ -1,5 +1,6 @@
 {nixpkgs}: let
   l = nixpkgs.lib // builtins;
+  mkDevelopDrv = import ../devshell-drv.nix;
   /*
   Use the Devshells Blocktype for devShells.
 
@@ -17,19 +18,20 @@
       fragment,
       fragmentRelPath,
       target,
-    }: [
-      (import ./actions/build.nix target)
+    }: let
+      developDrv = mkDevelopDrv target;
+    in [
+      (import ./actions/build.nix developDrv)
       {
         name = "enter";
         description = "enter this devshell";
-        # TODO: use target, which will require some additional work because of
-        # https://github.com/NixOS/nix/issues/7468
         command = ''
           std_layout_dir=$PRJ_ROOT/.std
           profile_path="$std_layout_dir/${fragmentRelPath}"
           mkdir -p "$profile_path"
+          # ${developDrv}
           nix_args=(
-            "$PRJ_ROOT#${fragment}"
+            "${builtins.builtins.unsafeDiscardStringContext developDrv.drvPath}"
             "--no-update-lock-file"
             "--no-write-lock-file"
             "--no-warn-dirty"
@@ -39,7 +41,13 @@
             "--builders-use-substitutes"
           )
           nix build "''${nix_args[@]}" --profile "$profile_path/shell-profile"
-          bash -c "source $profile_path/shell-profile/env.bash; SHLVL=$SHLVL; __devshell-motd; exec $SHELL -i"
+          eval "$(nix print-dev-env ${developDrv})"
+          if declare -F __devshell-motd &>/dev/null; then
+            __devshell-motd
+          fi
+          if ! [[ -v STD_DIRENV ]]; then
+            exec $SHELL -i
+          fi
         '';
       }
     ];
