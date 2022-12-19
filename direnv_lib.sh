@@ -5,6 +5,8 @@
 
 # re-branding & force congruent choice with `std` CLI
 direnv_layout_dir=$(git rev-parse --show-toplevel)/.std
+PRJ_ROOT=${direnv_layout_dir%/*}
+export PRJ_ROOT
 
 # nicer dienv & nixago output styling
 export DIRENV_LOG_FORMAT=$'\E[mdirenv: \E[38;5;8m%s\E[m'
@@ -63,8 +65,9 @@ use_std() {
 
   mkdir -p "$(direnv_layout_dir)/$block/$organ/$target"
 
-  nix build "$PWD#$system.$block.$organ.$target" "${nix_args[@]}" --profile "$profile_path/shell-profile"
-  . "$profile_path/shell-profile/entrypoint"
+  enter="$(nix build "$PWD#__std.actions.$system.$block.$organ.$target.enter" "${nix_args[@]}" --print-out-paths --profile "$profile_path/enter-action")"
+  export STD_DIRENV=1
+  eval "$(<"$enter")"
   # this is not true
-  unset IN_NIX_SHELL
+  unset IN_NIX_SHELL STD_DIRENV
 }
