@@ -21,29 +21,24 @@
       fragmentRelPath,
       target,
     }: let
-      builder = ["nix" "build" "--impure" "--json" "--no-link" "--expr" expr];
-      jq = ["|" "${nixpkgs.legacyPackages.${system}.jq}/bin/jq" "-r" "'.[].outputs.out'"];
-      fx = ["|" "xargs" "cat" "|" "${nixpkgs.legacyPackages.${system}.fx}/bin/fx"];
-      expr = l.strings.escapeShellArg ''
-        let
-          pkgs = (builtins.getFlake "${nixpkgs.sourceInfo.outPath}").legacyPackages.${system};
-          this = (builtins.getFlake "${flake}").${fragment};
-        in
-          pkgs.writeTextFile {
-            name = "data.json";
-            text = builtins.toJSON this;
-          }
-      '';
+      inherit (nixpkgs.legacyPackages.${system}) pkgs;
+
+      json = pkgs.writeTextFile {
+        name = "data.json";
+        text = builtins.toJSON target;
+      };
+      jq = ["${pkgs.jq}/bin/jq" "-r" "'.'" "${json}"];
+      fx = ["|" "xargs" "cat" "|" "${pkgs.fx}/bin/fx"];
     in [
       {
         name = "write";
         description = "write to file";
-        command = l.concatStringsSep "\t" (builder ++ jq);
+        command = "echo ${json}";
       }
       {
         name = "explore";
         description = "interactively explore";
-        command = l.concatStringsSep "\t" (builder ++ jq ++ fx);
+        command = l.concatStringsSep "\t" (jq ++ fx);
       }
     ];
   };

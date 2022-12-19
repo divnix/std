@@ -15,13 +15,20 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix target)
       {
         name = "run";
         description = "exec this target";
-        command = ''
-          nix run ${flake}#${fragment} -- "$@"
-        '';
+        command = let
+          run =
+            # this is the exact sequence mentioned by the `nix run` docs
+            # and so should be compatible
+            target.program
+            or "${target}/bin/${target.meta.mainProgram
+              or target.pname
+              or builtins.head (builtins.split "-" target.name)}";
+        in
+          run;
       }
     ];
   };
