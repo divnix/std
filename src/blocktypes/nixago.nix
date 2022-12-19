@@ -22,6 +22,7 @@
       flake,
       fragment,
       fragmentRelPath,
+      target,
     }: [
       {
         name = "populate";

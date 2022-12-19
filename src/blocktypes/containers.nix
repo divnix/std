@@ -18,6 +18,7 @@
       flake,
       fragment,
       fragmentRelPath,
+      target,
     }: [
       (import ./actions/build.nix flake fragment)
       {
@@ -32,7 +33,7 @@
         name = "publish";
         description = "copy the image to its remote registry";
         command = ''
-          nix run ${flake}#${fragment}.copyToRegistry
+          ${target.copyToRegistry}/bin/copy-to-registry
         '';
       }
       {

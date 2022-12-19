@@ -17,6 +17,7 @@
       flake,
       fragment,
       fragmentRelPath,
+      target,
     }: let
       run = ["nix" "run" "${flake}#${fragment}.config.microvm.runner"];
     in [
