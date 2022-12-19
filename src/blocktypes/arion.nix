@@ -19,6 +19,7 @@
       flake,
       fragment,
       fragmentRelPath,
+      target,
     }: let
       cmd = "arion --prebuilt-file $(nix build ${flake}#${fragment}.config.out.dockerComposeYaml --print-out-paths)";
     in [

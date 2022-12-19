@@ -19,6 +19,7 @@
       flake,
       fragment,
       fragmentRelPath,
+      target,
     }: let
       fx = "${nixpkgs.legacyPackages.${system}.fx}/bin";
       nomad = "${nixpkgs.legacyPackages.${system}.nomad}/bin";

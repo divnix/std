@@ -219,6 +219,7 @@
                   flake = inputs.self.sourceInfo.outPath;
                   fragment = targetFragment;
                   fragmentRelPath = "${cellName}/${cellBlock.name}/${name}";
+                  target = res.output.${cellBlock.name}.${name};
                 }
               else [];
             ci =
