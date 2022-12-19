@@ -24,7 +24,8 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix target)
+      # profile commands require a flake ref
       {
         name = "install";
         description = "install this target";
@@ -46,6 +47,7 @@
           nix profile remove ${flake}#${fragment}
         '';
       }
+      # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
       {
         name = "bundle";
         description = "bundle this target";

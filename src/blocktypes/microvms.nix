@@ -19,6 +19,7 @@
       fragmentRelPath,
       target,
     }: let
+      # TODO: convert to using `target`
       run = ["nix" "run" "${flake}#${fragment}.config.microvm.runner"];
     in [
       {

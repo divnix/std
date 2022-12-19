@@ -18,10 +18,12 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix target)
       {
         name = "enter";
         description = "enter this devshell";
+        # TODO: use target, which will require some additional work because of
+        # https://github.com/NixOS/nix/issues/7468
         command = ''
           std_layout_dir=$PRJ_ROOT/.std
           profile_path="$std_layout_dir/${fragmentRelPath}"

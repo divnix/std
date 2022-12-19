@@ -20,13 +20,13 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix target)
       {
         name = "print-image";
         description = "print out the image name & tag";
         command = ''
           echo
-          echo "$(nix eval --raw ${flake}#${fragment}.imageName):$(nix eval --raw ${flake}#${fragment}.imageTag)"
+          echo "${target.imageName}:${target.imageTag}"
         '';
       }
       {
@@ -40,21 +40,21 @@
         name = "copy-to-registry";
         description = "copy the image to its remote registry";
         command = ''
-          nix run ${flake}#${fragment}.copyToRegistry
+          ${target.copyToRegistry}/bin/copy-to-registry
         '';
       }
       {
         name = "copy-to-docker";
         description = "copy the image to the local docker registry";
         command = ''
-          nix run ${flake}#${fragment}.copyToDockerDaemon
+          ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
         '';
       }
       {
         name = "copy-to-podman";
         description = "copy the image to the local podman registry";
         command = ''
-          nix run ${flake}#${fragment}.copyToPodman
+          ${target.copyToPodman}/bin/copy-to-podman
         '';
       }
     ];

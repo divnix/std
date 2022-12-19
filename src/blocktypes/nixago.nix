@@ -28,14 +28,14 @@
         name = "populate";
         description = "populate this nixago file into the repo";
         command = ''
-          nix run ${flake}#${fragment}.install
+          ${target.install}/bin/nixago_shell_hook
         '';
       }
       {
         name = "explore";
         description = "interactively explore the nixago file";
         command = ''
-          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat "$(nix build --no-link --print-out-paths ${flake}#${fragment}.configFile)"
+          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat "${target.configFile}"
         '';
       }
     ];
