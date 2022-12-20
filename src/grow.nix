@@ -248,7 +248,6 @@
               f = set:
                 set
                 // {
-                  targetDrv = inputs.self.${system}.${set.cell}.${set.block}.${set.name}.drvPath or null;
                   actionDrv = inputs.self.__std.actions.${system}.${set.cell}.${set.block}.${set.name}.${set.action}.drvPath or null;
                 };
             in
