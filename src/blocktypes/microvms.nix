@@ -1,5 +1,5 @@
 {nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+  lib = nixpkgs.lib // builtins;
   /*
   Use the Microvms Blocktype for Microvm.nix - https://github.com/astro/microvm.nix
 
@@ -17,13 +17,9 @@
       fragmentRelPath,
       target,
     }: let
-      run = target':
-      # this is the exact sequence mentioned by the `nix run` docs
-      # and so should be compatible
-        target'.program
-        or "${target'}/bin/${target'.meta.mainProgram
-          or (target'.pname
-            or (l.removeSuffix "-${target.version or ""}" target.name))}";
+      run = import ./actions/run.nix {
+        inherit target lib;
+      };
     in [
       {
         name = "microvm";
