@@ -1,5 +1,5 @@
 {nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+  lib = nixpkgs.lib // builtins;
   /*
   Use the Runnables Blocktype for targets that you want to
   make accessible with a 'run' action on the TUI.
@@ -19,16 +19,9 @@
       {
         name = "run";
         description = "exec this target";
-        command = let
-          run =
-            # this is the exact sequence mentioned by the `nix run` docs
-            # and so should be compatible
-            target.program
-            or "${target}/bin/${target.meta.mainProgram
-              or (target.pname
-                or (l.removeSuffix "-${target.version or ""}" target.name))}";
-        in
-          run;
+        command = import ./actions/run.nix {
+          inherit target lib;
+        };
       }
     ];
   };
