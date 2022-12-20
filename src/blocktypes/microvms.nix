@@ -23,7 +23,7 @@
         target'.program
         or "${target'}/bin/${target'.meta.mainProgram
           or (target'.pname
-            or builtins.head (builtins.split "-" target'.name))}";
+            or (l.removeSuffix "-${target.version or ""}" target.name))}";
     in [
       {
         name = "microvm";
