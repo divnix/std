@@ -24,15 +24,16 @@
       fx = "${nixpkgs.legacyPackages.${system}.fx}/bin";
       nomad = "${nixpkgs.legacyPackages.${system}.nomad}/bin";
       jq = "${nixpkgs.legacyPackages.${system}.jq}/bin";
+      job = baseNameOf fragmentRelPath;
       nixExpr = ''
         x: let
           job = builtins.mapAttrs (_: v: v // {meta = v.meta or {} // {rev = "\"$(git rev-parse --short HEAD)\"";};}) x.job;
         in
-          builtins.toFile \"$job.json\" (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}))
+          builtins.toFile \"${job}.json\" (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}))
       '';
       layout = ''
         std_layout_dir=$PRJ_ROOT/.std
-        job_path="$std_layout_dir/${dirOf fragmentRelPath}/${baseNameOf fragmentRelPath}.json"
+        job_path="$std_layout_dir/${dirOf fragmentRelPath}/${job}.json"
 
         # use Nomad bin in path if it exists, and only fallback on nixpkgs if it doesn't
         PATH="$PATH:${nomad}"
