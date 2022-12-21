@@ -32,8 +32,21 @@
       {
         name = "publish";
         description = "copy the image to its remote registry";
-        command = ''
-          ${target.copyToRegistry}/bin/copy-to-registry
+        command = let
+          image = target.imageRefUnsafe or "${target.imageName}:${target.imageTag}";
+          # derive the same skopeo to avoid adding additional context
+          skopeo = let
+            lines = builtins.split "\n" target.copyToRegistry.text;
+            line = builtins.head (builtins.filter (x: builtins.isString x && l.hasInfix "/bin/skopeo" x) lines);
+            words = builtins.split " " line;
+          in
+            builtins.head words;
+        in ''
+          if ${skopeo} --insecure-policy inspect docker://${image} &> /dev/null; then
+            echo "Image ${image} already exists."
+          else
+            ${target.copyToRegistry}/bin/copy-to-registry
+          fi
         '';
       }
       {
