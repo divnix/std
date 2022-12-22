@@ -1,27 +1,6 @@
 inputs: let
   removeBy = import ./cells/std/errors/removeBy.nix {inherit inputs;};
 in {
-  warnOrganelles = project:
-    removeBy "October 2022" ''
-
-      "organelle" nomenclature is deprecated.
-
-      Please rename:
-
-      - sed -i 's/organelles/cellBlocks/g'
-      - sed -i 's/organelle/cellBlock/g'
-      - sed -i 's/Organelles/Cell Blocks/g'
-      - sed -i 's/Organelle/Cell Block/g'
-
-      There is an old revision of `std` in the evaluation path
-      in project: ${toString project}
-
-      Please review your code base and/or inform upstream to
-      update their version of Standard ASAP.
-
-      see: https://github.com/divnix/std/issues/116
-    '';
-
   warnRemovedDevshellOptionAdr = removeBy "December 2022" ''
     The std.adr.enable option has been removed from the std shell.
     Please look for something like "adr.enable = false" and drop it.
@@ -68,4 +47,17 @@ in {
 
     Please consult its documentation.
   '';
+
+  warnOldActionInterface = actions:
+    removeBy "March 2022" ''
+
+      The action interface has chaged from:
+        { system, flake, fragment, fragmentRelPath }
+      To:
+        { system, target, fragment, fragmentRelPath }
+
+      Please adjust the following actions:
+
+      ${builtins.concatStringsSep "\n" (map (a: " - ${a.name}: ${(builtins.unsafeGetAttrPos "name" a).file}") actions)}
+    '';
 }
