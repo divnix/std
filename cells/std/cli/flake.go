@@ -33,14 +33,16 @@ var (
 		"--no-warn-dirty",
 		"--accept-flake-config",
 	}
-	flakeBuild = []string{
-		"build",
-		"--out-link", ".std/last-action",
-		"--no-update-lock-file",
-		"--no-write-lock-file",
-		"--no-warn-dirty",
-		"--accept-flake-config",
-		"--builders-use-substitutes",
+	flakeBuild = func(out string) []string {
+		return []string{
+			"build",
+			"--out-link", out,
+			"--no-update-lock-file",
+			"--no-write-lock-file",
+			"--no-warn-dirty",
+			"--accept-flake-config",
+			"--builders-use-substitutes",
+		}
 	}
 )
 
@@ -92,8 +94,12 @@ func GetActionEvalCmdArgs(c, o, t, a string) (string, []string, error) {
 	if err != nil {
 		return "", nil, err
 	}
+	_, _, _, actionPath, err := setEnv()
+	if err != nil {
+		return "", nil, err
+	}
 	return nix, append(
-		flakeBuild, fmt.Sprintf(flakeActionsFragment, ".", currentSystem, c, o, t, a)), nil
+		flakeBuild(actionPath), fmt.Sprintf(flakeActionsFragment, ".", currentSystem, c, o, t, a)), nil
 }
 
 func LoadJson(r io.Reader) (*data.Root, error) {
@@ -139,7 +145,11 @@ func LoadFlakeCmd() (*cache.Cache, *cache.ActionID, *exec.Cmd, *bytes.Buffer, er
 	cmd.Stdout = buf
 
 	// initialize cache
-	path := ".std/cache"
+	_, _, prjCacheDir, _, err := setEnv()
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+	path := prjCacheDir
 	err = os.MkdirAll(path, os.ModePerm)
 	if err != nil {
 		return nil, nil, nil, nil, err
