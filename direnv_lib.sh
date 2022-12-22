@@ -5,7 +5,7 @@
 
 # re-branding & force congruent choice with `std` CLI
 direnv_layout_dir=$(git rev-parse --show-toplevel)/.std
-PRJ_ROOT=${direnv_layout_dir%/*}
+PRJ_ROOT="${direnv_layout_dir%/*}"
 export PRJ_ROOT
 
 # nicer dienv & nixago output styling
