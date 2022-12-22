@@ -44,7 +44,9 @@
             "--builders-use-substitutes"
           )
           nix build "''${nix_args[@]}" --profile "$profile_path/shell-profile"
+          _SHELL="$SHELL"
           eval "$(nix print-dev-env ${developDrv})"
+          SHELL="$_SHELL"
           if ! [[ -v STD_DIRENV ]]; then
             if declare -F __devshell-motd &>/dev/null; then
               __devshell-motd
