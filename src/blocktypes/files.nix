@@ -11,7 +11,6 @@
     type = "files";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
       target,

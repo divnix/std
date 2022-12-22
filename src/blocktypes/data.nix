@@ -16,7 +16,6 @@
     type = "data";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
       target,

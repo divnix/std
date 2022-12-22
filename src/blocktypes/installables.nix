@@ -19,7 +19,6 @@
     type = "installables";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
       target,
@@ -31,7 +30,11 @@
         description = "install this target";
         command = ''
           # ${target}
-          nix profile install ${flake}#${fragment}
+          if test -z "$PRJ_ROOT"; then
+            echo "PRJ_ROOT is not set. Action aborting."
+            exit 1
+          fi
+          nix profile install $PRJ_ROOT#${fragment}
         '';
       }
       {
@@ -39,7 +42,11 @@
         description = "upgrade this target";
         command = ''
           # ${target}
-          nix profile upgrade ${flake}#${fragment}
+          if test -z "$PRJ_ROOT"; then
+            echo "PRJ_ROOT is not set. Action aborting."
+            exit 1
+          fi
+          nix profile upgrade $PRJ_ROOT#${fragment}
         '';
       }
       {
@@ -47,7 +54,11 @@
         description = "remove this target";
         command = ''
           # ${target}
-          nix profile remove ${flake}#${fragment}
+          if test -z "$PRJ_ROOT"; then
+            echo "PRJ_ROOT is not set. Action aborting."
+            exit 1
+          fi
+          nix profile remove $PRJ_ROOT#${fragment}
         '';
       }
       # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
@@ -56,7 +67,11 @@
         description = "bundle this target";
         command = ''
           # ${target}
-          nix bundle --bundler github:Ninlives/relocatable.nix --refresh ${flake}#${fragment}
+          if test -z "$PRJ_ROOT"; then
+            echo "PRJ_ROOT is not set. Action aborting."
+            exit 1
+          fi
+          nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
         '';
       }
       {
@@ -64,7 +79,11 @@
         description = "bundle this target to image";
         command = ''
           # ${target}
-          nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh ${flake}#${fragment}
+          if test -z "$PRJ_ROOT"; then
+            echo "PRJ_ROOT is not set. Action aborting."
+            exit 1
+          fi
+          nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
         '';
       }
       {
@@ -72,7 +91,11 @@
         description = "bundle this target to AppImage";
         command = ''
           # ${target}
-          nix bundle --bundler github:ralismark/nix-appimage --refresh ${flake}#${fragment}
+          if test -z "$PRJ_ROOT"; then
+            echo "PRJ_ROOT is not set. Action aborting."
+            exit 1
+          fi
+          nix bundle --bundler github:ralismark/nix-appimage --refresh $PRJ_ROOT#${fragment}
         '';
       }
     ];
