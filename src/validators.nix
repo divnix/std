@@ -72,15 +72,45 @@ in {
       type = string;
       __functor = option function;
       ci = option (attrs bool);
-      actions = option (functionWithArgs {
-        system = false;
-        fragment = false;
-        fragmentRelPath = false;
-        target = false;
+      actions = option (
+        functionWithArgs {
+          system = false;
+          target = false;
+          fragment = false;
+          fragmentRelPath = false;
+        }
+      );
+    };
+    # warnOldActionInterface
+    cellBlockOldActionInterface = struct "cellBlockOldActionInterface" {
+      name = string;
+      type = string;
+      __functor = option function;
+      ci = option (attrs bool);
+      actions = option (let
+        type = functionWithArgs {
+          system = false;
+          flake = false;
+          fragment = false;
+          fragmentRelPath = false;
+        };
+      in {
+        inherit (type) name logContext checkToBool toError check;
+        checkType = x:
+          (
+            import ../deprecation.nix {inherit nixpkgs;}
+          )
+          .warnOldActionInterface (x {
+            flake = "";
+            fragment = [];
+            system = "";
+            fragmentRelPath = "";
+          }) (type.checkType x);
+        __functor = self: type.__functor self;
       });
     };
   in
-    list cellBlock;
+    list (either cellBlock cellBlockOldActionInterface);
   BlockSignature = file: block: let
     file' = prefixWithCellsFrom file;
   in

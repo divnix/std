@@ -214,12 +214,31 @@
             actions =
               if cellBlock ? actions
               then
-                cellBlock.actions {
-                  inherit system;
-                  fragment = targetFragment;
-                  fragmentRelPath = "${cellName}/${cellBlock.name}/${name}";
-                  target = res.output.${cellBlock.name}.${name};
-                }
+                (
+                  if
+                    l.trivial.functionArgs
+                    == {
+                      system = false;
+                      flake = false;
+                      fragment = false;
+                      fragmentRelPath = false;
+                    }
+                  then
+                    # warnOldActionInterface
+                    cellBlock.actions {
+                      inherit system;
+                      flake = inputs.self.sourceInfo.outPath;
+                      fragment = targetFragment;
+                      fragmentRelPath = "${cellName}/${cellBlock.name}/${name}";
+                    }
+                  else
+                    cellBlock.actions {
+                      inherit system;
+                      fragment = targetFragment;
+                      fragmentRelPath = "${cellName}/${cellBlock.name}/${name}";
+                      target = res.output.${cellBlock.name}.${name};
+                    }
+                )
               else [];
             ci =
               if cellBlock ? ci
