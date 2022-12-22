@@ -100,13 +100,13 @@ let
         description = "This issue is of low complexity or very well understood";
         color = colors.green;
       };
-      "3" = {
-        name = ":muscle: :muscle: :muscle: Effort: 3";
+      "2" = {
+        name = ":muscle: Effort: 3";
         description = "This issue is of medium complexity or only partly well understood";
         color = colors.yellow;
       };
       "5" = {
-        name = ":muscle: :muscle: :muscle: :muscle: :muscle: Effort: 5";
+        name = ":muscle: Effort: 5";
         description = "This issue is of high complexity or just not yet well understood";
         color = colors.red;
       };

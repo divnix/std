@@ -49,10 +49,10 @@ labels:
   name: ':muscle: Effort: 1'
 - color: '#FFEE58'
   description: This issue is of medium complexity or only partly well understood
-  name: ':muscle: :muscle: :muscle: Effort: 3'
+  name: ':muscle: Effort: 3'
 - color: '#F44336'
   description: This issue is of high complexity or just not yet well understood
-  name: ':muscle: :muscle: :muscle: :muscle: :muscle: Effort: 5'
+  name: ':muscle: Effort: 5'
 milestones:
 - description: ':dart:'
   state: open
