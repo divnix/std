@@ -31,7 +31,7 @@
           mkdir -p "$profile_path"
           # ${developDrv}
           nix_args=(
-            "${builtins.builtins.unsafeDiscardStringContext developDrv.drvPath}"
+            "${builtins.unsafeDiscardStringContext developDrv.drvPath}"
             "--no-update-lock-file"
             "--no-write-lock-file"
             "--no-warn-dirty"
