@@ -74,7 +74,6 @@ in {
       ci = option (attrs bool);
       actions = option (functionWithArgs {
         system = false;
-        flake = false;
         fragment = false;
         fragmentRelPath = false;
         target = false;

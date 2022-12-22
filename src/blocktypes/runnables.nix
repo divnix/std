@@ -10,7 +10,6 @@
     type = "runnables";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
       target,

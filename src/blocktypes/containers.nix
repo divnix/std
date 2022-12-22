@@ -15,7 +15,6 @@
     type = "containers";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
       target,

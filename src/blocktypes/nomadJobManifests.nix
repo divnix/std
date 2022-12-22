@@ -16,7 +16,6 @@
 
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
       target,
@@ -32,6 +31,10 @@
           builtins.toFile \"${job}.json\" (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}))
       '';
       layout = ''
+        if test -z "$PRJ_ROOT"; then
+          echo "PRJ_ROOT is not set. Action aborting."
+          exit 1
+        fi
         std_layout_dir=$PRJ_ROOT/.std
         job_path="$std_layout_dir/${dirOf fragmentRelPath}/${job}.json"
 
@@ -39,10 +42,15 @@
         PATH="$PATH:${nomad}"
       '';
       render = ''
+        if test -z "$PRJ_ROOT"; then
+          echo "PRJ_ROOT is not set. Action aborting."
+          exit 1
+        fi
+
         echo "Rendering to $job_path..."
 
-        # use `.` instead of ${flake} to capture dirty state
-        if ! out="$(nix eval --no-allow-dirty --raw .\#${fragment} --apply "${nixExpr}")"; then
+        # use `PRJ_ROOT` to capture dirty state
+        if ! out="$(nix eval --no-allow-dirty --raw $PRJ_ROOT\#${fragment} --apply "${nixExpr}")"; then
           >&2 echo "error: Will not render jobs from a dirty tree, otherwise we cannot keep good track of deployment history."
           exit 1
         fi

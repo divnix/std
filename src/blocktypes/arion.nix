@@ -16,7 +16,6 @@
     type = "arion";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
       target,

@@ -14,7 +14,6 @@
     type = "devshells";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
       target,
@@ -26,6 +25,10 @@
         name = "enter";
         description = "enter this devshell";
         command = ''
+          if test -z "$PRJ_ROOT"; then
+            echo "PRJ_ROOT is not set. Action aborting."
+            exit 1
+          fi
           std_layout_dir=$PRJ_ROOT/.std
           profile_path="$std_layout_dir/${fragmentRelPath}"
           mkdir -p "$profile_path"

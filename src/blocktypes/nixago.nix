@@ -19,7 +19,6 @@
     type = "nixago";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
       target,

@@ -12,7 +12,6 @@
     type = "microvms";
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
       target,
