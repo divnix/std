@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"log"
 	"os"
@@ -14,16 +13,6 @@ import (
 
 var buildVersion = "dev"
 var buildCommit = "dirty"
-
-// PRJ_ROOT is a useful environment contract prototyped by `numtide/devshell`
-// TODO: coordinate with `numtide` about PRJ Base Directory Specification
-const (
-	PRJ_ROOT       = "PRJ_ROOT"
-	PRJ_DATA_DIR   = "PRJ_DATA_DIR"
-	NIX_CONFIG     = "NIX_CONFIG"
-	prjRootGitCmd  = "git rev-parse --show-toplevel"
-	prjDataDirTmpl = "%s/.std"
-)
 
 // extraNixConfig implements quality of life flags for the nix command invocation
 var extraNixConfig = strings.Join([]string{
@@ -41,38 +30,15 @@ func bashExecve(command []string, cmdArgs []string) error {
 	if err != nil {
 		return err
 	}
-	var prjRoot string
-	prjRoot, present := os.LookupEnv(PRJ_ROOT)
-	if !present {
-		args := strings.Fields(prjRootGitCmd)
-		prjRootB, err := exec.Command(args[0], args[1:]...).Output()
-		prjRootB = bytes.TrimRight(prjRootB, "\n")
-		prjRoot = string(prjRootB[:])
-		if err != nil {
-			if exitErr, ok := err.(*exec.ExitError); ok {
-				return fmt.Errorf("%w, stderr:\n%s", exitErr, exitErr.Stderr)
-			}
-			return err
-		}
-
-		os.Setenv(PRJ_ROOT, prjRoot)
-	}
-	prjDataDir, present := os.LookupEnv(PRJ_DATA_DIR)
-	if !present {
-		prjDataDir = fmt.Sprintf(prjDataDirTmpl, prjRoot)
-		os.Setenv(PRJ_DATA_DIR, prjDataDir)
-	}
-	nixConfigEnv, present := os.LookupEnv(NIX_CONFIG)
-	if !present {
-		os.Setenv(NIX_CONFIG, extraNixConfig)
-	} else {
-		os.Setenv(NIX_CONFIG, fmt.Sprintf("%s\n%s", nixConfigEnv, extraNixConfig))
+	_, _, _, lastActionPath, err := setEnv()
+	if err != nil {
+		return err
 	}
 	env := os.Environ()
 	args := []string{"bash", "-c", fmt.Sprintf(
-		"%s && %s/last-action %s",
+		"%s && %s %s",
 		strings.Join(command, " "),
-		prjDataDir,
+		lastActionPath,
 		strings.Join(cmdArgs, " "),
 	),
 	}
