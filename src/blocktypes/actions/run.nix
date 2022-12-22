@@ -2,12 +2,11 @@
   lib,
   target,
 }: let
-  name = lib.removeSuffix "-${target.version or ""}" target.name;
+  name = lib.getName;
 
   programName =
     target.meta.mainProgram
-    or target.pname
-    or name;
+    or (lib.getName target);
 
   run =
     # this is the exact sequence mentioned by the `nix run` docs
