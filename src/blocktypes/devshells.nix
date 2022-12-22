@@ -45,10 +45,10 @@
           )
           nix build "''${nix_args[@]}" --profile "$profile_path/shell-profile"
           eval "$(nix print-dev-env ${developDrv})"
-          if declare -F __devshell-motd &>/dev/null; then
-            __devshell-motd
-          fi
           if ! [[ -v STD_DIRENV ]]; then
+            if declare -F __devshell-motd &>/dev/null; then
+              __devshell-motd
+            fi
             exec $SHELL -i
           fi
         '';
