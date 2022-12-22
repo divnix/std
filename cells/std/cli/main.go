@@ -18,9 +18,11 @@ var buildCommit = "dirty"
 // PRJ_ROOT is a useful environment contract prototyped by `numtide/devshell`
 // TODO: coordinate with `numtide` about PRJ Base Directory Specification
 const (
-	PRJ_ROOT      = "PRJ_ROOT"
-	NIX_CONFIG    = "NIX_CONFIG"
-	prjRootGitCmd = "git rev-parse --show-toplevel"
+	PRJ_ROOT       = "PRJ_ROOT"
+	PRJ_DATA_DIR   = "PRJ_DATA_DIR"
+	NIX_CONFIG     = "NIX_CONFIG"
+	prjRootGitCmd  = "git rev-parse --show-toplevel"
+	prjDataDirTmpl = "%s/.std"
 )
 
 // extraNixConfig implements quality of life flags for the nix command invocation
@@ -55,6 +57,11 @@ func bashExecve(command []string, cmdArgs []string) error {
 
 		os.Setenv(PRJ_ROOT, prjRoot)
 	}
+	prjDataDir, present := os.LookupEnv(PRJ_DATA_DIR)
+	if !present {
+		prjDataDir = fmt.Sprintf(prjDataDirTmpl, prjRoot)
+		os.Setenv(PRJ_DATA_DIR, prjDataDir)
+	}
 	nixConfigEnv, present := os.LookupEnv(NIX_CONFIG)
 	if !present {
 		os.Setenv(NIX_CONFIG, extraNixConfig)
@@ -63,9 +70,9 @@ func bashExecve(command []string, cmdArgs []string) error {
 	}
 	env := os.Environ()
 	args := []string{"bash", "-c", fmt.Sprintf(
-		"%s && %s/.std/last-action %s",
+		"%s && %s/last-action %s",
 		strings.Join(command, " "),
-		prjRoot,
+		prjDataDir,
 		strings.Join(cmdArgs, " "),
 	),
 	}

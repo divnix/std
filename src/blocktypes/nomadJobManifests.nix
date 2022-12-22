@@ -35,8 +35,11 @@
           echo "PRJ_ROOT is not set. Action aborting."
           exit 1
         fi
-        std_layout_dir=$PRJ_ROOT/.std
-        job_path="$std_layout_dir/${dirOf fragmentRelPath}/${job}.json"
+        if test -z "$PRJ_DATA_DIR"; then
+          echo "PRJ_DATA_DIR is not set. Action aborting."
+          exit 1
+        fi
+        job_path="$PRJ_DATA_DIR/${dirOf fragmentRelPath}/${job}.json"
 
         # use Nomad bin in path if it exists, and only fallback on nixpkgs if it doesn't
         PATH="$PATH:${nomad}"

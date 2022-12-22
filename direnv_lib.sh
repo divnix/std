@@ -6,7 +6,9 @@
 # re-branding & force congruent choice with `std` CLI
 direnv_layout_dir=$(git rev-parse --show-toplevel)/.std
 PRJ_ROOT="${direnv_layout_dir%/*}"
+PRJ_DATA_DIR="${direnv_layout_dir}"
 export PRJ_ROOT
+export PRJ_DATA_DIR
 
 # nicer dienv & nixago output styling
 export DIRENV_LOG_FORMAT=$'\E[mdirenv: \E[38;5;8m%s\E[m'
