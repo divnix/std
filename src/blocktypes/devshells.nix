@@ -29,8 +29,11 @@
             echo "PRJ_ROOT is not set. Action aborting."
             exit 1
           fi
-          std_layout_dir=$PRJ_ROOT/.std
-          profile_path="$std_layout_dir/${fragmentRelPath}"
+          if test -z "$PRJ_DATA_DIR"; then
+            echo "PRJ_DATA_DIR is not set. Action aborting."
+            exit 1
+          fi
+          profile_path="$PRJ_DATA_DIR/${fragmentRelPath}"
           mkdir -p "$profile_path"
           # ${developDrv}
           nix_args=(
