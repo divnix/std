@@ -48,16 +48,25 @@ in {
     packages = [nixpkgs.mdbook-mermaid];
   };
   githubsettings = presets.nixago.githubsettings {
-    configData.repository = {
-      name = "std";
-      homepage = "https://std.divnix.com";
-      description = "The Nix Flakes framework for perfectionists with deadlines [maintainer=@blaggacao]";
-      topics = "nix, nix-flakes, devops";
-      default_branch = "main";
-      allow_squash_merge = true;
-      allow_merge_commit = false;
-      allow_rebase_merge = true;
-      delete_branch_on_merge = true;
+    configData = {
+      repository = {
+        name = "std";
+        homepage = "https://std.divnix.com";
+        description = "The Nix Flakes framework for perfectionists with deadlines [maintainer=@blaggacao]";
+        topics = "nix, nix-flakes, devops";
+        default_branch = "main";
+        allow_squash_merge = true;
+        allow_merge_commit = false;
+        allow_rebase_merge = true;
+        delete_branch_on_merge = true;
+      };
+      milestones = [
+        {
+          title = "Release v1";
+          description = ":dart:";
+          state = "open";
+        }
+      ];
     };
   };
 }

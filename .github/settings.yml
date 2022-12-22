@@ -53,6 +53,10 @@ labels:
 - color: '#F44336'
   description: This issue is of high complexity or just not yet well understood
   name: ':muscle: :muscle: :muscle: :muscle: :muscle: Effort: 5'
+milestones:
+- description: ':dart:'
+  state: open
+  title: Release v1
 repository:
   allow_merge_commit: false
   allow_rebase_merge: true
