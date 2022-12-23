@@ -11,4 +11,5 @@ builtins.mapAttrs (_: inputs.cells.lib.dev.mkNixago) {
   mdbook = import ./nixago/mdbook.nix {inherit inputs cell;};
   treefmt = import ./nixago/treefmt.nix {inherit inputs cell;};
   githubsettings = import ./nixago/githubsettings.nix {inherit inputs cell;};
+  std-gh-action = import ./nixago/std-gh-action.nix {inherit inputs cell;};
 }

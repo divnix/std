@@ -69,4 +69,19 @@ in {
       ];
     };
   };
+  std-gh-action = presets.nixago.std-gh-action {
+    configData = {
+      on.push.branches = ["main"];
+      targets = [
+        {
+          block = "cli";
+          action = "build";
+        }
+        {
+          block = "packages";
+          action = "build";
+        }
+      ];
+    };
+  };
 }

@@ -39,4 +39,5 @@ in {
   githubsettings = std.nixago.githubsettings {
     configData = import ./nixago/githubsettings.nix;
   };
+  std-gh-action = std.nixago.std-gh-action;
 }

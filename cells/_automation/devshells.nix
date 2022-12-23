@@ -15,6 +15,7 @@ in
         cell.nixago.editorconfig
         cell.nixago.just
         cell.nixago.githubsettings
+        cell.nixago.std-gh-action
         std.nixago.lefthook
         std.nixago.adrgen
       ];

@@ -1,0 +1,45 @@
+jobs:
+  build-cli:
+    name: ${{ matrix.target.cell }} - ${{ matrix.target.name }}
+    needs:
+    - discover
+    runs-on: ubuntu-latest
+    steps:
+    - uses: divnix/std-action/run@main
+      with:
+        extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
+        json: ${{ toJSON(matrix.target) }}
+    strategy:
+      matrix:
+        target: ${{ fromJSON(needs.discover.outputs.hits).cli.build }}
+  build-packages:
+    name: ${{ matrix.target.cell }} - ${{ matrix.target.name }}
+    needs:
+    - discover
+    runs-on: ubuntu-latest
+    steps:
+    - uses: divnix/std-action/run@main
+      with:
+        extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
+        json: ${{ toJSON(matrix.target) }}
+    strategy:
+      matrix:
+        target: ${{ fromJSON(needs.discover.outputs.hits).packages.build }}
+  discover:
+    concurrency:
+      group: ${{ github.workflow }}
+    outputs:
+      hits: ${{ steps.discovery.outputs.hits }}
+      nix_conf: ${{ steps.discovery.outputs.nix_conf }}
+    runs-on: ubuntu-latest
+    steps:
+    - id: discovery
+      name: Standard CI Target Discovery
+      uses: divnix/std-action/discover@main
+name: Standard CI
+'on':
+  push:
+    branches:
+    - main
+permissions:
+  contents: read
