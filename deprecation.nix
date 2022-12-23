@@ -49,7 +49,7 @@ in {
   '';
 
   warnOldActionInterface = actions:
-    removeBy "March 2022" ''
+    removeBy "March 2023" ''
 
       The action interface has chaged from:
         { system, flake, fragment, fragmentRelPath }
