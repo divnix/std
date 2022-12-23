@@ -41,5 +41,6 @@ name: Standard CI
   push:
     branches:
     - main
+    - nixago-std-action
 permissions:
   contents: read

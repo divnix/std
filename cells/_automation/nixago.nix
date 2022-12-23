@@ -71,7 +71,7 @@ in {
   };
   std-gh-action = presets.nixago.std-gh-action {
     configData = {
-      on.push.branches = ["main"];
+      on.push.branches = ["main" "nixago-std-action"];
       targets = [
         {
           block = "cli";
