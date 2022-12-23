@@ -1,4 +1,7 @@
-{nixpkgs}: let
+{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Nixago Blocktype for nixago pebbles.
@@ -23,20 +26,20 @@
       fragmentRelPath,
       target,
     }: [
-      {
+      (mkCommand system "nixago" {
         name = "populate";
         description = "populate this nixago file into the repo";
         command = ''
           ${target.install}/bin/nixago_shell_hook
         '';
-      }
-      {
+      })
+      (mkCommand system "nixago" {
         name = "explore";
         description = "interactively explore the nixago file";
         command = ''
           ${nixpkgs.legacyPackages.${system}.bat}/bin/bat "${target.configFile}"
         '';
-      }
+      })
     ];
   };
 in

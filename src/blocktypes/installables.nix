@@ -1,4 +1,7 @@
-{nixpkgs}: let
+{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Installables Blocktype for targets that you want to
@@ -23,9 +26,9 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target)
+      (import ./actions/build.nix target (mkCommand system "installables"))
       # profile commands require a flake ref
-      {
+      (mkCommand system "installables" {
         name = "install";
         description = "install this target";
         command = ''
@@ -36,8 +39,8 @@
           fi
           nix profile install $PRJ_ROOT#${fragment}
         '';
-      }
-      {
+      })
+      (mkCommand system "installables" {
         name = "upgrade";
         description = "upgrade this target";
         command = ''
@@ -48,8 +51,8 @@
           fi
           nix profile upgrade $PRJ_ROOT#${fragment}
         '';
-      }
-      {
+      })
+      (mkCommand system "installables" {
         name = "remove";
         description = "remove this target";
         command = ''
@@ -60,9 +63,9 @@
           fi
           nix profile remove $PRJ_ROOT#${fragment}
         '';
-      }
+      })
       # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
-      {
+      (mkCommand system "installables" {
         name = "bundle";
         description = "bundle this target";
         command = ''
@@ -73,8 +76,8 @@
           fi
           nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
         '';
-      }
-      {
+      })
+      (mkCommand system "installables" {
         name = "bundleImage";
         description = "bundle this target to image";
         command = ''
@@ -85,8 +88,8 @@
           fi
           nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
         '';
-      }
-      {
+      })
+      (mkCommand system "installables" {
         name = "bundleAppImage";
         description = "bundle this target to AppImage";
         command = ''
@@ -97,7 +100,7 @@
           fi
           nix bundle --bundler github:ralismark/nix-appimage --refresh $PRJ_ROOT#${fragment}
         '';
-      }
+      })
     ];
   };
 in

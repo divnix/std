@@ -1,4 +1,7 @@
-{nixpkgs}: let
+{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Containers Blocktype for OCI-images built with nix2container.
@@ -19,16 +22,16 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target)
-      {
+      (import ./actions/build.nix target (mkCommand system "containers"))
+      (mkCommand system "containers" {
         name = "print-image";
         description = "print out the image name & tag";
         command = ''
           echo
           echo "${target.imageName}:${target.imageTag}"
         '';
-      }
-      {
+      })
+      (mkCommand system "containers" {
         name = "publish";
         description = "copy the image to its remote registry";
         command = let
@@ -47,28 +50,28 @@
             ${target.copyToRegistry}/bin/copy-to-registry
           fi
         '';
-      }
-      {
+      })
+      (mkCommand system "containers" {
         name = "copy-to-registry";
         description = "copy the image to its remote registry";
         command = ''
           ${target.copyToRegistry}/bin/copy-to-registry
         '';
-      }
-      {
+      })
+      (mkCommand system "containers" {
         name = "copy-to-docker";
         description = "copy the image to the local docker registry";
         command = ''
           ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
         '';
-      }
-      {
+      })
+      (mkCommand system "containers" {
         name = "copy-to-podman";
         description = "copy the image to the local podman registry";
         command = ''
           ${target.copyToPodman}/bin/copy-to-podman
         '';
-      }
+      })
     ];
   };
 in

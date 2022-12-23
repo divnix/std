@@ -1,4 +1,7 @@
-{nixpkgs}: let
+{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the `nomadJobsManifest` Blocktype for rendering job descriptions
@@ -70,7 +73,7 @@
       inject the git revision validate the manifest, after which it can be run or
       planned with the Nomad cli or the `deploy` action.
       */
-      {
+      (mkCommand system "nomadJobManifests" {
         name = "render";
         description = "build the JSON job description";
         command =
@@ -82,8 +85,8 @@
 
             ${render}
           '';
-      }
-      {
+      })
+      (mkCommand system "nomadJobManifests" {
         name = "deploy";
         description = "Deploy the job to Nomad";
         command =
@@ -124,8 +127,8 @@
               echo "Job hasn't changed since last deployment, nothing to deploy"
             fi
           '';
-      }
-      {
+      })
+      (mkCommand system "nomadJobManifests" {
         name = "explore";
         description = "interactively explore the Job defintion";
         command =
@@ -143,7 +146,7 @@
 
             fx "$job_path"
           '';
-      }
+      })
     ];
   };
 in

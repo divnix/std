@@ -276,7 +276,7 @@
               inherit name;
               value = l.listToAttrs (map (a: {
                   inherit (a) name;
-                  value = nixpkgs.legacyPackages.${system}.writeShellScript a.name a.command;
+                  value = validate.ActionCommand a.command;
                 })
                 actions);
             };

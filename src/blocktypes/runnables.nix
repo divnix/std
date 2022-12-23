@@ -1,4 +1,7 @@
-{nixpkgs}: let
+{
+  nixpkgs,
+  mkCommand,
+}: let
   lib = nixpkgs.lib // builtins;
   /*
   Use the Runnables Blocktype for targets that you want to
@@ -14,14 +17,14 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target)
-      {
+      (import ./actions/build.nix target (mkCommand system "runnables"))
+      (mkCommand system "runnables" {
         name = "run";
         description = "exec this target";
         command = import ./actions/run.nix {
           inherit target lib;
         };
-      }
+      })
     ];
   };
 in
