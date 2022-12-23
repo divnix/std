@@ -1,4 +1,7 @@
-{nixpkgs}: let
+{
+  nixpkgs,
+  mkCommand,
+}: let
   lib = nixpkgs.lib // builtins;
   /*
   Use the Microvms Blocktype for Microvm.nix - https://github.com/astro/microvm.nix
@@ -20,13 +23,13 @@
         inherit target lib;
       };
     in [
-      {
+      (mkCommand system "microvms" {
         name = "microvm";
         description = "exec this microvm";
         command = ''
           ${run target.config.microvm.runner.${target.config.microvm.hypervisor}}
         '';
-      }
+      })
     ];
   };
 in

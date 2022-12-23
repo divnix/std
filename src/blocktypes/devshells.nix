@@ -1,4 +1,7 @@
-{nixpkgs}: let
+{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   mkDevelopDrv = import ../devshell-drv.nix;
   /*
@@ -20,8 +23,8 @@
     }: let
       developDrv = mkDevelopDrv target;
     in [
-      (import ./actions/build.nix developDrv)
-      {
+      (import ./actions/build.nix developDrv (mkCommand system "devshells"))
+      (mkCommand system "devshells" {
         name = "enter";
         description = "enter this devshell";
         command = ''
@@ -57,7 +60,7 @@
             exec $SHELL -i
           fi
         '';
-      }
+      })
     ];
   };
 in

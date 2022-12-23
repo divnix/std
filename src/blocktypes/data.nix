@@ -1,4 +1,7 @@
-{nixpkgs}: let
+{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Data Blocktype for json serializable data.
@@ -29,16 +32,16 @@
       jq = ["${pkgs.jq}/bin/jq" "-r" "'.'" "${json}"];
       fx = ["|" "xargs" "cat" "|" "${pkgs.fx}/bin/fx"];
     in [
-      {
+      (mkCommand system "data" {
         name = "write";
         description = "write to file";
         command = "echo ${json}";
-      }
-      {
+      })
+      (mkCommand system "data" {
         name = "explore";
         description = "interactively explore";
         command = l.concatStringsSep "\t" (jq ++ fx);
-      }
+      })
     ];
   };
 in

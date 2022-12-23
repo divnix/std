@@ -134,4 +134,6 @@ in {
     # then attrs function
     # else throw "unreachable";
       attrs any;
+
+  ActionCommand = with yants "std" "actions"; drv;
 }

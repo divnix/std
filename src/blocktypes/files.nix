@@ -1,4 +1,7 @@
-{nixpkgs}: let
+{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Files Blocktype for any text data.
@@ -18,13 +21,13 @@
       file = toString target;
       bat = "${nixpkgs.legacyPackages.${system}.bat}/bin/bat";
     in [
-      {
+      (mkCommand system "files" {
         name = "explore";
         description = "interactively explore with bat";
         command = ''
           ${bat} ${file}
         '';
-      }
+      })
     ];
   };
 in

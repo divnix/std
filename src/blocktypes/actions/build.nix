@@ -1,4 +1,5 @@
-drv: {
+drv: mkCommand:
+mkCommand {
   name = "build";
   description = "build this target";
   command = ''

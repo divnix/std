@@ -1,4 +1,7 @@
-{nixpkgs}: let
+{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Functions Blocktype for reusable nix functions that you would
