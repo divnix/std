@@ -1,21 +1,30 @@
 {
-  inputs,
-  cell,
+  rustPlatform,
+  pkg-config,
+  lib,
+  stdenv,
+  darwin,
+  openssl,
+  fetchFromGitHub,
 }:
-with inputs.nixpkgs;
-  rustPlatform.buildRustPackage {
-    pname = "mdbook-kroki-preprocessor";
-    version = "0.1.0";
-    nativeBuildInputs = [pkg-config];
-    buildInputs = [openssl] ++ lib.optional stdenv.isDarwin darwin.apple_sdk.frameworks.Security;
+rustPlatform.buildRustPackage rec {
+  pname = "mdbook-kroki-preprocessor";
+  version = "0.1.2";
+  nativeBuildInputs = [pkg-config];
+  buildInputs = [openssl] ++ lib.optional stdenv.isDarwin darwin.apple_sdk.frameworks.Security;
 
-    cargoLock = {
-      lockFile = inputs.mdbook-kroki-preprocessor + "/Cargo.lock";
-    };
+  cargoLock = {
+    lockFile = src + "/Cargo.lock";
+  };
 
-    src = inputs.mdbook-kroki-preprocessor;
+  src = fetchFromGitHub {
+    owner = "JoelCourtney";
+    repo = "mdbook-kroki-preprocessor";
+    rev = "v${version}";
+    sha256 = "sha256-1TJuUzfyMycWlOQH67LR63/ll2GDZz25I3JfScy/Jnw=";
+  };
 
-    meta = {
-      description = "A mdbook preprocessor to render kroki-supported diagrams on the fly";
-    };
-  }
+  meta = {
+    description = "A mdbook preprocessor to render kroki-supported diagrams on the fly";
+  };
+}

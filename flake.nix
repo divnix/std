@@ -30,10 +30,6 @@
     n2c.url = "github:nlewo/nix2container";
     n2c.inputs.nixpkgs.follows = "nixpkgs";
     n2c.inputs.flake-utils.follows = "flake-utils";
-    mdbook-kroki-preprocessor = {
-      url = "github:JoelCourtney/mdbook-kroki-preprocessor";
-      flake = false;
-    };
 
     # Placeholder inputs that can be overloaded via follows
     microvm.follows = "blank";

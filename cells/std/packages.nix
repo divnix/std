@@ -4,5 +4,5 @@
 }: {
   adrgen = inputs.nixpkgs.callPackage ./packages/adrgen.nix {};
   mdbook = inputs.nixpkgs.mdbook;
-  mdbook-kroki-preprocessor = import ./packages/mdbook-kroki-preprocessor.nix {inherit inputs cell;};
+  mdbook-kroki-preprocessor = inputs.nixpkgs.callPackage ./packages/mdbook-kroki-preprocessor.nix {};
 }
