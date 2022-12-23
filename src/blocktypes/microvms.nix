@@ -27,7 +27,7 @@
         name = "microvm";
         description = "exec this microvm";
         command = ''
-          ${run target.config.microvm.runner.${target.config.microvm.hypervisor}}
+          ${target.config.microvm.runner.${target.config.microvm.hypervisor}}
         '';
       })
     ];
