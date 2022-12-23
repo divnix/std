@@ -152,31 +152,44 @@
 
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: let
       fx = &quot;${nixpkgs.legacyPackages.${system}.fx}/bin&quot;;
       nomad = &quot;${nixpkgs.legacyPackages.${system}.nomad}/bin&quot;;
       jq = &quot;${nixpkgs.legacyPackages.${system}.jq}/bin&quot;;
+      job = baseNameOf fragmentRelPath;
       nixExpr = ''
         x: let
           job = builtins.mapAttrs (_: v: v // {meta = v.meta or {} // {rev = &quot;\&quot;$(git rev-parse --short HEAD)\&quot;&quot;;};}) x.job;
         in
-          builtins.toFile \&quot;$job.json\&quot; (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}))
+          builtins.toFile \&quot;${job}.json\&quot; (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}))
       '';
       layout = ''
-        std_layout_dir=$PRJ_ROOT/.std
-        job_path=&quot;$std_layout_dir/${dirOf fragmentRelPath}/${baseNameOf fragmentRelPath}.json&quot;
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        if test -z &quot;$PRJ_DATA_DIR&quot;; then
+          echo &quot;PRJ_DATA_DIR is not set. Action aborting.&quot;
+          exit 1
+        fi
+        job_path=&quot;$PRJ_DATA_DIR/${dirOf fragmentRelPath}/${job}.json&quot;
 
         # use Nomad bin in path if it exists, and only fallback on nixpkgs if it doesn't
         PATH=&quot;$PATH:${nomad}&quot;
       '';
       render = ''
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+
         echo &quot;Rendering to $job_path...&quot;
 
-        # use `.` instead of ${flake} to capture dirty state
-        if ! out=&quot;$(nix eval --no-allow-dirty --raw .\#${fragment} --apply &quot;${nixExpr}&quot;)&quot;; then
+        # use `PRJ_ROOT` to capture dirty state
+        if ! out=&quot;$(nix eval --no-allow-dirty --raw $PRJ_ROOT\#${fragment} --apply &quot;${nixExpr}&quot;)&quot;; then
           &gt;&amp;2 echo &quot;error: Will not render jobs from a dirty tree, otherwise we cannot keep good track of deployment history.&quot;
           exit 1
         fi

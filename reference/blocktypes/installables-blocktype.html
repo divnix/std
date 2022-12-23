@@ -155,51 +155,83 @@
     type = &quot;installables&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix target)
+      # profile commands require a flake ref
       {
         name = &quot;install&quot;;
         description = &quot;install this target&quot;;
         command = ''
-          nix profile install ${flake}#${fragment}
+          # ${target}
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          nix profile install $PRJ_ROOT#${fragment}
         '';
       }
       {
         name = &quot;upgrade&quot;;
         description = &quot;upgrade this target&quot;;
         command = ''
-          nix profile upgrade ${flake}#${fragment}
+          # ${target}
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          nix profile upgrade $PRJ_ROOT#${fragment}
         '';
       }
       {
         name = &quot;remove&quot;;
         description = &quot;remove this target&quot;;
         command = ''
-          nix profile remove ${flake}#${fragment}
+          # ${target}
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          nix profile remove $PRJ_ROOT#${fragment}
         '';
       }
+      # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
       {
         name = &quot;bundle&quot;;
         description = &quot;bundle this target&quot;;
         command = ''
-          nix bundle --bundler github:Ninlives/relocatable.nix --refresh ${flake}#${fragment}
+          # ${target}
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
         '';
       }
       {
         name = &quot;bundleImage&quot;;
         description = &quot;bundle this target to image&quot;;
         command = ''
-          nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh ${flake}#${fragment}
+          # ${target}
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
         '';
       }
       {
         name = &quot;bundleAppImage&quot;;
         description = &quot;bundle this target to AppImage&quot;;
         command = ''
-          nix bundle --bundler github:ralismark/nix-appimage --refresh ${flake}#${fragment}
+          # ${target}
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          nix bundle --bundler github:ralismark/nix-appimage --refresh $PRJ_ROOT#${fragment}
         '';
       }
     ];

@@ -155,22 +155,22 @@
     type = &quot;nixago&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: [
       {
         name = &quot;populate&quot;;
         description = &quot;populate this nixago file into the repo&quot;;
         command = ''
-          nix run ${flake}#${fragment}.install
+          ${target.install}/bin/nixago_shell_hook
         '';
       }
       {
         name = &quot;explore&quot;;
         description = &quot;interactively explore the nixago file&quot;;
         command = ''
-          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat &quot;$(nix build --no-link --print-out-paths ${flake}#${fragment}.configFile)&quot;
+          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat &quot;${target.configFile}&quot;
         '';
       }
     ];

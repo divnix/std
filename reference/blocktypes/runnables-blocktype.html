@@ -135,7 +135,7 @@
                     <main>
                         <h1 id="runnables"><a class="header" href="#runnables">Runnables</a></h1>
 <pre><code class="language-nix">{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+  lib = nixpkgs.lib // builtins;
   /*
   Use the Runnables Blocktype for targets that you want to
   make accessible with a 'run' action on the TUI.
@@ -146,17 +146,17 @@
     type = &quot;runnables&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix target)
       {
         name = &quot;run&quot;;
         description = &quot;exec this target&quot;;
-        command = ''
-          nix run ${flake}#${fragment} -- &quot;$@&quot;
-        '';
+        command = import ./actions/run.nix {
+          inherit target lib;
+        };
       }
     ];
   };

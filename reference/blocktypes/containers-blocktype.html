@@ -151,45 +151,58 @@
     type = &quot;containers&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix target)
       {
         name = &quot;print-image&quot;;
         description = &quot;print out the image name &amp; tag&quot;;
         command = ''
           echo
-          echo &quot;$(nix eval --raw ${flake}#${fragment}.imageName):$(nix eval --raw ${flake}#${fragment}.imageTag)&quot;
+          echo &quot;${target.imageName}:${target.imageTag}&quot;
         '';
       }
       {
         name = &quot;publish&quot;;
         description = &quot;copy the image to its remote registry&quot;;
-        command = ''
-          nix run ${flake}#${fragment}.copyToRegistry
+        command = let
+          image = target.imageRefUnsafe or &quot;${target.imageName}:${target.imageTag}&quot;;
+          # derive the same skopeo to avoid adding additional context
+          skopeo = let
+            lines = builtins.split &quot;\n&quot; target.copyToRegistry.text;
+            line = builtins.head (builtins.filter (x: builtins.isString x &amp;&amp; l.hasInfix &quot;/bin/skopeo&quot; x) lines);
+            words = builtins.split &quot; &quot; line;
+          in
+            builtins.head words;
+        in ''
+          if ${skopeo} --insecure-policy inspect docker://${image} &amp;&gt; /dev/null; then
+            echo &quot;Image ${image} already exists.&quot;
+          else
+            ${target.copyToRegistry}/bin/copy-to-registry
+          fi
         '';
       }
       {
         name = &quot;copy-to-registry&quot;;
         description = &quot;copy the image to its remote registry&quot;;
         command = ''
-          nix run ${flake}#${fragment}.copyToRegistry
+          ${target.copyToRegistry}/bin/copy-to-registry
         '';
       }
       {
         name = &quot;copy-to-docker&quot;;
         description = &quot;copy the image to the local docker registry&quot;;
         command = ''
-          nix run ${flake}#${fragment}.copyToDockerDaemon
+          ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
         '';
       }
       {
         name = &quot;copy-to-podman&quot;;
         description = &quot;copy the image to the local podman registry&quot;;
         command = ''
-          nix run ${flake}#${fragment}.copyToPodman
+          ${target.copyToPodman}/bin/copy-to-podman
         '';
       }
     ];

@@ -1478,27 +1478,6 @@ in
 <pre><code class="language-nix">inputs: let
   removeBy = import ./cells/std/errors/removeBy.nix {inherit inputs;};
 in {
-  warnOrganelles = project:
-    removeBy &quot;October 2022&quot; ''
-
-      &quot;organelle&quot; nomenclature is deprecated.
-
-      Please rename:
-
-      - sed -i 's/organelles/cellBlocks/g'
-      - sed -i 's/organelle/cellBlock/g'
-      - sed -i 's/Organelles/Cell Blocks/g'
-      - sed -i 's/Organelle/Cell Block/g'
-
-      There is an old revision of `std` in the evaluation path
-      in project: ${toString project}
-
-      Please review your code base and/or inform upstream to
-      update their version of Standard ASAP.
-
-      see: https://github.com/divnix/std/issues/116
-    '';
-
   warnRemovedDevshellOptionAdr = removeBy &quot;December 2022&quot; ''
     The std.adr.enable option has been removed from the std shell.
     Please look for something like &quot;adr.enable = false&quot; and drop it.
@@ -1545,6 +1524,19 @@ in {
 
     Please consult its documentation.
   '';
+
+  warnOldActionInterface = actions:
+    removeBy &quot;March 2022&quot; ''
+
+      The action interface has chaged from:
+        { system, flake, fragment, fragmentRelPath }
+      To:
+        { system, target, fragment, fragmentRelPath }
+
+      Please adjust the following actions:
+
+      ${builtins.concatStringsSep &quot;\n&quot; (map (a: &quot; - ${a.name}: ${(builtins.unsafeGetAttrPos &quot;name&quot; a).file}&quot;) actions)}
+    '';
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="builtin-block-types"><a class="header" href="#builtin-block-types">Builtin Block Types</a></h1>
@@ -1572,33 +1564,28 @@ Actions according to the needs of your project.</p>
     type = &quot;data&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: let
-      builder = [&quot;nix&quot; &quot;build&quot; &quot;--impure&quot; &quot;--json&quot; &quot;--no-link&quot; &quot;--expr&quot; expr];
-      jq = [&quot;|&quot; &quot;${nixpkgs.legacyPackages.${system}.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.[].outputs.out'&quot;];
-      fx = [&quot;|&quot; &quot;xargs&quot; &quot;cat&quot; &quot;|&quot; &quot;${nixpkgs.legacyPackages.${system}.fx}/bin/fx&quot;];
-      expr = l.strings.escapeShellArg ''
-        let
-          pkgs = (builtins.getFlake &quot;${nixpkgs.sourceInfo.outPath}&quot;).legacyPackages.${system};
-          this = (builtins.getFlake &quot;${flake}&quot;).${fragment};
-        in
-          pkgs.writeTextFile {
-            name = &quot;data.json&quot;;
-            text = builtins.toJSON this;
-          }
-      '';
+      inherit (nixpkgs.legacyPackages.${system}) pkgs;
+
+      json = pkgs.writeTextFile {
+        name = &quot;data.json&quot;;
+        text = builtins.toJSON target;
+      };
+      jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
+      fx = [&quot;|&quot; &quot;xargs&quot; &quot;cat&quot; &quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
     in [
       {
         name = &quot;write&quot;;
         description = &quot;write to file&quot;;
-        command = l.concatStringsSep &quot;\t&quot; (builder ++ jq);
+        command = &quot;echo ${json}&quot;;
       }
       {
         name = &quot;explore&quot;;
         description = &quot;interactively explore&quot;;
-        command = l.concatStringsSep &quot;\t&quot; (builder ++ jq ++ fx);
+        command = l.concatStringsSep &quot;\t&quot; (jq ++ fx);
       }
     ];
   };
@@ -1626,7 +1613,7 @@ in
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="runnables"><a class="header" href="#runnables">Runnables</a></h1>
 <pre><code class="language-nix">{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+  lib = nixpkgs.lib // builtins;
   /*
   Use the Runnables Blocktype for targets that you want to
   make accessible with a 'run' action on the TUI.
@@ -1637,17 +1624,17 @@ in
     type = &quot;runnables&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix target)
       {
         name = &quot;run&quot;;
         description = &quot;exec this target&quot;;
-        command = ''
-          nix run ${flake}#${fragment} -- &quot;$@&quot;
-        '';
+        command = import ./actions/run.nix {
+          inherit target lib;
+        };
       }
     ];
   };
@@ -1676,51 +1663,83 @@ in
     type = &quot;installables&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix target)
+      # profile commands require a flake ref
       {
         name = &quot;install&quot;;
         description = &quot;install this target&quot;;
         command = ''
-          nix profile install ${flake}#${fragment}
+          # ${target}
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          nix profile install $PRJ_ROOT#${fragment}
         '';
       }
       {
         name = &quot;upgrade&quot;;
         description = &quot;upgrade this target&quot;;
         command = ''
-          nix profile upgrade ${flake}#${fragment}
+          # ${target}
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          nix profile upgrade $PRJ_ROOT#${fragment}
         '';
       }
       {
         name = &quot;remove&quot;;
         description = &quot;remove this target&quot;;
         command = ''
-          nix profile remove ${flake}#${fragment}
+          # ${target}
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          nix profile remove $PRJ_ROOT#${fragment}
         '';
       }
+      # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
       {
         name = &quot;bundle&quot;;
         description = &quot;bundle this target&quot;;
         command = ''
-          nix bundle --bundler github:Ninlives/relocatable.nix --refresh ${flake}#${fragment}
+          # ${target}
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
         '';
       }
       {
         name = &quot;bundleImage&quot;;
         description = &quot;bundle this target to image&quot;;
         command = ''
-          nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh ${flake}#${fragment}
+          # ${target}
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
         '';
       }
       {
         name = &quot;bundleAppImage&quot;;
         description = &quot;bundle this target to AppImage&quot;;
         command = ''
-          nix bundle --bundler github:ralismark/nix-appimage --refresh ${flake}#${fragment}
+          # ${target}
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          nix bundle --bundler github:ralismark/nix-appimage --refresh $PRJ_ROOT#${fragment}
         '';
       }
     ];
@@ -1730,35 +1749,33 @@ in
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="microvms"><a class="header" href="#microvms">Microvms</a></h1>
 <pre><code class="language-nix">{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+  lib = nixpkgs.lib // builtins;
   /*
   Use the Microvms Blocktype for Microvm.nix - https://github.com/astro/microvm.nix
 
   Available actions:
     - microvm
   */
-  substituters = &quot;--option extra-substituters https://microvm.cachix.org&quot;;
-  keys = &quot;--option extra-trusted-public-keys microvm.cachix.org-1:oXnBc6hRE3eX5rSYdRyMYXnfzcCxC7yKPTbZXALsqys=&quot;;
 
   microvms = name: {
     inherit name;
     type = &quot;microvms&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: let
-      run = [&quot;nix&quot; &quot;run&quot; &quot;${flake}#${fragment}.config.microvm.runner&quot;];
+      run = import ./actions/run.nix {
+        inherit target lib;
+      };
     in [
       {
         name = &quot;microvm&quot;;
         description = &quot;exec this microvm&quot;;
-        command =
-          (l.concatStringsSep &quot;\t&quot; run)
-          + &quot;.$(nix eval --json --option warn-dirty false\ &quot;
-          + &quot;${flake}#${fragment}.config.microvm.hypervisor)&quot;
-          + &quot;\ ${substituters} ${keys}&quot;;
+        command = ''
+          ${run target.config.microvm.runner.${target.config.microvm.hypervisor}}
+        '';
       }
     ];
   };
@@ -1768,6 +1785,7 @@ in
 <div style="break-before: page; page-break-before: always;"></div><h1 id="devshells"><a class="header" href="#devshells">Devshells</a></h1>
 <pre><code class="language-nix">{nixpkgs}: let
   l = nixpkgs.lib // builtins;
+  mkDevelopDrv = import ../devshell-drv.nix;
   /*
   Use the Devshells Blocktype for devShells.
 
@@ -1781,20 +1799,30 @@ in
     type = &quot;devshells&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
-    }: [
-      (import ./actions/build.nix flake fragment)
+      target,
+    }: let
+      developDrv = mkDevelopDrv target;
+    in [
+      (import ./actions/build.nix developDrv)
       {
         name = &quot;enter&quot;;
         description = &quot;enter this devshell&quot;;
         command = ''
-          std_layout_dir=$PRJ_ROOT/.std
-          profile_path=&quot;$std_layout_dir/${fragmentRelPath}&quot;
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          if test -z &quot;$PRJ_DATA_DIR&quot;; then
+            echo &quot;PRJ_DATA_DIR is not set. Action aborting.&quot;
+            exit 1
+          fi
+          profile_path=&quot;$PRJ_DATA_DIR/${fragmentRelPath}&quot;
           mkdir -p &quot;$profile_path&quot;
+          # ${developDrv}
           nix_args=(
-            &quot;$PRJ_ROOT#${fragment}&quot;
+            &quot;${builtins.unsafeDiscardStringContext developDrv.drvPath}&quot;
             &quot;--no-update-lock-file&quot;
             &quot;--no-write-lock-file&quot;
             &quot;--no-warn-dirty&quot;
@@ -1804,7 +1832,15 @@ in
             &quot;--builders-use-substitutes&quot;
           )
           nix build &quot;''${nix_args[@]}&quot; --profile &quot;$profile_path/shell-profile&quot;
-          bash -c &quot;source $profile_path/shell-profile/env.bash; SHLVL=$SHLVL; __devshell-motd; exec $SHELL -i&quot;
+          _SHELL=&quot;$SHELL&quot;
+          eval &quot;$(nix print-dev-env ${developDrv})&quot;
+          SHELL=&quot;$_SHELL&quot;
+          if ! [[ -v STD_DIRENV ]]; then
+            if declare -F __devshell-motd &amp;&gt;/dev/null; then
+              __devshell-motd
+            fi
+            exec $SHELL -i
+          fi
         '';
       }
     ];
@@ -1830,45 +1866,58 @@ in
     type = &quot;containers&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: [
-      (import ./actions/build.nix flake fragment)
+      (import ./actions/build.nix target)
       {
         name = &quot;print-image&quot;;
         description = &quot;print out the image name &amp; tag&quot;;
         command = ''
           echo
-          echo &quot;$(nix eval --raw ${flake}#${fragment}.imageName):$(nix eval --raw ${flake}#${fragment}.imageTag)&quot;
+          echo &quot;${target.imageName}:${target.imageTag}&quot;
         '';
       }
       {
         name = &quot;publish&quot;;
         description = &quot;copy the image to its remote registry&quot;;
-        command = ''
-          nix run ${flake}#${fragment}.copyToRegistry
+        command = let
+          image = target.imageRefUnsafe or &quot;${target.imageName}:${target.imageTag}&quot;;
+          # derive the same skopeo to avoid adding additional context
+          skopeo = let
+            lines = builtins.split &quot;\n&quot; target.copyToRegistry.text;
+            line = builtins.head (builtins.filter (x: builtins.isString x &amp;&amp; l.hasInfix &quot;/bin/skopeo&quot; x) lines);
+            words = builtins.split &quot; &quot; line;
+          in
+            builtins.head words;
+        in ''
+          if ${skopeo} --insecure-policy inspect docker://${image} &amp;&gt; /dev/null; then
+            echo &quot;Image ${image} already exists.&quot;
+          else
+            ${target.copyToRegistry}/bin/copy-to-registry
+          fi
         '';
       }
       {
         name = &quot;copy-to-registry&quot;;
         description = &quot;copy the image to its remote registry&quot;;
         command = ''
-          nix run ${flake}#${fragment}.copyToRegistry
+          ${target.copyToRegistry}/bin/copy-to-registry
         '';
       }
       {
         name = &quot;copy-to-docker&quot;;
         description = &quot;copy the image to the local docker registry&quot;;
         command = ''
-          nix run ${flake}#${fragment}.copyToDockerDaemon
+          ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
         '';
       }
       {
         name = &quot;copy-to-podman&quot;;
         description = &quot;copy the image to the local podman registry&quot;;
         command = ''
-          nix run ${flake}#${fragment}.copyToPodman
+          ${target.copyToPodman}/bin/copy-to-podman
         '';
       }
     ];
@@ -1898,22 +1947,22 @@ in
     type = &quot;nixago&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: [
       {
         name = &quot;populate&quot;;
         description = &quot;populate this nixago file into the repo&quot;;
         command = ''
-          nix run ${flake}#${fragment}.install
+          ${target.install}/bin/nixago_shell_hook
         '';
       }
       {
         name = &quot;explore&quot;;
         description = &quot;interactively explore the nixago file&quot;;
         command = ''
-          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat &quot;$(nix build --no-link --print-out-paths ${flake}#${fragment}.configFile)&quot;
+          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat &quot;${target.configFile}&quot;
         '';
       }
     ];
@@ -1940,11 +1989,11 @@ in
     type = &quot;arion&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: let
-      cmd = &quot;arion --prebuilt-file $(nix build ${flake}#${fragment}.config.out.dockerComposeYaml --print-out-paths)&quot;;
+      cmd = &quot;arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
     in [
       {
         name = &quot;up&quot;;
@@ -2012,31 +2061,44 @@ in
 
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: let
       fx = &quot;${nixpkgs.legacyPackages.${system}.fx}/bin&quot;;
       nomad = &quot;${nixpkgs.legacyPackages.${system}.nomad}/bin&quot;;
       jq = &quot;${nixpkgs.legacyPackages.${system}.jq}/bin&quot;;
+      job = baseNameOf fragmentRelPath;
       nixExpr = ''
         x: let
           job = builtins.mapAttrs (_: v: v // {meta = v.meta or {} // {rev = &quot;\&quot;$(git rev-parse --short HEAD)\&quot;&quot;;};}) x.job;
         in
-          builtins.toFile \&quot;$job.json\&quot; (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}))
+          builtins.toFile \&quot;${job}.json\&quot; (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}))
       '';
       layout = ''
-        std_layout_dir=$PRJ_ROOT/.std
-        job_path=&quot;$std_layout_dir/${dirOf fragmentRelPath}/${baseNameOf fragmentRelPath}.json&quot;
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        if test -z &quot;$PRJ_DATA_DIR&quot;; then
+          echo &quot;PRJ_DATA_DIR is not set. Action aborting.&quot;
+          exit 1
+        fi
+        job_path=&quot;$PRJ_DATA_DIR/${dirOf fragmentRelPath}/${job}.json&quot;
 
         # use Nomad bin in path if it exists, and only fallback on nixpkgs if it doesn't
         PATH=&quot;$PATH:${nomad}&quot;
       '';
       render = ''
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+
         echo &quot;Rendering to $job_path...&quot;
 
-        # use `.` instead of ${flake} to capture dirty state
-        if ! out=&quot;$(nix eval --no-allow-dirty --raw .\#${fragment} --apply &quot;${nixExpr}&quot;)&quot;; then
+        # use `PRJ_ROOT` to capture dirty state
+        if ! out=&quot;$(nix eval --no-allow-dirty --raw $PRJ_ROOT\#${fragment} --apply &quot;${nixExpr}&quot;)&quot;; then
           &gt;&amp;2 echo &quot;error: Will not render jobs from a dirty tree, otherwise we cannot keep good track of deployment history.&quot;
           exit 1
         fi

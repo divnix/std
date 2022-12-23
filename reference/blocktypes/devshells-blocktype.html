@@ -136,6 +136,7 @@
                         <h1 id="devshells"><a class="header" href="#devshells">Devshells</a></h1>
 <pre><code class="language-nix">{nixpkgs}: let
   l = nixpkgs.lib // builtins;
+  mkDevelopDrv = import ../devshell-drv.nix;
   /*
   Use the Devshells Blocktype for devShells.
 
@@ -149,20 +150,30 @@
     type = &quot;devshells&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
-    }: [
-      (import ./actions/build.nix flake fragment)
+      target,
+    }: let
+      developDrv = mkDevelopDrv target;
+    in [
+      (import ./actions/build.nix developDrv)
       {
         name = &quot;enter&quot;;
         description = &quot;enter this devshell&quot;;
         command = ''
-          std_layout_dir=$PRJ_ROOT/.std
-          profile_path=&quot;$std_layout_dir/${fragmentRelPath}&quot;
+          if test -z &quot;$PRJ_ROOT&quot;; then
+            echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+            exit 1
+          fi
+          if test -z &quot;$PRJ_DATA_DIR&quot;; then
+            echo &quot;PRJ_DATA_DIR is not set. Action aborting.&quot;
+            exit 1
+          fi
+          profile_path=&quot;$PRJ_DATA_DIR/${fragmentRelPath}&quot;
           mkdir -p &quot;$profile_path&quot;
+          # ${developDrv}
           nix_args=(
-            &quot;$PRJ_ROOT#${fragment}&quot;
+            &quot;${builtins.unsafeDiscardStringContext developDrv.drvPath}&quot;
             &quot;--no-update-lock-file&quot;
             &quot;--no-write-lock-file&quot;
             &quot;--no-warn-dirty&quot;
@@ -172,7 +183,15 @@
             &quot;--builders-use-substitutes&quot;
           )
           nix build &quot;''${nix_args[@]}&quot; --profile &quot;$profile_path/shell-profile&quot;
-          bash -c &quot;source $profile_path/shell-profile/env.bash; SHLVL=$SHLVL; __devshell-motd; exec $SHELL -i&quot;
+          _SHELL=&quot;$SHELL&quot;
+          eval &quot;$(nix print-dev-env ${developDrv})&quot;
+          SHELL=&quot;$_SHELL&quot;
+          if ! [[ -v STD_DIRENV ]]; then
+            if declare -F __devshell-motd &amp;&gt;/dev/null; then
+              __devshell-motd
+            fi
+            exec $SHELL -i
+          fi
         '';
       }
     ];

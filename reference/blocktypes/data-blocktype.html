@@ -152,33 +152,28 @@
     type = &quot;data&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: let
-      builder = [&quot;nix&quot; &quot;build&quot; &quot;--impure&quot; &quot;--json&quot; &quot;--no-link&quot; &quot;--expr&quot; expr];
-      jq = [&quot;|&quot; &quot;${nixpkgs.legacyPackages.${system}.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.[].outputs.out'&quot;];
-      fx = [&quot;|&quot; &quot;xargs&quot; &quot;cat&quot; &quot;|&quot; &quot;${nixpkgs.legacyPackages.${system}.fx}/bin/fx&quot;];
-      expr = l.strings.escapeShellArg ''
-        let
-          pkgs = (builtins.getFlake &quot;${nixpkgs.sourceInfo.outPath}&quot;).legacyPackages.${system};
-          this = (builtins.getFlake &quot;${flake}&quot;).${fragment};
-        in
-          pkgs.writeTextFile {
-            name = &quot;data.json&quot;;
-            text = builtins.toJSON this;
-          }
-      '';
+      inherit (nixpkgs.legacyPackages.${system}) pkgs;
+
+      json = pkgs.writeTextFile {
+        name = &quot;data.json&quot;;
+        text = builtins.toJSON target;
+      };
+      jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
+      fx = [&quot;|&quot; &quot;xargs&quot; &quot;cat&quot; &quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
     in [
       {
         name = &quot;write&quot;;
         description = &quot;write to file&quot;;
-        command = l.concatStringsSep &quot;\t&quot; (builder ++ jq);
+        command = &quot;echo ${json}&quot;;
       }
       {
         name = &quot;explore&quot;;
         description = &quot;interactively explore&quot;;
-        command = l.concatStringsSep &quot;\t&quot; (builder ++ jq ++ fx);
+        command = l.concatStringsSep &quot;\t&quot; (jq ++ fx);
       }
     ];
   };

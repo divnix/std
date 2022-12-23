@@ -135,35 +135,33 @@
                     <main>
                         <h1 id="microvms"><a class="header" href="#microvms">Microvms</a></h1>
 <pre><code class="language-nix">{nixpkgs}: let
-  l = nixpkgs.lib // builtins;
+  lib = nixpkgs.lib // builtins;
   /*
   Use the Microvms Blocktype for Microvm.nix - https://github.com/astro/microvm.nix
 
   Available actions:
     - microvm
   */
-  substituters = &quot;--option extra-substituters https://microvm.cachix.org&quot;;
-  keys = &quot;--option extra-trusted-public-keys microvm.cachix.org-1:oXnBc6hRE3eX5rSYdRyMYXnfzcCxC7yKPTbZXALsqys=&quot;;
 
   microvms = name: {
     inherit name;
     type = &quot;microvms&quot;;
     actions = {
       system,
-      flake,
       fragment,
       fragmentRelPath,
+      target,
     }: let
-      run = [&quot;nix&quot; &quot;run&quot; &quot;${flake}#${fragment}.config.microvm.runner&quot;];
+      run = import ./actions/run.nix {
+        inherit target lib;
+      };
     in [
       {
         name = &quot;microvm&quot;;
         description = &quot;exec this microvm&quot;;
-        command =
-          (l.concatStringsSep &quot;\t&quot; run)
-          + &quot;.$(nix eval --json --option warn-dirty false\ &quot;
-          + &quot;${flake}#${fragment}.config.microvm.hypervisor)&quot;
-          + &quot;\ ${substituters} ${keys}&quot;;
+        command = ''
+          ${run target.config.microvm.runner.${target.config.microvm.hypervisor}}
+        '';
       }
     ];
   };
