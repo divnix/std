@@ -128,7 +128,6 @@ take a look at the following:
 - [`input-output-hk/bitte-cells`][bitte-cells]
 - [`divnix/hive`][divnix-hive]
 - [`input-output-hk/tullia`][iog-tullia]
-- [`mdbook-kroki-preprocessor`][mdbook-kroki-preprocessor]
 - [`HardenedNixOS-Profile`][hardenednixos-profile]
 - [`Julia2Nix.jl`][julia2nix]
 - [`inputs-output-hk/cardano-world`][cardano-world]
@@ -173,7 +172,6 @@ direnv allow
 [hardenednixos-profile]: https://github.com/hardenedlinux/HardenedNixOS-Profile
 [iog-tullia]: https://github.com/input-output-hk/tullia
 [julia2nix]: https://github.com/JuliaCN/Julia2Nix.jl
-[mdbook-kroki-preprocessor]: https://github.com/input-output-hk/mdbook-kroki-preprocessor
 [nix-flakes]: https://nixos.wiki/wiki/Flakes
 [nix]: https://nixos.org/manual/nix/unstable
 [std]: https://github.com/divnix/std
