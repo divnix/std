@@ -1545,7 +1545,10 @@ actions they provide to a particular Cell Block.</p>
 <p>It is entirely possible to define custom Block Types with custom
 Actions according to the needs of your project.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="data"><a class="header" href="#data">Data</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Data Blocktype for json serializable data.
@@ -1576,23 +1579,26 @@ Actions according to the needs of your project.</p>
       jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
       fx = [&quot;|&quot; &quot;xargs&quot; &quot;cat&quot; &quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
     in [
-      {
+      (mkCommand system &quot;data&quot; {
         name = &quot;write&quot;;
         description = &quot;write to file&quot;;
         command = &quot;echo ${json}&quot;;
-      }
-      {
+      })
+      (mkCommand system &quot;data&quot; {
         name = &quot;explore&quot;;
         description = &quot;interactively explore&quot;;
         command = l.concatStringsSep &quot;\t&quot; (jq ++ fx);
-      }
+      })
     ];
   };
 in
   data
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="functions"><a class="header" href="#functions">Functions</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Functions Blocktype for reusable nix functions that you would
@@ -1611,7 +1617,10 @@ in
   functions
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="runnables"><a class="header" href="#runnables">Runnables</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   lib = nixpkgs.lib // builtins;
   /*
   Use the Runnables Blocktype for targets that you want to
@@ -1627,21 +1636,24 @@ in
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target)
-      {
+      (import ./actions/build.nix target (mkCommand system &quot;runnables&quot;))
+      (mkCommand system &quot;runnables&quot; {
         name = &quot;run&quot;;
         description = &quot;exec this target&quot;;
         command = import ./actions/run.nix {
           inherit target lib;
         };
-      }
+      })
     ];
   };
 in
   runnables
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="installables"><a class="header" href="#installables">Installables</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Installables Blocktype for targets that you want to
@@ -1666,9 +1678,9 @@ in
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target)
+      (import ./actions/build.nix target (mkCommand system &quot;installables&quot;))
       # profile commands require a flake ref
-      {
+      (mkCommand system &quot;installables&quot; {
         name = &quot;install&quot;;
         description = &quot;install this target&quot;;
         command = ''
@@ -1679,8 +1691,8 @@ in
           fi
           nix profile install $PRJ_ROOT#${fragment}
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;installables&quot; {
         name = &quot;upgrade&quot;;
         description = &quot;upgrade this target&quot;;
         command = ''
@@ -1691,8 +1703,8 @@ in
           fi
           nix profile upgrade $PRJ_ROOT#${fragment}
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;installables&quot; {
         name = &quot;remove&quot;;
         description = &quot;remove this target&quot;;
         command = ''
@@ -1703,9 +1715,9 @@ in
           fi
           nix profile remove $PRJ_ROOT#${fragment}
         '';
-      }
+      })
       # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
-      {
+      (mkCommand system &quot;installables&quot; {
         name = &quot;bundle&quot;;
         description = &quot;bundle this target&quot;;
         command = ''
@@ -1716,8 +1728,8 @@ in
           fi
           nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;installables&quot; {
         name = &quot;bundleImage&quot;;
         description = &quot;bundle this target to image&quot;;
         command = ''
@@ -1728,8 +1740,8 @@ in
           fi
           nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;installables&quot; {
         name = &quot;bundleAppImage&quot;;
         description = &quot;bundle this target to AppImage&quot;;
         command = ''
@@ -1740,14 +1752,17 @@ in
           fi
           nix bundle --bundler github:ralismark/nix-appimage --refresh $PRJ_ROOT#${fragment}
         '';
-      }
+      })
     ];
   };
 in
   installables
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="microvms"><a class="header" href="#microvms">Microvms</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   lib = nixpkgs.lib // builtins;
   /*
   Use the Microvms Blocktype for Microvm.nix - https://github.com/astro/microvm.nix
@@ -1769,20 +1784,23 @@ in
         inherit target lib;
       };
     in [
-      {
+      (mkCommand system &quot;microvms&quot; {
         name = &quot;microvm&quot;;
         description = &quot;exec this microvm&quot;;
         command = ''
           ${run target.config.microvm.runner.${target.config.microvm.hypervisor}}
         '';
-      }
+      })
     ];
   };
 in
   microvms
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="devshells"><a class="header" href="#devshells">Devshells</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   mkDevelopDrv = import ../devshell-drv.nix;
   /*
@@ -1804,8 +1822,8 @@ in
     }: let
       developDrv = mkDevelopDrv target;
     in [
-      (import ./actions/build.nix developDrv)
-      {
+      (import ./actions/build.nix developDrv (mkCommand system &quot;devshells&quot;))
+      (mkCommand system &quot;devshells&quot; {
         name = &quot;enter&quot;;
         description = &quot;enter this devshell&quot;;
         command = ''
@@ -1841,14 +1859,17 @@ in
             exec $SHELL -i
           fi
         '';
-      }
+      })
     ];
   };
 in
   devshells
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="containers"><a class="header" href="#containers">Containers</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Containers Blocktype for OCI-images built with nix2container.
@@ -1869,16 +1890,16 @@ in
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target)
-      {
+      (import ./actions/build.nix target (mkCommand system &quot;containers&quot;))
+      (mkCommand system &quot;containers&quot; {
         name = &quot;print-image&quot;;
         description = &quot;print out the image name &amp; tag&quot;;
         command = ''
           echo
           echo &quot;${target.imageName}:${target.imageTag}&quot;
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;containers&quot; {
         name = &quot;publish&quot;;
         description = &quot;copy the image to its remote registry&quot;;
         command = let
@@ -1897,35 +1918,38 @@ in
             ${target.copyToRegistry}/bin/copy-to-registry
           fi
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;containers&quot; {
         name = &quot;copy-to-registry&quot;;
         description = &quot;copy the image to its remote registry&quot;;
         command = ''
           ${target.copyToRegistry}/bin/copy-to-registry
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;containers&quot; {
         name = &quot;copy-to-docker&quot;;
         description = &quot;copy the image to the local docker registry&quot;;
         command = ''
           ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;containers&quot; {
         name = &quot;copy-to-podman&quot;;
         description = &quot;copy the image to the local podman registry&quot;;
         command = ''
           ${target.copyToPodman}/bin/copy-to-podman
         '';
-      }
+      })
     ];
   };
 in
   containers
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="nixago"><a class="header" href="#nixago">Nixago</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Nixago Blocktype for nixago pebbles.
@@ -1950,27 +1974,30 @@ in
       fragmentRelPath,
       target,
     }: [
-      {
+      (mkCommand system &quot;nixago&quot; {
         name = &quot;populate&quot;;
         description = &quot;populate this nixago file into the repo&quot;;
         command = ''
           ${target.install}/bin/nixago_shell_hook
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;nixago&quot; {
         name = &quot;explore&quot;;
         description = &quot;interactively explore the nixago file&quot;;
         command = ''
           ${nixpkgs.legacyPackages.${system}.bat}/bin/bat &quot;${target.configFile}&quot;
         '';
-      }
+      })
     ];
   };
 in
   nixago
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="arion"><a class="header" href="#arion">Arion</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the arion for arionCompose Jobs - https://docs.hercules-ci.com/arion/
@@ -1994,55 +2021,58 @@ in
     }: let
       cmd = &quot;arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
     in [
-      {
+      (mkCommand system &quot;arion&quot; {
         name = &quot;up&quot;;
         description = &quot;arion up&quot;;
         command = ''
           ${cmd} up &quot;$@&quot;
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;arion&quot; {
         name = &quot;ps&quot;;
         description = &quot;exec this arion task to ps&quot;;
         command = ''
           ${cmd} ps &quot;$@&quot;
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;arion&quot; {
         name = &quot;stop&quot;;
         description = &quot;arion stop&quot;;
         command = ''
           ${cmd} stop &quot;$@&quot;
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;arion&quot; {
         name = &quot;rm&quot;;
         description = &quot;arion rm&quot;;
         command = ''
           ${cmd} rm &quot;$@&quot;
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;arion&quot; {
         name = &quot;config&quot;;
         description = &quot;check the docker-compose yaml file&quot;;
         command = ''
           ${cmd} config &quot;$@&quot;
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;arion&quot; {
         name = &quot;arion&quot;;
         description = &quot;pass any command to arion&quot;;
         command = ''
           ${cmd} &quot;$@&quot;
         '';
-      }
+      })
     ];
   };
 in
   arion
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="nomad-job-manfiests"><a class="header" href="#nomad-job-manfiests">Nomad Job Manfiests</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the `nomadJobsManifest` Blocktype for rendering job descriptions
@@ -2114,7 +2144,7 @@ in
       inject the git revision validate the manifest, after which it can be run or
       planned with the Nomad cli or the `deploy` action.
       */
-      {
+      (mkCommand system &quot;nomadJobManifests&quot; {
         name = &quot;render&quot;;
         description = &quot;build the JSON job description&quot;;
         command =
@@ -2126,8 +2156,8 @@ in
 
             ${render}
           '';
-      }
-      {
+      })
+      (mkCommand system &quot;nomadJobManifests&quot; {
         name = &quot;deploy&quot;;
         description = &quot;Deploy the job to Nomad&quot;;
         command =
@@ -2168,8 +2198,8 @@ in
               echo &quot;Job hasn't changed since last deployment, nothing to deploy&quot;
             fi
           '';
-      }
-      {
+      })
+      (mkCommand system &quot;nomadJobManifests&quot; {
         name = &quot;explore&quot;;
         description = &quot;interactively explore the Job defintion&quot;;
         command =
@@ -2187,7 +2217,7 @@ in
 
             fx &quot;$job_path&quot;
           '';
-      }
+      })
     ];
   };
 in

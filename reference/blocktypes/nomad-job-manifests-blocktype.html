@@ -134,7 +134,10 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="nomad-job-manfiests"><a class="header" href="#nomad-job-manfiests">Nomad Job Manfiests</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the `nomadJobsManifest` Blocktype for rendering job descriptions
@@ -206,7 +209,7 @@
       inject the git revision validate the manifest, after which it can be run or
       planned with the Nomad cli or the `deploy` action.
       */
-      {
+      (mkCommand system &quot;nomadJobManifests&quot; {
         name = &quot;render&quot;;
         description = &quot;build the JSON job description&quot;;
         command =
@@ -218,8 +221,8 @@
 
             ${render}
           '';
-      }
-      {
+      })
+      (mkCommand system &quot;nomadJobManifests&quot; {
         name = &quot;deploy&quot;;
         description = &quot;Deploy the job to Nomad&quot;;
         command =
@@ -260,8 +263,8 @@
               echo &quot;Job hasn't changed since last deployment, nothing to deploy&quot;
             fi
           '';
-      }
-      {
+      })
+      (mkCommand system &quot;nomadJobManifests&quot; {
         name = &quot;explore&quot;;
         description = &quot;interactively explore the Job defintion&quot;;
         command =
@@ -279,7 +282,7 @@
 
             fx &quot;$job_path&quot;
           '';
-      }
+      })
     ];
   };
 in

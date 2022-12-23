@@ -134,7 +134,10 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="containers"><a class="header" href="#containers">Containers</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Containers Blocktype for OCI-images built with nix2container.
@@ -155,16 +158,16 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target)
-      {
+      (import ./actions/build.nix target (mkCommand system &quot;containers&quot;))
+      (mkCommand system &quot;containers&quot; {
         name = &quot;print-image&quot;;
         description = &quot;print out the image name &amp; tag&quot;;
         command = ''
           echo
           echo &quot;${target.imageName}:${target.imageTag}&quot;
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;containers&quot; {
         name = &quot;publish&quot;;
         description = &quot;copy the image to its remote registry&quot;;
         command = let
@@ -183,28 +186,28 @@
             ${target.copyToRegistry}/bin/copy-to-registry
           fi
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;containers&quot; {
         name = &quot;copy-to-registry&quot;;
         description = &quot;copy the image to its remote registry&quot;;
         command = ''
           ${target.copyToRegistry}/bin/copy-to-registry
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;containers&quot; {
         name = &quot;copy-to-docker&quot;;
         description = &quot;copy the image to the local docker registry&quot;;
         command = ''
           ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;containers&quot; {
         name = &quot;copy-to-podman&quot;;
         description = &quot;copy the image to the local podman registry&quot;;
         command = ''
           ${target.copyToPodman}/bin/copy-to-podman
         '';
-      }
+      })
     ];
   };
 in

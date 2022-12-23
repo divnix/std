@@ -134,7 +134,10 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="data"><a class="header" href="#data">Data</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Data Blocktype for json serializable data.
@@ -165,16 +168,16 @@
       jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
       fx = [&quot;|&quot; &quot;xargs&quot; &quot;cat&quot; &quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
     in [
-      {
+      (mkCommand system &quot;data&quot; {
         name = &quot;write&quot;;
         description = &quot;write to file&quot;;
         command = &quot;echo ${json}&quot;;
-      }
-      {
+      })
+      (mkCommand system &quot;data&quot; {
         name = &quot;explore&quot;;
         description = &quot;interactively explore&quot;;
         command = l.concatStringsSep &quot;\t&quot; (jq ++ fx);
-      }
+      })
     ];
   };
 in

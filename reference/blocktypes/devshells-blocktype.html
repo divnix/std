@@ -134,7 +134,10 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="devshells"><a class="header" href="#devshells">Devshells</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   mkDevelopDrv = import ../devshell-drv.nix;
   /*
@@ -156,8 +159,8 @@
     }: let
       developDrv = mkDevelopDrv target;
     in [
-      (import ./actions/build.nix developDrv)
-      {
+      (import ./actions/build.nix developDrv (mkCommand system &quot;devshells&quot;))
+      (mkCommand system &quot;devshells&quot; {
         name = &quot;enter&quot;;
         description = &quot;enter this devshell&quot;;
         command = ''
@@ -193,7 +196,7 @@
             exec $SHELL -i
           fi
         '';
-      }
+      })
     ];
   };
 in

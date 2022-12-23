@@ -134,7 +134,10 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="microvms"><a class="header" href="#microvms">Microvms</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   lib = nixpkgs.lib // builtins;
   /*
   Use the Microvms Blocktype for Microvm.nix - https://github.com/astro/microvm.nix
@@ -156,13 +159,13 @@
         inherit target lib;
       };
     in [
-      {
+      (mkCommand system &quot;microvms&quot; {
         name = &quot;microvm&quot;;
         description = &quot;exec this microvm&quot;;
         command = ''
           ${run target.config.microvm.runner.${target.config.microvm.hypervisor}}
         '';
-      }
+      })
     ];
   };
 in

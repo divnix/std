@@ -134,7 +134,10 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="installables"><a class="header" href="#installables">Installables</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Installables Blocktype for targets that you want to
@@ -159,9 +162,9 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target)
+      (import ./actions/build.nix target (mkCommand system &quot;installables&quot;))
       # profile commands require a flake ref
-      {
+      (mkCommand system &quot;installables&quot; {
         name = &quot;install&quot;;
         description = &quot;install this target&quot;;
         command = ''
@@ -172,8 +175,8 @@
           fi
           nix profile install $PRJ_ROOT#${fragment}
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;installables&quot; {
         name = &quot;upgrade&quot;;
         description = &quot;upgrade this target&quot;;
         command = ''
@@ -184,8 +187,8 @@
           fi
           nix profile upgrade $PRJ_ROOT#${fragment}
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;installables&quot; {
         name = &quot;remove&quot;;
         description = &quot;remove this target&quot;;
         command = ''
@@ -196,9 +199,9 @@
           fi
           nix profile remove $PRJ_ROOT#${fragment}
         '';
-      }
+      })
       # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
-      {
+      (mkCommand system &quot;installables&quot; {
         name = &quot;bundle&quot;;
         description = &quot;bundle this target&quot;;
         command = ''
@@ -209,8 +212,8 @@
           fi
           nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;installables&quot; {
         name = &quot;bundleImage&quot;;
         description = &quot;bundle this target to image&quot;;
         command = ''
@@ -221,8 +224,8 @@
           fi
           nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;installables&quot; {
         name = &quot;bundleAppImage&quot;;
         description = &quot;bundle this target to AppImage&quot;;
         command = ''
@@ -233,7 +236,7 @@
           fi
           nix bundle --bundler github:ralismark/nix-appimage --refresh $PRJ_ROOT#${fragment}
         '';
-      }
+      })
     ];
   };
 in

@@ -134,7 +134,10 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="arion"><a class="header" href="#arion">Arion</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the arion for arionCompose Jobs - https://docs.hercules-ci.com/arion/
@@ -158,48 +161,48 @@
     }: let
       cmd = &quot;arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
     in [
-      {
+      (mkCommand system &quot;arion&quot; {
         name = &quot;up&quot;;
         description = &quot;arion up&quot;;
         command = ''
           ${cmd} up &quot;$@&quot;
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;arion&quot; {
         name = &quot;ps&quot;;
         description = &quot;exec this arion task to ps&quot;;
         command = ''
           ${cmd} ps &quot;$@&quot;
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;arion&quot; {
         name = &quot;stop&quot;;
         description = &quot;arion stop&quot;;
         command = ''
           ${cmd} stop &quot;$@&quot;
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;arion&quot; {
         name = &quot;rm&quot;;
         description = &quot;arion rm&quot;;
         command = ''
           ${cmd} rm &quot;$@&quot;
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;arion&quot; {
         name = &quot;config&quot;;
         description = &quot;check the docker-compose yaml file&quot;;
         command = ''
           ${cmd} config &quot;$@&quot;
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;arion&quot; {
         name = &quot;arion&quot;;
         description = &quot;pass any command to arion&quot;;
         command = ''
           ${cmd} &quot;$@&quot;
         '';
-      }
+      })
     ];
   };
 in

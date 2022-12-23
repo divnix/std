@@ -134,7 +134,10 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="nixago"><a class="header" href="#nixago">Nixago</a></h1>
-<pre><code class="language-nix">{nixpkgs}: let
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
   l = nixpkgs.lib // builtins;
   /*
   Use the Nixago Blocktype for nixago pebbles.
@@ -159,20 +162,20 @@
       fragmentRelPath,
       target,
     }: [
-      {
+      (mkCommand system &quot;nixago&quot; {
         name = &quot;populate&quot;;
         description = &quot;populate this nixago file into the repo&quot;;
         command = ''
           ${target.install}/bin/nixago_shell_hook
         '';
-      }
-      {
+      })
+      (mkCommand system &quot;nixago&quot; {
         name = &quot;explore&quot;;
         description = &quot;interactively explore the nixago file&quot;;
         command = ''
           ${nixpkgs.legacyPackages.${system}.bat}/bin/bat &quot;${target.configFile}&quot;
         '';
-      }
+      })
     ];
   };
 in
