@@ -51,6 +51,10 @@
     harvest = import ./src/harvest.nix {inherit winnow;};
     winnow = import ./src/winnow.nix {inherit (inputs) nixpkgs;};
     l = inputs.nixpkgs.lib // builtins;
+    flakeModule = import ./src/flakeModule.nix {
+      inherit grow harvest pick winnow;
+      validators = import ./src/validators.nix {inherit (inputs) nixpkgs yants;};
+    };
   in
     {
       inherit (inputs) yants dmerge incl; # convenience re-exports
@@ -58,6 +62,7 @@
       inherit (blockTypes) runnables installables functions data devshells containers files microvms nixago nomadJobManifests;
       inherit grow growOn deSystemize pick harvest winnow;
       systems = l.systems.doubles;
+      inherit flakeModule;
     }
     # on our own account ...
     // (import ./dogfood.nix {inherit inputs growOn blockTypes pick harvest;});
