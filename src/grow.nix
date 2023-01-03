@@ -263,11 +263,18 @@
                 cellBlock.ci
               else [];
             ci' = let
-              f = set:
+              f = set: let
+                action = inputs.self.__std.actions.${system}.${set.cell}.${set.block}.${set.name}.${set.action} or null;
+              in
                 set
                 // {
-                  actionDrv = inputs.self.__std.actions.${system}.${set.cell}.${set.block}.${set.name}.${set.action}.drvPath or null;
-                };
+                  actionDrv = action.drvPath or null;
+                }
+                // (
+                  if action ? proviso
+                  then {inherit (action) proviso;}
+                  else {}
+                );
             in
               map f ci;
           in {
