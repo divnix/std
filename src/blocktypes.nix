@@ -2,7 +2,10 @@
   mkCommand = system: type: args:
     args
     // {
-      command = nixpkgs.legacyPackages.${system}.writeShellScript "${type}-${args.name}" args.command;
+      command = (nixpkgs.legacyPackages.${system}.writeShellScript "${type}-${args.name}" args.command).overrideAttrs (self:
+        nixpkgs.lib.optionalAttrs (args ? proviso) {
+          passthru = self.passthru or {} // {inherit (args) proviso;};
+        });
     };
 in {
   runnables = import ./blocktypes/runnables.nix {inherit nixpkgs mkCommand;};
