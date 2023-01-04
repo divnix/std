@@ -51,18 +51,18 @@
             local delim="$RANDOM"
 
             function get_images () {
-              nix show-derivation $@ \
-              | jq -r '.[].env.text' \
-              | grep -o 'docker://\S*'
+              command nix show-derivation $@ \
+              | command jq -r '.[].env.text' \
+              | command grep -o 'docker://\S*'
             }
 
-            drvs="$(jq -r '.actionDrv | select(. != "null")' <<< "''${input[@]}")"
+            drvs="$(command jq -r '.actionDrv | select(. != "null")' <<< "''${input[@]}")"
 
             mapfile -t images < <(get_images $drvs)
 
-            cat << "$delim" > /tmp/check.sh
+            command cat << "$delim" > /tmp/check.sh
             #!/usr/bin/env bash
-            if ! skopeo inspect --insecure-policy "$1" &>/dev/null; then
+            if ! command skopeo inspect --insecure-policy "$1" &>/dev/null; then
             echo "$1" >> /tmp/no_exist
             fi
             $delim
@@ -72,17 +72,17 @@
             rm -f /tmp/no_exist
 
             echo "''${images[@]}" \
-            | xargs -n 1 -P 0 /tmp/check.sh
+            | command xargs -n 1 -P 0 /tmp/check.sh
 
             declare -a filtered
 
             for i in "''${!images[@]}"; do
-              if grep "''${images[$i]}" /tmp/no_exist &>/dev/null; then
+              if command grep "''${images[$i]}" /tmp/no_exist &>/dev/null; then
                 filtered+=("''${input[$i]}")
               fi
             done
 
-            output=$(jq -cs '. += $p' --argjson p "$output" <<< "''${filtered[@]}")
+            output=$(command jq -cs '. += $p' --argjson p "$output" <<< "''${filtered[@]}")
             }
           '';
       })
