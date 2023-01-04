@@ -36,20 +36,55 @@
         description = "copy the image to its remote registry";
         command = let
           image = target.imageRefUnsafe or "${target.imageName}:${target.imageTag}";
-          # derive the same skopeo to avoid adding additional context
-          skopeo = let
-            lines = builtins.split "\n" target.copyToRegistry.text;
-            line = builtins.head (builtins.filter (x: builtins.isString x && l.hasInfix "/bin/skopeo" x) lines);
-            words = builtins.split " " line;
-          in
-            builtins.head words;
         in ''
-          if ${skopeo} --insecure-policy inspect docker://${image} &> /dev/null; then
-            echo "Image ${image} already exists."
-          else
-            ${target.copyToRegistry}/bin/copy-to-registry
-          fi
+          # docker://${builtins.unsafeDiscardStringContext image}
+          ${target.copyToRegistry}/bin/copy-to-registry
         '';
+        proviso =
+          # bash
+          ''
+            function proviso() {
+            local -n input=$1
+            local -n output=$2
+
+            local -a images
+            local delim="$RANDOM"
+
+            function get_images () {
+              nix show-derivation $@ \
+              | jq -r '.[].env.text' \
+              | grep -o 'docker://\S*'
+            }
+
+            drvs="$(jq -r '.actionDrv | select(. != "null")' <<< "''${input[@]}")"
+
+            mapfile -t images < <(get_images $drvs)
+
+            cat << "$delim" > /tmp/check.sh
+            #!/usr/bin/env bash
+            if ! skopeo inspect --insecure-policy "$1" &>/dev/null; then
+            echo "$1" >> /tmp/no_exist
+            fi
+            $delim
+
+            chmod +x /tmp/check.sh
+
+            rm -f /tmp/no_exist
+
+            echo "''${images[@]}" \
+            | xargs -n 1 -P 0 /tmp/check.sh
+
+            declare -a filtered
+
+            for i in "''${!images[@]}"; do
+              if grep "''${images[$i]}" /tmp/no_exist &>/dev/null; then
+                filtered+=("''${input[$i]}")
+              fi
+            done
+
+            output=$(jq -cs '. += $p' --argjson p "$output" <<< "''${filtered[@]}")
+            }
+          '';
       })
       (mkCommand system "containers" {
         name = "copy-to-registry";
