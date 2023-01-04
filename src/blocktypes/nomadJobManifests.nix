@@ -14,6 +14,7 @@
     - explore
   */
   nomadJobManifests = name: {
+    __functor = import ./__functor.nix;
     inherit name;
     type = "nomadJobManifests";
 
