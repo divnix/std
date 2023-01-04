@@ -268,6 +268,7 @@
               in
                 set
                 // {
+                  targetDrv = inputs.self.${system}.${set.cell}.${set.block}.${set.name}.drvPath or null;
                   actionDrv = action.drvPath or null;
                 }
                 // (
