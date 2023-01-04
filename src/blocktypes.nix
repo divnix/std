@@ -4,7 +4,7 @@
     // {
       command = (nixpkgs.legacyPackages.${system}.writeShellScript "${type}-${args.name}" args.command).overrideAttrs (self:
         nixpkgs.lib.optionalAttrs (args ? proviso) {
-          passthru = self.passthru or {} // {inherit (args) proviso;};
+          passthru = self.passthru or {} // {proviso = builtins.toFile "${args.name}-proviso" args.proviso;};
         });
     };
 in {

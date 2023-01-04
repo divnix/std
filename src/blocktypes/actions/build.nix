@@ -1,8 +1,6 @@
 out: mkCommand: let
   contextFreeDrv =
     builtins.unsafeDiscardStringContext out.drvPath;
-  contextFreeOut =
-    builtins.unsafeDiscardStringContext out;
 in
   mkCommand {
     name = "build";
@@ -11,18 +9,35 @@ in
       # ${out}
       nix build ${contextFreeDrv}
     '';
-    proviso = ''
-      nix build github:divnix/nix-uncached/v2.12.1
+    proviso =
+      # bash
+      ''
+        function proviso() {
+          local -n input=$1
+          local -n output=$2
 
-      cached="$(result/bin/nix-uncached "${contextFreeOut}")"
+          local drvs
+          local -a uncached
 
-      if [[ -n $cached ]]; then
-        cached="$(nix show-derivation "${contextFreeOut}" | jq -r '.| to_entries[] | select(.value|.env.preferLocalBuild != "1") | .key')"
-      fi
+          # FIXME: merge upstream to avoid any need for runtime context
+          nix build github:divnix/nix-uncached/v2.12.1
 
-      if [[ -z $cached ]]; then
-        # skip the build in CI, since everything is already cached
-        exit 1
-      fi
-    '';
+          drvs="$(jq -r '.targetDrv | select(. != "null")' <<< "''${input[@]}")"
+
+          mapfile -t uncached < <(nix-store -q $drvs | result/bin/nix-uncached)
+
+          if [[ -n ''${uncached[*]} ]]; then
+            mapfile -t uncached < <(nix show-derivation $drvs | jq -r '.| to_entries[] | select(.value|.env.preferLocalBuild != "1") | .key')
+          fi
+
+          if [[ -n ''${uncached[*]} ]]; then
+            local list filtered
+
+            list=$(jq -ncR '[inputs]' <<< "''${uncached[@]}")
+            filtered=$(jq -c 'select([.targetDrv] | inside($p))' --argjson p "$list" <<< "''${input[@]}")
+
+            output=$(jq -cs '. += $p' --argjson p "$output" <<< "$filtered")
+          fi
+        }
+      '';
   }
