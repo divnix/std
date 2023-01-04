@@ -20,23 +20,24 @@ in
           local -a uncached
 
           # FIXME: merge upstream to avoid any need for runtime context
-          nix build github:divnix/nix-uncached/v2.12.1
+          command nix build github:divnix/nix-uncached/v2.12.1
 
-          drvs="$(jq -r '.targetDrv | select(. != "null")' <<< "''${input[@]}")"
+          drvs="$(command jq -r '.targetDrv | select(. != "null")' <<< "''${input[@]}")"
 
-          mapfile -t uncached < <(nix-store -q $drvs | result/bin/nix-uncached)
+          mapfile -t uncached < <(command nix-store -q $drvs | result/bin/nix-uncached)
 
           if [[ -n ''${uncached[*]} ]]; then
-            mapfile -t uncached < <(nix show-derivation $drvs | jq -r '.| to_entries[] | select(.value|.env.preferLocalBuild != "1") | .key')
+            mapfile -t uncached < <(command nix show-derivation $drvs \
+            | command jq -r '.| to_entries[] | select(.value|.env.preferLocalBuild != "1") | .key')
           fi
 
           if [[ -n ''${uncached[*]} ]]; then
             local list filtered
 
-            list=$(jq -ncR '[inputs]' <<< "''${uncached[@]}")
-            filtered=$(jq -c 'select([.targetDrv] | inside($p))' --argjson p "$list" <<< "''${input[@]}")
+            list=$(command jq -ncR '[inputs]' <<< "''${uncached[@]}")
+            filtered=$(command jq -c 'select([.targetDrv] | inside($p))' --argjson p "$list" <<< "''${input[@]}")
 
-            output=$(jq -cs '. += $p' --argjson p "$output" <<< "$filtered")
+            output=$(command jq -cs '. += $p' --argjson p "$output" <<< "$filtered")
           fi
         }
       '';
