@@ -93,7 +93,8 @@ But hey! It means: we can progress together!
     nixpkgs.follows = "std/nixpkgs";
   };
 
-  outputs = { std, self, ...}: std.growOn {
+  outputs = { std, self, ...} @ inputs: std.growOn {
+    inherit inputs;
     # 1. Each folder inside `cellsFrom` becomes a "Cell"
     #    Run for example: 'mkdir nix/mycell'
     # 2. Each <block>.nix or <block>/default.nix within it becomes a "Cell Block"
