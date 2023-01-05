@@ -145,18 +145,14 @@ You may find releases on the [GitHub Release Page][releases] of this repository.
 
 ## Examples in the Wild
 
-If you'd like to see some examples
-of what a [Standard][std] project looks like,
-take a look at the following:
+This [GitHub search query](https://github.com/search?p=7&q=%22divnix%2Fstd%22+filename%3Aflake.nix&type=Code) holds a pretty good answer.
 
-- [`input-output-hk/bitte-cells`][bitte-cells]
-- [`divnix/hive`][divnix-hive]
-- [`input-output-hk/tullia`][iog-tullia]
-- [`HardenedNixOS-Profile`][hardenednixos-profile]
-- [`Julia2Nix.jl`][julia2nix]
-- [`inputs-output-hk/cardano-world`][cardano-world]
+## Explainer Video Series
 
-:construction: Work in progress, would like to help us extend this section?
+- [Std - Introduction](https://www.loom.com/share/cf9d5d1a10514d65bf6b8287f7ddc7d6)
+- [Std - Cell Blocks Deep Dive](https://www.loom.com/share/04fa1d578fd044059b02c9c052d87b77)
+- [Std - Operables & OCI](https://www.loom.com/share/27d91aa1eac24bcaaaed18ea6d6d03ca)
+- [Std - Nixago](https://www.loom.com/share/5c1badd77ab641d3b8e256ddbba69042)
 
 ## Contributions
 
