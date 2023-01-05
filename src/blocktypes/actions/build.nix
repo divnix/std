@@ -24,10 +24,10 @@ in
 
           drvs="$(command jq -r '.targetDrv | select(. != "null")' <<< "''${input[@]}")"
 
-          mapfile -t uncached < <(command nix-store -q $drvs | result/bin/nix-uncached)
+          mapfile -t uncached < <(command nix show-derivation $drvs | jq -r '.[].outputs.out.path' | result/bin/nix-uncached)
 
           if [[ -n ''${uncached[*]} ]]; then
-            mapfile -t uncached < <(command nix show-derivation $drvs \
+            mapfile -t uncached < <(command nix show-derivation ''${uncached[@]} \
             | command jq -r '.| to_entries[] | select(.value|.env.preferLocalBuild != "1") | .key')
           fi
 
