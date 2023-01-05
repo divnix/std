@@ -172,20 +172,55 @@
         description = &quot;copy the image to its remote registry&quot;;
         command = let
           image = target.imageRefUnsafe or &quot;${target.imageName}:${target.imageTag}&quot;;
-          # derive the same skopeo to avoid adding additional context
-          skopeo = let
-            lines = builtins.split &quot;\n&quot; target.copyToRegistry.text;
-            line = builtins.head (builtins.filter (x: builtins.isString x &amp;&amp; l.hasInfix &quot;/bin/skopeo&quot; x) lines);
-            words = builtins.split &quot; &quot; line;
-          in
-            builtins.head words;
         in ''
-          if ${skopeo} --insecure-policy inspect docker://${image} &amp;&gt; /dev/null; then
-            echo &quot;Image ${image} already exists.&quot;
-          else
-            ${target.copyToRegistry}/bin/copy-to-registry
-          fi
+          # docker://${builtins.unsafeDiscardStringContext image}
+          ${target.copyToRegistry}/bin/copy-to-registry
         '';
+        proviso =
+          # bash
+          ''
+            function proviso() {
+            local -n input=$1
+            local -n output=$2
+
+            local -a images
+            local delim=&quot;$RANDOM&quot;
+
+            function get_images () {
+              command nix show-derivation $@ \
+              | command jq -r '.[].env.text' \
+              | command grep -o 'docker://\S*'
+            }
+
+            drvs=&quot;$(command jq -r '.actionDrv | select(. != &quot;null&quot;)' &lt;&lt;&lt; &quot;''${input[@]}&quot;)&quot;
+
+            mapfile -t images &lt; &lt;(get_images $drvs)
+
+            command cat &lt;&lt; &quot;$delim&quot; &gt; /tmp/check.sh
+            #!/usr/bin/env bash
+            if ! command skopeo inspect --insecure-policy &quot;$1&quot; &amp;&gt;/dev/null; then
+            echo &quot;$1&quot; &gt;&gt; /tmp/no_exist
+            fi
+            $delim
+
+            chmod +x /tmp/check.sh
+
+            rm -f /tmp/no_exist
+
+            echo &quot;''${images[@]}&quot; \
+            | command xargs -n 1 -P 0 /tmp/check.sh
+
+            declare -a filtered
+
+            for i in &quot;''${!images[@]}&quot;; do
+              if command grep &quot;''${images[$i]}&quot; /tmp/no_exist &amp;&gt;/dev/null; then
+                filtered+=(&quot;''${input[$i]}&quot;)
+              fi
+            done
+
+            output=$(command jq -cs '. += $p' --argjson p &quot;$output&quot; &lt;&lt;&lt; &quot;''${filtered[@]}&quot;)
+            }
+          '';
       })
       (mkCommand system &quot;containers&quot; {
         name = &quot;copy-to-registry&quot;;
