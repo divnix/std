@@ -139,7 +139,7 @@ It further dogfoods itself and implements utilities in its own [**Cells**][cells
 {{#include ../dogfood.nix}}
 ```
 
-_That's it. `std.grow` is a "smart" importer of your `nix` code and is designed to keep boilerplate at bay._
+_That's it. `std.grow` is a "smart" importer of your `nix` code and is designed to keep boilerplate at bay. In the so called "Soil" compatibility layer, you can do whatever your heart desires. For example put `flake-utils` or `flake-parts` patterns here. Or, as in the above example, just make your stuff play nicely with the Nix CLI._
 
 > **TIP:**
 >

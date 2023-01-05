@@ -39,7 +39,9 @@ growOn {
     (blockTypes.data "data")
     (blockTypes.files "files")
   ];
-} {
+}
+# Soil ("compatibile with the entire world")
+{
   devShells = harvest inputs.self ["_automation" "devshells"];
   packages = harvest inputs.self [["std" "cli"] ["std" "packages"]];
   templates = pick inputs.self ["presets" "templates"];
