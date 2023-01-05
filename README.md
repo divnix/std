@@ -18,6 +18,30 @@ with contributions from [David Arnold](https://github.com/blaggacao),
 and many more amazing people (see end of file for a full list)._
 -->
 
+---
+
+[![Support room on Matrix](https://img.shields.io/matrix/std-nix:matrix.org?server_fqdn=matrix.org&style=for-the-badge)](https://matrix.to/#/#std-nix:matrix.org)
+
+###### Stack
+
+[![Yants](https://img.shields.io/badge/DivNix-Yants-green?style=for-the-badge&logo=NixOS)](https://github.com/divnix/yants)
+[![DMerge](https://img.shields.io/badge/DivNix-DMerge-yellow?style=for-the-badge&logo=NixOS)](https://github.com/divnix/data-merge)
+[![NoSys](https://img.shields.io/badge/DivNix-NoSys-orange?style=for-the-badge&logo=NixOS)](https://github.com/divnix/nosys)
+[![Blank](https://img.shields.io/badge/DivNix-Blank-grey?style=for-the-badge&logo=NixOS)](https://github.com/divnix/blank)
+[![Incl](https://img.shields.io/badge/DivNix-Incl-blue?style=for-the-badge&logo=NixOS)](https://github.com/divnix/incl)
+[![Paisano](https://img.shields.io/badge/DivNix-Paisano-red?style=for-the-badge&logo=NixOS)](https://github.com/divnix/paisano)
+
+###### Integrations
+
+[![Numtide Devshell](https://img.shields.io/badge/Numtide-Devshell-yellowgreen?style=for-the-badge&logo=NixOS)](https://github.com/numtide/devshell)
+[![Nlewo Nix2Container](https://img.shields.io/badge/Nlewo-Nix2Container-blue?style=for-the-badge&logo=NixOS)](https://github.com/nlewo/nix2container)
+[![Fluidattacks Makes](https://img.shields.io/badge/Fluidattacks-Makes-blue?style=for-the-badge&logo=NixOS)](https://github.com/fluidattacks/makes)
+[![Astro MicroVM](https://img.shields.io/badge/Astro-MicroVM-blue?style=for-the-badge&logo=NixOS)](https://github.com/astro/microvm.nix)
+[![HerculesCI FlakeParts](https://img.shields.io/badge/HerculesCI-FlakeParts-lightgrey?style=for-the-badge&logo=NixOS)](https://github.com/hercules-ci/flake-parts)
+[![Cachix Cache](https://img.shields.io/badge/Cachix-Cache-blue?style=for-the-badge&logo=NixOS)](https://github.com/cachix)
+
+---
+
 [Standard][std] is THE opinionated, generic,
 [Nix][nix] [Flakes][nix-flakes] framework
 that will allow you to grow and cultivate
