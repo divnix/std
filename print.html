@@ -228,8 +228,8 @@ But hey! It means: we can progress together!</p>
   #  - but can use anything that produces flake outputs (e.g. flake-parts or flake-utils)
   # 5. Run: nix run .
   {
-    devShells = std.harvest self [&quot;&lt;mycell&gt;&quot; &quot;devshells&quot;];
-    packages = std.harvest self [&quot;&lt;mycell&gt;&quot; &quot;packages&quot;];
+    devShells = std.harvest self [&quot;mycell&quot; &quot;devshells&quot;];
+    packages = std.harvest self [&quot;mycell&quot; &quot;packages&quot;];
   };
 }
 
