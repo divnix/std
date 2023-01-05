@@ -151,6 +151,12 @@ with contributions from [David Arnold](https://github.com/blaggacao),
 and many more amazing people (see end of file for a full list)._
 -->
 <hr />
+<p><a href="https://github.com/divnix/std">Standard</a> is a nifty DevOps framework that
+enables an efficient SDLC with power of <a href="https://nixos.org/manual/nix/unstable">Nix</a> via <a href="https://nixos.wiki/wiki/Flakes">Flakes</a>.</p>
+<p>It organizes and disciplines your Nix and thereby speeds you up.
+It also comes with great horizontal integrations of high
+quality vertical DevOps tooling crafted by the <a href="https://discourse.nixos.org">Nix Ecosystem</a>.</p>
+<hr />
 <p><a href="https://matrix.to/#/#std-nix:matrix.org"><img src="https://img.shields.io/matrix/std-nix:matrix.org?server_fqdn=matrix.org&amp;style=for-the-badge" alt="Support room on Matrix" /></a></p>
 <h6 id="stack"><a class="header" href="#stack">Stack</a></h6>
 <p><a href="https://github.com/divnix/yants"><img src="https://img.shields.io/badge/DivNix-Yants-green?style=for-the-badge&amp;logo=NixOS" alt="Yants" /></a>
@@ -166,12 +172,7 @@ and many more amazing people (see end of file for a full list)._
 <a href="https://github.com/astro/microvm.nix"><img src="https://img.shields.io/badge/Astro-MicroVM-blue?style=for-the-badge&amp;logo=NixOS" alt="Astro MicroVM" /></a>
 <a href="https://github.com/hercules-ci/flake-parts"><img src="https://img.shields.io/badge/HerculesCI-FlakeParts-lightgrey?style=for-the-badge&amp;logo=NixOS" alt="HerculesCI FlakeParts" /></a>
 <a href="https://github.com/cachix"><img src="https://img.shields.io/badge/Cachix-Cache-blue?style=for-the-badge&amp;logo=NixOS" alt="Cachix Cache" /></a></p>
-<hr />
-<p><a href="https://github.com/divnix/std">Standard</a> is THE opinionated, generic,
-<a href="https://nixos.org/manual/nix/unstable">Nix</a> <a href="https://nixos.wiki/wiki/Flakes">Flakes</a> framework
-that will allow you to grow and cultivate
-Nix Cells with ease. Nix Cells are the fine
-art of code organization using flakes.</p>
+<h6 id="the-standard-story"><a class="header" href="#the-standard-story">The Standard Story</a></h6>
 <p><em>Once</em> your <code>nix</code> code has evolved into a giant
 ball of spaghetti and nobody else except a few
 select members of your tribe can still read it
@@ -190,36 +191,51 @@ your team and community will finally find a
 <em>canonical</em> answer to the everlasting question:
 <em>What can I <strong>do</strong> with this repository?</em></p>
 <hr />
-<h2 id="the-std-repository-itself"><a class="header" href="#the-std-repository-itself">The <code>std</code> repository itself</a></h2>
-<p>In this repository, you’ll find, both, the <em>implementation</em> and an <em>application</em> of <a href="https://github.com/divnix/std">Standard</a>.</p>
-<h3 id="implementation"><a class="header" href="#implementation">Implementation</a></h3>
-<p><em>What is <code>std</code>? — The well-commented <code>nix</code> code → <a href="https://github.com/divnix/std/tree/main/src"><code>./src</code></a>.</em></p>
-<p>That folder implements:</p>
-<ul>
-<li><a href="https://github.com/divnix/std/blob/main/src/grow.nix"><code>std.grow</code></a>: the “smart” importer</li>
-<li><a href="https://github.com/divnix/std/blob/main/src/grow-on.nix"><code>std.growOn</code></a>: <code>std.grow</code>-variant that recursively merges all additional variadic arguments</li>
-<li><a href="https://github.com/divnix/std/blob/main/src/harvest.nix"><code>std.harvest</code></a>: harvest your <strong>Targets</strong> into a different shape for compatibility</li>
-<li><a href="https://github.com/divnix/std/blob/main/src/winnow.nix"><code>std.winnow</code></a>: when more advanced harvesting is required, use this to harvest <em>and</em> filter the output</li>
-<li><a href="https://github.com/divnix/std/blob/main/src/pick.nix"><code>std.pick</code></a>: pick your <strong>Targets</strong> into a different shape without system scope</li>
-<li><a href="https://github.com/divnix/incl"><code>std.incl</code></a>: a straight-forward source filter with additive semantics</li>
-<li><a href="https://github.com/divnix/nosys/blob/master/flake.nix"><code>std.deSystemize</code></a>: a helper to hide <code>system</code> from plain sight</li>
-<li><a href="https://github.com/divnix/std/blob/main/src/blocktypes.nix"><code>std.&lt;blockType&gt;</code></a>: builtin <strong>(Cell) Block Types</strong> that implement <strong>(Cell Block Type) Actions</strong></li>
-</ul>
-<h3 id="application"><a class="header" href="#application">Application</a></h3>
-<p><em>Dog-fooding? → <a href="https://github.com/divnix/std/tree/main/cells"><code>./cells</code></a>.</em></p>
-<ul>
-<li><strong>Cells:</strong> <a href="https://github.com/divnix/std/tree/main/cells"><code>./cells</code></a> mainly implements <a href="https://github.com/divnix/std/tree/main/cells/std"><code>std</code></a>.</li>
-<li><strong>Cell Blocks:</strong> <a href="https://github.com/divnix/std/tree/main/cells/std"><code>std</code></a> implements:
-<ul>
-<li><a href="https://github.com/divnix/std/blob/main/cells/std/cli.nix"><code>cli</code></a>;</li>
-<li><a href="https://github.com/divnix/std/blob/main/cells/std/devshellProfiles.nix"><code>devshellProfiles</code></a>;</li>
-<li><a href="https://github.com/divnix/std/blob/main/cells/std/nixago.nix"><code>nixago</code></a>; and</li>
-<li><a href="https://github.com/divnix/std/blob/main/cells/std/lib/default.nix"><code>lib</code></a>.</li>
-</ul>
-</li>
-<li><strong>Targets:</strong> each Cell Block implements one or various targets.</li>
-<li><strong>Block Type Actions:</strong> some <strong>Targets</strong> expose <strong>Actions</strong> inferred from the <strong>Block Type</strong>.</li>
-</ul>
+<h2 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h2>
+<pre><code class="language-nix"># flake.nix
+{
+  description = &quot;Description for the project&quot;;
+
+  inputs = {
+    std.url = &quot;github:divnix/std&quot;;
+    nixpkgs.follows = &quot;std/nixpkgs&quot;;
+  };
+
+  outputs = { std, self, ...}: std.growOn {
+    # 1. Each folder inside `cellsFrom` becomes a &quot;Cell&quot;
+    #    Run for example: 'mkdir nix/mycell'
+    # 2. Each &lt;block&gt;.nix or &lt;block&gt;/default.nix within it becomes a &quot;Cell Block&quot;
+    #    Run for example: '$EDITOR nix/mycell/packages.nix' - see example content below
+    cellsFrom = ./nix;
+    # 3. Only blocks with these names [here: &quot;packages&quot; &amp; &quot;devshells&quot;] are picked up by Standard
+    cellBlocks = with std.blockTypes; [
+      (installables &quot;packages&quot; {ci.build = true;})
+      (devshells &quot;devshells&quot; {ci.build = true;})
+    ];
+  }
+  # 4. Run 'nix run github:divnix/std'
+  # 'growOn' ... Soil:
+  #  - here, compat for the Nix CLI
+  #  - but can use anything that produces flake outputs (e.g. flake-parts or flake-utils)
+  # 5. Run: nix run .
+  {
+    devShells = std.harvest self [&quot;&lt;mycell&gt;&quot; &quot;devshells&quot;];
+    packages = std.harvest self [&quot;&lt;mycell&gt;&quot; &quot;packages&quot;];
+  };
+}
+
+# nix/mycell/packages.nix
+{inputs, cell}: {
+  inherit (inputs.nixpkgs) hello;
+  default = cell.packages.hello;
+}
+</code></pre>
+<h2 id="this-repository"><a class="header" href="#this-repository">This Repository</a></h2>
+<p>This repository combines the above mentioned stack components into the ready-to-use Standard framework.
+It adds a curated collection of <a href="https://github.com/divnix/std/blob/main/src/blocktypes.nix"><strong>Block Types</strong></a> for DevOps use cases.
+It further dogfoods itself and implements utilities in its own <a href="https://github.com/divnix/std/tree/main/cells"><strong>Cells</strong></a>.</p>
+<h6 id="dogfooding"><a class="header" href="#dogfooding">Dogfooding</a></h6>
+<p><sub>Only renders in the <a href="https://std.divnix.com">Documentation</a>.</sub></p>
 <pre><code class="language-nix">{
   growOn,
   inputs,
@@ -269,44 +285,39 @@ growOn {
 </code></pre>
 <p><em>That’s it. <code>std.grow</code> is a “smart” importer of your <code>nix</code> code and is designed to keep boilerplate at bay.</em></p>
 <blockquote>
-<p><strong>TIP:</strong>
-Now, enter the devshell (<code>direnv allow</code>) and play with the <code>std</code> CLI/TUI companion.
-It answers one critical question to newcomers and veterans alike:</p>
+<p><strong>TIP:</strong></p>
+<ol>
+<li>Clone this repo <code>git clone https://github.com/divnix/std.git</code></li>
+<li>Install <code>direnv</code> &amp; inside the repo, do: <code>direnv allow</code> (first time takes a little longer)</li>
+<li>Run the TUI by entering <code>std</code> (first time takes a little longer)</li>
+</ol>
 <center><i>What can I <b>do</b> with this repository?</i></center>
 &emsp;
 </blockquote>
-<h3 id="documentation"><a class="header" href="#documentation">Documentation</a></h3>
-<p><em>Where can I find the documentation? → <a href="https://github.com/divnix/std/tree/main/docs"><code>./docs</code></a>.</em></p>
-<p><em>No, I mean rendered? → <a href="https://std.divnix.com">The Standard Book</a>.</em></p>
-<p>The documentation is structured around these axes:</p>
-<div class="table-wrapper"><table><thead><tr><th></th><th>For Study</th><th>For Work</th></tr></thead><tbody>
-<tr><td><strong>The Practice</strong></td><td>Tutorials</td><td>How-To Guides</td></tr>
-<tr><td><strong>The Theory</strong></td><td>Explanation</td><td>Reference</td></tr>
-</tbody></table>
-</div>
-<h3 id="licenses"><a class="header" href="#licenses">Licenses</a></h3>
-<p><em>What licenses are used? → <a href="https://github.com/divnix/std/blob/main/.reuse/dep5"><code>./.reuse/dep5</code></a>.</em></p>
-<p><em>And the usual copies? → <a href="https://github.com/divnix/std/tree/main/LICENSES"><code>./LICENSES</code></a>.</em></p>
-<h2 id="releases"><a class="header" href="#releases">Releases</a></h2>
-<p>You may find releases on the <a href="https://github.com/divnix/std/releases">GitHub Release Page</a> of this repository.</p>
-<h2 id="why"><a class="header" href="#why">Why?</a></h2>
-<ul>
-<li><a href="https://std.divnix.com/explain/why-nix.html">Why <code>nix</code>?</a></li>
-<li><a href="https://std.divnix.com/explain/why-std.html">Why <code>std</code>?</a></li>
-</ul>
-<h2 id="examples-in-the-wild"><a class="header" href="#examples-in-the-wild">Examples in the Wild</a></h2>
-<p>This <a href="https://github.com/search?p=7&amp;q=%22divnix%2Fstd%22+filename%3Aflake.nix&amp;type=Code">GitHub search query</a> holds a pretty good answer.</p>
-<h2 id="explainer-video-series"><a class="header" href="#explainer-video-series">Explainer Video Series</a></h2>
+<h2 id="documentation"><a class="header" href="#documentation">Documentation</a></h2>
+<p>The <a href="https://std.divnix.com">Documentation</a> is here.</p>
+<p>And here is the <a href="https://jmgilman.github.io/std-book/">Book</a>, a very good walk-trough. Start here!</p>
+<h6 id="video-series"><a class="header" href="#video-series">Video Series</a></h6>
 <ul>
 <li><a href="https://www.loom.com/share/cf9d5d1a10514d65bf6b8287f7ddc7d6">Std - Introduction</a></li>
 <li><a href="https://www.loom.com/share/04fa1d578fd044059b02c9c052d87b77">Std - Cell Blocks Deep Dive</a></li>
 <li><a href="https://www.loom.com/share/27d91aa1eac24bcaaaed18ea6d6d03ca">Std - Operables &amp; OCI</a></li>
 <li><a href="https://www.loom.com/share/5c1badd77ab641d3b8e256ddbba69042">Std - Nixago</a></li>
 </ul>
+<h6 id="examples-in-the-wild"><a class="header" href="#examples-in-the-wild">Examples in the Wild</a></h6>
+<p>This <a href="https://github.com/search?p=7&amp;q=%22divnix%2Fstd%22+filename%3Aflake.nix&amp;type=Code">GitHub search query</a> holds a pretty good answer.</p>
+<h2 id="why"><a class="header" href="#why">Why?</a></h2>
+<ul>
+<li><a href="https://std.divnix.com/explain/why-nix.html">Why <code>nix</code>?</a></li>
+<li><a href="https://std.divnix.com/explain/why-std.html">Why <code>std</code>?</a></li>
+</ul>
 <h2 id="contributions"><a class="header" href="#contributions">Contributions</a></h2>
-<p>Please enter the development environment:</p>
-<pre><code class="language-console">direnv allow
+<p>Please enter the contribution environment:</p>
+<pre><code class="language-console">direnv allow || nix develop -c &quot;$SHELL
 </code></pre>
+<h2 id="licenses"><a class="header" href="#licenses">Licenses</a></h2>
+<p><em>What licenses are used? → <a href="https://github.com/divnix/std/blob/main/.reuse/dep5"><code>./.reuse/dep5</code></a>.</em></p>
+<p><em>And the usual copies? → <a href="https://github.com/divnix/std/tree/main/LICENSES"><code>./LICENSES</code></a>.</em></p>
 <hr />
 
                     </main>
