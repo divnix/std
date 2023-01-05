@@ -207,7 +207,8 @@ But hey! It means: we can progress together!</p>
     nixpkgs.follows = &quot;std/nixpkgs&quot;;
   };
 
-  outputs = { std, self, ...}: std.growOn {
+  outputs = { std, self, ...} @ inputs: std.growOn {
+    inherit inputs;
     # 1. Each folder inside `cellsFrom` becomes a &quot;Cell&quot;
     #    Run for example: 'mkdir nix/mycell'
     # 2. Each &lt;block&gt;.nix or &lt;block&gt;/default.nix within it becomes a &quot;Cell Block&quot;
