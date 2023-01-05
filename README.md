@@ -100,6 +100,7 @@ But hey! It means: we can progress together!
     #    Run for example: '$EDITOR nix/mycell/packages.nix' - see example content below
     cellsFrom = ./nix;
     # 3. Only blocks with these names [here: "packages" & "devshells"] are picked up by Standard
+    #    It's a bit like the output type system of your flake project (hint: CLI & TUI!!)
     cellBlocks = with std.blockTypes; [
       (installables "packages" {ci.build = true;})
       (devshells "devshells" {ci.build = true;})
