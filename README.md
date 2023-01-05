@@ -20,6 +20,15 @@ and many more amazing people (see end of file for a full list)._
 
 ---
 
+[Standard][std] is a nifty DevOps framework that
+enables an efficient SDLC with the power of [Nix][nix] via [Flakes][nix-flakes].
+
+It organizes and disciplines your Nix and thereby speeds you up.
+It also comes with great horizontal integrations of high
+quality vertical DevOps tooling crafted by the [Nix Ecosystem][ecosystem].
+
+---
+
 [![Support room on Matrix](https://img.shields.io/matrix/std-nix:matrix.org?server_fqdn=matrix.org&style=for-the-badge)](https://matrix.to/#/#std-nix:matrix.org)
 
 ###### Stack
@@ -40,13 +49,7 @@ and many more amazing people (see end of file for a full list)._
 [![HerculesCI FlakeParts](https://img.shields.io/badge/HerculesCI-FlakeParts-lightgrey?style=for-the-badge&logo=NixOS)](https://github.com/hercules-ci/flake-parts)
 [![Cachix Cache](https://img.shields.io/badge/Cachix-Cache-blue?style=for-the-badge&logo=NixOS)](https://github.com/cachix)
 
----
-
-[Standard][std] is THE opinionated, generic,
-[Nix][nix] [Flakes][nix-flakes] framework
-that will allow you to grow and cultivate
-Nix Cells with ease. Nix Cells are the fine
-art of code organization using flakes.
+###### The Standard Story
 
 _Once_ your `nix` code has evolved into a giant
 ball of spaghetti and nobody else except a few
@@ -70,37 +73,57 @@ _What can I **do** with this repository?_
 
 ---
 
-## The `std` repository itself
+## Getting Started
 
-In this repository, you'll find, both, the _implementation_ and an _application_ of [Standard][std].
+```nix
+# flake.nix
+{
+  description = "Description for the project";
 
-### Implementation
+  inputs = {
+    std.url = "github:divnix/std";
+    nixpkgs.follows = "std/nixpkgs";
+  };
 
-_What is `std`? &mdash; The well-commented `nix` code &rarr; [`./src`][src]._
+  outputs = { std, self, ...}: std.growOn {
+    # 1. Each folder inside `cellsFrom` becomes a "Cell"
+    #    Run for example: 'mkdir nix/mycell'
+    # 2. Each <block>.nix or <block>/default.nix within it becomes a "Cell Block"
+    #    Run for example: '$EDITOR nix/mycell/packages.nix' - see example content below
+    cellsFrom = ./nix;
+    # 3. Only blocks with these names [here: "packages" & "devshells"] are picked up by Standard
+    cellBlocks = with std.blockTypes; [
+      (installables "packages" {ci.build = true;})
+      (devshells "devshells" {ci.build = true;})
+    ];
+  }
+  # 4. Run 'nix run github:divnix/std'
+  # 'growOn' ... Soil:
+  #  - here, compat for the Nix CLI
+  #  - but can use anything that produces flake outputs (e.g. flake-parts or flake-utils)
+  # 5. Run: nix run .
+  {
+    devShells = std.harvest self ["<mycell>" "devshells"];
+    packages = std.harvest self ["<mycell>" "packages"];
+  };
+}
 
-That folder implements:
+# nix/mycell/packages.nix
+{inputs, cell}: {
+  inherit (inputs.nixpkgs) hello;
+  default = cell.packages.hello;
+}
+```
 
-- [`std.grow`][grow]: the "smart" importer
-- [`std.growOn`][grow-on]: `std.grow`-variant that recursively merges all additional variadic arguments
-- [`std.harvest`][harvest]: harvest your **Targets** into a different shape for compatibility
-- [`std.winnow`][winnow]: when more advanced harvesting is required, use this to harvest _and_ filter the output
-- [`std.pick`][pick]: pick your **Targets** into a different shape without system scope
-- [`std.incl`][incl]: a straight-forward source filter with additive semantics
-- [`std.deSystemize`][de-systemize]: a helper to hide `system` from plain sight
-- [`std.<blockType>`][blocktypes]: builtin **(Cell) Block Types** that implement **(Cell Block Type) Actions**
+## This Repository
 
-### Application
+This repository combines the above mentioned stack components into the ready-to-use Standard framework.
+It adds a curated collection of [**Block Types**][blocktypes] for DevOps use cases.
+It further dogfoods itself and implements utilities in its own [**Cells**][cells].
 
-_Dog-fooding? &rarr; [`./cells`][cells]._
+###### Dogfooding
 
-- **Cells:** [`./cells`][cells] mainly implements [`std`][cell-std].
-- **Cell Blocks:** [`std`][cell-std] implements:
-  - [`cli`][block-cli];
-  - [`devshellProfiles`][block-devshellprofiles];
-  - [`nixago`][block-nixago]; and
-  - [`lib`][block-lib].
-- **Targets:** each Cell Block implements one or various targets.
-- **Block Type Actions:** some **Targets** expose **Actions** inferred from the **Block Type**.
+<sub>Only renders in the [Documentation][documentation].</sub>
 
 ```nix
 {{#include ../dogfood.nix}}
@@ -109,91 +132,61 @@ _Dog-fooding? &rarr; [`./cells`][cells]._
 _That's it. `std.grow` is a "smart" importer of your `nix` code and is designed to keep boilerplate at bay._
 
 > **TIP:**
-> Now, enter the devshell (`direnv allow`) and play with the `std` CLI/TUI companion.
-> It answers one critical question to newcomers and veterans alike:
+>
+> 1. Clone this repo `git clone https://github.com/divnix/std.git`
+> 2. Install `direnv` & inside the repo, do: `direnv allow` (first time takes a little longer)
+> 3. Run the TUI by entering `std` (first time takes a little longer)
 >
 > <center><i>What can I <b>do</b> with this repository?</i></center>
 > &emsp;
 
-### Documentation
+## Documentation
 
-_Where can I find the documentation? &rarr; [`./docs`][docs]._
+The [Documentation][documentation] is here.
 
-_No, I mean rendered? &rarr; [The Standard Book][book]._
+And here is the [Book][book], a very good walk-trough. Start here!
 
-The documentation is structured around these axes:
-
-|                  | For Study   | For Work      |
-| ---------------- | ----------- | ------------- |
-| **The Practice** | Tutorials   | How-To Guides |
-| **The Theory**   | Explanation | Reference     |
-
-### Licenses
-
-_What licenses are used? &rarr; [`./.reuse/dep5`][licensing]._
-
-_And the usual copies? &rarr; [`./LICENSES`][licenses]._
-
-## Releases
-
-You may find releases on the [GitHub Release Page][releases] of this repository.
-
-## Why?
-
-- [Why `nix`?][why-nix]
-- [Why `std`?][why-std]
-
-## Examples in the Wild
-
-This [GitHub search query](https://github.com/search?p=7&q=%22divnix%2Fstd%22+filename%3Aflake.nix&type=Code) holds a pretty good answer.
-
-## Explainer Video Series
+###### Video Series
 
 - [Std - Introduction](https://www.loom.com/share/cf9d5d1a10514d65bf6b8287f7ddc7d6)
 - [Std - Cell Blocks Deep Dive](https://www.loom.com/share/04fa1d578fd044059b02c9c052d87b77)
 - [Std - Operables & OCI](https://www.loom.com/share/27d91aa1eac24bcaaaed18ea6d6d03ca)
 - [Std - Nixago](https://www.loom.com/share/5c1badd77ab641d3b8e256ddbba69042)
 
+###### Examples in the Wild
+
+This [GitHub search query](https://github.com/search?p=7&q=%22divnix%2Fstd%22+filename%3Aflake.nix&type=Code) holds a pretty good answer.
+
+## Why?
+
+- [Why `nix`?][why-nix]
+- [Why `std`?][why-std]
+
 ## Contributions
 
-Please enter the development environment:
+Please enter the contribution environment:
 
 ```console
-direnv allow
+direnv allow || nix develop -c "$SHELL
 ```
+
+## Licenses
+
+_What licenses are used? &rarr; [`./.reuse/dep5`][licensing]._
+
+_And the usual copies? &rarr; [`./LICENSES`][licenses]._
 
 ---
 
-[cell-std]: https://github.com/divnix/std/tree/main/cells/std
-[block-cli]: https://github.com/divnix/std/blob/main/cells/std/cli.nix
-[block-devshellprofiles]: https://github.com/divnix/std/blob/main/cells/std/devshellProfiles.nix
-[block-nixago]: https://github.com/divnix/std/blob/main/cells/std/nixago.nix
-[block-lib]: https://github.com/divnix/std/blob/main/cells/std/lib/default.nix
 [cells]: https://github.com/divnix/std/tree/main/cells
-[src]: https://github.com/divnix/std/tree/main/src
-[docs]: https://github.com/divnix/std/tree/main/docs
-[book]: https://std.divnix.com
-[releases]: https://github.com/divnix/std/releases
+[documentation]: https://std.divnix.com
+[book]: https://jmgilman.github.io/std-book/
 [licensing]: https://github.com/divnix/std/blob/main/.reuse/dep5
 [licenses]: https://github.com/divnix/std/tree/main/LICENSES
-[grow]: https://github.com/divnix/std/blob/main/src/grow.nix
-[grow-on]: https://github.com/divnix/std/blob/main/src/grow-on.nix
-[harvest]: https://github.com/divnix/std/blob/main/src/harvest.nix
-[winnow]: https://github.com/divnix/std/blob/main/src/winnow.nix
-[pick]: https://github.com/divnix/std/blob/main/src/pick.nix
-[incl]: https://github.com/divnix/incl
-[de-systemize]: https://github.com/divnix/nosys/blob/master/flake.nix
 [blocktypes]: https://github.com/divnix/std/blob/main/src/blocktypes.nix
-[flake]: https://github.com/divnix/std/blob/main/flake.nix
-[yants]: https://github.com/divnix/yants
-[bitte-cells]: https://github.com/input-output-hk/bitte-cells
-[cardano-world]: https://github.com/input-output-hk/cardano-world
-[divnix-hive]: https://github.com/divnix/hive
-[hardenednixos-profile]: https://github.com/hardenedlinux/HardenedNixOS-Profile
-[iog-tullia]: https://github.com/input-output-hk/tullia
-[julia2nix]: https://github.com/JuliaCN/Julia2Nix.jl
 [nix-flakes]: https://nixos.wiki/wiki/Flakes
 [nix]: https://nixos.org/manual/nix/unstable
 [std]: https://github.com/divnix/std
 [why-std]: https://std.divnix.com/explain/why-std.html
 [why-nix]: https://std.divnix.com/explain/why-nix.html
+[ecosystem]: https://discourse.nixos.org
