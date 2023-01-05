@@ -286,13 +286,15 @@ growOn {
     (blockTypes.data &quot;data&quot;)
     (blockTypes.files &quot;files&quot;)
   ];
-} {
+}
+# Soil (&quot;compatibile with the entire world&quot;)
+{
   devShells = harvest inputs.self [&quot;_automation&quot; &quot;devshells&quot;];
   packages = harvest inputs.self [[&quot;std&quot; &quot;cli&quot;] [&quot;std&quot; &quot;packages&quot;]];
   templates = pick inputs.self [&quot;presets&quot; &quot;templates&quot;];
 }
 </code></pre>
-<p><em>That’s it. <code>std.grow</code> is a “smart” importer of your <code>nix</code> code and is designed to keep boilerplate at bay.</em></p>
+<p><em>That’s it. <code>std.grow</code> is a “smart” importer of your <code>nix</code> code and is designed to keep boilerplate at bay. In the so called “Soil” compatibility layer, you can do whatever your heart desires. For example put <code>flake-utils</code> or <code>flake-parts</code> patterns here. Or, as in the above example, just make your stuff play nicely with the Nix CLI.</em></p>
 <blockquote>
 <p><strong>TIP:</strong></p>
 <ol>
