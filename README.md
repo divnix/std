@@ -71,6 +71,14 @@ your team and community will finally find a
 _canonical_ answer to the everlasting question:
 _What can I **do** with this repository?_
 
+###### The Standard NixOS Story (in case you wondered)
+
+_Once_ you got fed up with `divnix/digga`
+or a disorganized personal configuration,
+please head straight over to [`divnix/hive`][hive]
+and join the chat, there. It's work in progress.
+But hey! It means: we can progress together!
+
 ---
 
 ## Getting Started
@@ -190,3 +198,4 @@ _And the usual copies? &rarr; [`./LICENSES`][licenses]._
 [why-std]: https://std.divnix.com/explain/why-std.html
 [why-nix]: https://std.divnix.com/explain/why-nix.html
 [ecosystem]: https://discourse.nixos.org
+[hive]: https://github.com/divnix/hive
