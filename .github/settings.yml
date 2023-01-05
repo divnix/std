@@ -63,7 +63,8 @@ repository:
   allow_squash_merge: true
   default_branch: main
   delete_branch_on_merge: true
-  description: The Nix Flakes framework for perfectionists with deadlines [maintainer=@blaggacao]
+  description: A DevOps framework for the SDLC with the power of Nix and Flakes. Good
+    for keeping deadlines!
   homepage: https://std.divnix.com
   name: std
-  topics: nix, nix-flakes, devops
+  topics: nix, nix-flakes, devops, sdlc

@@ -52,8 +52,8 @@ in {
       repository = {
         name = "std";
         homepage = "https://std.divnix.com";
-        description = "The Nix Flakes framework for perfectionists with deadlines [maintainer=@blaggacao]";
-        topics = "nix, nix-flakes, devops";
+        description = "A DevOps framework for the SDLC with the power of Nix and Flakes. Good for keeping deadlines!";
+        topics = "nix, nix-flakes, devops, sdlc";
         default_branch = "main";
         allow_squash_merge = true;
         allow_merge_commit = false;
