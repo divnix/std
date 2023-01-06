@@ -43,11 +43,13 @@ quality vertical DevOps tooling crafted by the [Nix Ecosystem][ecosystem].
 ###### Integrations
 
 [![Numtide Devshell](https://img.shields.io/badge/Numtide-Devshell-yellowgreen?style=for-the-badge&logo=NixOS)](https://github.com/numtide/devshell)
+[![Numtide Treefmt](https://img.shields.io/badge/Numtide-Treefmt-yellow?style=for-the-badge&logo=NixOS)](https://github.com/numtide/treefmt)
 [![Nlewo Nix2Container](https://img.shields.io/badge/Nlewo-Nix2Container-blue?style=for-the-badge&logo=NixOS)](https://github.com/nlewo/nix2container)
 [![Fluidattacks Makes](https://img.shields.io/badge/Fluidattacks-Makes-blue?style=for-the-badge&logo=NixOS)](https://github.com/fluidattacks/makes)
 [![Astro MicroVM](https://img.shields.io/badge/Astro-MicroVM-blue?style=for-the-badge&logo=NixOS)](https://github.com/astro/microvm.nix)
 [![HerculesCI FlakeParts](https://img.shields.io/badge/HerculesCI-FlakeParts-lightgrey?style=for-the-badge&logo=NixOS)](https://github.com/hercules-ci/flake-parts)
 [![Cachix Cache](https://img.shields.io/badge/Cachix-Cache-blue?style=for-the-badge&logo=NixOS)](https://github.com/cachix)
+[![Nix-Community Nixago](https://img.shields.io/badge/NixCommunity-Nixago-yellow?style=for-the-badge&logo=NixOS)](https://github.com/nix-community/nixago)
 
 ###### The Standard Story
 
