@@ -264,18 +264,20 @@
               else [];
             ci' = let
               f = set: let
-                action = inputs.self.__std.actions.${system}.${set.cell}.${set.block}.${set.name}.${set.action} or null;
+                target = inputs.self.${system}.${set.cell}.${set.block}.${set.name};
+                action = inputs.self.__std.actions.${system}.${set.cell}.${set.block}.${set.name}.${set.action};
               in
-                set
-                // {
-                  targetDrv = action.targetDrv or (inputs.self.${system}.${set.cell}.${set.block}.${set.name}.drvPath or null);
-                  actionDrv = action.drvPath or null;
-                }
-                // (
-                  if action ? proviso
-                  then {inherit (action) proviso;}
-                  else {}
-                );
+                assert l.assertMsg (l.isDerivation action) "action must be a derivation. Please file a bug in divnix/std if you hit this line.";
+                  set
+                  // {
+                    targetDrv = action.targetDrv or target.drvPath or null; # can be null: nomad mainfests only hold data
+                    actionDrv = action.drvPath;
+                  }
+                  // (
+                    if action ? proviso
+                    then {inherit (action) proviso;}
+                    else {}
+                  );
             in
               map f ci;
           in {
