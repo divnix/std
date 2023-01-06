@@ -9,6 +9,7 @@ in
       # ${out}
       nix build ${contextFreeDrv}
     '';
+    targetDrv = out.drvPath;
     proviso =
       # bash
       ''
