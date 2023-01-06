@@ -2,10 +2,17 @@
   mkCommand = system: type: args:
     args
     // {
-      command = (nixpkgs.legacyPackages.${system}.writeShellScript "${type}-${args.name}" args.command).overrideAttrs (self:
-        nixpkgs.lib.optionalAttrs (args ? proviso) {
-          passthru = self.passthru or {} // {proviso = builtins.toFile "${args.name}-proviso" args.proviso;};
-        });
+      command = (nixpkgs.legacyPackages.${system}.writeShellScript "${type}-${args.name}" args.command).overrideAttrs (self: {
+        passthru =
+          self.passthru
+          or {}
+          // nixpkgs.lib.optionalAttrs (args ? proviso) {
+            proviso = builtins.toFile "${args.name}-proviso" args.proviso;
+          }
+          // nixpkgs.lib.optionalAttrs (args ? targetDrv) {
+            inherit (args) targetDrv;
+          };
+      });
     };
 in {
   runnables = import ./blocktypes/runnables.nix {inherit nixpkgs mkCommand;};
