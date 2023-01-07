@@ -10,13 +10,13 @@ This design document can only be altered through an RFC process.
 
 ## Overview
 
-Standard is a _kitchen sink_ to bootstrap and sustain an _efficient_ Software Delivery Lifecycle (SDLC) with the power of Nix and Flakes.
-_Kitchen sink_, here, is a colloquial word for _Horizontal Integration Framework_ which integrates _vertical_ tooling, that is designed around the linux philosophy of doing one thing and to it well.
-The integration target, thereby, is the _efficient_ SDLC end-to-end process for which we offer suitable and well-integrated tools and best practices.
+Standard is a _framework_ to bootstrap and sustain an _efficient_ Software Delivery Lifecycle (SDLC) with the power of Nix and Flakes.
+In particular, Standard is a _Horizontal Integration Framework_ which integrates _vertical_ tooling, that is designed around the linux philosophy of doing one thing and to it well.
+The integration target, thereby, is the _efficient_ SDLC end-to-end process for which we offer well-integrated tools and best practices.
 An _efficient_ SDLC is characterized by two things.
 Firstly, an adequate _lead time_ which is the amount of time it takes to set up an initial version of the software delivery pipeline.
 It needs to be "adequate" rather than "just fast", because it takes place in the context of a team and thus encompasses learning and onboarding activities.
-Rather than optimizing for speed, these need optimization for success, above all.k
+Rather than optimizing for speed, these need optimization for success, above all.
 Secondly, an efficient SDLC is characterized by short _cycle times_ which is the amount of time it takes for a commit to be shipped to a production environment.
 Along this journey, we encounter aspects of the development, or in the broader sense, the _contribution_ environment.
 We also encounter the packaging pipeline that produces our distributable artifacts.
@@ -25,9 +25,7 @@ The goal of Standard is to optimize the critical path along this process to achi
 
 ## Scope
 
-The SDLC end-to-end process can be subdivided in roughly three process regions with different overall shapes and characteristics.
-That being said, it is important to note, that the shapeshifting nature across these process regions is by no means a valid justification to _break up_ the end-to-end perspective along these not-actual-boundaries.
-The process ownership of this process is fundamentally end-to-end and any attempts at optimization needs to honor these natural end-to-end boundaries.
+The SDLC end-to-end process can be subdivided (not broken up!) in roughly three process regions with different overall shapes and characteristics.
 
 The stipulated process regions are:
 
@@ -35,7 +33,7 @@ The stipulated process regions are:
 - **Packaging Pipeline** which roughly covers _commit-to-distribution_. It is typically set up once and then orchestrated by a CI control loop.
 - **Continuous 'X' within the Application Lifecycle Management** which roughly covers _distribution-to-next-rollout_.
 
-While Standard is fundamentally concerned with optimizing across the end-to-end process, we also limit the scope inside this project repository to its core value proposition and where we cannot leverage other ecosystem projects.
+While Standard is fundamentally concerned with optimizing across the end-to-end process, we also limit the scope inside this project repository for practical reasons.
 Therefor, we opt to delegate the **Contribution Environment** to a trusted project with an appropriate scope in the broader Nix Community, while employing community outreach to try to ensure our optimization targets are met or at least not accidentally sabotaged.
 On the other hand, we opt to delegate **Continuous 'X' within the Application Lifecycle Management** by dovetailing with more appropriate initiatives of adjacent ecosystems, such as for example [OAM](https://OAM.dev), which has developed an interesting model to reflect role boundaries naturally in their code interfaces.
 
@@ -43,7 +41,7 @@ On the other hand, we opt to delegate **Continuous 'X' within the Application Li
 
 The project is rooted deeply inside the Nix Ecosystem, but it strives to become a portal to make the powers of a store based reproducible packaging system readily available and palatable to colleagues and friends.
 
-- _Nix where nix due_ &mdash; a Nix maximalist approach may be an innate condition to some of us, but trying to be a portal we deeply recognize and value other more profane perspectives and don't dismiss them as ignorance.
+- _Use nix only where it is best suited_ &mdash; a Nix maximalist approach may be an innate condition to some of us, but trying to be a portal we deeply recognize and value other perspectives and don't dismiss them as ignorance.
 - _Disrupt where disruption is necessary_ &mdash; to our chagrin, the Nix ecosystem is quite a monotheistic silo. Therefore, we don't shy away from deviating from its widely accepted norms and standards when we feel that deviation has a greater chance at furthering the ideas of being a portal.
 - _Look left, right, above and beyond_ &mdash; our end-to-end perspective commands us to actively seek and reach out to other projects and ecosystems to compose the best possible value chain.
 
@@ -88,7 +86,7 @@ Some library functions and integrations may be assorted outside of these organiz
 
 ### Block Type Library
 
-As mentioned in the context of `paisano` above, Standard exploits the Block Type concept with a focus on providing enriched output types for the SDLC & ALM.
+As mentioned in the context of `paisano` above, Standard exploits the Block Type concept with a focus on providing enriched output types for the SDLC.
 
 For example, it would be redundant in Standard to codify how to build and upload a container image by hand, since the container output type is already fully aware in a highly optimized fashion of these semantics.
 As another example, it would be redundant to encode deployment semantics of a terraform deployment declaration, since a (future) terraform type can be made fully aware in a highly optimized fashion (i.e. securely store state) of the required semantics.
