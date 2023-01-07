@@ -15,8 +15,8 @@ Please also complement this with the high level overview in the [Architecture](.
 - Setup Processes
 - The actual SDLC Cycle
 
-While an instance of the actual SDLC process inside the boundaries of Standard's current scope is easy to break down into _eval_, _build_ and _effect/action_ and easy to measure with the _cycle time_ metric.
-The Setup Process is where adoption success or failure may be determined alongside:
+While an instance of the actual SDLC process inside the boundaries of Standard's current scope is easy to break down into _eval_, _build_ and _effect/action_ and easy to measure with the _cycle time_ metric,
+the Setup Process is where adoption success or failure may be determined alongside:
 
 - Provided Documentation
 - Shared Mental Models
