@@ -408,6 +408,7 @@
   in
     res.output
     // {
+      __std.__schema = "v0";
       __std.ci = l.listToAttrs res.ci;
       __std.ci' = l.listToAttrs res.ci';
       __std.init = l.listToAttrs res.init;
