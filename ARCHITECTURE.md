@@ -33,6 +33,12 @@ The stipulated process regions are:
 - **Packaging Pipeline** which roughly covers _commit-to-distribution_. It is typically set up once and then orchestrated by a CI control loop.
 - **Continuous 'X' within the Application Lifecycle Management** which roughly covers _distribution-to-next-rollout_.
 
+> Note:
+>
+> We use the term Contribution Environment to mean _Development Environment Plus_.
+> Compared to "development environment", it explicitely encapsulates aspects of contribution and integration in the broader process flow.
+> If you prefer, you can think "Development Environment" for practical purposes.
+
 While Standard is fundamentally concerned with optimizing across the end-to-end process, we also limit the scope inside this project repository for practical reasons.
 Therefor, we opt to delegate the **Contribution Environment** to a trusted project with an appropriate scope in the broader Nix Community, while employing community outreach to try to ensure our optimization targets are met or at least not accidentally sabotaged.
 On the other hand, we opt to delegate **Continuous 'X' within the Application Lifecycle Management** by dovetailing with more appropriate initiatives of adjacent ecosystems, such as for example [OAM](https://OAM.dev), which has developed an interesting model to reflect role boundaries naturally in their code interfaces.
