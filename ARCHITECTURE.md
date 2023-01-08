@@ -10,14 +10,14 @@ This design document can only be altered through an RFC process.
 
 ## Overview
 
-Standard is a _framework_ to bootstrap and sustain an _efficient_ Software Delivery Lifecycle (SDLC) with the power of Nix and Flakes.
+Standard is a _framework_ to bootstrap and sustain the automatable sections of the Software Delivery Lifecycle (SDLC) _efficiently_ with the power of Nix and Flakes.
 In particular, Standard is a _Horizontal Integration Framework_ which integrates _vertical_ tooling, that is designed around the linux philosophy of doing one thing and to it well.
-The integration target, thereby, is the _efficient_ SDLC end-to-end process for which we offer well-integrated tools and best practices.
-An _efficient_ SDLC is characterized by two things.
+The integration target, thereby, are the end-to-end automatable sections of the SDLC process for which we offer well-integrated tools and best practices.
+_Efficient_ automatable sections of the SDLC are characterized by two things.
 Firstly, an adequate _lead time_ which is the amount of time it takes to set up an initial version of the software delivery pipeline.
 It needs to be "adequate" rather than "just fast", because it takes place in the context of a team and thus encompasses learning and onboarding activities.
 Rather than optimizing for speed, these need optimization for success, above all.
-Secondly, an efficient SDLC is characterized by short _cycle times_ which is the amount of time it takes for a commit to be shipped to a production environment.
+Secondly, efficient automatable sections of the SDLC are characterized by short _cycle times_ which is the amount of time it takes for a commit to be shipped to a production environment.
 Along this journey, we encounter aspects of the development, or in the broader sense, the _contribution_ environment.
 We also encounter the packaging pipeline that produces our distributable artifacts.
 We encounter Continuous Building & Integration, Continuous Deployment as well as Continuous Observability and Discovery.
@@ -25,7 +25,7 @@ The goal of Standard is to optimize the critical path along this process to achi
 
 ## Scope
 
-The SDLC end-to-end process can be subdivided (not broken up!) in roughly three process regions with different overall shapes and characteristics.
+The automatable sections of the SDLC end-to-end process can be subdivided (not broken up!) in roughly three process regions with different overall shapes and characteristics.
 
 The stipulated process regions are:
 
@@ -47,7 +47,7 @@ The project is rooted deeply inside the Nix Ecosystem, but it strives to become 
 
 ## Goals
 
-- _Complete_: Standard should make a complete offer for setting up and running the SDLC.
+- _Complete_: Standard should make a complete offer for setting up and running the automatbale sections of the SDLC.
 - _Optimized_: Standard should optimize for agent ("make your day-to-day life easier") and principle ("quick time to market"), alike.
 - _Integrated_: Standard should provide the best possible integration experience across a well-curated assortment of verticals.
 
@@ -73,7 +73,7 @@ From the perspective of one component, all external accessor interfaces are unif
 On the flip side, by choosing high level and, above all, stable accessors, productivity may increase.
 
 The third principle allows for keeping code DRY.
-There are a finite amount of artifact categories of relevance across the SDLC, such as binary packages or OCI images, among others.
+There are a finite amount of artifact categories of relevance, such as binary packages or OCI images, among others.
 The `paisano` concept of so called Block Types describes these artifact and outputs types in a generic manner and attaches well-known semantics to their handling.
 
 The first two principles combined, also yield collateral benefits when context switching between two standardized benefits, by lowering the amount of relearning effort required for each context switch as the fundamental organizational principles are stable across projects.
