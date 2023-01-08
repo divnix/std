@@ -57,6 +57,20 @@ The project is rooted deeply inside the Nix Ecosystem, but it strives to become 
 - _Optimized_: Standard should optimize for agent ("make your day-to-day life easier") and principle ("quick time to market"), alike.
 - _Integrated_: Standard should provide the best possible integration experience across a well-curated assortment of verticals.
 
+## Value Matrix
+
+In this section, we'll explain how Standard intents to create value. We'll make use of a simple value matrix with simple scores of 1 to 5.
+
+|                                                  | Software Sponsor [Principal] | Provider of SDLC Automation [Agent] | Consumer of SDLC Automation [Agent] |
+| ------------------------------------------------ | :--------------------------: | :---------------------------------: | :---------------------------------: |
+| Productivity                                     |        \* \* \* \* \*        |           \* \* \* \* \*            |              \* \* \*               |
+| Code Organization                                |           \* \* \*           |           \* \* \* \* \*            |              \* \* \*               |
+| Mental Model & Learning                          |         \* \* \* \*          |           \* \* \* \* \*            |             \* \* \* \*             |
+| Batteries Included                               |              \*              |           \* \* \* \* \*            |                 \*                  |
+| Communtiy and Ecosystem                          |            \* \*             |           \* \* \* \* \*            |              \* \* \*               |
+| Reproducability & Software Supply Chain Security |        \* \* \* \* \*        |           \* \* \* \* \*            |                \* \*                |
+| Modularity & Incremental Adoption                |           \* \* \*           |              \* \* \*               |           \* \* \* \* \*            |
+
 ## Architecture
 
 ### Code Organization
