@@ -96,12 +96,12 @@ The third principle allows for keeping code DRY.
 There are a finite amount of artifact categories of relevance, such as binary packages or OCI images, among others.
 The `paisano` concept of so called Block Types describes these artifact and outputs types in a generic manner and attaches well-known semantics to their handling.
 
-The first two principles combined, also yield collateral benefits when context switching between two standardized benefits, by lowering the amount of relearning effort required for each context switch as the fundamental organizational principles are stable across projects.
+The first two principles combined, also yield collateral benefits when context switching between two standardized projects, by lowering the amount of relearning required as the fundamental organizational principles are stable.
 The last principle opens up a realm of possibilities from user interfaces to pipeline automations that we pretend to exploit further down.
 
 ### Function Library
 
-Alongside the **Packaging Pipeline**, and by dogfooding its code organization principles, Standard provides a curated assortment of library functions and integrations that users are encouraged to adopt in accordance with their concrete use case for productivity and to build on the shoulders of the entire Standard community.
+Alongside the **Packaging Pipeline**, and by dogfooding its code organization principles, Standard provides a curated assortment of library functions and integrations that users can adopt in accordance with their needs encouraged by the promise of hightened productivity or the peace of mind to build on the shoulders of the entire Standard community.
 Some library functions and integrations may be assorted outside of these organizational principles as otherwise unspecial top level shorthands.
 
 ### Block Type Library
