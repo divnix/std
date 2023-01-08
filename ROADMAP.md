@@ -10,10 +10,10 @@ This roadmap gives an overview of the short and mid term direction that the proj
 We've identified a couple of deliverable categories that should help us better understand the work spectrum associated with the project.
 Please also complement this with the high level overview in the [Architecture](./ARCHITECTURE.md).
 
-##### Process Categories alongside the SDLC
+##### Process Categories alongside the (automatable sections of the) SDLC
 
 - Setup Processes
-- The actual SDLC Cycle
+- The actual automatable parts of the SDLC Cycle
 
 While an instance of the actual SDLC process inside the boundaries of Standard's current scope is easy to break down into _eval_, _build_ and _effect/action_ and easy to measure with the _cycle time_ metric,
 the Setup Process is where adoption success or failure may be determined alongside:
