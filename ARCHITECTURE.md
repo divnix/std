@@ -14,13 +14,18 @@ Standard is a _framework_ to bootstrap and sustain the automatable sections of t
 In particular, Standard is a _Horizontal Integration Framework_ which integrates _vertical_ tooling, that is designed around the linux philosophy of doing one thing and to it well.
 The integration target, thereby, are the end-to-end automatable sections of the SDLC process for which we offer well-integrated tools and best practices.
 _Efficient_ automatable sections of the SDLC are characterized by two things.
+
 Firstly, an adequate _lead time_ which is the amount of time it takes to set up an initial version of the software delivery pipeline.
-It needs to be "adequate" rather than "just fast", because it takes place in the context of a team and thus encompasses learning and onboarding activities.
-Rather than optimizing for speed, these need optimization for success, above all.
+It needs to be _adequate_ rather than _just fast_, as it takes place in the context of a team and thus encompasses learning and onboarding activities.
+Rather than optimizing for speed, these need optimization for success.
+
 Secondly, efficient automatable sections of the SDLC are characterized by short _cycle times_ which is the amount of time it takes for a commit to be shipped to a production environment.
-Along this journey, we encounter aspects of the development, or in the broader sense, the _contribution_ environment.
-We also encounter the packaging pipeline that produces our distributable artifacts.
-We encounter Continuous Building & Integration, Continuous Deployment as well as Continuous Observability and Discovery.
+Along this journey, we encounter our scope (more on it below):
+
+- aspects of the _contribution_ environment;
+- the packaging pipeline that produces our distributable artifacts;
+- Continuous Building & Integration, Continuous Deployment as well as Continuous Observability and Discovery.
+
 The goal of Standard is to optimize the critical path along this process to achieve superior _cycle times_ through the powers of Nix and Flakes when compared to any other similar framework that doesn't recognize the intrinsic value of _reproducability_.
 
 ## Scope
