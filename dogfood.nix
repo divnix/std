@@ -32,7 +32,7 @@ growOn {
     # _automation
     (blockTypes.devshells "devshells" {ci.build = true;})
     (blockTypes.nixago "nixago")
-    (blockTypes.containers "containers" {ci.publish = true;})
+    (blockTypes.containers "containers")
     # (blockTypes.tasks "tasks") # TODO: implement properly
 
     # _tests
