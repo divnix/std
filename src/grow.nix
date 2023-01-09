@@ -406,28 +406,29 @@
       ];
     res = accumulate (l.map loadOutputFor Systems);
   in
-    res.output
-    // {
-      __std.__schema = "v0";
-      __std.ci = l.listToAttrs res.ci;
-      __std.ci' = l.listToAttrs res.ci';
-      __std.init = l.listToAttrs res.init;
-      __std.actions = res.actions;
-      __std.direnv_lib = ../direnv_lib.sh;
-      __std.nixConfig = let
-        # FIXME: refactor when merged NixOS/nixpkgs#203999
-        nixConfig = l.generators.toKeyValue {
-          mkKeyValue = l.generators.mkKeyValueDefault {
-            mkValueString = v:
-              if l.isList v
-              then l.concatStringsSep " " v
-              else if (l.isPath v || v ? __toString)
-              then toString v
-              else l.generators.mkValueStringDefault {} v;
-          } " = ";
-        };
-      in
-        nixConfig (import "${inputs.self}/flake.nix").nixConfig or {};
-    };
+    assert l.assertMsg ((l.compareVersions l.nixVersion "2.9.2") >= 0) "Go back to square one: you'll need a newer nix version (minimum: v2.9.2).";
+      res.output
+      // {
+        __std.__schema = "v0";
+        __std.ci = l.listToAttrs res.ci;
+        __std.ci' = l.listToAttrs res.ci';
+        __std.init = l.listToAttrs res.init;
+        __std.actions = res.actions;
+        __std.direnv_lib = ../direnv_lib.sh;
+        __std.nixConfig = let
+          # FIXME: refactor when merged NixOS/nixpkgs#203999
+          nixConfig = l.generators.toKeyValue {
+            mkKeyValue = l.generators.mkKeyValueDefault {
+              mkValueString = v:
+                if l.isList v
+                then l.concatStringsSep " " v
+                else if (l.isPath v || v ? __toString)
+                then toString v
+                else l.generators.mkValueStringDefault {} v;
+            } " = ";
+          };
+        in
+          nixConfig (import "${inputs.self}/flake.nix").nixConfig or {};
+      };
 in
   grow
