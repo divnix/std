@@ -75,6 +75,7 @@ We'll make use of a simple value matrix with simple sentiment scores:
 | Communtiy and Ecosystem                          |        :neutral_face:        |            :heart_eyes:             |              :smiley:               |
 | Reproducability & Software Supply Chain Security |         :heart_eyes:         |            :heart_eyes:             |           :neutral_face:            |
 | Modularity & Incremental Adoption                |           :smiley:           |              :smiley:               |            :heart_eyes:             |
+| Developer Experience & Onboarding Story          |           :smiley:           |              :smiley:               |            :heart_eyes:             |
 
 ## Architecture
 
