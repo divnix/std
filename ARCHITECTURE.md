@@ -11,8 +11,15 @@ This design document can only be altered through an RFC process.
 ## Overview
 
 Standard is a _framework_ to bootstrap and sustain the automatable sections of the Software Delivery Lifecycle (SDLC) _efficiently_ with the power of Nix and Flakes.
-In particular, Standard is a _Horizontal Integration Framework_ which integrates _vertical_ tooling, that is designed around the linux philosophy of doing one thing and to it well.
-The integration target, thereby, are the end-to-end automatable sections of the SDLC process for which we offer well-integrated tools and best practices.
+In particular, Standard is a _Horizontal Integration Framework_ which integrates _vertical_ tooling.
+
+> Glossary:
+>
+> _Vertical Tooling_: does one thing and does it well in a narrow defined scope/vertical
+>
+> _Horizontal Tooling_: ovelay tooling that stiches vertical tooling together to a polished whole
+
+In that context, the integration target are the end-to-end automatable sections of the SDLC process for which we offer well-integrated tools and best practices.
 _Efficient_ automatable sections of the SDLC are characterized by two things.
 
 Firstly, an adequate _lead time_ which is the amount of time it takes to set up an initial version of the software delivery pipeline.
