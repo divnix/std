@@ -156,13 +156,13 @@ in {
   };
   config = {
     flake = let
-      grown = grow (cfg.grow
-        // {
+      grown = grow ({
           inherit inputs;
           inherit (config) systems;
           # access them explicitly to trigger a module system error if not defined
           inherit (cfg.grow) cellsFrom cellBlocks;
-        });
+        }
+        // lib.optionalAttrs (opt.grow.type.getSubOptions opt.grow.loc).nixpkgsConfig.isDefined {inherit (cfg.grow) nixpkgsConfig;});
       picked = mapAttrs (_: v: pick grown v) cfg.pick;
       harvested = mapAttrs (_: v: harvest grown v) cfg.harvest;
       winnowed = zipAttrsWith (n: v: winnow (head v) grown (head (tail v))) [cfg.winnowIf cfg.winnow];
