@@ -59,17 +59,22 @@ The project is rooted deeply inside the Nix Ecosystem, but it strives to become 
 
 ## Value Matrix
 
-In this section, we'll explain how Standard intents to create value. We'll make use of a simple value matrix with simple scores of 1 to 5.
+In this section, we'll explain how Standard intents to create value.
+We'll make use of a simple value matrix with simple sentiment scores:
+
+- :heart_eyes: &rarr; "absolutely love it!!!"
+- :smile: &rarr; "feels pretty good."
+- :neutral_face: &rarr; "whatever?!?"
 
 |                                                  | Software Sponsor [Principal] | Provider of SDLC Automation [Agent] | Consumer of SDLC Automation [Agent] |
 | ------------------------------------------------ | :--------------------------: | :---------------------------------: | :---------------------------------: |
-| Productivity                                     |        \* \* \* \* \*        |           \* \* \* \* \*            |              \* \* \*               |
-| Code Organization                                |           \* \* \*           |           \* \* \* \* \*            |              \* \* \*               |
-| Mental Model & Learning                          |         \* \* \* \*          |           \* \* \* \* \*            |             \* \* \* \*             |
-| Batteries Included                               |              \*              |           \* \* \* \* \*            |                 \*                  |
-| Communtiy and Ecosystem                          |            \* \*             |           \* \* \* \* \*            |              \* \* \*               |
-| Reproducability & Software Supply Chain Security |        \* \* \* \* \*        |           \* \* \* \* \*            |                \* \*                |
-| Modularity & Incremental Adoption                |           \* \* \*           |              \* \* \*               |           \* \* \* \* \*            |
+| Productivity                                     |         :heart_eyes:         |            :heart_eyes:             |              :smiley:               |
+| Code Organization                                |           :smiley:           |            :heart_eyes:             |              :smiley:               |
+| Mental Model & Learning                          |           :smiley:           |            :heart_eyes:             |              :smiley:               |
+| Batteries Included                               |        :neutral_face:        |            :heart_eyes:             |           :neutral_face:            |
+| Communtiy and Ecosystem                          |        :neutral_face:        |            :heart_eyes:             |              :smiley:               |
+| Reproducability & Software Supply Chain Security |         :heart_eyes:         |            :heart_eyes:             |           :neutral_face:            |
+| Modularity & Incremental Adoption                |           :smiley:           |              :smiley:               |            :heart_eyes:             |
 
 ## Architecture
 
