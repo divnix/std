@@ -1,10 +1,11 @@
 name: Standard CI
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      runs-on:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -15,10 +16,10 @@ jobs:
       hits: ${{ steps.discovery.outputs.hits }}
       nix_conf: ${{ steps.discovery.outputs.nix_conf }}
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs-on }}
     steps:
       - name: Standard Discovery
-        uses: divnix/std-action/discover@v0.0.5
+        uses: divnix/std-action/discover@v0.0.6
         id: discovery
 
   build_cli:
@@ -29,9 +30,9 @@ jobs:
       matrix:
         target: ${{ fromJSON(needs.discover.outputs.hits).cli.build }}
     name: ${{ matrix.target.action }}->${{ matrix.target.cell }}.${{ matrix.target.block }}.${{ matrix.target.name }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs-on }}
     steps:
-      - uses: divnix/std-action/run@v0.0.5
+      - uses: divnix/std-action/run@v0.0.6
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
@@ -49,9 +50,9 @@ jobs:
       matrix:
         target: ${{ fromJSON(needs.discover.outputs.hits).packages.build }}
     name: ${{ matrix.target.action }}->${{ matrix.target.cell }}.${{ matrix.target.block }}.${{ matrix.target.name }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs-on }}
     steps:
-      - uses: divnix/std-action/run@v0.0.5
+      - uses: divnix/std-action/run@v0.0.6
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
@@ -69,9 +70,9 @@ jobs:
       matrix:
         target: ${{ fromJSON(needs.discover.outputs.hits).devshells.build }}
     name: ${{ matrix.target.action }}->${{ matrix.target.cell }}.${{ matrix.target.block }}.${{ matrix.target.name }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs-on }}
     steps:
-      - uses: divnix/std-action/run@v0.0.5
+      - uses: divnix/std-action/run@v0.0.6
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
