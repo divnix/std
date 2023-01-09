@@ -7,18 +7,16 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: cachix/install-nix-action@v17
+      - uses: nixbuild/nix-quick-install-action@v21
         with:
-          install_url: https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.9.0pre20220519_5aeda91/install
-          extra_nix_config: |
+          nix_conf: |
             experimental-features = nix-command flakes
-            system-features = nixos-test benchmark big-parallel kvm recursive-nix
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
       - run: nix develop .#book -c mdbook build
