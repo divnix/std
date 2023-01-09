@@ -15,25 +15,25 @@ In particular, Standard is a _Horizontal Integration Framework_ which integrates
 
 > Glossary:
 >
-> _Vertical Tooling_: does one thing and does it well in a narrow defined scope/vertical
+> _Vertical Tooling_ does one thing and does it well in a narrow scope (i.e "vertical").
 >
-> _Horizontal Tooling_: ovelay tooling that stiches vertical tooling together to a polished whole
+> _Horizontal Tooling_ stiches vertical tooling together to a polished whole.
 
 In that context, the integration target are the end-to-end automatable sections of the SDLC process for which we offer well-integrated tools and best practices.
-_Efficient_ automatable sections of the SDLC are characterized by two things.
+_Efficient_ SDLCs are characterized by two things.
 
-Firstly, an adequate _lead time_ which is the amount of time it takes to set up an initial version of the software delivery pipeline.
+Firstly, by adequate _lead time_ which is the amount of time it takes to set up an initial version of the software delivery pipeline.
 It needs to be _adequate_ rather than _just fast_, as it takes place in the context of a team and thus encompasses learning and onboarding activities.
-Rather than optimizing for speed, these need optimization for success.
+Rather than for speed, they need optimization for success.
 
-Secondly, efficient automatable sections of the SDLC are characterized by short _cycle times_ which is the amount of time it takes for a commit to be shipped to a production environment.
+Secondly, by short _cycle times_ which is the amount of time it takes for a commit to be shipped to a production environment.
 Along this journey, we encounter our scope (more on it below):
 
 - aspects of the _contribution_ environment;
-- the packaging pipeline that produces our distributable artifacts;
-- Continuous Building & Integration, Continuous Deployment as well as Continuous Observability and Discovery.
+- the packaging pipeline that produces artifacts;
+- and continous processes integrating the application lifecycle.
 
-The goal of Standard is to optimize the critical path along this process to achieve superior _cycle times_ through the powers of Nix and Flakes when compared to any other similar framework that doesn't recognize the intrinsic value of _reproducability_.
+The goal of Standard is to optimize the critical path along this journey to achieve superior _cycle times_ through the powers of Nix and Flakes over frameworks in failure mode of disregard for the intrinsic value of _reproducability_.
 
 ## Scope
 
@@ -45,28 +45,30 @@ The stipulated process regions are:
 - **Packaging Pipeline** which roughly covers _commit-to-distribution_. It is typically set up once and then orchestrated by a CI control loop.
 - **Continuous 'X' within the Application Lifecycle Management** which roughly covers _distribution-to-next-rollout_.
 
-> Note:
+> Glossary:
 >
-> We use the term Contribution Environment to mean _Development Environment Plus_.
-> Compared to "development environment", it explicitely encapsulates aspects of contribution and integration in the broader process flow.
-> If you prefer, you can think "Development Environment" for practical purposes.
+> We use the term _Contribution Environment_ to mean _Development Environment Plus_.
+> Compared to _Development Environment_, it explicitly encapsulates aspects of contribution and integration of the broader process flow.
+> If you prefer, you can think _Development Environment_ for practical purposes.
 
-While Standard is fundamentally concerned with optimizing across the end-to-end process, we also limit the scope inside this project repository for practical reasons.
-Therefor, we opt to delegate the **Contribution Environment** to a trusted project with an appropriate scope in the broader Nix Community, while employing community outreach to try to ensure our optimization targets are met or at least not accidentally sabotaged.
-On the other hand, we opt to delegate **Continuous 'X' within the Application Lifecycle Management** by dovetailing with more appropriate initiatives of adjacent ecosystems, such as for example [OAM](https://OAM.dev), which has developed an interesting model to reflect role boundaries naturally in their code interfaces.
+While Standard is fundamentally concerned with optimizing across the end-to-end process, we also limit the scope inside this project repository for practical reasons:
+
+Therefore, we seek to delegate the **Contribution Environment** to a trusted project with an appropriate scope in the broader Nix Community, while employing community outreach to try to ensure our optimization targets are met or at least not accidentally sabotaged.
+
+On the other hand, we seek to delegate **Continuous 'X'** by dovetailing and cultivating outreach with more appropriate initiatives of adjacent ecosystems.
 
 ## Ideals
 
 The project is rooted deeply inside the Nix Ecosystem, but it strives to become a portal to make the powers of a store based reproducible packaging system readily available and palatable to colleagues and friends.
 
 - _Use nix only where it is best suited_ &mdash; a Nix maximalist approach may be an innate condition to some of us, but trying to be a portal we deeply recognize and value other perspectives and don't dismiss them as ignorance.
-- _Disrupt where disruption is necessary_ &mdash; to our chagrin, the Nix ecosystem is quite a monotheistic silo. Therefore, we don't shy away from deviating from its widely accepted norms and standards when we feel that deviation has a greater chance at furthering the ideas of being a portal.
+- _Disrupt where disruption is necessary_ &mdash; to our chagrin, the Nix ecosystem is quite a monotheistic silo. Therefore, we don't shy away from deviating from its widely accepted norms and standards when we feel that it furthers our goals.
 - _Look left, right, above and beyond_ &mdash; our end-to-end perspective commands us to actively seek and reach out to other projects and ecosystems to compose the best possible value chain.
 
 ## Goals
 
 - _Complete_: Standard should make a complete offer for setting up and running the automatbale sections of the SDLC.
-- _Optimized_: Standard should optimize for agent ("make your day-to-day life easier") and principle ("quick time to market"), alike.
+- _Optimized_: Standard should optimize for agent ("make your day-to-day life easier") and principle ("quick time-to-market"), alike.
 - _Integrated_: Standard should provide the best possible integration experience across a well-curated assortment of verticals.
 
 ## Value Matrix
@@ -74,9 +76,11 @@ The project is rooted deeply inside the Nix Ecosystem, but it strives to become 
 In this section, we'll explain how Standard intents to create value.
 We'll make use of a simple value matrix with simple sentiment scores:
 
-- :heart_eyes: &rarr; "absolutely love it!!!"
-- :smile: &rarr; "feels pretty good."
-- :neutral_face: &rarr; "whatever?!?"
+- :heart_eyes: &rarr; <i>"absolutely love it!!!"</i>
+- :smile: &rarr; <i>"feels pretty good."</i>
+- :neutral_face: &rarr; <i>"whatever?!?"</i>
+
+The X-Axis represents the three prototypical stakeholder roles, while the Y-Axis represents the broad value creation categories that we have identified.
 
 |                                                  | Software Sponsor [Principal] | Provider of SDLC Automation [Agent] | Consumer of SDLC Automation [Agent] |
 | ------------------------------------------------ | :--------------------------: | :---------------------------------: | :---------------------------------: |
