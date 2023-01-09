@@ -4,14 +4,16 @@ on:
   pull_request:
 
 jobs:
-  build:
+  check:
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v17
+
+      - uses: nixbuild/nix-quick-install-action@v21
         with:
-          skip_adding_nixpkgs_channel: true
-          extra_nix_config: |
+          nix_version: 2.9.2
+          nix_conf: |
+            experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
       - name: Nix Flake Show
