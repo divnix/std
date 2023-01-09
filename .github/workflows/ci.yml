@@ -1,0 +1,20 @@
+name: Standard CI
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  mac:
+    uses: ./.github/workflows/std.yml
+    with:
+      runs-on: macOS-12
+    secrets: inherit
+
+  linux:
+    uses: ./.github/workflows/std.yml
+    with:
+      runs-on: ubuntu-latest
+    secrets: inherit
