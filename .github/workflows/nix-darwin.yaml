@@ -1,9 +1,6 @@
-name: nix-macos
+name: PR MacOS
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
 
 jobs:
