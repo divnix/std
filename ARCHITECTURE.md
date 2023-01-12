@@ -93,7 +93,19 @@ The X-Axis represents the three prototypical stakeholder roles, while the Y-Axis
 | Modularity & Incremental Adoption                |           :smiley:           |              :smiley:               |            :heart_eyes:             |
 | Developer Experience & Onboarding Story          |           :smiley:           |              :smiley:               |            :heart_eyes:             |
 
+So, this is for you and your team, if you:
+
+- Care about reproducability
+- Value clean code
+- Have a deadline to meet
+- Want to serve an optimized UX
+
 ## Architecture
+
+<div align="center">
+  <h3>Architecture Diagram</h3>
+  <img src="./artwork/architecture.svg" width="900" />
+</div>
 
 ### Code Organization
 
