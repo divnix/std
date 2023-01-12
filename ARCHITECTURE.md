@@ -1,6 +1,6 @@
 # Standard Design and Architecture
 
-At the time of writing, almost a year of exploratory and freestyle project history has past.
+At the time of writing, almost a year of exploratory and freestyle project history has passed.
 Fortunately, it is not necessary for further understanding, so I'll spare you that.
 This document, though, lays out the design, architecture and direction of Standard.
 
@@ -17,9 +17,9 @@ In particular, Standard is a _Horizontal Integration Framework_ which integrates
 >
 > _Vertical Tooling_ does one thing and does it well in a narrow scope (i.e "vertical").
 >
-> _Horizontal Tooling_ stiches vertical tooling together to a polished whole.
+> _Horizontal Tooling_ stitches vertical tooling together to a polished whole.
 
-In that context, the integration target are the end-to-end automatable sections of the SDLC process for which we offer well-integrated tools and best practices.
+In that context, the integration targets are the end-to-end automatable sections of the SDLC process for which we offer well-integrated tools and best practices.
 _Efficient_ SDLCs are characterized by two things.
 
 Firstly, by adequate _lead time_ which is the amount of time it takes to set up an initial version of the software delivery pipeline.
@@ -31,7 +31,7 @@ Along this journey, we encounter our scope (more on it below):
 
 - aspects of the _contribution_ environment;
 - the packaging pipeline that produces artifacts;
-- and continous processes integrating the application lifecycle.
+- and continuous processes integrating the application lifecycle.
 
 The goal of Standard is to optimize the critical path along this journey to achieve superior _cycle times_ through the powers of Nix and Flakes over frameworks in failure mode of disregard for the intrinsic value of _reproducability_.
 
@@ -49,7 +49,7 @@ The stipulated process regions are:
 >
 > We use the term _Contribution Environment_ to mean _Development Environment Plus_.
 > Compared to _Development Environment_, it explicitly encapsulates aspects of contribution and integration of the broader process flow.
-> If you prefer, you can think _Development Environment_ for practical purposes.
+> If you prefer, you can think of _Development Environment_ for practical purposes.
 
 While Standard is fundamentally concerned with optimizing across the end-to-end process, we also limit the scope inside this project repository for practical reasons:
 
@@ -67,8 +67,8 @@ The project is rooted deeply inside the Nix Ecosystem, but it strives to become 
 
 ## Goals
 
-- _Complete_: Standard should make a complete offer for setting up and running the automatbale sections of the SDLC.
-- _Optimized_: Standard should optimize for agent ("make your day-to-day life easier") and principle ("quick time-to-market"), alike.
+- _Complete_: Standard should make a complete offer for setting up and running the automatable sections of the SDLC.
+- _Optimized_: Standard should optimize for agents ("make your day-to-day life easier") and principle ("quick time-to-market"), alike.
 - _Integrated_: Standard should provide the best possible integration experience across a well-curated assortment of verticals.
 
 ## Value Matrix
@@ -88,14 +88,14 @@ The X-Axis represents the three prototypical stakeholder roles, while the Y-Axis
 | Code Organization                                |           :smiley:           |            :heart_eyes:             |              :smiley:               |
 | Mental Model & Learning                          |           :smiley:           |            :heart_eyes:             |              :smiley:               |
 | Batteries Included                               |        :neutral_face:        |            :heart_eyes:             |           :neutral_face:            |
-| Communtiy and Ecosystem                          |        :neutral_face:        |            :heart_eyes:             |              :smiley:               |
-| Reproducability & Software Supply Chain Security |         :heart_eyes:         |            :heart_eyes:             |           :neutral_face:            |
+| Community and Ecosystem                          |        :neutral_face:        |            :heart_eyes:             |              :smiley:               |
+| Reproducibility & Software Supply Chain Security |         :heart_eyes:         |            :heart_eyes:             |           :neutral_face:            |
 | Modularity & Incremental Adoption                |           :smiley:           |              :smiley:               |            :heart_eyes:             |
 | Developer Experience & Onboarding Story          |           :smiley:           |              :smiley:               |            :heart_eyes:             |
 
 So, this is for you and your team, if you:
 
-- Care about reproducability
+- Care about reproducibility
 - Value clean code
 - Have a deadline to meet
 - Want to serve an optimized UX
@@ -109,7 +109,7 @@ So, this is for you and your team, if you:
 
 ### Code Organization
 
-Standard is build around a balanced model of code organization that promotes transparency, the ability to refactor and productivity.
+Standard is built around a balanced model of code organization that promotes transparency, the ability to refactor and productivity.
 This code organization is provided by a so-called "Importer Library" housed as an independently useful component under [`divnix/paisano`](https://github.com/divnix/paisano).
 
 It features three principles:
@@ -135,7 +135,7 @@ The last principle opens up a realm of possibilities from user interfaces to pip
 
 ### Function Library
 
-Alongside the **Packaging Pipeline**, and by dogfooding its code organization principles, Standard provides a curated assortment of library functions and integrations that users can adopt in accordance with their needs encouraged by the promise of hightened productivity or the peace of mind to build on the shoulders of the entire Standard community.
+Alongside the **Packaging Pipeline**, and by dogfooding its code organization principles, Standard provides a curated assortment of library functions and integrations that users can adopt in accordance with their needs encouraged by the promise of heightened productivity or the peace of mind to build on the shoulders of the entire Standard community.
 Some library functions and integrations may be assorted outside of these organizational principles as otherwise unspecial top level shorthands.
 
 ### Block Type Library
@@ -150,4 +150,4 @@ As another example, it would be redundant to encode deployment semantics of a te
 Within the scope of the Standard use case, we aim to provide registry-like features to index community provided block types and library functions that are not maintained by the core maintainers.
 Such a registry will need to find a good solution for near-code documentation that can be rendered into a compelling index and documentation site.
 
-Strictly, this model may be useful outside of Standard in the context of paisano, but in here that's also not Standard's problem.
+Strictly, this model may be useful outside of Standard in the context of paisano, but here that's also not Standard's problem.
