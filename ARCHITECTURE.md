@@ -144,3 +144,10 @@ As mentioned in the context of `paisano` above, Standard exploits the Block Type
 
 For example, it would be redundant in Standard to codify how to build and upload a container image by hand, since the container output type is already fully aware in a highly optimized fashion of these semantics.
 As another example, it would be redundant to encode deployment semantics of a terraform deployment declaration, since a (future) terraform type can be made fully aware in a highly optimized fashion (i.e. securely store state) of the required semantics.
+
+### Modularity & Virality Model
+
+Within the scope of the Standard use case, we aim to provide registry-like features to index community provided block types and library functions that are not maintained by the core maintainers.
+Such a registry will need to find a good solution for near-code documentation that can be rendered into a compelling index and documentation site.
+
+Strictly, this model may be useful outside of Standard in the context of paisano, but in here that's also not Standard's problem.
