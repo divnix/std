@@ -40,10 +40,13 @@ in {
     };
   };
   mdbook = presets.nixago.mdbook {
+    output = "docs/book.toml";
     configData = {
       book.title = "The Standard Documentation";
+      book.src = ".";
       preprocessor.mermaid.command = "mdbook-mermaid";
       output.html.additional-js = ["static/mermaid.min.js" "static/mermaid-init.js"];
+      build.build-dir = "book";
     };
     packages = [nixpkgs.mdbook-mermaid];
   };
