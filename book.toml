@@ -1,0 +1,18 @@
+[book]
+language = "en"
+multilingual = false
+src = "."
+title = "The Standard Documentation"
+
+[build]
+build-dir = "book"
+
+[output.html]
+additional-js = ["static/mermaid.min.js", "static/mermaid-init.js"]
+
+[preprocessor]
+[preprocessor.kroki-preprocessor]
+command = "mdbook-kroki-preprocessor"
+
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
