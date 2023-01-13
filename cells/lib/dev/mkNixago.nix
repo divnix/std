@@ -23,6 +23,7 @@ in
       packages ? [],
       commands ? [],
       devshell ? {},
+      output ? null
     }: let
       __passthru = self.__passthru or configuration';
       newSelf =
@@ -33,6 +34,7 @@ in
           packages = __passthru.packages ++ packages;
           commands = __passthru.commands ++ commands;
           devshell = l.recursiveUpdate __passthru.devshell devshell;
+          output = if output != null then output else __passthru.output;
         };
     in
       (nixago.lib.make newSelf)

@@ -1,11 +1,11 @@
 [book]
 language = "en"
 multilingual = false
-src = "docs"
+src = "."
 title = "The Standard Documentation"
 
 [build]
-build-dir = "docs/book"
+build-dir = "book"
 
 [output.html]
 additional-js = ["static/mermaid.min.js", "static/mermaid-init.js"]

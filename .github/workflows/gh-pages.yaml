@@ -19,7 +19,7 @@ jobs:
             experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
-      - run: nix develop .#book -c mdbook build
+      - run: nix develop .#book -c mdbook build ./docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
