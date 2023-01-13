@@ -100,6 +100,28 @@ So, this is for you and your team, if you:
 - Have a deadline to meet
 - Want to serve an optimized UX
 
+## Selling Points
+
+<sub>ChatGPT insited on publishing Standard's selling points. So it went ahead and did it itself. What you'll read are its conclusions:</sub>
+
+The main selling points of Standard are:
+
+- **Efficiency:** Standard automates the software delivery lifecycle, making the process more efficient and streamlined.
+
+- **Reproducibility:** Standard's emphasis on reproducibility ensures that every stage of the SDLC can be easily replicated, leading to a more consistent and reliable software development process.
+
+- **Speed:** Standard optimizes the critical path of the SDLC journey to achieve superior cycle times, which means that your software can be shipped to production faster.
+
+- **Flexibility:** Standard is built to be flexible and adaptable, which allows it to be used in a variety of different contexts and industries.
+
+- **Cost-effective:** Automating the software delivery lifecycle with Standard saves time and resources, making it more cost-effective.
+
+- **Integration:** Standard is a horizontal integration framework that integrates vertical tooling, making it easier to stitch together different tools and processes to create a polished whole.
+
+- **Community Outreach:** Standard is a part of the Nix ecosystem and is committed to community outreach to ensure that its optimization targets are met and that other perspectives are not dismissed.
+
+These points show how Standard can help adopters to improve their software delivery process, and how it can save them time, money and improve the quality of their software.
+
 ## Architecture
 
 <div align="center">
