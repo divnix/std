@@ -1,6 +1,8 @@
 # Documentation
 
 [Introduction](README.md)
+[Design & Architecture](./ARCHITECTURE.md)
+[Roadmap](./ROADMAP.md)
 
 # Tutorials
 
