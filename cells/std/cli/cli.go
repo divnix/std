@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/divnix/std/data"
+	"github.com/divnix/std/flake"
 )
 
 type Spec struct {
@@ -45,7 +46,7 @@ var rootCmd = &cobra.Command{
 		if err := re.MatchToTarget(args[0], s); err != nil {
 			return err
 		}
-		nix, nixargs, err := GetActionEvalCmdArgs(s.Cell, s.Block, s.Target, s.Action)
+		nix, nixargs, err := flake.GetActionEvalCmdArgs(s.Cell, s.Block, s.Target, s.Action)
 		if err != nil {
 			// TODO: remove non relevant nix fragment search paths from error msg
 			return err
@@ -67,7 +68,7 @@ Use this command to cold-start or refresh the CLI cache.
 The TUI does this automatically, but the command completion needs manual initialization of the CLI cache.`,
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		c, key, loadCmd, buf, err := LoadFlakeCmd()
+		c, key, loadCmd, buf, err := flake.LoadFlakeCmd()
 		if err != nil {
 			return fmt.Errorf("while loading flake (cmd '%v'): %w", loadCmd, err)
 		}
@@ -84,7 +85,7 @@ Returns a non-zero exit code and an error message if the repository is not a val
 The TUI does this automatically.`,
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, _, loadCmd, _, err := LoadFlakeCmd()
+		_, _, loadCmd, _, err := flake.LoadFlakeCmd()
 		if err != nil {
 			return fmt.Errorf("while loading flake (cmd '%v'): %w", loadCmd, err)
 		}
@@ -105,7 +106,7 @@ Shows a list of all available targets. Can be used as an alternative to the TUI.
 Also loads the CLI cache, if no cache is found. Reads the cache, otherwise.`,
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		cache, key, loadCmd, buf, err := LoadFlakeCmd()
+		cache, key, loadCmd, buf, err := flake.LoadFlakeCmd()
 		if err != nil {
 			return fmt.Errorf("while loading flake (cmd '%v'): %w", loadCmd, err)
 		}
@@ -131,7 +132,8 @@ Also loads the CLI cache, if no cache is found. Reads the cache, otherwise.`,
 			for _, o := range c.Blocks {
 				for _, t := range o.Targets {
 					for _, a := range t.Actions {
-						fmt.Fprintln(w, fmt.Sprintf("//%s/%s/%s:%s\t--\t%s:  %s", c.Cell, o.Block, t.Target, a.Name, t.Description, a.Descr))
+						fmt.Fprintln(w, fmt.Sprintf(
+							"//%s/%s/%s:%s\t--\t%s:  %s", c.Name, o.Name, t.Name, a.Name, t.Description(), a.Description()))
 					}
 				}
 			}
@@ -156,7 +158,7 @@ func init() {
 	// completes: '//cell/block/target:action'
 	carapace.Gen(rootCmd).PositionalCompletion(
 		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
-			cache, key, _, _, err := LoadFlakeCmd()
+			cache, key, _, _, err := flake.LoadFlakeCmd()
 			if err != nil {
 				return carapace.ActionMessage(fmt.Sprintf("%v\n", err))
 			}

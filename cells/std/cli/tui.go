@@ -15,6 +15,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 
 	"github.com/divnix/std/data"
+	"github.com/divnix/std/flake"
 	"github.com/divnix/std/keys"
 	"github.com/divnix/std/models"
 	"github.com/divnix/std/styles"
@@ -170,10 +171,10 @@ type cellLoadedMsg struct{ root *data.Root }
 type cellLoadingFatalErrMsg struct{ err error }
 
 func (m *Tui) GetActionCmd(i *ActionItem) ([]string, tea.Msg) {
-	nix, args, err := GetActionEvalCmdArgs(
-		i.r.Cell(i.CellIdx, i.BlockIdx, i.TargetIdx),
-		i.r.Block(i.CellIdx, i.BlockIdx, i.TargetIdx),
-		i.r.Target(i.CellIdx, i.BlockIdx, i.TargetIdx),
+	nix, args, err := flake.GetActionEvalCmdArgs(
+		i.r.CellName(i.CellIdx, i.BlockIdx, i.TargetIdx),
+		i.r.BlockName(i.CellIdx, i.BlockIdx, i.TargetIdx),
+		i.r.TargetName(i.CellIdx, i.BlockIdx, i.TargetIdx),
 		i.r.ActionTitle(i.CellIdx, i.BlockIdx, i.TargetIdx, i.ActionIdx),
 	)
 	if err != nil {
@@ -184,7 +185,7 @@ func (m *Tui) GetActionCmd(i *ActionItem) ([]string, tea.Msg) {
 
 func (m *Tui) Init() tea.Cmd {
 	var cmds []tea.Cmd
-	c, key, cmd, buf, err := LoadFlakeCmd()
+	c, key, cmd, buf, err := flake.LoadFlakeCmd()
 	if err != nil {
 		return func() tea.Msg { return cellLoadingFatalErrMsg{err} }
 	}

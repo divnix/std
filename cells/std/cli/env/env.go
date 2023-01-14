@@ -1,4 +1,4 @@
-package main
+package env
 
 import (
 	"bytes"
@@ -21,7 +21,18 @@ const (
 	prjLastActionTmpl = "%s/.std/last-action"
 )
 
-func setEnv() (string, string, string, string, error) {
+// extraNixConfig implements quality of life flags for the nix command invocation
+var extraNixConfig = strings.Join([]string{
+	// can never occur: actions invoke store path copies of the flake
+	// "warn-dirty = false",
+	"accept-flake-config = true",
+	"builders-use-substitutes = true",
+	// TODO: these are unfortunately not available for setting as env flags
+	// update-lock-file = false,
+	// write-lock-file = false,
+}, "\n")
+
+func SetEnv() (string, string, string, string, error) {
 	var prjRoot string
 	prjRoot, present := os.LookupEnv(PRJ_ROOT)
 	if !present {

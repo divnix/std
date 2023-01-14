@@ -1,19 +1,15 @@
-package main
+package flake
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"strings"
 
-	"github.com/TylerBrock/colorjson"
-
 	"github.com/divnix/std/cache"
-	"github.com/divnix/std/data"
+	"github.com/divnix/std/env"
 )
 
 type outt struct {
@@ -22,10 +18,12 @@ type outt struct {
 }
 
 var (
-	currentSystemArgs    = []string{"eval", "--raw", "--impure", "--expr", "builtins.currentSystem"}
-	flakeInitFragment    = "%s#__std.init.%s"
-	flakeActionsFragment = "%s#__std.actions.%s.%s.%s.%s.%s"
-	flakeEvalJson        = []string{
+	currentSystemArgs      = []string{"eval", "--raw", "--impure", "--expr", "builtins.currentSystem"}
+	cellsFromArgs          = []string{"eval", "--raw"}
+	flakeCellsFromFragment = "%s#__std.cellsFrom"
+	flakeInitFragment      = "%s#__std.init"
+	flakeActionsFragment   = "%s#__std.actions.%s.%s.%s.%s.%s"
+	flakeEvalJson          = []string{
 		"eval",
 		"--json",
 		"--no-update-lock-file",
@@ -46,7 +44,7 @@ var (
 	}
 )
 
-func GetNix() (string, error) {
+func getNix() (string, error) {
 	nix, err := exec.LookPath("nix")
 	if err != nil {
 		return "", errors.New("You need to install 'nix' in order to use 'std'")
@@ -56,7 +54,7 @@ func GetNix() (string, error) {
 
 func getCurrentSystem() ([]byte, error) {
 	// detect the current system
-	nix, err := GetNix()
+	nix, err := getNix()
 	if err != nil {
 		return nil, err
 	}
@@ -70,22 +68,33 @@ func getCurrentSystem() ([]byte, error) {
 	return currentSystem, nil
 }
 
-func GetInitEvalCmdArgs() (string, []string, error) {
-	nix, err := GetNix()
+func GetCellsFrom() (string, error) {
+	nix, err := getNix()
+	if err != nil {
+		return "", err
+	}
+	cellsFrom, err := exec.Command(nix, append(cellsFromArgs, fmt.Sprintf(flakeCellsFromFragment, "."))...).Output()
+	if err != nil {
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			return "", fmt.Errorf("%w, stderr:\n%s", exitErr, exitErr.Stderr)
+		}
+		return "", err
+	}
+	return string(cellsFrom[:]), nil
+}
+
+func getInitEvalCmdArgs() (string, []string, error) {
+	nix, err := getNix()
 	if err != nil {
 		return "", nil, err
 	}
 
-	currentSystem, err := getCurrentSystem()
-	if err != nil {
-		return "", nil, err
-	}
 	return nix, append(
-		flakeEvalJson, fmt.Sprintf(flakeInitFragment, ".", currentSystem)), nil
+		flakeEvalJson, fmt.Sprintf(flakeInitFragment, ".")), nil
 }
 
 func GetActionEvalCmdArgs(c, o, t, a string) (string, []string, error) {
-	nix, err := GetNix()
+	nix, err := getNix()
 	if err != nil {
 		return "", nil, err
 	}
@@ -94,7 +103,7 @@ func GetActionEvalCmdArgs(c, o, t, a string) (string, []string, error) {
 	if err != nil {
 		return "", nil, err
 	}
-	_, _, _, actionPath, err := setEnv()
+	_, _, _, actionPath, err := env.SetEnv()
 	if err != nil {
 		return "", nil, err
 	}
@@ -102,34 +111,9 @@ func GetActionEvalCmdArgs(c, o, t, a string) (string, []string, error) {
 		flakeBuild(actionPath), fmt.Sprintf(flakeActionsFragment, ".", currentSystem, c, o, t, a)), nil
 }
 
-func LoadJson(r io.Reader) (*data.Root, error) {
-	var root = &data.Root{}
-
-	var r2 bytes.Buffer
-	r1 := io.TeeReader(r, &r2)
-
-	var dec = json.NewDecoder(r1)
-
-	if err := dec.Decode(&root.Cells); err != nil {
-		var serr *json.SyntaxError
-		if errors.As(err, &serr) {
-			return nil, fmt.Errorf("json syntax error: %w: string:\n%v", err, r2.String())
-		}
-		var obj interface{}
-		var debugDecoder = json.NewDecoder(&r2)
-		debugDecoder.Decode(&obj)
-		f := colorjson.NewFormatter()
-		f.Indent = 2
-		s, _ := f.Marshal(obj)
-		return nil, fmt.Errorf("%w - object: %s", err, s)
-	}
-
-	return root, nil
-}
-
 func LoadFlakeCmd() (*cache.Cache, *cache.ActionID, *exec.Cmd, *bytes.Buffer, error) {
 
-	nix, args, err := GetInitEvalCmdArgs()
+	nix, args, err := getInitEvalCmdArgs()
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}
@@ -145,7 +129,7 @@ func LoadFlakeCmd() (*cache.Cache, *cache.ActionID, *exec.Cmd, *bytes.Buffer, er
 	cmd.Stdout = buf
 
 	// initialize cache
-	_, _, prjCacheDir, _, err := setEnv()
+	_, _, prjCacheDir, _, err := env.SetEnv()
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}
