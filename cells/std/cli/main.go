@@ -9,28 +9,19 @@ import (
 	"syscall"
 
 	tea "github.com/charmbracelet/bubbletea"
+
+	"github.com/divnix/std/env"
 )
 
 var buildVersion = "dev"
 var buildCommit = "dirty"
-
-// extraNixConfig implements quality of life flags for the nix command invocation
-var extraNixConfig = strings.Join([]string{
-	// can never occur: actions invoke store path copies of the flake
-	// "warn-dirty = false",
-	"accept-flake-config = true",
-	"builders-use-substitutes = true",
-	// TODO: these are unfortunately not available for setting as env flags
-	// update-lock-file = false,
-	// write-lock-file = false,
-}, "\n")
 
 func bashExecve(command []string, cmdArgs []string) error {
 	binary, err := exec.LookPath("bash")
 	if err != nil {
 		return err
 	}
-	_, _, _, lastActionPath, err := setEnv()
+	_, _, _, lastActionPath, err := env.SetEnv()
 	if err != nil {
 		return err
 	}

@@ -128,7 +128,7 @@
           // (
             if third == null
             then {inherit (acc) init;}
-            else {init = acc.init ++ [third];}
+            else {init = acc.init ++ (l.concatMap (t: l.flatten t.init) [third]);}
           )
           // (
             if fourth == null
@@ -290,17 +290,14 @@
                 })
                 actions);
             };
-            init = {
-              inherit name;
-              deps = target.meta.after or target.after or [];
-              description = target.meta.description or target.description or "n/a";
-              readme =
-                if l.pathExists tPath.readme
-                then tPath.readme
-                else "";
-              # for speed only extract name & description, the bare minimum for display
-              actions = map (a: {inherit (a) name description;}) actions;
-            };
+            init =
+              {
+                inherit name;
+                # for speed only extract name & description, the bare minimum for display
+                actions = map (a: {inherit (a) name description;}) actions;
+              }
+              // (l.optionalAttrs (l.pathExists tPath.readme) {inherit (tPath) readme;})
+              // (l.optionalAttrs (target ? meta && target.meta ? description) {inherit (target.meta) description;});
           };
           isFile = l.pathExists oPath.file;
           isDir = l.pathExists oPath.dir;
@@ -329,13 +326,13 @@
             {${cellBlock.name} = l.listToAttrs (map (x: x.actions) extracted);}
             # __std.init (fast)
             {
-              cellBlock = cellBlock.name;
-              blockType = cellBlock.type;
-              readme =
-                if l.pathExists oPath.readme
-                then oPath.readme
-                else "";
-              targets = map (x: x.init) extracted;
+              init =
+                {
+                  cellBlock = cellBlock.name;
+                  blockType = cellBlock.type;
+                  targets = map (x: x.init) extracted;
+                }
+                // (l.optionalAttrs (l.pathExists oPath.readme) {inherit (oPath) readme;});
             }
             # __std.ci
             {
@@ -356,12 +353,12 @@
           {${cellName} = res.actions;}
           # __std.init (fast)
           {
-            cell = cellName;
-            readme =
-              if l.pathExists cPath.readme
-              then cPath.readme
-              else "";
-            cellBlocks = res.init; # []
+            init =
+              {
+                cell = cellName;
+                cellBlocks = res.init; # []
+              }
+              // (l.optionalAttrs (l.pathExists cPath.readme) {inherit (cPath) readme;});
           }
           # __std.ci
           {
@@ -381,10 +378,7 @@
         # __std.actions (slow)
         {${system} = res.actions;}
         # __std.init (fast)
-        {
-          name = system;
-          value = res.init;
-        }
+        {inherit (res) init;}
         # __std.ci
         {
           ci = [
@@ -412,9 +406,10 @@
         __std.__schema = "v0";
         __std.ci = l.listToAttrs res.ci;
         __std.ci' = l.listToAttrs res.ci';
-        __std.init = l.listToAttrs res.init;
+        __std.init = l.unique res.init;
         __std.actions = res.actions;
         __std.direnv_lib = ../direnv_lib.sh;
+        __std.cellsFrom = l.baseNameOf cellsFrom;
         __std.nixConfig = let
           # FIXME: refactor when merged NixOS/nixpkgs#203999
           nixConfig = l.generators.toKeyValue {

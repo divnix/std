@@ -15,27 +15,6 @@ import (
 	"github.com/divnix/std/styles"
 )
 
-const (
-	noTargetReadme = `Target '%s' has no readme yet.
-
-To create one, simply drop a file in:
-
-	${cellsFrom}/%s/%s/%s.md
-`
-	noCellReadme = `Cell '//%s' has no readme yet.
-
-To create one, simply drop a file in:
-
-	${cellsFrom}/%s/Readme.md
-`
-	noBlockReadme = `Block '//%s/%s' has no readme yet.
-
-To create one, simply drop a file in:
-
-	${cellsFrom}/%s/%s/Readme.md
-`
-)
-
 var (
 
 	// Tabs.
@@ -100,52 +79,12 @@ type renderTargetMarkdownMsg struct {
 }
 
 func (m *ReadmeModel) LoadReadme(d *data.Root, ci, oi, ti int) {
-	m.Cell = d.Cell(ci, oi, ti)
-	m.Block = d.Block(ci, oi, ti)
-	m.Target = d.Target(ci, oi, ti)
-	if d.HasTargetHelp(ci, oi, ti) {
-		m.TargetHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", d.TargetHelp(ci, oi, ti)))
-	} else {
-		content := lipgloss.NewStyle().
-			Width(m.Width).
-			Height(m.Height).
-			Render(fmt.Sprintf(
-				noTargetReadme,
-				d.TargetTitle(ci, oi, ti),
-				d.Cell(ci, oi, ti),
-				d.Block(ci, oi, ti),
-				d.Target(ci, oi, ti),
-			))
-		m.TargetHelp.Viewport.SetContent(content)
-	}
-	if d.HasCellHelp(ci, oi, ti) {
-		m.CellHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", d.CellHelp(ci, oi, ti)))
-	} else {
-		content := lipgloss.NewStyle().
-			Width(m.Width).
-			Height(m.Height).
-			Render(fmt.Sprintf(
-				noCellReadme,
-				d.Cell(ci, oi, ti),
-				d.Cell(ci, oi, ti),
-			))
-		m.CellHelp.Viewport.SetContent(content)
-	}
-	if d.HasBlockHelp(ci, oi, ti) {
-		m.BlockHelp.Viewport.SetContent(fmt.Sprintf("Rendering %s ...", d.BlockHelp(ci, oi, ti)))
-	} else {
-		content := lipgloss.NewStyle().
-			Width(m.Width).
-			Height(m.Height).
-			Render(fmt.Sprintf(
-				noBlockReadme,
-				d.Cell(ci, oi, ti),
-				d.Block(ci, oi, ti),
-				d.Cell(ci, oi, ti),
-				d.Block(ci, oi, ti),
-			))
-		m.BlockHelp.Viewport.SetContent(content)
-	}
+	m.Cell = d.CellName(ci, oi, ti)
+	m.CellHelp.Viewport.SetContent(d.CellHelp(ci, oi, ti))
+	m.Block = d.BlockName(ci, oi, ti)
+	m.BlockHelp.Viewport.SetContent(d.BlockHelp(ci, oi, ti))
+	m.Target = d.TargetName(ci, oi, ti)
+	m.TargetHelp.Viewport.SetContent(d.TargetHelp(ci, oi, ti))
 }
 
 func NewReadme() *ReadmeModel {
