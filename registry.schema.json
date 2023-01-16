@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/divnix/std/main/registry.schema.json",
+  "title": "Standard Registry",
+  "description": "The json schema to be found when serializing .#__std of a Standardized repository with Nix to json.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "__schema": {
+      "title": "Schema Version",
+      "description": "The Standard Registry schema version.",
+      "const": "v0"
+    },
+    "cellsFrom": {
+      "title": "Cell Root Path",
+      "description": "Relative path to the repository root from which cells are discovered.",
+      "type": "string"
+    },
+    "ci": { "$ref": "#/definitions/ci" },
+    "ci'": { "$ref": "#/definitions/ci-prime" },
+    "init": { "$ref": "#/definitions/init" },
+    "actions": { "$ref": "#/definitions/actions" }
+  },
+  "required": ["__schema", "ci", "ci'", "init", "actions", "cellsFrom"],
+
+  "$defs": {
+    "ci-task": {
+      "title": "CI Task w/o Drvs",
+      "description": "A representation of a CI task's metadata.",
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "The name of the action."
+        },
+        "actionFragment": {
+          "type": "string",
+          "description": "The flake fragment where to find the action derivation."
+        },
+        "block": { "type": "string", "description": "The block name." },
+        "blockType": { "type": "string", "description": "The block type." },
+        "cell": { "type": "string", "description": "The cell name." },
+        "name": { "type": "string", "description": "The target name." },
+        "targetFragment": {
+          "type": "string",
+          "description": "The flake fragment where to find the target."
+        }
+      },
+      "required": [
+        "action",
+        "actionFragment",
+        "block",
+        "blockType",
+        "cell",
+        "name",
+        "targetFragment"
+      ]
+    },
+    "ci-task-prime": {}
+  },
+
+  "definitions": {
+    "actions": {
+      "title": "Actions",
+      "description": "The Actions collection's runnable derivations. They house derivations. Since building these derivations may be expensive, they are housed in a separate namespace that can be accessed on demand by a caller.",
+      "type": "object",
+      "additionalProperties": {
+        "title": "System",
+        "description": "Actions are namespaced per system as a derviation is only valid for its specified system.",
+        "type": "object",
+        "additionalProperties": {
+          "title": "Cell",
+          "description": "The cell namespace for actions.",
+          "type": "object",
+          "additionalProperties": {
+            "title": "Block",
+            "description": "The block namespace for actions.",
+            "type": "object",
+            "additionalProperties": {
+              "title": "Target",
+              "description": "The target namespace for actions.",
+              "type": "object",
+              "additionalProperties": {
+                "title": "Action",
+                "description": "The string reperesentation of a realized store path that points to a runnable which implements the action.",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "init": {
+      "title": "Init",
+      "description": "The representational metadata about the Standardized repository.",
+      "type": "array",
+      "items": {
+        "title": "Cell",
+        "description": "The representational data of a cell.",
+        "type": "object",
+        "required": ["cell", "cellBlocks"],
+        "properties": {
+          "cell": { "type": "string" },
+          "cellBlocks": {
+            "type": "array",
+            "items": {
+              "title": "Block",
+              "description": "The representational data of a block.",
+              "type": "object",
+              "required": ["blockType", "cellBlock", "targets"],
+              "properties": {
+                "blockType": { "type": "string" },
+                "cellBlock": { "type": "string" },
+                "targets": {
+                  "type": "array",
+                  "items": {
+                    "title": "Target",
+                    "description": "The representational data of a target.",
+                    "type": "object",
+                    "required": ["name", "actions"],
+                    "properties": {
+                      "name": { "type": "string" },
+                      "actions": {
+                        "type": "array",
+                        "items": {
+                          "title": "Action",
+                          "description": "The representational data of an action (w/o derivation).",
+                          "type": "object",
+                          "properties": {
+                            "name": { "type": "string" },
+                            "description": { "type": "string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ci": {
+      "title": "CI w/o Drvs",
+      "description": "A cheap evaluation that provides all necessary metadata without evaluating any derivations.",
+      "type": "object",
+      "additionalProperties": {
+        "title": "System",
+        "type": "array",
+        "items": { "$ref": "#/$defs/ci-task" }
+      }
+    },
+    "ci-prime": {
+      "title": "CI w/ Drvs",
+      "description": "An expensive evaluation that provides all necessary metadata including evaluated derivations.",
+      "type": "object",
+      "additionalProperties": {
+        "title": "System",
+        "type": "array",
+        "items": {
+          "title": "CI Task w/ Drvs",
+          "description": "A representation of a CI task that includes evaluated derviations.",
+          "allOf": [
+            { "$ref": "#/$defs/ci-task" },
+            {
+              "type": "object",
+              "title": "Drvs extension",
+              "description": "The expensive-to-evaluate derivations.",
+              "properties": {
+                "actionDrv": {
+                  "type": "string",
+                  "description": "The evaluated derivation for the action runnable."
+                },
+                "targetDrv": {
+                  "type": "string",
+                  "description": "The evaluated derivation for the target (if target is a derivation)."
+                },
+                "proviso": {
+                  "type": "string",
+                  "description": "A provisio which lets a CI cheaply decide whether running an action can be skipped."
+                }
+              },
+              "required": ["actionDrv"]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
