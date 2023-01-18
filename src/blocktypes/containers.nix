@@ -1,6 +1,7 @@
 {
   nixpkgs,
   mkCommand,
+  sharedActions,
 }: let
   l = nixpkgs.lib // builtins;
   /*
@@ -22,8 +23,8 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target (mkCommand system "containers"))
-      (mkCommand system "containers" {
+      (sharedActions.build system target)
+      (mkCommand system {
         name = "print-image";
         description = "print out the image name & tag";
         command = ''
@@ -31,7 +32,7 @@
           echo "${target.imageName}:${target.imageTag}"
         '';
       })
-      (mkCommand system "containers" {
+      (mkCommand system {
         name = "publish";
         description = "copy the image to its remote registry";
         command = let
@@ -86,21 +87,21 @@
             }
           '';
       })
-      (mkCommand system "containers" {
+      (mkCommand system {
         name = "copy-to-registry";
         description = "copy the image to its remote registry";
         command = ''
           ${target.copyToRegistry}/bin/copy-to-registry
         '';
       })
-      (mkCommand system "containers" {
+      (mkCommand system {
         name = "copy-to-docker";
         description = "copy the image to the local docker registry";
         command = ''
           ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
         '';
       })
-      (mkCommand system "containers" {
+      (mkCommand system {
         name = "copy-to-podman";
         description = "copy the image to the local podman registry";
         command = ''

@@ -38,6 +38,7 @@
   };
   outputs = inputs: let
     blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs;};
+    sharedActions = import ./src/actions.nix {inherit (inputs) nixpkgs;};
     deSystemize = inputs.nosys.lib.deSys;
     grow = import ./src/grow.nix {
       inherit (inputs) nixpkgs yants;
@@ -58,7 +59,7 @@
   in
     {
       inherit (inputs) yants dmerge incl; # convenience re-exports
-      inherit blockTypes;
+      inherit blockTypes sharedActions;
       inherit (blockTypes) runnables installables functions data devshells containers files microvms nixago nomadJobManifests;
       inherit grow growOn deSystemize pick harvest winnow;
       systems = l.systems.doubles;

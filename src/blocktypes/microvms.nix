@@ -18,12 +18,8 @@
       fragment,
       fragmentRelPath,
       target,
-    }: let
-      run = import ./actions/run.nix {
-        inherit target lib;
-      };
-    in [
-      (mkCommand system "microvms" {
+    }: [
+      (mkCommand system {
         name = "microvm";
         description = "exec this microvm";
         command = ''

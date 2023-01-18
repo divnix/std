@@ -74,7 +74,7 @@
       inject the git revision validate the manifest, after which it can be run or
       planned with the Nomad cli or the `deploy` action.
       */
-      (mkCommand system "nomadJobManifests" {
+      (mkCommand system {
         name = "render";
         description = "build the JSON job description";
         command =
@@ -87,7 +87,7 @@
             ${render}
           '';
       })
-      (mkCommand system "nomadJobManifests" {
+      (mkCommand system {
         name = "deploy";
         description = "Deploy the job to Nomad";
         command =
@@ -129,7 +129,7 @@
             fi
           '';
       })
-      (mkCommand system "nomadJobManifests" {
+      (mkCommand system {
         name = "explore";
         description = "interactively explore the Job defintion";
         command =

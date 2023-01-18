@@ -1,6 +1,7 @@
 {
   nixpkgs,
   mkCommand,
+  sharedActions,
 }: let
   l = nixpkgs.lib // builtins;
   /*
@@ -26,9 +27,9 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target (mkCommand system "installables"))
+      (sharedActions.build system target)
       # profile commands require a flake ref
-      (mkCommand system "installables" {
+      (mkCommand system {
         name = "install";
         description = "install this target";
         command = ''
@@ -40,7 +41,7 @@
           nix profile install $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system "installables" {
+      (mkCommand system {
         name = "upgrade";
         description = "upgrade this target";
         command = ''
@@ -52,7 +53,7 @@
           nix profile upgrade $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system "installables" {
+      (mkCommand system {
         name = "remove";
         description = "remove this target";
         command = ''
@@ -65,7 +66,7 @@
         '';
       })
       # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
-      (mkCommand system "installables" {
+      (mkCommand system {
         name = "bundle";
         description = "bundle this target";
         command = ''
@@ -77,7 +78,7 @@
           nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system "installables" {
+      (mkCommand system {
         name = "bundleImage";
         description = "bundle this target to image";
         command = ''
@@ -89,7 +90,7 @@
           nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system "installables" {
+      (mkCommand system {
         name = "bundleAppImage";
         description = "bundle this target to AppImage";
         command = ''

@@ -21,7 +21,7 @@
       file = toString target;
       bat = "${nixpkgs.legacyPackages.${system}.bat}/bin/bat";
     in [
-      (mkCommand system "files" {
+      (mkCommand system {
         name = "explore";
         description = "interactively explore with bat";
         command = ''
