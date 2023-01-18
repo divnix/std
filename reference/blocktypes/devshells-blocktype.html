@@ -137,6 +137,7 @@
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
+  sharedActions,
 }: let
   l = nixpkgs.lib // builtins;
   mkDevelopDrv = import ../devshell-drv.nix;
@@ -159,8 +160,8 @@
     }: let
       developDrv = mkDevelopDrv target;
     in [
-      (import ./actions/build.nix developDrv (mkCommand system &quot;devshells&quot;))
-      (mkCommand system &quot;devshells&quot; {
+      (sharedActions.build system target)
+      (mkCommand system {
         name = &quot;enter&quot;;
         description = &quot;enter this devshell&quot;;
         command = ''

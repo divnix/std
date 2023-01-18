@@ -1615,12 +1615,12 @@ Actions according to the needs of your project.</p>
       jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
       fx = [&quot;|&quot; &quot;xargs&quot; &quot;cat&quot; &quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
     in [
-      (mkCommand system &quot;data&quot; {
+      (mkCommand system {
         name = &quot;write&quot;;
         description = &quot;write to file&quot;;
         command = &quot;echo ${json}&quot;;
       })
-      (mkCommand system &quot;data&quot; {
+      (mkCommand system {
         name = &quot;explore&quot;;
         description = &quot;interactively explore&quot;;
         command = l.concatStringsSep &quot;\t&quot; (jq ++ fx);
@@ -1656,6 +1656,7 @@ in
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
+  sharedActions,
 }: let
   lib = nixpkgs.lib // builtins;
   /*
@@ -1672,14 +1673,8 @@ in
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target (mkCommand system &quot;runnables&quot;))
-      (mkCommand system &quot;runnables&quot; {
-        name = &quot;run&quot;;
-        description = &quot;exec this target&quot;;
-        command = import ./actions/run.nix {
-          inherit target lib;
-        };
-      })
+      (sharedActions.build system target)
+      (sharedActions.run system target)
     ];
   };
 in
@@ -1689,6 +1684,7 @@ in
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
+  sharedActions,
 }: let
   l = nixpkgs.lib // builtins;
   /*
@@ -1714,9 +1710,9 @@ in
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target (mkCommand system &quot;installables&quot;))
+      (sharedActions.build system target)
       # profile commands require a flake ref
-      (mkCommand system &quot;installables&quot; {
+      (mkCommand system {
         name = &quot;install&quot;;
         description = &quot;install this target&quot;;
         command = ''
@@ -1728,7 +1724,7 @@ in
           nix profile install $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system &quot;installables&quot; {
+      (mkCommand system {
         name = &quot;upgrade&quot;;
         description = &quot;upgrade this target&quot;;
         command = ''
@@ -1740,7 +1736,7 @@ in
           nix profile upgrade $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system &quot;installables&quot; {
+      (mkCommand system {
         name = &quot;remove&quot;;
         description = &quot;remove this target&quot;;
         command = ''
@@ -1753,7 +1749,7 @@ in
         '';
       })
       # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
-      (mkCommand system &quot;installables&quot; {
+      (mkCommand system {
         name = &quot;bundle&quot;;
         description = &quot;bundle this target&quot;;
         command = ''
@@ -1765,7 +1761,7 @@ in
           nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system &quot;installables&quot; {
+      (mkCommand system {
         name = &quot;bundleImage&quot;;
         description = &quot;bundle this target to image&quot;;
         command = ''
@@ -1777,7 +1773,7 @@ in
           nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system &quot;installables&quot; {
+      (mkCommand system {
         name = &quot;bundleAppImage&quot;;
         description = &quot;bundle this target to AppImage&quot;;
         command = ''
@@ -1815,12 +1811,8 @@ in
       fragment,
       fragmentRelPath,
       target,
-    }: let
-      run = import ./actions/run.nix {
-        inherit target lib;
-      };
-    in [
-      (mkCommand system &quot;microvms&quot; {
+    }: [
+      (mkCommand system {
         name = &quot;microvm&quot;;
         description = &quot;exec this microvm&quot;;
         command = ''
@@ -1836,6 +1828,7 @@ in
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
+  sharedActions,
 }: let
   l = nixpkgs.lib // builtins;
   mkDevelopDrv = import ../devshell-drv.nix;
@@ -1858,8 +1851,8 @@ in
     }: let
       developDrv = mkDevelopDrv target;
     in [
-      (import ./actions/build.nix developDrv (mkCommand system &quot;devshells&quot;))
-      (mkCommand system &quot;devshells&quot; {
+      (sharedActions.build system target)
+      (mkCommand system {
         name = &quot;enter&quot;;
         description = &quot;enter this devshell&quot;;
         command = ''
@@ -1905,6 +1898,7 @@ in
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
+  sharedActions,
 }: let
   l = nixpkgs.lib // builtins;
   /*
@@ -1926,8 +1920,8 @@ in
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target (mkCommand system &quot;containers&quot;))
-      (mkCommand system &quot;containers&quot; {
+      (sharedActions.build system target)
+      (mkCommand system {
         name = &quot;print-image&quot;;
         description = &quot;print out the image name &amp; tag&quot;;
         command = ''
@@ -1935,7 +1929,7 @@ in
           echo &quot;${target.imageName}:${target.imageTag}&quot;
         '';
       })
-      (mkCommand system &quot;containers&quot; {
+      (mkCommand system {
         name = &quot;publish&quot;;
         description = &quot;copy the image to its remote registry&quot;;
         command = let
@@ -1990,21 +1984,21 @@ in
             }
           '';
       })
-      (mkCommand system &quot;containers&quot; {
+      (mkCommand system {
         name = &quot;copy-to-registry&quot;;
         description = &quot;copy the image to its remote registry&quot;;
         command = ''
           ${target.copyToRegistry}/bin/copy-to-registry
         '';
       })
-      (mkCommand system &quot;containers&quot; {
+      (mkCommand system {
         name = &quot;copy-to-docker&quot;;
         description = &quot;copy the image to the local docker registry&quot;;
         command = ''
           ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
         '';
       })
-      (mkCommand system &quot;containers&quot; {
+      (mkCommand system {
         name = &quot;copy-to-podman&quot;;
         description = &quot;copy the image to the local podman registry&quot;;
         command = ''
@@ -2045,14 +2039,14 @@ in
       fragmentRelPath,
       target,
     }: [
-      (mkCommand system &quot;nixago&quot; {
+      (mkCommand system {
         name = &quot;populate&quot;;
         description = &quot;populate this nixago file into the repo&quot;;
         command = ''
           ${target.install}/bin/nixago_shell_hook
         '';
       })
-      (mkCommand system &quot;nixago&quot; {
+      (mkCommand system {
         name = &quot;explore&quot;;
         description = &quot;interactively explore the nixago file&quot;;
         command = ''
@@ -2092,42 +2086,42 @@ in
     }: let
       cmd = &quot;arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
     in [
-      (mkCommand system &quot;arion&quot; {
+      (mkCommand system {
         name = &quot;up&quot;;
         description = &quot;arion up&quot;;
         command = ''
           ${cmd} up &quot;$@&quot;
         '';
       })
-      (mkCommand system &quot;arion&quot; {
+      (mkCommand system {
         name = &quot;ps&quot;;
         description = &quot;exec this arion task to ps&quot;;
         command = ''
           ${cmd} ps &quot;$@&quot;
         '';
       })
-      (mkCommand system &quot;arion&quot; {
+      (mkCommand system {
         name = &quot;stop&quot;;
         description = &quot;arion stop&quot;;
         command = ''
           ${cmd} stop &quot;$@&quot;
         '';
       })
-      (mkCommand system &quot;arion&quot; {
+      (mkCommand system {
         name = &quot;rm&quot;;
         description = &quot;arion rm&quot;;
         command = ''
           ${cmd} rm &quot;$@&quot;
         '';
       })
-      (mkCommand system &quot;arion&quot; {
+      (mkCommand system {
         name = &quot;config&quot;;
         description = &quot;check the docker-compose yaml file&quot;;
         command = ''
           ${cmd} config &quot;$@&quot;
         '';
       })
-      (mkCommand system &quot;arion&quot; {
+      (mkCommand system {
         name = &quot;arion&quot;;
         description = &quot;pass any command to arion&quot;;
         command = ''
@@ -2216,7 +2210,7 @@ in
       inject the git revision validate the manifest, after which it can be run or
       planned with the Nomad cli or the `deploy` action.
       */
-      (mkCommand system &quot;nomadJobManifests&quot; {
+      (mkCommand system {
         name = &quot;render&quot;;
         description = &quot;build the JSON job description&quot;;
         command =
@@ -2229,7 +2223,7 @@ in
             ${render}
           '';
       })
-      (mkCommand system &quot;nomadJobManifests&quot; {
+      (mkCommand system {
         name = &quot;deploy&quot;;
         description = &quot;Deploy the job to Nomad&quot;;
         command =
@@ -2271,7 +2265,7 @@ in
             fi
           '';
       })
-      (mkCommand system &quot;nomadJobManifests&quot; {
+      (mkCommand system {
         name = &quot;explore&quot;;
         description = &quot;interactively explore the Job defintion&quot;;
         command =

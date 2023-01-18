@@ -168,12 +168,12 @@
       jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
       fx = [&quot;|&quot; &quot;xargs&quot; &quot;cat&quot; &quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
     in [
-      (mkCommand system &quot;data&quot; {
+      (mkCommand system {
         name = &quot;write&quot;;
         description = &quot;write to file&quot;;
         command = &quot;echo ${json}&quot;;
       })
-      (mkCommand system &quot;data&quot; {
+      (mkCommand system {
         name = &quot;explore&quot;;
         description = &quot;interactively explore&quot;;
         command = l.concatStringsSep &quot;\t&quot; (jq ++ fx);

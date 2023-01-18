@@ -137,6 +137,7 @@
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
+  sharedActions,
 }: let
   lib = nixpkgs.lib // builtins;
   /*
@@ -153,14 +154,8 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target (mkCommand system &quot;runnables&quot;))
-      (mkCommand system &quot;runnables&quot; {
-        name = &quot;run&quot;;
-        description = &quot;exec this target&quot;;
-        command = import ./actions/run.nix {
-          inherit target lib;
-        };
-      })
+      (sharedActions.build system target)
+      (sharedActions.run system target)
     ];
   };
 in

@@ -137,6 +137,7 @@
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
+  sharedActions,
 }: let
   l = nixpkgs.lib // builtins;
   /*
@@ -162,9 +163,9 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target (mkCommand system &quot;installables&quot;))
+      (sharedActions.build system target)
       # profile commands require a flake ref
-      (mkCommand system &quot;installables&quot; {
+      (mkCommand system {
         name = &quot;install&quot;;
         description = &quot;install this target&quot;;
         command = ''
@@ -176,7 +177,7 @@
           nix profile install $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system &quot;installables&quot; {
+      (mkCommand system {
         name = &quot;upgrade&quot;;
         description = &quot;upgrade this target&quot;;
         command = ''
@@ -188,7 +189,7 @@
           nix profile upgrade $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system &quot;installables&quot; {
+      (mkCommand system {
         name = &quot;remove&quot;;
         description = &quot;remove this target&quot;;
         command = ''
@@ -201,7 +202,7 @@
         '';
       })
       # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
-      (mkCommand system &quot;installables&quot; {
+      (mkCommand system {
         name = &quot;bundle&quot;;
         description = &quot;bundle this target&quot;;
         command = ''
@@ -213,7 +214,7 @@
           nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system &quot;installables&quot; {
+      (mkCommand system {
         name = &quot;bundleImage&quot;;
         description = &quot;bundle this target to image&quot;;
         command = ''
@@ -225,7 +226,7 @@
           nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system &quot;installables&quot; {
+      (mkCommand system {
         name = &quot;bundleAppImage&quot;;
         description = &quot;bundle this target to AppImage&quot;;
         command = ''
