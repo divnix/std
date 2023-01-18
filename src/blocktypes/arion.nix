@@ -25,42 +25,42 @@
     }: let
       cmd = "arion --prebuilt-file ${target.config.out.dockerComposeYaml}";
     in [
-      (mkCommand system "arion" {
+      (mkCommand system {
         name = "up";
         description = "arion up";
         command = ''
           ${cmd} up "$@"
         '';
       })
-      (mkCommand system "arion" {
+      (mkCommand system {
         name = "ps";
         description = "exec this arion task to ps";
         command = ''
           ${cmd} ps "$@"
         '';
       })
-      (mkCommand system "arion" {
+      (mkCommand system {
         name = "stop";
         description = "arion stop";
         command = ''
           ${cmd} stop "$@"
         '';
       })
-      (mkCommand system "arion" {
+      (mkCommand system {
         name = "rm";
         description = "arion rm";
         command = ''
           ${cmd} rm "$@"
         '';
       })
-      (mkCommand system "arion" {
+      (mkCommand system {
         name = "config";
         description = "check the docker-compose yaml file";
         command = ''
           ${cmd} config "$@"
         '';
       })
-      (mkCommand system "arion" {
+      (mkCommand system {
         name = "arion";
         description = "pass any command to arion";
         command = ''

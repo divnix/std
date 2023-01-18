@@ -1,6 +1,7 @@
 {
   nixpkgs,
   mkCommand,
+  sharedActions,
 }: let
   l = nixpkgs.lib // builtins;
   mkDevelopDrv = import ../devshell-drv.nix;
@@ -23,8 +24,8 @@
     }: let
       developDrv = mkDevelopDrv target;
     in [
-      (import ./actions/build.nix developDrv (mkCommand system "devshells"))
-      (mkCommand system "devshells" {
+      (sharedActions.build system target)
+      (mkCommand system {
         name = "enter";
         description = "enter this devshell";
         command = ''

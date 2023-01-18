@@ -1,6 +1,7 @@
 {
   nixpkgs,
   mkCommand,
+  sharedActions,
 }: let
   lib = nixpkgs.lib // builtins;
   /*
@@ -17,14 +18,8 @@
       fragmentRelPath,
       target,
     }: [
-      (import ./actions/build.nix target (mkCommand system "runnables"))
-      (mkCommand system "runnables" {
-        name = "run";
-        description = "exec this target";
-        command = import ./actions/run.nix {
-          inherit target lib;
-        };
-      })
+      (sharedActions.build system target)
+      (sharedActions.run system target)
     ];
   };
 in

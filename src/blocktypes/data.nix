@@ -32,12 +32,12 @@
       jq = ["${pkgs.jq}/bin/jq" "-r" "'.'" "${json}"];
       fx = ["|" "xargs" "cat" "|" "${pkgs.fx}/bin/fx"];
     in [
-      (mkCommand system "data" {
+      (mkCommand system {
         name = "write";
         description = "write to file";
         command = "echo ${json}";
       })
-      (mkCommand system "data" {
+      (mkCommand system {
         name = "explore";
         description = "interactively explore";
         command = l.concatStringsSep "\t" (jq ++ fx);
