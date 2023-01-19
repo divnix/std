@@ -13,4 +13,5 @@ in {
   nixago = import ./blocktypes/nixago.nix {inherit nixpkgs mkCommand;};
   arion = import ./blocktypes/arion.nix {inherit nixpkgs mkCommand;};
   nomadJobManifests = import ./blocktypes/nomadJobManifests.nix {inherit nixpkgs mkCommand;};
+  pkgs = import ./blocktypes/pkgs.nix {};
 }

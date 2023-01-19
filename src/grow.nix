@@ -316,7 +316,7 @@
             else if isDir
             then validate.Import cellBlock.type oPath.dir (import' oPath.dir)
             else throw "unreachable!";
-          extracted = l.mapAttrsToList extract imported;
+          extracted = l.optionals (cellBlock.cli or true) (l.mapAttrsToList extract imported);
         in
           optionalLoad (isFile || isDir)
           [

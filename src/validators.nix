@@ -70,6 +70,7 @@ in {
     cellBlock = struct "cellBlock" {
       name = string;
       type = string;
+      cli = option bool;
       __functor = option function;
       ci = option (attrs bool);
       actions = option (
