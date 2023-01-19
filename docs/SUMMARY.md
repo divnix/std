@@ -47,6 +47,7 @@
   - [Nixago](reference/blocktypes/nixago-blocktype.md)
   - [Arion](reference/blocktypes/arion-blocktype.md)
   - [Nomad Job Manifests](reference/blocktypes/nomad-job-manifests-blocktype.md)
+  - [Pkgs](reference/blocktypes/pkgs-blocktype.md)
 
 - [`//std`](reference/std/Readme.md)
 
