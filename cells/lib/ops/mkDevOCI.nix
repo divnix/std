@@ -2,7 +2,7 @@
   inputs,
   cell,
 }: let
-  inherit (inputs) nixpkgs std;
+  inherit (inputs) nixpkgs;
   l = nixpkgs.lib // builtins;
   n2c = inputs.n2c.packages.nix2container;
 
@@ -90,6 +90,7 @@ in
         mkdir -p $out/etc
         echo "sandbox = false" > $out/etc/nix.conf
         echo "experimental-features = nix-command flakes" >> $out/etc/nix.conf
+        echo "accept-flake-config = true" >> $out/etc/nix.conf
 
         # Increase warn timeout and whitelist all paths
         cat >$out/etc/direnv.toml << EOF
@@ -99,10 +100,14 @@ in
         prefix = [ "/" ]
         EOF
 
+        # force override the project local .envrc to load the given shell
+        echo 'eval "$(nix print-dev-env ${devshell})" ; exit' > /etc/direnvrc
+
         # Add direnv shim
         cat >$out/etc/${shellConfigs.${shellName}} << EOF
         eval "\$(direnv hook ${shellName})"
         EOF
+
 
         # Put local profile in path
         echo 'export PATH="$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"' >> $out/etc/${shellConfigs.${shellName}}
@@ -260,8 +265,7 @@ in
               ++ (l.optionals (! slim) [
                 # Include <nixpkgs> to support installing additional packages
                 "NIX_PATH=nixpkgs=${nixpkgs.path}"
-              ])
-              ++ (map envToList devshell.passthru.config.env);
+              ]);
             Volumes = l.optionalAttrs vscode {"/vscode" = {};};
           }
           // (l.optionalAttrs (! vscode) {WorkingDir = "/work";});
