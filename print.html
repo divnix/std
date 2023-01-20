@@ -1800,6 +1800,8 @@ in
   Use the Microvms Blocktype for Microvm.nix - https://github.com/astro/microvm.nix
 
   Available actions:
+    - run
+    - console
     - microvm
   */
 
@@ -1813,10 +1815,24 @@ in
       target,
     }: [
       (mkCommand system {
-        name = &quot;microvm&quot;;
-        description = &quot;exec this microvm&quot;;
+        name = &quot;run&quot;;
+        description = &quot;run the microvm&quot;;
         command = ''
-          ${target.config.microvm.runner.${target.config.microvm.hypervisor}}
+          ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-run
+        '';
+      })
+      (mkCommand system {
+        name = &quot;console&quot;;
+        description = &quot;enter the microvm console&quot;;
+        command = ''
+          ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-console
+        '';
+      })
+      (mkCommand system {
+        name = &quot;microvm&quot;;
+        description = &quot;pass any command to microvm&quot;;
+        command = ''
+          ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-&quot;$@&quot;
         '';
       })
     ];
