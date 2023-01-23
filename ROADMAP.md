@@ -28,9 +28,9 @@ the Setup Process is where adoption success or failure may be determined alongsi
 
 As discussed in the [Architecture](./ARCHITECTURE.md) document, we roughly identify three regions with shifting characteristics alongside the SDLC:
 
-- Contribution Environment Region
+- Development Environment Region
 - Build Pipeline Region (including CI control loops)
-- Continuous X Region of the ALM (including environment propagation rules, SecOps, infrastructure management and others)
+- Continuous Delivery and Beyond (Application Lifecycle Management)
 
 ##### Deliverable Types
 

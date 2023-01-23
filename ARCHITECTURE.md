@@ -29,41 +29,11 @@ Rather than for speed, they need optimization for success.
 Secondly, by short _cycle times_ which is the amount of time it takes for a commit to be shipped to a production environment.
 Along this journey, we encounter our scope (more on it below):
 
-- aspects of the _contribution_ environment;
+- aspects of the _development_ environment;
 - the packaging pipeline that produces artifacts;
 - and continuous processes integrating the application lifecycle.
 
 The goal of Standard is to optimize the critical path along this journey to achieve superior _cycle times_ through the powers of Nix and Flakes over frameworks in failure mode of disregard for the intrinsic value of _reproducability_.
-
-## Scope
-
-The automatable sections of the SDLC end-to-end process can be subdivided (not broken up!) in roughly three process regions with different overall shapes and characteristics.
-
-The stipulated process regions are:
-
-- **Contribution Environment** which roughly covers _code-to-commit_.
-- **Packaging Pipeline** which roughly covers _commit-to-distribution_. It is typically set up once and then orchestrated by a CI control loop.
-- **Continuous 'X' within the Application Lifecycle Management** which roughly covers _distribution-to-next-rollout_.
-
-> Glossary:
->
-> We use the term _Contribution Environment_ to mean _Development Environment Plus_.
-> Compared to _Development Environment_, it explicitly encapsulates aspects of contribution and integration of the broader process flow.
-> If you prefer, you can think of _Development Environment_ for practical purposes.
-
-While Standard is fundamentally concerned with optimizing across the end-to-end process, we also limit the scope inside this project repository for practical reasons:
-
-Therefore, we seek to delegate the **Contribution Environment** to a trusted project with an appropriate scope in the broader Nix Community, while employing community outreach to try to ensure our optimization targets are met or at least not accidentally sabotaged.
-
-On the other hand, we seek to delegate **Continuous 'X'** by dovetailing and cultivating outreach with more appropriate initiatives of adjacent ecosystems.
-
-## Ideals
-
-The project is rooted deeply inside the Nix Ecosystem, but it strives to become a portal to make the powers of a store based reproducible packaging system readily available and palatable to colleagues and friends.
-
-- _Use nix only where it is best suited_ &mdash; a Nix maximalist approach may be an innate condition to some of us, but trying to be a portal we deeply recognize and value other perspectives and don't dismiss them as ignorance.
-- _Disrupt where disruption is necessary_ &mdash; to our chagrin, the Nix ecosystem is quite a monotheistic silo. Therefore, we don't shy away from deviating from its widely accepted norms and standards when we feel that it furthers our goals.
-- _Look left, right, above and beyond_ &mdash; our end-to-end perspective commands us to actively seek and reach out to other projects and ecosystems to compose the best possible value chain.
 
 ## Goals
 
@@ -80,7 +50,7 @@ We'll make use of a simple value matrix with simple sentiment scores:
 - :smile: &rarr; <i>"feels pretty good."</i>
 - :neutral_face: &rarr; <i>"whatever?!?"</i>
 
-The X-Axis represents the three prototypical stakeholder roles, while the Y-Axis represents the broad value creation categories that we have identified.
+The X-axis represents the three prototypical stakeholder roles, while the Y-axis represents the broad value creation categories that we have identified.
 
 |                                                  | Software Sponsor [Principal] | Provider of SDLC Automation [Agent] | Consumer of SDLC Automation [Agent] |
 | ------------------------------------------------ | :--------------------------: | :---------------------------------: | :---------------------------------: |
@@ -121,6 +91,31 @@ The main selling points of Standard are:
 - **Community Outreach:** Standard is a part of the Nix ecosystem and is committed to community outreach to ensure that its optimization targets are met and that other perspectives are not dismissed.
 
 These points show how Standard can help adopters to improve their software delivery process, and how it can save them time, money and improve the quality of their software.
+
+## Scope
+
+The automatable sections of the SDLC end-to-end process can be subdivided (not broken up!) in roughly three process regions with different overall shapes and characteristics.
+
+The stipulated process regions are:
+
+- **Development Environment** which roughly covers _code-to-commit_.
+- **Packaging Pipeline** which roughly covers _commit-to-distribution_. It is typically set up once and then orchestrated by a CI control loop.
+- **Continuous Delivery and Beyond (Application Lifecycle Management)** which roughly covers _distribution-to-next-rollout_.
+
+While Standard is fundamentally concerned with optimizing across the end-to-end process, we also limit the scope inside this project repository for practical reasons:
+
+Therefore, we seek to delegate the **Development Environment** to a trusted project with an appropriate scope in the broader Nix Community, while employing community outreach to try to ensure our optimization targets are met or at least not accidentally sabotaged.
+
+On the other hand, we seek to delegate **Continous Delivery and Beyond** by dovetailing and cultivating outreach with more appropriate initiatives of adjacent ecosystems.
+
+## Ideals
+
+The project aims to impove the SDLC by sensibly applying Nix' own superpowers and its ecoysystem's ingenuity to the problem.
+But it strives to become a portal to make the powers of a store based reproducible packaging system readily available and palatable to colleagues and friends.
+
+- _Use nix only where it is best suited_ &mdash; a Nix maximalist approach may be an innate condition to some of us, but trying to be a portal we deeply recognize and value other perspectives and don't dismiss them as ignorance.
+- _Disrupt where disruption is necessary_ &mdash; to our chagrin, the Nix ecosystem is quite a monotheistic silo. Therefore, we don't shy away from deviating from its widely accepted norms and standards when we feel that it furthers our goals.
+- _Look left, right, above and beyond_ &mdash; our end-to-end perspective commands us to actively seek and reach out to other projects and ecosystems to compose the best possible value chain.
 
 ## Architecture
 
