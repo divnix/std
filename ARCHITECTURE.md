@@ -120,8 +120,13 @@ But it strives to become a portal to make the powers of a store based reproducib
 ## Architecture
 
 <div align="center">
-  <h3>Architecture Diagram</h3>
-  <img src="./artwork/architecture.svg" width="900" />
+  <h3>Inhabiting the SDLC</h3>
+  <img src="./artwork/sdlc.svg" width="900" />
+</div>
+
+<div align="center">
+  <h3>Component Value Contribution</h3>
+  <img src="./artwork/components.svg" width="900" />
 </div>
 
 ### Code Organization
