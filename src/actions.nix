@@ -30,7 +30,7 @@
 
             uncached_json=$(result/bin/nix-uncached $drvs)
 
-            mapfile -t uncached < <(command jq -r 'to_entries[]|select(.value == [])|.key' <<< "$uncached_json")
+            mapfile -t uncached < <(command jq -r 'to_entries[]|select(.value != [])|.key' <<< "$uncached_json")
 
             if [[ -n ''${uncached[*]} ]]; then
               local list filtered
