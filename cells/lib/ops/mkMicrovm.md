@@ -12,7 +12,10 @@ This is an integration for [`astro/microvm.nix`][microvm].
   inherit (inputs.std.lib) ops;
 in {
   # microvm <module>
-  myhost = ops.mkMicrovm ({ pkgs, lib, ... }: { networking.hostName = "microvms-host";});
+  myhost = ops.mkMicrovm {
+    nixpkgs = inputs.nixpkgs;
+    modules = [({ pkgs, lib, ... }: { networking.hostName = "microvms-host";})];
+  };
 }
 ```
 
