@@ -6,11 +6,11 @@ This document, though, lays out the design, architecture and direction of Standa
 
 If the topics discussed herein are dear to you, please take it as an invitation to get involved.
 
-This design document can only be altered through an RFC process.
+This design document shall be stable and amendments go through a proper process of consideration.
 
 ## Overview
 
-Standard is a _framework_ to bootstrap and sustain the automatable sections of the Software Delivery Lifecycle (SDLC) _efficiently_ with the power of Nix and Flakes.
+Standard is a collection of functionality and best practices (_"framework"_) to bootstrap and sustain the automatable sections of the Software Delivery Lifecycle (SDLC) _efficiently_ with the power of Nix and Flakes.
 In particular, Standard is a _Horizontal Integration Framework_ which integrates _vertical_ tooling.
 
 > Glossary:
@@ -18,158 +18,180 @@ In particular, Standard is a _Horizontal Integration Framework_ which integrates
 > _Vertical Tooling_ does one thing and does it well in a narrow scope (i.e "vertical").
 >
 > _Horizontal Tooling_ stitches vertical tooling together to a polished whole.
+>
+> <sub>
+> Where does this terminology come from?
+> We occasionally borrow concepts from organizational science.
+> </sub>
 
-In that context, the integration targets are the end-to-end automatable sections of the SDLC process for which we offer well-integrated tools and best practices.
+In that context, subject to integration are the end-to-end automatable sections of the SDLC process for which we offer well-integrated tools and best practices.
 _Efficient_ SDLCs are characterized by two things.
 
 Firstly, by adequate _lead time_ which is the amount of time it takes to set up an initial version of the software delivery pipeline.
-It needs to be _adequate_ rather than _just fast_, as it takes place in the context of a team and thus encompasses learning and onboarding activities.
+It needs to be _adequate_ rather than _just fast_, as it takes place in the context of a team.
 Rather than for speed, they need optimization for success.
+For example, a process needs to be documented & explained and your team needs to be trained on it.
+Standard encourages incremental adoption in order to leave enough space for these paramount activities.
+If you're in a hurry and your team is onboard, though, you still can jumpstart the implementation.
 
-Secondly, by short _cycle times_ which is the amount of time it takes for a commit to be shipped to a production environment.
+Secondly, efficient SDLCs are characterized by short _cycle times_ which is the amount of time it takes for a designed feature to be shipped to production.
 Along this journey, we encounter our scope (more on it below):
 
 - aspects of the _development_ environment;
 - the packaging pipeline that produces artifacts;
 - and continuous processes integrating the application lifecycle.
 
-The goal of Standard is to optimize the critical path along this journey to achieve superior _cycle times_ through the powers of Nix and Flakes over frameworks in failure mode of disregard for the intrinsic value of _reproducability_.
+Hence, the goal of Standard is to:
+
+- Enable easy and incremental adoption
+- Optimize the critical path that reduces your SDLC's cycle time.
+
+Additionally, unlike similar projects, we harness the power of Nix & Flakes to ensure reproducibility.
 
 ## Goals
 
-- _Complete_: Standard should make a complete offer for setting up and running the automatable sections of the SDLC.
-- _Optimized_: Standard should optimize for agents ("make your day-to-day life easier") and principle ("quick time-to-market"), alike.
-- _Integrated_: Standard should provide the best possible integration experience across a well-curated assortment of verticals.
+- _Complete_: Standard should cover the important use cases for setting up and running the automatable sections of the SDLC.
+- _Optimized_: Standard should optimize both for the needs of the individual developers and the market success of the product.
+- _Integrated_: Standard should provide the user with a satisfying integration experience across a well-curated assortment of tools and functionality.
 
-## Value Matrix
-
-In this section, we'll explain how Standard intents to create value.
-We'll make use of a simple value matrix with simple sentiment scores:
-
-- :heart_eyes: &rarr; <i>"absolutely love it!!!"</i>
-- :smile: &rarr; <i>"feels pretty good."</i>
-- :neutral_face: &rarr; <i>"whatever?!?"</i>
-
-The X-axis represents the three prototypical stakeholder roles, while the Y-axis represents the broad value creation categories that we have identified.
-
-|                                                  | Software Sponsor [Principal] | Provider of SDLC Automation [Agent] | Consumer of SDLC Automation [Agent] |
-| ------------------------------------------------ | :--------------------------: | :---------------------------------: | :---------------------------------: |
-| Productivity                                     |         :heart_eyes:         |            :heart_eyes:             |              :smiley:               |
-| Code Organization                                |           :smiley:           |            :heart_eyes:             |              :smiley:               |
-| Mental Model & Learning                          |           :smiley:           |            :heart_eyes:             |              :smiley:               |
-| Batteries Included                               |        :neutral_face:        |            :heart_eyes:             |           :neutral_face:            |
-| Community and Ecosystem                          |        :neutral_face:        |            :heart_eyes:             |              :smiley:               |
-| Reproducibility & Software Supply Chain Security |         :heart_eyes:         |            :heart_eyes:             |           :neutral_face:            |
-| Modularity & Incremental Adoption                |           :smiley:           |              :smiley:               |            :heart_eyes:             |
-| Developer Experience & Onboarding Story          |           :smiley:           |              :smiley:               |            :heart_eyes:             |
-
-So, this is for you and your team, if you:
-
-- Care about reproducibility
-- Value clean code
-- Have a deadline to meet
-- Want to serve an optimized UX
-
-## Selling Points
-
-<sub>ChatGPT insited on publishing Standard's selling points. So it went ahead and did it itself. What you'll read are its conclusions:</sub>
-
-The main selling points of Standard are:
-
-- **Efficiency:** Standard automates the software delivery lifecycle, making the process more efficient and streamlined.
-
-- **Reproducibility:** Standard's emphasis on reproducibility ensures that every stage of the SDLC can be easily replicated, leading to a more consistent and reliable software development process.
-
-- **Speed:** Standard optimizes the critical path of the SDLC journey to achieve superior cycle times, which means that your software can be shipped to production faster.
-
-- **Flexibility:** Standard is built to be flexible and adaptable, which allows it to be used in a variety of different contexts and industries.
-
-- **Cost-effective:** Automating the software delivery lifecycle with Standard saves time and resources, making it more cost-effective.
-
-- **Integration:** Standard is a horizontal integration framework that integrates vertical tooling, making it easier to stitch together different tools and processes to create a polished whole.
-
-- **Community Outreach:** Standard is a part of the Nix ecosystem and is committed to community outreach to ensure that its optimization targets are met and that other perspectives are not dismissed.
-
-These points show how Standard can help adopters to improve their software delivery process, and how it can save them time, money and improve the quality of their software.
-
-## Scope
-
-The automatable sections of the SDLC end-to-end process can be subdivided (not broken up!) in roughly three process regions with different overall shapes and characteristics.
-
-The stipulated process regions are:
-
-- **Development Environment** which roughly covers _code-to-commit_.
-- **Packaging Pipeline** which roughly covers _commit-to-distribution_. It is typically set up once and then orchestrated by a CI control loop.
-- **Continuous Delivery and Beyond (Application Lifecycle Management)** which roughly covers _distribution-to-next-rollout_.
-
-While Standard is fundamentally concerned with optimizing across the end-to-end process, we also limit the scope inside this project repository for practical reasons:
-
-Therefore, we seek to delegate the **Development Environment** to a trusted project with an appropriate scope in the broader Nix Community, while employing community outreach to try to ensure our optimization targets are met or at least not accidentally sabotaged.
-
-On the other hand, we seek to delegate **Continous Delivery and Beyond** by dovetailing and cultivating outreach with more appropriate initiatives of adjacent ecosystems.
+Please defer to the [sales pitch](./PITCH.md), if you need more excitement.
 
 ## Ideals
 
-The project aims to impove the SDLC by sensibly applying Nix' own superpowers and its ecoysystem's ingenuity to the problem.
-But it strives to become a portal to make the powers of a store based reproducible packaging system readily available and palatable to colleagues and friends.
+While we aim to improve the SDLC by applying Nix and its ecoysystem's ingenuity to the problem, we also want to build bridges.
+In order to bring the powers of store based reproducible packaging to colleagues and friends, we need to maneuver around the ecosystem's pitfalls:
 
-- _Use nix only where it is best suited_ &mdash; a Nix maximalist approach may be an innate condition to some of us, but trying to be a portal we deeply recognize and value other perspectives and don't dismiss them as ignorance.
-- _Disrupt where disruption is necessary_ &mdash; to our chagrin, the Nix ecosystem is quite a monotheistic silo. Therefore, we don't shy away from deviating from its widely accepted norms and standards when we feel that it furthers our goals.
-- _Look left, right, above and beyond_ &mdash; our end-to-end perspective commands us to actively seek and reach out to other projects and ecosystems to compose the best possible value chain.
+- _Use nix only where it is best suited_ &mdash; a Nix maximalist approach may be an innate condition to some of us, but to build bridges we deeply recognize and value other perspectives and don't dismiss them as ignorance.
+- _Disrupt where disruption is necessary_ &mdash; the Nix ecosystem has a fairly rigid set of principles and norms that we don't think always apply in our use cases.
+- _Look left, right, above and beyond_ &mdash; our end-to-end perspective commands us to actively seek and reach out to other projects and ecosystems to compose our value chain; there's no place for the "not invented here"-syndrome.
+
+## Scope
+
+These are big goals and ideals.
+In the interest of practical advancements, we'll narrow down the scope in this section.
+
+We can subdivide (not break up!) our process into roughly three regions with different shapes and characteristics:
+
+- **Development Environment** roughly covers _code-to-commit_.
+- **Packaging Pipeline** roughly covers _commit-to-distribution_.
+- **Deployment and Beyond** roughly covers _distribution-to-next-rollout_.
+
+We delegate:
+
+- The **Development Environment** to a trusted project in the broader Nix Community employing community outreach to promote our cause and ensure it is at least not accidentally sabotaged.
+- The **Deployment and Beyond** by cultivating outreach and dovetailing with initiatives of, among others, the Cloud Native ecosystem.
+
+And we focus on:
+
+- The **Packaging Pipeline**
+- _Interfaces_ and _Integration_ with the other two
 
 ## Architecture
 
-<div align="center">
-  <h3>Inhabiting the SDLC</h3>
-  <img src="./artwork/sdlc.svg" width="900" />
-</div>
+### Overview
 
-<div align="center">
-  <h3>Component Value Contribution</h3>
-  <img src="./artwork/components.svg" width="900" />
-</div>
+#### Locating Standard in the SDLC
 
-### Code Organization
+Where is Standard located in the big picture?
 
-Standard is built around a balanced model of code organization that promotes transparency, the ability to refactor and productivity.
-This code organization is provided by a so-called "Importer Library" housed as an independently useful component under [`divnix/paisano`](https://github.com/divnix/paisano).
+This graphic locates Standard across the SDLC & ALM.
 
-It features three principles:
+But not only that.
+It also explains how automation in itself is implemented as _code_, just as the application itself.
+Therefore, we make a distinction between:
 
-- Three folder levels with predefined semantics
-- A single function interface common to all its components
-- Typed outputs (which is a novelty compared to Flakes)
+- first order application code on the first level (L1); and
+- higher order supporting code on higher levels as exemplified by L2 and L3.
 
-The first principle helps you to cut off at a sane level of structure.
-Neither too flat, which would make your collection hard to reason about or orderly extend.
-Nor too nested, which ends up being an over engineered structure.
+> Glossary:
+>
+> _L2 & L3_ have no clearly defined meaning.
+> They represent that we may observe multiple layers of higher order code when automating.
+> Examples could be bash scripts, configuration data, platform utility code and more.
 
-The second principle allows for easy organization and refactoring of your global namespace.
-From the perspective of one component, all external accessor interfaces are unified, which makes semantic reorganization trivial.
-On the flip side, by choosing high level and, above all, stable accessors, productivity may increase.
+<div align="center"><img src="./artwork/sdlc.svg" width="900" /></div>
 
-The third principle allows for keeping code DRY.
-There are a finite amount of artifact categories of relevance, such as binary packages or OCI images, among others.
-The `paisano` concept of so called Block Types describes these artifact and outputs types in a generic manner and attaches well-known semantics to their handling.
+#### Standard's Components and their Value Contribution
 
-The first two principles combined, also yield collateral benefits when context switching between two standardized projects, by lowering the amount of relearning required as the fundamental organizational principles are stable.
-The last principle opens up a realm of possibilities from user interfaces to pipeline automations that we pretend to exploit further down.
+What is Standard made of? And how do its components contribute value?
 
-### Function Library
+On the left side of the graphic, we show how Standard, like an onion, is build in layers:
 
-Alongside the **Packaging Pipeline**, and by dogfooding its code organization principles, Standard provides a curated assortment of library functions and integrations that users can adopt in accordance with their needs encouraged by the promise of heightened productivity or the peace of mind to build on the shoulders of the entire Standard community.
-Some library functions and integrations may be assorted outside of these organizational principles as otherwise unspecial top level shorthands.
+Center to Standard is [`divnix/paisano`](https://github.com/divnix/paisano).
+This flake (i.e. "Nix library") implements two main abstractions: Block Types and Cells.
 
-### Block Type Library
+_**Block Types**_ are not unlike Rust's traits or Golang's interfaces.
+They are abstract definitions of artifact classes.
+Those abstract classes implement _shared functionality_.
 
-As mentioned in the context of `paisano` above, Standard exploits the Block Type concept with a focus on providing enriched output types for the SDLC.
+A few examples of artifact classes in our scope are: packages, containers, scripts and manifests, among others.
+Examples of shared functionality are _push_ on containers and on packages _build_.
 
-For example, it would be redundant in Standard to codify how to build and upload a container image by hand, since the container output type is already fully aware in a highly optimized fashion of these semantics.
-As another example, it would be redundant to encode deployment semantics of a terraform deployment declaration, since a (future) terraform type can be made fully aware in a highly optimized fashion (i.e. securely store state) of the required semantics.
+_**Cells**_, in turn, organize your code into related units of functionality.
+Hence, Cells are a code _orgnization principle_.
 
-### Modularity & Virality Model
+On top of Paisano's abstractions, Standard implements within its scope:
 
-Within the scope of the Standard use case, we aim to provide registry-like features to index community provided block types and library functions that are not maintained by the core maintainers.
-Such a registry will need to find a good solution for near-code documentation that can be rendered into a compelling index and documentation site.
+- a collection of Block Types; and
+- a collection of library functionality organized in Cells.
 
-Strictly, this model may be useful outside of Standard in the context of paisano, but here that's also not Standard's problem.
+On the right side of the graphic, we sketch an idea how these components are put into service for the SDLC.
+
+<div align="center"><img src="./artwork/components.svg" width="900" /></div>
+
+### Paisano (Code Organization)
+
+We already learnt about Paisano's two main abstractions: Cells & Block Types.
+
+Cells enable and encourage the user to cleanly organize their code into related units of functionality.
+The concrete semantics of code layout are completely at her choosing.
+For example, she could separate application tiers like frontend and backend into their own Cell, each.
+Or she could reflect the microservices architecture in the Cells.
+
+Paisano has a first class concept of Cells.
+By simply placing a folder in the repository, Paisano will pick it up.
+In that regard, Paisano is an automated importer, that spares the user the need to setup and maintain boilerplate plumbing code.
+
+Within a Cell, the user groups artifacts within Blocks of an appropriate Block Type.
+When configuring Standard, she names her Blocks using Standard's Block Types so that Paisano's importer can pick them up, too.
+By doing that, she also declares the repository's artifact type system to humans and machines.
+
+Machines can make great use of that to interact with the artifact type system in multiple ways.
+Paisano exports structured json-serializable data about a repository's _typed_ artifacts in its so-called "Paisano Registry".
+A CLI or TUI, as is bundled with Standard, or even a web user interface can consume, represent and act upon that data.
+
+And so can CI.
+
+In fact, this is an innovation in the SDLC space:
+We can devise an implementation of a CI which, by querying Paisano's Registry, autonomously discovers all work that needs to be done.
+Indeed, we made a reference implementation for GitHub Actions over at [`divnix/std-action`](https://github.com/divnix/paisano).
+To our knowledge, this is the first and only "zero config" CI implementation based on the principles of artifact typing and code organization.
+By using these principles rather than a rigid opinionated structure, it also remains highly flexible and adapts well to the user's preferences.
+
+In summary, all these organization and typing principles enable:
+
+- Easy refactoring of your repository's namespace for devops artifacts
+- Intuitive grouping of functionality that encourages well-defined internal boundaries
+  - Thereby keeping your automation code clean and maintainable
+- Making use of Block Types and the shared library to implement the DRY principle
+- Reasoning about the content of your repo through structured data
+  - Thereby interesting user interfaces, such as a CLI, TUI or even a UI
+  - But also services such as (close to) zero config & self-updating CI
+- Similar organizational principles help to lower the cost of context switching between different projects
+
+### Standard's Block Types (DevOps Type System)
+
+As mentioned above, Standard exploits the Block Type abstraction to provide artifact types for the SDLC.
+Within the semantics of each Block Type, we implement shared functionality.
+This is designed to offer the user an optimized, audited implementation.
+It also saves the need to devise "yet another" local implementation of otherwise well-understood generic functionality, such as, for example the building of a package or the pushing of a container image.
+
+### Standard's Cells (Function Library)
+
+Alongside the **Packaging Pipeline**, Standard provides a curated assortment of library functions and integrations that users can adopt.
+While optional, an audited and community maintained function library and its corresponding documentation fulfills the promise of productivity, shared mental models and ease of adoption.
+
+## Modularity & Virality Model
+
+We aim to provide a public registry in which we index and aggregate additional Block Types and Cells from the Standard user community that are not maintained in-tree.
+A good documentation story will be part of that registry.

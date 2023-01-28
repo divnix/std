@@ -2,6 +2,7 @@
 
 [Introduction](README.md)
 [Design & Architecture](./ARCHITECTURE.md)
+[Sales Pitch](./PITCH.md)
 [Roadmap](./ROADMAP.md)
 
 # Tutorials

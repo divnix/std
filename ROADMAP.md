@@ -7,30 +7,32 @@ This roadmap gives an overview of the short and mid term direction that the proj
 
 ## Deliverable Categories
 
-We've identified a couple of deliverable categories that should help us better understand the work spectrum associated with the project.
-Please also complement this with the high level overview in the [Architecture](./ARCHITECTURE.md).
+We've identified a couple of deliverable categories in line with the [architectural overview](./ARCHITECTURE.md).
 
-##### Process Categories alongside the (automatable sections of the) SDLC
+These help us to better understand the work spectrum associated with the project.
 
-- Setup Processes
-- The actual automatable parts of the SDLC Cycle
+##### Process Categories
 
-While an instance of the actual SDLC process inside the boundaries of Standard's current scope is easy to break down into _eval_, _build_ and _effect/action_ and easy to measure with the _cycle time_ metric,
-the Setup Process is where adoption success or failure may be determined alongside:
+To run an _automation_ we have to _set it up_, first.
+We should keep that in mind when working on the backlog and therefore classify:
 
-- Provided Documentation
-- Shared Mental Models
-- Curated Quick Start Template
-- Onboarding & Learning Context
-- Actual Installation and Setup
+- Setup
+- Automation
+
+Work packages that supports setup typically involve:
+
+- Documentation & Setup Instructions
+- Pattern & Shared Mental Models
+- Quick Start Template
+- Onboarding & Learning Content
 
 ##### Process Regions
 
-As discussed in the [Architecture](./ARCHITECTURE.md) document, we roughly identify three regions with shifting characteristics alongside the SDLC:
+Per our [architectural overview](./ARCHITECTURE.md), we distinguishe these process regions:
 
-- Development Environment Region
-- Build Pipeline Region (including CI control loops)
-- Continuous Delivery and Beyond (Application Lifecycle Management)
+- Development Environment
+- Build Pipeline
+- Deployment and Beyond (Application Lifecycle Management)
 
 ##### Deliverable Types
 
@@ -45,6 +47,6 @@ As discussed in the [Architecture](./ARCHITECTURE.md) document, we roughly ident
 ## Milestone v1
 
 With the above in mind, the [issue backlog](https://github.com/divnix/std/issues) will be regularly groomed and prioritized.
-This is an aid for the core contributors, but it may also provide the necessary orientation and stability to convince interested new contributors.
+This is an aid for the core contributors, but it may also provide the necessary orientation to get new contributors set up.
 
 Welcome!
