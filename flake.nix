@@ -37,6 +37,11 @@
     arion.follows = "blank";
   };
   outputs = inputs: let
+    # this is a standard-specific contract to wrap the data block type with metadata
+    dataWith = meta: data: {
+      __std_data_wrapper = true;
+      inherit data meta;
+    };
     blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs;};
     sharedActions = import ./src/actions.nix {inherit (inputs) nixpkgs;};
     deSystemize = inputs.nosys.lib.deSys;
@@ -59,7 +64,7 @@
   in
     {
       inherit (inputs) yants dmerge incl; # convenience re-exports
-      inherit blockTypes sharedActions;
+      inherit blockTypes sharedActions dataWith;
       inherit (blockTypes) runnables installables functions data devshells containers files microvms nixago nomadJobManifests;
       inherit grow growOn deSystemize pick harvest winnow;
       systems = l.systems.doubles;
