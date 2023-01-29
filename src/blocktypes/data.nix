@@ -30,7 +30,7 @@
         text = builtins.toJSON target;
       };
       jq = ["${pkgs.jq}/bin/jq" "-r" "'.'" "${json}"];
-      fx = ["|" "xargs" "cat" "|" "${pkgs.fx}/bin/fx"];
+      fx = ["|" "${pkgs.fx}/bin/fx"];
     in [
       (mkCommand system {
         name = "write";
