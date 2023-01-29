@@ -166,7 +166,7 @@
         text = builtins.toJSON target;
       };
       jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
-      fx = [&quot;|&quot; &quot;xargs&quot; &quot;cat&quot; &quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
+      fx = [&quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
     in [
       (mkCommand system {
         name = &quot;write&quot;;
