@@ -209,7 +209,7 @@
             tPath = paths.targetPath oPath name;
             targetFragment = ''"${system}"."${cellName}"."${cellBlock.name}"."${name}"'';
             actionFragment = action: {
-              actionFragment = ''"__std"."actions"."${system}"."${cellName}"."${cellBlock.name}"."${name}"."${action}'';
+              actionFragment = ''"__std"."actions"."${system}"."${cellName}"."${cellBlock.name}"."${name}"."${action}"'';
             };
             actions =
               if cellBlock ? actions
