@@ -6,14 +6,14 @@ _Where appropriate, we compare with `divnix/paisano`, instead_.
 
 ### flake-utils
 
-`numtide/flake-utils` is a small & lightweight utility with a focus on generating flake file _outputs_ in accordance with the packaging use case built-in into the Nix CLI tooling.
+`numtide/flake-utils` is a small & lightweight utility with a focus on generating flake file _outputs_ in accordance with the packaging use case built into the Nix CLI tooling.
 
 Paisano, in turn, is an importer with a focus on _code organization_; it still plugs well into a `flake.nix` file, but also preserves its index function by keeping it clean.
 While you _can_ use it to match the schema that Nix CLI expects, it also enables more flexibility as it is not specially optimized for the Nix _package manager use case_.
 
 ### flake-parts
 
-`hercules-ci/flake-parts` is a component aggregator with a focus on a flake schema that is built-in into the Nix CLI tooling that makes use of the NixOS module system for composability and aggregation.
+`hercules-ci/flake-parts` is a component aggregator with a focus on a flake schema that is built into the Nix CLI tooling that makes use of the NixOS module system for composability and aggregation.
 
 Paisano, in turn, is an importer with a focus on _code organization_; it still plugs well into a `flake.nix` file, but also preserves its index function by keeping it clean.
 While you _can_ use it to match the schema that Nix CLI expects, it also enables more flexibility as it is not specially optimized for the Nix _package manager use case_.
@@ -24,12 +24,12 @@ However, in that role, it gives you back the freedom to use the output schema th
 Convergence towards the Flakes output schema is provided via the harvester family of functions (`winnow`, `harvest` & `pick`).
 Depending on the domain schema, it can be a _lossy_ convergence due the lesser expressivity of the flake output schema.
 
-Flake Parts aggregates bespoke use-case specific interfaces implemented in the module system DSL.
+Flake Parts aggregates bespoke use-case specific interfaces implemented in a domain specific language based on Nix (i.e. "the module system").
 Paisano, in turn, focuses on code organization along high level code boundaries connected by generic interfaces.
 
-The core tenet of Flake Parts is bespoke module system DSL interfaces for each use case.
+The core tenet of Flake Parts is domain specific interfaces for each use case.
 
-The core tenet of Paisano remains Nix' original functional style.
+The core tenet of Paisano remains Nix' original functional style paired with a function library.
 
 ### Devshell
 
@@ -45,7 +45,7 @@ Most languages are already covered.
 ### Bazel
 
 Bazel is similar to Nix in that it creates cross-language build graphs.
-However, it doesn't not guarantee reproducibility.
+However, it does not guarantee reproducibility.
 Currently it has more advanced build caching strategies: a gap that the Nix community is very eager to close soon.
 
 ### My CI/CD

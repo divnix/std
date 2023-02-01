@@ -7,14 +7,14 @@ It is essential to have an idea of who they are, so let's introduce:
 Makes resources available in return for the expectation of future benefits.
 
 **_The Provider of Automation_**
-Sets up and maintains the automation alongside the SDLC.
-A helpful analogy would be the person who sets up and maintains the conveyor belt, which moves features to production.
+Sets up and maintains the automation along the SDLC.
+A helpful analogy would be the person who sets up and maintains the conveyor belt which moves features to production.
 
 **_The Consumer of Automation_**
-Consumes and co-maintaines the automation alongside the SDLC.
-A helpful analogy would be that this person not only uses and configures our conveyor belt, but is also capable of maintaining it.
+Consumes and co-maintaines the automation along the SDLC.
+A helpful analogy would be that this person not only uses and configures our conveyor belt, but is also capable of occasionally maintaining it.
 
-It is equally essential to have an understanding what they value, so let's try to get an overview.
+It is essential to have an understanding what they value, so let's try to get an overview.
 We'll make use of a high level value matrix with simple sentiment scores:
 
 - :heart_eyes: &rarr; <i>"absolutely love it!!!"</i>
