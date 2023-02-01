@@ -1,7 +1,6 @@
 # Roadmap
 
-The freestyle history of the project was productive at its time.
-But recently, it has been outgrowing its freedom to freestyle.
+The freestyle history of the project was productive during the alpha stage, but as the code stabilizes, so too must our processes.
 
 This roadmap gives an overview of the short and mid term direction that the project aims to take.
 
@@ -13,22 +12,22 @@ These help us to better understand the work spectrum associated with the project
 
 ##### Process Categories
 
-To run an _automation_ we have to _set it up_, first.
+To run _automation_ we have to _set it up_, first.
 We should keep that in mind when working on the backlog and therefore classify:
 
 - Setup
 - Automation
 
-Work packages that supports setup typically involve:
+For setup, besides function libraries, a variety of supporting material is crucial, such as:
 
-- Documentation & Setup Instructions
-- Pattern & Shared Mental Models
-- Quick Start Template
+- Documentation & Instructions
+- Patterns & Shared Mental Models
+- Quick Start Templates
 - Onboarding & Learning Content
 
 ##### Process Regions
 
-Per our [architectural overview](./ARCHITECTURE.md), we distinguishe these process regions:
+Per our [architectural overview](./ARCHITECTURE.md), we distinguish these process regions:
 
 - Development Environment
 - Build Pipeline
@@ -37,12 +36,12 @@ Per our [architectural overview](./ARCHITECTURE.md), we distinguishe these proce
 ##### Deliverable Types
 
 - Docs
-- CLI Commands or TUI functionality
+- CLI commands or TUI helpers
 - Integrations
-- Library Functions
+- Library functions
 - Block Types
-- Stable Interfaces
-- Community Outreach
+- Stable interfaces
+- Community outreach
 
 ## Milestone v1
 

@@ -11,21 +11,18 @@ This design document shall be stable and amendments go through a proper process 
 ## Overview
 
 Standard is a collection of functionality and best practices (_"framework"_) to bootstrap and sustain the automatable sections of the Software Delivery Lifecycle (SDLC) _efficiently_ with the power of Nix and Flakes.
-In particular, Standard is a _Horizontal Integration Framework_ which integrates _vertical_ tooling.
+In particular, Standard is a _Horizontal\* Integration Framework_ which integrates _vertical\*_ tooling.
 
-> Glossary:
+> <sub>We occasionally adapt concepts from non-technical contexts. This is one instance.</sub>
 >
 > _Vertical Tooling_ does one thing and does it well in a narrow scope (i.e "vertical").
 >
 > _Horizontal Tooling_ stitches vertical tooling together to a polished whole.
->
-> <sub>
-> Where does this terminology come from?
-> We occasionally borrow concepts from organizational science.
-> </sub>
 
-In that context, subject to integration are the end-to-end automatable sections of the SDLC process for which we offer well-integrated tools and best practices.
-_Efficient_ SDLCs are characterized by two things.
+What is being integrated are the end-to-end automatable sections of the SDLC.
+For these we curate a collection of functionality, tools and best practices.
+
+An SDLCs _efficiency_ on the is characterized by two things.
 
 Firstly, by adequate _lead time_ which is the amount of time it takes to set up an initial version of the software delivery pipeline.
 It needs to be _adequate_ rather than _just fast_, as it takes place in the context of a team.
@@ -94,14 +91,14 @@ And we focus on:
 
 Where is Standard located in the big picture?
 
-This graphic locates Standard across the SDLC & ALM.
+This graphic locates Standard across the SDLC & Application Lifecycle Management (ALM).
 
 But not only that.
 It also explains how automation in itself is implemented as _code_, just as the application itself.
 Therefore, we make a distinction between:
 
-- first order application code on the first level (L1); and
-- higher order supporting code on higher levels as exemplified by L2 and L3.
+- first order application code (L1); and
+- above that, higher order supporting code as exemplified by L2 and L3.
 
 > Glossary:
 >
@@ -125,7 +122,7 @@ They are abstract definitions of artifact classes.
 Those abstract classes implement _shared functionality_.
 
 A few examples of artifact classes in our scope are: packages, containers, scripts and manifests, among others.
-Examples of shared functionality are _push_ on containers and on packages _build_.
+Examples of shared functionality are _push_ on containers and _build_ on packages.
 
 _**Cells**_, in turn, organize your code into related units of functionality.
 Hence, Cells are a code _orgnization principle_.
@@ -141,11 +138,11 @@ On the right side of the graphic, we sketch an idea how these components are put
 
 ### Paisano (Code Organization)
 
-We already learnt about Paisano's two main abstractions: Cells & Block Types.
+We already learned about Paisano's two main abstractions: Cells & Block Types.
 
 Cells enable and encourage the user to cleanly organize their code into related units of functionality.
 The concrete semantics of code layout are completely at her choosing.
-For example, she could separate application tiers like frontend and backend into their own Cell, each.
+For example, she could separate application tiers like frontend and backend into their own cells, each.
 Or she could reflect the microservices architecture in the Cells.
 
 Paisano has a first class concept of Cells.
@@ -170,13 +167,13 @@ By using these principles rather than a rigid opinionated structure, it also rem
 
 In summary, all these organization and typing principles enable:
 
-- Easy refactoring of your repository's namespace for devops artifacts
+- Easy refactoring of your repository's devops namespace
 - Intuitive grouping of functionality that encourages well-defined internal boundaries
-  - Thereby keeping your automation code clean and maintainable
+  - Allowing for keeping your automation code clean and maintainable
 - Making use of Block Types and the shared library to implement the DRY principle
 - Reasoning about the content of your repo through structured data
   - Thereby interesting user interfaces, such as a CLI, TUI or even a UI
-  - But also services such as (close to) zero config & self-updating CI
+  - As well as also services like a (close to) zero config, self-updating CI
 - Similar organizational principles help to lower the cost of context switching between different projects
 
 ### Standard's Block Types (DevOps Type System)
@@ -184,7 +181,7 @@ In summary, all these organization and typing principles enable:
 As mentioned above, Standard exploits the Block Type abstraction to provide artifact types for the SDLC.
 Within the semantics of each Block Type, we implement shared functionality.
 This is designed to offer the user an optimized, audited implementation.
-It also saves the need to devise "yet another" local implementation of otherwise well-understood generic functionality, such as, for example the building of a package or the pushing of a container image.
+Alleviates the burdon of devising "yet another" local implementation of otherwise well-understood generic functionality, such as, the building of a package or the pushing of a container image.
 
 ### Standard's Cells (Function Library)
 
