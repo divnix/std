@@ -50,6 +50,7 @@ Depending on the domain schema, it can be a _lossy_ convergence, though, due the
       packages = std.harvest self [["std" "cli"] ["std" "packages"]];
       templates = std.pick self ["presets" "templates"];
     };
+}
 ```
 
 </details>
