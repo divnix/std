@@ -202,9 +202,11 @@ func (m *Tui) Init() tea.Cmd {
 		})
 		// ... re-load the flake with non-blocking i/o
 		cmds = append(cmds, func() tea.Msg {
+			stderr := new(bytes.Buffer)
+			cmd.Stderr = stderr
 			err = cmd.Run()
 			if err != nil {
-				return cellLoadingFatalErrMsg{err}
+				return cellLoadingFatalErrMsg{fmt.Errorf(stderr.String())}
 			}
 			bufA := &bytes.Buffer{}
 			r := io.TeeReader(buf, bufA)
