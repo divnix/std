@@ -21,7 +21,7 @@ and many more amazing people (see end of file for a full list)._
 ---
 
 [Standard][std] is a nifty DevOps framework that
-enables an efficient Software Delivery Life Cycle (SDLC) with the power of [Nix][nix] via [Flakes][nix-flakes].
+enables an efficient Software Development Life Cycle (SDLC) with the power of [Nix][nix] via [Flakes][nix-flakes].
 
 It organizes and disciplines your Nix and thereby speeds you up.
 It also comes with great horizontal integrations of high

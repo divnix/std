@@ -14,7 +14,7 @@ A helpful analogy would be the person who sets up and maintains the conveyor bel
 Consumes and co-maintaines the automation along the SDLC.
 A helpful analogy would be that this person not only uses and configures our conveyor belt, but is also capable of occasionally maintaining it.
 
-It is essential to have an understanding what they value, so let's try to get an overview.
+It is essential to have an understanding of what they value, so let's try to get an overview.
 We'll make use of a high level value matrix with simple sentiment scores:
 
 - :heart_eyes: &rarr; <i>"absolutely love it!!!"</i>
@@ -34,10 +34,10 @@ We'll make use of a high level value matrix with simple sentiment scores:
 
 So, this is for you and your team, if you:
 
-- Care about reproducibility
-- Value clean code
-- Have a deadline to meet
-- Want to serve an optimized UX
+- Care about reproducibility for more reliablility throughout your software development
+- Value clean code for keeping a check on techincal debt and increased long-term maintainability
+- Have a deadline to meet with the help of the includes best practices and batteries
+- Want to serve an optimized UX to your colleagues via a repo CLI / TUI and (close to) zero-config CI
 
 # Selling Points
 
