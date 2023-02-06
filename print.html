@@ -1921,9 +1921,14 @@ Actions according to the needs of your project.</p>
     }: let
       inherit (nixpkgs.legacyPackages.${system}) pkgs;
 
+      # if target ? __std_data_wrapper, then we need to unpack from `.data`
       json = pkgs.writeTextFile {
         name = &quot;data.json&quot;;
-        text = builtins.toJSON target;
+        text = builtins.toJSON (
+          if target ? __std_data_wrapper
+          then target.data
+          else target
+        );
       };
       jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
       fx = [&quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
