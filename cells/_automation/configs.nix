@@ -123,7 +123,7 @@ in {
         src = ".";
       };
       build = {
-        build-dir = "docs/book";
+        build-dir = "book";
       };
       preprocessor = {
         mermaid.command = "mdbook-mermaid";

@@ -1,4 +1,4 @@
-# A minimal Standard Template to get started with docs!
+# A minimal project template with docs!
 
 ## Included Configuration
 
