@@ -1,6 +1,6 @@
 ## The `std` TUI / CLI
 
-### Usage
+#### Usage
 
 - Enter a `std`ized repository.
 - Enter it's devshell (which must include `//std/devshellProfiles:default`)

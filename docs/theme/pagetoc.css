@@ -19,6 +19,8 @@
     width: 200px;
     height: calc(100vh - var(--menu-bar-height) - 0.67em * 4);
     overflow: auto;
+    line-hight: 1em;
+    font-size: 0.8em;
   }
   .pagetoc a {
     border-left: 1px solid var(--sidebar-bg);
@@ -43,10 +45,10 @@
     padding-left: 20px;
   }
   .pagetoc .pagetoc-H3 {
-    padding-left: 40px;
+    padding-left: 30px;
   }
   .pagetoc .pagetoc-H4 {
-    padding-left: 60px;
+    display: none;
   }
   .pagetoc .pagetoc-H5 {
     display: none;
