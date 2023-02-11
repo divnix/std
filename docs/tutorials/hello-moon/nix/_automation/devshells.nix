@@ -31,7 +31,7 @@ in
       # integration between Devshell and Nixago
       nixago = [
         # off-the-shelve from `std`
-        (std.nixago.conform {configData = {inherit (inputs) cells;};})
+        (std.nixago.conform {data = {inherit (inputs) cells;};})
         std.nixago.lefthook
         std.nixago.adrgen
         # modified from the local Cell

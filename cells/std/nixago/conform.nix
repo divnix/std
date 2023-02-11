@@ -5,7 +5,7 @@
   l = nixpkgs.lib // builtins;
   inherit (inputs) nixpkgs;
 in {
-  configData = {};
+  data = {};
   format = "yaml";
   output = ".conform.yaml";
   packages = [nixpkgs.conform];

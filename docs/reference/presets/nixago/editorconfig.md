@@ -1,1 +1,0 @@
-../../../../cells/presets/nixago/editorconfig.md

@@ -31,7 +31,7 @@ growOn {
 
     # _automation
     (blockTypes.devshells "devshells" {ci.build = true;})
-    (blockTypes.nixago "nixago")
+    (blockTypes.nixago "configs")
     (blockTypes.containers "containers")
     # (blockTypes.tasks "tasks") # TODO: implement properly
 

@@ -88,14 +88,6 @@
 - [`//presets`](reference/presets/Readme.md)
 
   - [`/templates`](reference/presets/templates/Readme.md)
-  - [`/nixago`](reference/presets/nixago/Readme.md)
-    - [`/adrgen`](reference/presets/nixago/adrgen.md)
-    - [`/conform`](reference/presets/nixago/conform.md)
-    - [`/editorconfig`](reference/presets/nixago/editorconfig.md)
-    - [`/lefthook`](reference/presets/nixago/lefthook.md)
-    - [`/mdbook`](reference/presets/nixago/mdbook.md)
-    - [`/treefmt`](reference/presets/nixago/treefmt.md)
-    - [`/githubsettings`](reference/presets/nixago/githubsettings.md)
 
 - [`//_automation`]()
 

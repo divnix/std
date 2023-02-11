@@ -31,8 +31,8 @@ in
               t:
                 l.recursiveUpdate t
                 {
-                  configData.global.excludes =
-                    t.configData.global.excludes
+                  data.global.excludes =
+                    t.data.global.excludes
                     or []
                     ++ (l.map (o: o.output) cfg.nixago);
                 }
