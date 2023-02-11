@@ -163,53 +163,6 @@ in
 <pre><code class="language-nix">inputs: let
   removeBy = import ./cells/std/errors/removeBy.nix {inherit inputs;};
 in {
-  warnRemovedDevshellOptionAdr = removeBy &quot;December 2022&quot; ''
-    The std.adr.enable option has been removed from the std shell.
-    Please look for something like &quot;adr.enable = false&quot; and drop it.
-  '';
-  warnRemovedDevshellOptionDocs = removeBy &quot;December 2022&quot; ''
-    The std.docs.enable option has been removed from the std shell.
-    Please look for something like &quot;docs.enable = false&quot; and drop it.
-  '';
-  warnMkMakes = removeBy &quot;December 2022&quot; ''
-    std.lib.fromMakesWith has been refactored to std.lib.mkMakes.
-
-    It furthermore doesn't take 'inputs' as its first argument
-    anymore.
-  '';
-  warnMkMicrovm = removeBy &quot;December 2022&quot; ''
-    std.lib.fromMicrovmWith has been refactored to std.lib.mkMicrovm.
-
-    It furthermore doesn't take 'inputs' as its first argument
-    anymore.
-  '';
-
-  warnNewLibCell = removeBy &quot;December 2022&quot; ''
-
-    'std.std.lib' has been distributed into its own cell 'std.lib'
-
-    Please access functions via their new location:
-
-    ... moved to 'std.lib.ops':
-    - 'std.std.lib.mkMicrovm' -&gt; 'std.lib.ops.mkMicrovm'
-    - 'std.std.lib.writeShellEntrypoint' -&gt; 'std.lib.ops.writeShellEntrypoint'
-
-    ... moved to 'std.lib.dev':
-    - 'std.std.lib.mkShell' -&gt; 'std.lib.dev.mkShell'
-    - 'std.std.lib.mkNixago' -&gt; 'std.lib.dev.mkNixago'
-    - 'std.std.lib.mkMakes' -&gt; 'std.lib.dev.mkMakes'
-  '';
-
-  warnWriteShellEntrypoint = removeBy &quot;December 2022&quot; ''
-
-    'std.lib.ops.writeShellEntrypoint' is deprecated.
-
-    Instead, use 'std.lib.ops.mkOperable' together
-    with 'std.lib.ops.mkStandardOCI'.
-
-    Please consult its documentation.
-  '';
-
   warnOldActionInterface = actions:
     removeBy &quot;March 2023&quot; ''
 
