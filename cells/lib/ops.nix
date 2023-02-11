@@ -9,10 +9,6 @@ in {
     inputs = requireInput "microvm" "github:astro/microvm.nix" "std.lib.ops.mkMicrovm";
   };
 
-  writeShellEntrypoint = warnWriteShellEntrypoint import ./ops/writeShellEntrypoint.nix {
-    inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.writeShellEntrypoint";
-  };
-
   mkOperable = import ./ops/mkOperable.nix {inherit inputs cell;};
   mkOperableScript = import ./ops/mkOperableScript.nix {inherit inputs cell;};
   mkSetup = import ./ops/mkSetup.nix {inherit inputs cell;};
