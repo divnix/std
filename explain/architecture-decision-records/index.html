@@ -1,0 +1,396 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Architecture Decisions - The Standard Documentation</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="../../ARCHITECTURE.html">Design & Architecture</a></li><li class="chapter-item expanded affix "><a href="../../PITCH.html">Sales Pitch</a></li><li class="chapter-item expanded affix "><a href="../../COMPARE.html">Comparisions</a></li><li class="chapter-item expanded affix "><a href="../../ROADMAP.html">Roadmap</a></li><li class="chapter-item expanded affix "><li class="part-title">Tutorials</li><li class="chapter-item expanded "><a href="../../tutorials/walk-in-the-park.html"><strong aria-hidden="true">1.</strong> A walk in the park</a></li><li class="chapter-item expanded "><a href="../../tutorials/hello-world/index.html"><strong aria-hidden="true">2.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="../../tutorials/hello-moon/index.html"><strong aria-hidden="true">3.</strong> Hello Moon</a></li><li class="chapter-item expanded affix "><li class="part-title">How-To Guides</li><li class="chapter-item expanded "><a href="../../guides/growing-cells.html"><strong aria-hidden="true">4.</strong> Growing Cells</a></li><li class="chapter-item expanded "><a href="../../guides/incl.html"><strong aria-hidden="true">5.</strong> Include Filter</a></li><li class="chapter-item expanded "><a href="../../guides/envrc.html"><strong aria-hidden="true">6.</strong> Setup .envrc</a></li><li class="chapter-item expanded affix "><li class="part-title">Explanation</li><li class="chapter-item expanded "><a href="../../explain/why-nix.html"><strong aria-hidden="true">7.</strong> Why nix?</a></li><li class="chapter-item expanded "><a href="../../explain/why-std.html"><strong aria-hidden="true">8.</strong> Why std?</a></li><li class="chapter-item expanded "><a href="../../explain/architecture-decision-records/index.html" class="active"><strong aria-hidden="true">9.</strong> Architecture Decisions</a></li><li class="chapter-item expanded affix "><li class="part-title">Patterns</li><li class="chapter-item expanded "><a href="../../patterns/four-packaging-layers.html"><strong aria-hidden="true">10.</strong> The 4 Packaging Layers</a></li><li class="chapter-item expanded affix "><li class="part-title">Templates</li><li class="chapter-item expanded "><a href="../../templates/minimal.html"><strong aria-hidden="true">11.</strong> Minimal</a></li><li class="chapter-item expanded "><a href="../../templates/rust.html"><strong aria-hidden="true">12.</strong> Rust</a></li><li class="chapter-item expanded affix "><li class="part-title">Reference</li><li class="chapter-item expanded "><a href="../../reference/cli.html"><strong aria-hidden="true">13.</strong> TUI/CLI</a></li><li class="chapter-item expanded "><a href="../../reference/conventions.html"><strong aria-hidden="true">14.</strong> Conventions</a></li><li class="chapter-item expanded "><a href="../../reference/deprecations.html"><strong aria-hidden="true">15.</strong> Deprecations</a></li><li class="chapter-item expanded "><a href="../../reference/blocktypes.html"><strong aria-hidden="true">16.</strong> Builtin Block Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../reference/blocktypes/data-blocktype.html"><strong aria-hidden="true">16.1.</strong> Data</a></li><li class="chapter-item expanded "><a href="../../reference/blocktypes/functions-blocktype.html"><strong aria-hidden="true">16.2.</strong> Functions</a></li><li class="chapter-item expanded "><a href="../../reference/blocktypes/runnables-blocktype.html"><strong aria-hidden="true">16.3.</strong> Runnables</a></li><li class="chapter-item expanded "><a href="../../reference/blocktypes/installables-blocktype.html"><strong aria-hidden="true">16.4.</strong> Installables</a></li><li class="chapter-item expanded "><a href="../../reference/blocktypes/microvms-blocktype.html"><strong aria-hidden="true">16.5.</strong> Microvms</a></li><li class="chapter-item expanded "><a href="../../reference/blocktypes/devshells-blocktype.html"><strong aria-hidden="true">16.6.</strong> Devshells</a></li><li class="chapter-item expanded "><a href="../../reference/blocktypes/containers-blocktype.html"><strong aria-hidden="true">16.7.</strong> Containers</a></li><li class="chapter-item expanded "><a href="../../reference/blocktypes/nixago-blocktype.html"><strong aria-hidden="true">16.8.</strong> Nixago</a></li><li class="chapter-item expanded "><a href="../../reference/blocktypes/arion-blocktype.html"><strong aria-hidden="true">16.9.</strong> Arion</a></li><li class="chapter-item expanded "><a href="../../reference/blocktypes/nomad-job-manifests-blocktype.html"><strong aria-hidden="true">16.10.</strong> Nomad Job Manifests</a></li><li class="chapter-item expanded "><a href="../../reference/blocktypes/pkgs-blocktype.html"><strong aria-hidden="true">16.11.</strong> Pkgs</a></li></ol></li><li class="chapter-item expanded "><a href="../../reference/std/index.html"><strong aria-hidden="true">17.</strong> //std</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../reference/std/devshellProfiles/index.html"><strong aria-hidden="true">17.1.</strong> /devshellProfiles</a></li><li class="chapter-item expanded "><a href="../../reference/std/nixago/index.html"><strong aria-hidden="true">17.2.</strong> /nixago</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../reference/std/nixago/adrgen.html"><strong aria-hidden="true">17.2.1.</strong> /adrgen</a></li><li class="chapter-item expanded "><a href="../../reference/std/nixago/conform.html"><strong aria-hidden="true">17.2.2.</strong> /conform</a></li><li class="chapter-item expanded "><a href="../../reference/std/nixago/editorconfig.html"><strong aria-hidden="true">17.2.3.</strong> /editorconfig</a></li><li class="chapter-item expanded "><a href="../../reference/std/nixago/just.html"><strong aria-hidden="true">17.2.4.</strong> /just</a></li><li class="chapter-item expanded "><a href="../../reference/std/nixago/lefthook.html"><strong aria-hidden="true">17.2.5.</strong> /lefthook</a></li><li class="chapter-item expanded "><a href="../../reference/std/nixago/mdbook.html"><strong aria-hidden="true">17.2.6.</strong> /mdbook</a></li><li class="chapter-item expanded "><a href="../../reference/std/nixago/treefmt.html"><strong aria-hidden="true">17.2.7.</strong> /treefmt</a></li><li class="chapter-item expanded "><a href="../../reference/std/nixago/githubsettings.html"><strong aria-hidden="true">17.2.8.</strong> /githubsettings</a></li></ol></li><li class="chapter-item expanded "><a href="../../reference/std/errors/index.html"><strong aria-hidden="true">17.3.</strong> /errors</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../reference/std/errors/removeBy.html"><strong aria-hidden="true">17.3.1.</strong> /removeBy</a></li><li class="chapter-item expanded "><a href="../../reference/std/errors/requireInput.html"><strong aria-hidden="true">17.3.2.</strong> /requireInput</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../reference/lib/index.html"><strong aria-hidden="true">18.</strong> //lib</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../reference/lib/dev/index.html"><strong aria-hidden="true">18.1.</strong> /dev</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../reference/lib/dev/mkMakes.html"><strong aria-hidden="true">18.1.1.</strong> /mkMakes</a></li><li class="chapter-item expanded "><a href="../../reference/lib/dev/mkShell.html"><strong aria-hidden="true">18.1.2.</strong> /mkShell</a></li><li class="chapter-item expanded "><a href="../../reference/lib/dev/mkNixago.html"><strong aria-hidden="true">18.1.3.</strong> /mkNixago</a></li><li class="chapter-item expanded "><a href="../../reference/lib/dev/mkArion.html"><strong aria-hidden="true">18.1.4.</strong> /mkArion</a></li></ol></li><li class="chapter-item expanded "><a href="../../reference/lib/ops/index.html"><strong aria-hidden="true">18.2.</strong> /ops</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../reference/lib/ops/mkMicrovm.html"><strong aria-hidden="true">18.2.1.</strong> /mkMicrovm</a></li><li class="chapter-item expanded "><a href="../../reference/lib/ops/mkOperable.html"><strong aria-hidden="true">18.2.2.</strong> /mkOperable</a></li><li class="chapter-item expanded "><a href="../../reference/lib/ops/mkOCI.html"><strong aria-hidden="true">18.2.3.</strong> /mkOCI</a></li><li class="chapter-item expanded "><a href="../../reference/lib/ops/mkStandardOCI.html"><strong aria-hidden="true">18.2.4.</strong> /mkStandardOCI</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../glossary.html"><strong aria-hidden="true">19.</strong> Glossary</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Standard Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="architecture-decision-record"><a class="header" href="#architecture-decision-record">Architecture Decision Record</a></h1>
+<p>An architecture decision record (ADR) is a document that captures an
+important architectural decision made along with its context and consequences.</p>
+<p>The <a href="template.html">template</a> has all the info.</p>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<p>To interact with this ADR, enter the devshell and interact though the <code>adrgen</code> tool.</p>
+<hr />
+<h1 id="1-adopt-semi-conventional-file-locations"><a class="header" href="#1-adopt-semi-conventional-file-locations">1. Adopt semi-conventional file locations</a></h1>
+<p>Date: 2022-03-01</p>
+<h2 id="status"><a class="header" href="#status">Status</a></h2>
+<p>accepted</p>
+<h2 id="context"><a class="header" href="#context">Context</a></h2>
+<blockquote>
+<p>What is the issue that we're seeing that is motivating this decision or change?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>Repository navigation is among the first activities to build a mental model of any given repository.
+The Nix Ecosystem has come up with some weak conventions: these are variations that are mainly informed by the <code>nixpkgs</code> repository, itself.
+Despite that, users find it difficult to quickly &quot;wrap their head&quot; around a new project.
+This is often times a result of an organically grown file organization that has trouble keeping up with growing project semantics.
+As a result, onboading onto a &quot;new&quot; nix project even within the same organizational context, sometimes can be a very frustrating and time-consuming activity.</p>
+<h2 id="decision"><a class="header" href="#decision">Decision</a></h2>
+<blockquote>
+<p>What is the change that we're proposing and/or doing?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>A semi-conventional folder structure shall be adopted.</p>
+<p>That folder structure shall have an abstract organization concept.</p>
+<p>At the same time, it shall leave the user maximum freedom of semantics and naming.</p>
+<p>Hence, 3 levels of organization are adopted.
+These levels correspond to the abstract organizational concepts of:</p>
+<ul>
+<li>consistent collection of functionality (&quot;what makes sense to group together?&quot;)</li>
+<li>repository output type (&quot;what types of gitops artifacts are produced?&quot;)</li>
+<li>named outputs (&quot;what are the actual outputs?&quot;)</li>
+</ul>
+<h2 id="consequences"><a class="header" href="#consequences">Consequences</a></h2>
+<blockquote>
+<p>What becomes easier or more difficult to do because of this change?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>With this design and despite complete freedom of concrete semantics, a prototypical mental model can be reused across different projects.</p>
+<p>That same prototypical mental model also speeds up schaffolding of new content and code.</p>
+<p>At the expense of nested folders, it may still be further expanded, if additional organization is required.
+All the while that the primary meta-information about a project is properly communicated through these first three levels via the file system api, itself (think <code>ls</code> / <code>rg</code> / <code>fd</code>).</p>
+<p>On the other hand, this rigidity is sometimes overkill and users may resort to filler names such as &quot;<code>default</code>&quot;, because a given semantic only produces singletons.
+This is acceptable, however, because this parallellity in addressing even these singleton values trades for very easy expansion or refactoring, as the meta-models of code organization already align.</p>
+<hr />
+<h1 id="2-restrict-the-calling-interface"><a class="header" href="#2-restrict-the-calling-interface">2. Restrict the calling interface</a></h1>
+<p>Date: 2022-03-01</p>
+<h2 id="status-1"><a class="header" href="#status-1">Status</a></h2>
+<p>accepted</p>
+<h2 id="context-1"><a class="header" href="#context-1">Context</a></h2>
+<blockquote>
+<p>What is the issue that we're seeing that is motivating this decision or change?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>The Nix Ecosystem has optimized for contributor efficiency at the expense of local code readibility and local reasoning.
+Over time, the <code>callPackage</code> idiom was developed that destructures arbitrary attributes of an 80k <em>upstream</em> attributeset provided by <code>nixpkgs</code>.
+A complicating side condition is added, where overlays modify that original upstream packages set in arbitrary ways.
+This is not a problem for people, who know nixpkgs by heart and it is not a problem for the author either.
+It is a problem for the future code reader, Nix expert or less so, who needs to grasp the essence of &quot;what's going on&quot; under a productivity side condidion.</p>
+<p>Local reasoning is a tried and tested strategy to help mitigate those issues.</p>
+<p>In a variant of this problem, we observe only somewhat convergent, but still largely diverging styles of passing arguments in general across the repository context.</p>
+<h2 id="decision-1"><a class="header" href="#decision-1">Decision</a></h2>
+<blockquote>
+<p>What is the change that we're proposing and/or doing?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>Encourage local reasoning by always fully qualifing identifiers within the scope of a single file.</p>
+<p>In order to do so, the entry level nix files of this framework have exactly one possible interface: <code>{inputs, cell}</code>.</p>
+<p><code>inputs</code> represent the global inputs, whereas <code>cell</code> keeps reference to the local context.
+<em>A Cell is the first ordering priciple for &quot;consitent collection of functionality&quot;.</em></p>
+<h2 id="consequences-1"><a class="header" href="#consequences-1">Consequences</a></h2>
+<blockquote>
+<p>What becomes easier or more difficult to do because of this change?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>This restricts up to the prescribed 3 layers of organization the notion of &quot;how files can communicate with each other&quot;.</p>
+<p>That inter-files-interface is the <em>only</em> global context to really grasp, and it is structurally aligned across all Standard projects.</p>
+<p>By virtue of this meta model of a global context and interfile-communications, for a somewhat familiarized code reader the barriers to local reasoning are greatly reduced.</p>
+<p>The two context references are well known (flake inputs &amp; cell-local blocks) and easily discoverable.</p>
+<p>For authors, this schema takes away any delay that might arise out of the consideration of how to best structure that inter-file communcation schema.</p>
+<p>Out of experience, a significant and low value (and ad-hoc) design process can by leap-frogged via this guidance.</p>
+<hr />
+<h1 id="3-hide-system-for-mortals"><a class="header" href="#3-hide-system-for-mortals">3. Hide system for mortals</a></h1>
+<p>Date: 2022-04-01</p>
+<h2 id="status-2"><a class="header" href="#status-2">Status</a></h2>
+<p>accepted</p>
+<h2 id="context-2"><a class="header" href="#context-2">Context</a></h2>
+<blockquote>
+<p>What is the issue that we're seeing that is motivating this decision or change?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>In the context of DevOps (Standard is a DevOps framework), cross compilation is a significatly lesser concern, than what it is for packagers.</p>
+<p>The pervasive use of <code>system</code> in the current Nix (and foremost Flakes) Ecosystem is an optimization (and in part education) choice for these packagers.</p>
+<p>However, in the context of DevOps, while not being irrelevant, it accounts for a fair share of distraction potential.</p>
+<p>This ultimately diminuishes code-readibility and reasoning; and consequentially adoption. Especially in those code paths, where <code>system</code> is a secondary concern.</p>
+<h2 id="decision-2"><a class="header" href="#decision-2">Decision</a></h2>
+<blockquote>
+<p>What is the change that we're proposing and/or doing?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>De-systemize everything to the &quot;current&quot; system and effectively hiding the explict manipulation from plain sight in most cases.</p>
+<p>An attribute set, that differentiates for systems on any given level of its tree, is <code>deSystemized</code>.</p>
+<p>This means that all child attributes of the &quot;current&quot; system are lifted onto the &quot;system&quot;-level as siblings to the system attributes.</p>
+<p>That also means, if explicit reference to <code>system</code> is necessary, it is still there among the siblings.</p>
+<p>The &quot;current&quot; system is brought into scope automatically, however.</p>
+<p>What &quot;current&quot; means, is an early selector (&quot;select early and forget&quot;), usually determined by the user's operating system.</p>
+<h2 id="consequences-2"><a class="header" href="#consequences-2">Consequences</a></h2>
+<blockquote>
+<p>What becomes easier or more difficult to do because of this change?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>The explicit handling of <code>system</code> in foreing context, where <code>system</code> is not a primary concern is largely eliminated.</p>
+<p>This makes using this framework a little easier for everybody, including packaging experts.</p>
+<p>Since <code>nixpkgs</code>, itself, exposes <code>nixpkgs.system</code> and packaging without <code>nixpkgs</code> is hardly imaginably, power-users still enjoy easy access to the &quot;current&quot; system, in case it's needed.</p>
+<hr />
+<h1 id="4-early-select-system-for-conceptual-untangling"><a class="header" href="#4-early-select-system-for-conceptual-untangling">4. Early select system for conceptual untangling</a></h1>
+<p>Date: 2022-04-01</p>
+<h2 id="status-3"><a class="header" href="#status-3">Status</a></h2>
+<p>accepted</p>
+<h2 id="context-3"><a class="header" href="#context-3">Context</a></h2>
+<blockquote>
+<p>What is the issue that we're seeing that is motivating this decision or change?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>Building on the previous ADR, we saw why we hide <code>system</code> from plain sight.</p>
+<p>In that ADR, we mention &quot;select early and forget&quot; as a strategy to scope the current system consistently across the project.</p>
+<p>The current best practices for flakes postulate <code>system</code> as the second level selector of an output attribute.</p>
+<p>For current flakes, type primes over system.</p>
+<p>However, this design choice makes the lema &quot;select early and forget&quot; across multiple code-paths a pain to work with.</p>
+<p>This handling is exacerbated by the distinction between &quot;systemized&quot; and &quot;non-systemized&quot; (e.g. <code>lib</code>) output attributes.</p>
+<p>In the overall set of optimization goals of this framework, this distinction is of extraordinarily poor value, more so, that function
+calls are memoized during a single evaluation, which renders the system selector comuptationally irrelevant where not used.</p>
+<h2 id="decision-3"><a class="header" href="#decision-3">Decision</a></h2>
+<blockquote>
+<p>What is the change that we're proposing and/or doing?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<ul>
+<li>Move the <code>system</code> selector from the second level to the first level.</li>
+<li>Apply the <code>system</code> selector regardless and without excheption.</li>
+</ul>
+<h2 id="consequences-3"><a class="header" href="#consequences-3">Consequences</a></h2>
+<blockquote>
+<p>What becomes easier or more difficult to do because of this change?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>The motto &quot;select early and forget&quot; makes various code-paths easier to reason about and maintain.</p>
+<p>The Nix CLI completion won't respond gracefully to these changes.
+However, the Nix CLI is explicitly <em>not</em> a primary target of this framework.
+The reason for this is that the use cases for the Nix CLI are somewhat skewed towards the packager use case, but in any case are (currently) not purpose built for the DevOps use case.</p>
+<p>A simple patch to the Nix binary, can mitigate this for people who's muscle memory prefers the Nix CLI regardless.
+If you've already got that level of muscle memory, its meandering scope is probably anyways not an issue for you anymore.</p>
+<hr />
+<h1 id="5-nixpkgs-is-still-special-but-not-too-much"><a class="header" href="#5-nixpkgs-is-still-special-but-not-too-much">5. Nixpkgs is still special, but not too much</a></h1>
+<p>Date: 2022-05-01</p>
+<h2 id="status-4"><a class="header" href="#status-4">Status</a></h2>
+<p>accepted</p>
+<h2 id="context-4"><a class="header" href="#context-4">Context</a></h2>
+<blockquote>
+<p>What is the issue that we're seeing that is motivating this decision or change?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>In general, Standard wouldn't treat any intput as special.
+However, no project that requires source distributions of one of the 80k+ packages available in <code>nixpkgs</code> can practically do without it.</p>
+<p>Now, <code>nixpkgs</code> has this wired and counter-intuitive mouthful of <code>legacyPackages</code>, which was originally intended to ring an alarm bell and, for the non-nix-historians, still does.</p>
+<p>Also, not very many other package collections adopt this idiom which makes it pretty much a singularity of the Nix package collection (<code>nixpkgs</code>).</p>
+<h2 id="decision-4"><a class="header" href="#decision-4">Decision</a></h2>
+<blockquote>
+<p>What is the change that we're proposing and/or doing?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>If <code>inputs.nixpkgs</code> is provided, in-scope <code>legacyPackages</code> onto <code>inputs.nixpkgs</code>, directly.</p>
+<h2 id="consequences-4"><a class="header" href="#consequences-4">Consequences</a></h2>
+<blockquote>
+<p>What becomes easier or more difficult to do because of this change?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>Users of Standard access packages as <code>nixpkgs.&lt;package-name&gt;</code>.</p>
+<p>Users that want to interact with nixos, do so by loading <code>nixos = import (inputs.nixpkgs + &quot;/nixos&quot;);</code> or similar.
+The close coupling of the Nix Package Collection and NixOS now is broken.
+This suites well the DevOps use case, which is not <em>primarily</em> concerned with the unseparable union of the Nix Packages Collection and NixOS.
+It rather presents a plethora of use cases that content with the Nix Package Collection, alone, and where NixOS would present as a distraction.
+Now, this separation is more <em>explicit</em>.</p>
+<p>As another consequence of not treating <code>nixpkgs</code> (or even the packaging use case) special is that Standard does not implement primary support for <code>overlays</code>.</p>
+<hr />
+<h1 id="6-avoid-fix-point-logic-such-as-overlays"><a class="header" href="#6-avoid-fix-point-logic-such-as-overlays">6. Avoid fix-point logic, such as overlays</a></h1>
+<p>Date: 2022-05-01</p>
+<h2 id="status-5"><a class="header" href="#status-5">Status</a></h2>
+<p>accepted</p>
+<h2 id="context-5"><a class="header" href="#context-5">Context</a></h2>
+<blockquote>
+<p>What is the issue that we're seeing that is motivating this decision or change?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>Fix point logic is marvelously magic and also very practical.
+A lot of people love the concept of <code>nixpkgs</code>'s <code>overlays</code>.</p>
+<p>However, we've all been suckers in the early days, and fix point logic wasn't probably one of the concepts that we grasped intuitivly and right at the beginning of our Nix journey.</p>
+<p>The concept of recursivity all in itself is already demanding to reason about, where the concept of recourse-until-not-more-possible is even more mind-boggling.</p>
+<p>Fix points are also clear instances of overloading global context.</p>
+<p>And global context is a double edged sword between high-productivity for that one who has a good mental model of it and nightmare for that one who has to resort to local reasoning.</p>
+<h2 id="decision-5"><a class="header" href="#decision-5">Decision</a></h2>
+<blockquote>
+<p>What is the change that we're proposing and/or doing?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>In the interest of balancing productivity (for the veteran) and ease-of-onboarding (for the novice), we do not implement a prime support for fix-point logic, such as <code>overlays</code> at the framework level.</p>
+<h2 id="consequences-5"><a class="header" href="#consequences-5">Consequences</a></h2>
+<blockquote>
+<p>What becomes easier or more difficult to do because of this change?</p>
+</blockquote>
+<!-- write an answer to this question below -->
+<p>Users who depend on it, need to scope its use to a particular Cell Block.
+For the Nix package collection, users can do, for example: <code>nixpkgs.appendOverlays [ /* ... */ ]</code>.
+There is a small penalty in evaluating <code>nixpkgs</code> a second time, since every moving of the fix point retriggers a complete evalutation.
+But since this decision is made in the interest of <em>balancing</em> enacting trade-offs, this appears to be cost-effective in accordance with the overall optimization goals of Standard.</p>
+<hr />
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../explain/why-std.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../../patterns/four-packaging-layers.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../explain/why-std.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../../patterns/four-packaging-layers.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript" src="../../static/mermaid.min.js"></script>
+        <script type="text/javascript" src="../../static/mermaid-init.js"></script>
+    </body>
+</html>
