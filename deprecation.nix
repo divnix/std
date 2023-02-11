@@ -60,4 +60,20 @@ in {
 
       ${builtins.concatStringsSep "\n" (map (a: " - ${a.name}: ${(builtins.unsafeGetAttrPos "name" a).file}") actions)}
     '';
+
+  warnNixagoOutfactored = removeBy "May 2023" ''
+
+    std.presets.nixago has been outfactored into its own repository.
+
+    Add to your flake.nix
+
+    inputs.std-data-collection.url = "github:divnix/std-data-collection";
+    inputs.std-data-collection.inputs.std.follows = "std";
+    inputs.std-data-collection.inputs.nixpkgs.follows = "nixpkgs";
+
+    Replace accessors of
+      `inputs.std.presets.nixago`
+    with
+      `inputs.std-data-collection.data.configs`
+  '';
 }

@@ -89,7 +89,7 @@ While you can explore `std.nixago` [here][std-nixago], let's now have a closer l
 ```
 
 In this Cell Block, we have been modifying some built-in convenience `std.nixago.*` pebbles.
-The way `configData` is merged upon the existing pebble is via a simple left-hand-side/right-hand-site `data-merge` (`std.dmerge`).
+The way `data` is merged upon the existing pebble is via a simple left-hand-side/right-hand-site `data-merge` (`std.dmerge`).
 
 > **Background on array merge strategies:**
 >

@@ -4,7 +4,7 @@
 }: let
   inherit (inputs) nixpkgs;
 in {
-  configData = {};
+  data = {};
   output = "treefmt.toml";
   format = "toml";
   commands = [{package = nixpkgs.treefmt;}];

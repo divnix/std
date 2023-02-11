@@ -10,7 +10,7 @@ It is enriched with a tight integration for `std` [Nixago][nixago] pebbles:
     /* ... */
     nixago = [
       (cell.nixago.foo {
-        configData.qux = "xyz";
+        data.qux = "xyz";
         packages = [ pkgs.additional-package ];
       })
       cell.nixago.bar

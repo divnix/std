@@ -5,7 +5,7 @@
   inherit (inputs) nixpkgs;
   l = nixpkgs.lib // builtins;
 in {
-  configData = {};
+  data = {};
   format = "yaml";
   output = "lefthook.yml";
   packages = [nixpkgs.lefthook];

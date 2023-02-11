@@ -22,7 +22,7 @@ in
     nixago = [
       (std.nixago.just {
         packages = [ nixpkgs.treefmt ];
-        configData = {
+        data = {
           tasks = {
             fmt = {
               description = "Formats all changed source files";

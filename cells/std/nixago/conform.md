@@ -13,7 +13,7 @@ in {
   default = std.lib.mkShell {
     /* ... */
     nixago = [
-      (std.nixago.conform {configData = {inherit (inputs) cells;};})
+      (std.nixago.conform {data = {inherit (inputs) cells;};})
     ];
   };
 }

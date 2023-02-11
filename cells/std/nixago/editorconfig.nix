@@ -5,14 +5,14 @@
   l = nixpkgs.lib // builtins;
   inherit (inputs) nixpkgs;
 in {
-  configData = {};
+  data = {};
   output = ".editorconfig";
   engine = request: let
-    inherit (request) configData output;
+    inherit (request) data output;
     name = l.baseNameOf output;
     value = {
-      globalSection = {root = configData.root or true;};
-      sections = l.removeAttrs configData ["root"];
+      globalSection = {root = data.root or true;};
+      sections = l.removeAttrs data ["root"];
     };
   in
     nixpkgs.writeText name (l.generators.toINIWithGlobalSection {} value);

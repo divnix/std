@@ -5,27 +5,28 @@
   inherit (inputs) nixpkgs;
   inherit (inputs.cells) std;
   l = nixpkgs.lib // builtins;
-in {
+   inherit (import (inputs.self + /deprecation.nix) inputs) warnNixagoOutfactored;
+in l.mapAttrs (_: warnNixagoOutfactored) {
   adrgen = std.nixago.adrgen {
-    configData = import ./nixago/adrgen.nix;
+    data = import ./nixago/adrgen.nix;
   };
   editorconfig = std.nixago.editorconfig {
-    configData = import ./nixago/editorconfig.nix;
+    data = import ./nixago/editorconfig.nix;
     hook.mode = "copy"; # already useful before entering the devshell
   };
   conform = std.nixago.conform {
-    configData = import ./nixago/conform.nix;
+    data = import ./nixago/conform.nix;
   };
   lefthook = std.nixago.lefthook {
-    configData = import ./nixago/lefthook.nix;
+    data = import ./nixago/lefthook.nix;
   };
   mdbook = std.nixago.mdbook {
-    configData = import ./nixago/mdbook.nix;
+    data = import ./nixago/mdbook.nix;
     hook.mode = "copy"; # let CI pick it up outside of devshell
     packages = [std.packages.mdbook-kroki-preprocessor];
   };
   treefmt = std.nixago.treefmt {
-    configData = import ./nixago/treefmt.nix;
+    data = import ./nixago/treefmt.nix;
     packages = [
       nixpkgs.alejandra
       nixpkgs.nodePackages.prettier
@@ -37,6 +38,6 @@ in {
     '';
   };
   githubsettings = std.nixago.githubsettings {
-    configData = import ./nixago/githubsettings.nix;
+    data = import ./nixago/githubsettings.nix;
   };
 }

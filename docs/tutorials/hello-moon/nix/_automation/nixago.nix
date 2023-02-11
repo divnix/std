@@ -14,10 +14,10 @@ in {
   treefmt: https://github.com/numtide/treefmt
   */
   treefmt = std.nixago.treefmt {
-    # we use the configData attribute to modify the
+    # we use the data attribute to modify the
     # target data structure via a simple data overlay
     # (`divnix/data-merge` / `std.dmerge`) mechanism.
-    configData.formatter.go = {
+    data.formatter.go = {
       command = "gofmt";
       options = ["-w"];
       includes = ["*.go"];
@@ -32,7 +32,7 @@ in {
   editorconfig: https://editorconfig.org/
   */
   editorconfig = std.nixago.editorconfig {
-    configData = {
+    data = {
       # the actual target data structure depends on the
       # Nixago Pebble, and ultimately, on the tool to configure
       "*.xcf" = {
@@ -54,7 +54,7 @@ in {
   mdbook: https://rust-lang.github.io/mdBook
   */
   mdbook = std.nixago.mdbook {
-    configData = {
+    data = {
       book.title = "The Standard Book";
     };
   };

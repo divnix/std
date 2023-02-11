@@ -4,7 +4,7 @@
 }: let
   inherit (inputs) nixpkgs;
 in {
-  configData = {};
+  data = {};
   output = "book.toml";
   format = "toml";
   hook.extra = d: let

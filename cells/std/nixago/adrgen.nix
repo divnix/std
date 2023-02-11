@@ -4,7 +4,7 @@
 }: let
   inherit (inputs) nixpkgs;
 in {
-  configData = {};
+  data = {};
   output = "adrgen.config.yml";
   format = "yaml";
   commands = [{package = cell.packages.adrgen;}];

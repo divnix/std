@@ -5,7 +5,7 @@
   inherit (inputs) nixpkgs;
   l = nixpkgs.lib // builtins;
 in {
-  configData = {};
+  data = {};
   apply = d: let
     # Transforms interpreter attribute if present
     # nixpkgs.pkgname -> nixpkgs.pkgname + '/bin/<name>'
