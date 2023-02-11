@@ -2658,8 +2658,8 @@ and add each Cell as a so called &quot;scope&quot; to its
 <a href="https://www.conventionalcommits.org/">Conventional Commit</a> configuration.</p>
 <hr />
 <p>If you're rather looking for Nixago Presets (i.e. pebbles that already have an opinionated default), please refer to the <a href="reference/../../../reference/presets/nixago"><em>nixago presets</em></a>, instead.</p>
-<h3 id="adrgen"><a class="header" href="#adrgen"><a href="https://github.com/asiermarques/adrgen"><code>adrgen</code></a></a></h3>
-<p>A great tool to manage Architecture Decision Records.</p>
+<h3 id="adrgen"><a class="header" href="#adrgen"><code>adrgen</code></a></h3>
+<p><a href="https://github.com/asiermarques/adrgen"><code>adrgen</code></a> is a great tool to manage Architecture Decision Records.</p>
 <hr />
 <h4 id="definition"><a class="header" href="#definition">Definition:</a></h4>
 <pre><code class="language-nix">{
@@ -2674,8 +2674,8 @@ in {
   commands = [{package = inputs.cells.std.packages.adrgen;}];
 }
 </code></pre>
-<h3 id="conform"><a class="header" href="#conform"><a href="reference/conform.html"><code>conform</code></a></a></h3>
-<p>Conform your code to policies, e.g. in a pre-commit hook.</p>
+<h3 id="conform"><a class="header" href="#conform"><code>conform</code></a></h3>
+<p><a href="reference/conform.html">Conform</a> your code to policies, e.g. in a pre-commit hook.</p>
 <p>This version is wrapped, it can auto-enhance the conventional
 commit scopes with your <code>cells</code> as follows:</p>
 <pre><code class="language-nix">{ inputs, cell}: let
@@ -2727,8 +2727,8 @@ in {
   };
 }
 </code></pre>
-<h3 id="editorconfig"><a class="header" href="#editorconfig"><a href="https://github.com/editorconfig/"><code>editorconfig</code></a></a></h3>
-<p>Most editors understand this file and autoconfigure themselves accordingly.</p>
+<h3 id="editorconfig"><a class="header" href="#editorconfig"><code>editorconfig</code></a></h3>
+<p>Most editors understand the <a href="https://github.com/editorconfig/"><code>.editorconfig</code></a> file and autoconfigure themselves accordingly.</p>
 <hr />
 <h4 id="definition-2"><a class="header" href="#definition-2">Definition:</a></h4>
 <pre><code class="language-nix">{
@@ -2768,8 +2768,8 @@ Please see the App's Homepage for the configuration schema.</p>
   hook.mode = &quot;copy&quot;; # let the Github Settings action pick it up outside of devshell
 }
 </code></pre>
-<h3 id="just"><a class="header" href="#just"><a href="https://github.com/casey/just"><code>just</code></a></a></h3>
-<p>Just is a general purpose command runner with syntax inspired by <code>make</code>.</p>
+<h3 id="just"><a class="header" href="#just"><code>just</code></a></h3>
+<p><a href="https://github.com/casey/just">Just</a> is a general purpose command runner with syntax inspired by <code>make</code>.</p>
 <p>Tasks are configured via an attribute set where the name is the name of the task
 (i.e. <code>just &lt;task&gt;</code>) and the value is the task definition (see below for an
 example). The generated <code>Justfile</code> should be committed to allow non-Nix users to
@@ -2860,8 +2860,8 @@ in {
   };
 }
 </code></pre>
-<h3 id="lefthook"><a class="header" href="#lefthook"><a href="https://github.com/evilmartians/lefthook"><code>lefthook</code></a></a></h3>
-<p>A fast (parallel execution) and elegant git hook manager.</p>
+<h3 id="lefthook"><a class="header" href="#lefthook"><code>lefthook</code></a></h3>
+<p><a href="https://github.com/evilmartians/lefthook">Lefthook</a> is a fast (parallel execution) and elegant git hook manager.</p>
 <hr />
 <h4 id="definition-5"><a class="header" href="#definition-5">Definition:</a></h4>
 <pre><code class="language-nix">{
@@ -2894,8 +2894,8 @@ in {
   '';
 }
 </code></pre>
-<h3 id="mdbook"><a class="header" href="#mdbook"><a href="https://github.com/rust-lang/mdBook"><code>mdbook</code></a></a></h3>
-<p>Write clean docs for humans.</p>
+<h3 id="mdbook"><a class="header" href="#mdbook"><code>mdbook</code></a></h3>
+<p>Write clean docs for humans with <a href="https://github.com/rust-lang/mdBook"><code>mdbook</code></a>.</p>
 <p>This version comes preset with this gem to make any
 Solution Architect extra happy: <a href="https://github.com/joelcourtney/mdbook-kroki-preprocessor"><code>mdbook-kroki-preprocessor</code></a></p>
 <hr />
@@ -2933,8 +2933,8 @@ in {
   commands = [{package = nixpkgs.mdbook;}];
 }
 </code></pre>
-<h3 id="treefmt"><a class="header" href="#treefmt"><a href="https://github.com/numtide/treefmt"><code>treefmt</code></a></a></h3>
-<p>A code formatter to fromat the entire code tree extremly fast (in parallel and with a smart cache).</p>
+<h3 id="treefmt"><a class="header" href="#treefmt"><code>treefmt</code></a></h3>
+<p>A <a href="https://github.com/numtide/treefmt">code-tree formatter</a> to fromat the entire code tree extremly fast (in parallel and with a smart cache).</p>
 <hr />
 <h4 id="definition-7"><a class="header" href="#definition-7">Definition:</a></h4>
 <pre><code class="language-nix">{
