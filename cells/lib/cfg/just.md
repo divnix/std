@@ -1,6 +1,6 @@
-### [`just`][just]
+### `just`
 
-Just is a general purpose command runner with syntax inspired by `make`.
+[Just][just] is a general purpose command runner with syntax inspired by `make`.
 
 Tasks are configured via an attribute set where the name is the name of the task
 (i.e. `just <task>`) and the value is the task definition (see below for an

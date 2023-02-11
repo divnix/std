@@ -1,6 +1,6 @@
-### [`mdbook`][mdbook]
+### `mdbook`
 
-Write clean docs for humans.
+Write clean docs for humans with [`mdbook`][mdbook].
 
 This version comes preset with this gem to make any
 Solution Architect extra happy: [`mdbook-kroki-preprocessor`][mdbook-kroki-preprocessor]

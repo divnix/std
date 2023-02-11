@@ -1,6 +1,6 @@
-### [`editorconfig`][editorconfig]
+### `editorconfig`
 
-Most editors understand this file and autoconfigure themselves accordingly.
+Most editors understand the [`.editorconfig`][editorconfig] file and autoconfigure themselves accordingly.
 
 [editorconfig]: https://github.com/editorconfig/
 

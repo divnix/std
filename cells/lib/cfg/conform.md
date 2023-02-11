@@ -1,6 +1,6 @@
-### [`conform`][conform]
+### `conform`
 
-Conform your code to policies, e.g. in a pre-commit hook.
+[Conform][conform] your code to policies, e.g. in a pre-commit hook.
 
 This version is wrapped, it can auto-enhance the conventional
 commit scopes with your `cells` as follows:
