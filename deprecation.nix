@@ -38,6 +38,6 @@ in {
     Replace accessors of
       `inputs.std.std.nixago`
     with
-      `inputs.std.lib.configs`
+      `inputs.std.lib.cfg`
   '';
 }
