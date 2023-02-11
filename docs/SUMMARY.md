@@ -32,6 +32,7 @@
 
 # Templates
 
+- [Minimal](templates/minimal.md)
 - [Rust](templates/rust.md)
 
 # Reference
@@ -55,7 +56,6 @@
 
 - [`//std`](reference/std/Readme.md)
 
-  - [`/cli`](reference/std/cli/Readme.md)
   - [`/devshellProfiles`](reference/std/devshellProfiles/Readme.md)
   - [`/nixago`](reference/std/nixago/Readme.md)
     - [`/adrgen`](reference/std/nixago/adrgen.md)
@@ -84,13 +84,5 @@
     - [`/mkOperable`](reference/lib/ops/mkOperable.md)
     - [`/mkOCI`](reference/lib/ops/mkOCI.md)
     - [`/mkStandardOCI`](reference/lib/ops/mkStandardOCI.md)
-
-- [`//presets`](reference/presets/Readme.md)
-
-  - [`/templates`](reference/presets/templates/Readme.md)
-
-- [`//_automation`]()
-
-  - [`/devshells`](reference/_automation/devshells/Readme.md)
 
 - [Glossary](glossary.md)
