@@ -1,1 +1,0 @@
-../../../../cells/std/devshellProfiles/Readme.md

@@ -56,7 +56,6 @@
 
 - [`//std`](reference/std/Readme.md)
 
-  - [`/devshellProfiles`](reference/std/devshellProfiles/Readme.md)
   - [`/errors`](reference/std/errors/Readme.md)
     - [`/removeBy`](reference/std/errors/removeBy.md)
     - [`/requireInput`](reference/std/errors/requireInput.md)
@@ -71,6 +70,7 @@
     - [`/mkArion`](reference/lib/dev/mkArion.md)
 
   - [`/ops`](reference/lib/ops/Readme.md)
+
     - [`/mkMicrovm`](reference/lib/ops/mkMicrovm.md)
     - [`/mkOperable`](reference/lib/ops/mkOperable.md)
     - [`/mkOCI`](reference/lib/ops/mkOCI.md)
