@@ -3,17 +3,17 @@
   cell,
 }: let
   inherit (inputs) nixpkgs;
-  inherit (inputs.std) std;
+  inherit (inputs.std) lib;
   /*
   While these are strictly specializations of the available
-  Nixago Pebbles at `std.nixago.*`, it would be entirely
+  Nixago Pebbles at `lib.cfg.*`, it would be entirely
   possible to define a completely new pebble inline
   */
 in {
   /*
   treefmt: https://github.com/numtide/treefmt
   */
-  treefmt = std.nixago.treefmt {
+  treefmt = lib.cfg.treefmt {
     # we use the data attribute to modify the
     # target data structure via a simple data overlay
     # (`divnix/data-merge` / `std.dmerge`) mechanism.
@@ -31,7 +31,7 @@ in {
   /*
   editorconfig: https://editorconfig.org/
   */
-  editorconfig = std.nixago.editorconfig {
+  editorconfig = lib.cfg.editorconfig {
     data = {
       # the actual target data structure depends on the
       # Nixago Pebble, and ultimately, on the tool to configure
@@ -53,7 +53,7 @@ in {
   /*
   mdbook: https://rust-lang.github.io/mdBook
   */
-  mdbook = std.nixago.mdbook {
+  mdbook = lib.cfg.mdbook {
     data = {
       book.title = "The Standard Book";
     };
