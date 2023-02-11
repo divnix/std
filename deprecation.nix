@@ -76,4 +76,15 @@ in {
     with
       `inputs.std-data-collection.data.configs`
   '';
+
+  warnNixagoMoved = removeBy "May 2023" ''
+
+    In order to improve semantic clarity,
+    std.std.nixago has been moved to std.lib.configs.
+
+    Replace accessors of
+      `inputs.std.std.nixago`
+    with
+      `inputs.std.lib.configs`
+  '';
 }

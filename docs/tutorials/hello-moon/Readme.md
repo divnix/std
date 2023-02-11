@@ -81,14 +81,14 @@ For a more elegant method of entering a development shell read on the [direnv][d
 
 #### `./nix/_automation/nixago.nix`
 
-As we have seen above, the `nixago` option in the `cell.devshells` Cell Block references Targets from both `std.nixago` _and_ `cell.nixago`.
-While you can explore `std.nixago` [here][std-nixago], let's now have a closer look at `cell.nixago`:
+As we have seen above, the `nixago` option in the `cell.devshells` Cell Block references Targets from both `lib.cfg`.
+While you can explore `lib.cfg` [here][lib-cfg], let's now have a closer look at `cell.nixago`:
 
 ```nix
 {{#include ./nix/_automation/nixago.nix}}
 ```
 
-In this Cell Block, we have been modifying some built-in convenience `std.nixago.*` pebbles.
+In this Cell Block, we have been modifying some built-in convenience `lib.cfg.*` pebbles.
 The way `data` is merged upon the existing pebble is via a simple left-hand-side/right-hand-site `data-merge` (`std.dmerge`).
 
 > **Background on array merge strategies:**
@@ -193,7 +193,7 @@ Because I use these commands so often, I've set: `alias d="direnv"` in my shell'
 [direnv-how-to]: ../../guides/envrc.md
 [blocktypes-devshells]: ../../reference/blocktypes/devshells-blocktype.md
 [blocktypes-nixago]: ../../reference/blocktypess/nixago-blocktype.md
-[std-nixago]: https://github.com/divnix/std/blob/main/cells/std/nixago.nix
+[lib-cfg]: https://github.com/divnix/std/blob/main/cells/lib/cfg.nix
 [direnv]: #direnv
 [hello-world]: ../hello-world
 [devshell-wrapper]: ../../reference/lib/dev/mkShell.md

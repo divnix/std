@@ -22,6 +22,7 @@ growOn {
     # lib
     (blockTypes.functions "dev")
     (blockTypes.functions "ops")
+    (blockTypes.nixago "cfg")
 
     # presets
     (blockTypes.data "templates")

@@ -1,1 +1,0 @@
-../../../../cells/std/nixago/githubsettings.md

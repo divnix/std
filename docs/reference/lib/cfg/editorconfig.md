@@ -1,0 +1,1 @@
+../../../../cells/lib/cfg/editorconfig.md

@@ -19,21 +19,20 @@
   input, its primary Cell with the same name as well as the dev lib.
   */
   inherit (inputs) nixpkgs;
-  inherit (inputs.std) std;
-  inherit (inputs.std.lib) dev;
+  inherit (inputs.std) std lib;
   inherit (cell) nixago;
 in
   # we use Standard's mkShell wrapper for its Nixago integration
-  l.mapAttrs (_: dev.mkShell) {
+  l.mapAttrs (_: lib.dev.mkShell) {
     default = {...}: {
       name = "My Devshell";
       # This `nixago` option is a courtesy of the `std` horizontal
       # integration between Devshell and Nixago
       nixago = [
         # off-the-shelve from `std`
-        (std.nixago.conform {data = {inherit (inputs) cells;};})
-        std.nixago.lefthook
-        std.nixago.adrgen
+        (lib.cfg.conform {data = {inherit (inputs) cells;};})
+        lib.cfg.lefthook
+        lib.cfg.adrgen
         # modified from the local Cell
         nixago.treefmt
         nixago.editorconfig

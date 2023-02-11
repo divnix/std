@@ -13,5 +13,5 @@ Solution Architect extra happy: [`mdbook-kroki-preprocessor`][mdbook-kroki-prepr
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/std/nixago/mdbook.nix}}
+{{#include ./../../../../cells/lib/cfg/mdbook.nix}}
 ```
