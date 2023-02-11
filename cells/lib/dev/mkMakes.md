@@ -1,10 +1,12 @@
-# `mkMakes` provides an interface to `makes` tasks
+### `mkMakes`
+
+... provides an interface to `makes` tasks
 
 This is an integration for [`fluidattacks/makes`][makes].
 
 A version that has this [patch][patch] is a prerequisite.
 
-## Usage example
+#### Usage example
 
 ```nix
 {

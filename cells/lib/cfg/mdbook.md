@@ -1,4 +1,4 @@
-# [`mdbook`][mdbook]
+### [`mdbook`][mdbook]
 
 Write clean docs for humans.
 

@@ -1,8 +1,10 @@
-# `mkMicrovm` provides an interface to `microvm` tasks
+### `mkMicrovm`
+
+... provides an interface to `microvm` tasks
 
 This is an integration for [`astro/microvm.nix`][microvm].
 
-## Usage example
+#### Usage example
 
 ```nix
 {

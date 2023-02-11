@@ -1,4 +1,4 @@
-# `mkStandardOCI`
+### `mkStandardOCI`
 
 ... is a function interface into the [third layer of packaging][packaging-third] of the Standard SDLC Packaging pattern.
 
@@ -10,11 +10,11 @@ The function signature is as follows:
 {{#include ../../../../cells/lib/ops/mkStandardOCI.nix:9:27}}
 ```
 
-## The Standard Image
+#### The Standard Image
 
 Standard images are minimal and hardened. They only contain required dependencies.
 
-### Contracts
+##### Contracts
 
 The following contracts can be consumed:
 
@@ -29,13 +29,13 @@ That's it. There is nothing more to see.
 
 All other dependencies are contained in `/nix/store/...`.
 
-## The Debug Image
+#### The Debug Image
 
 Debug Images wrap the standard images and provide additional debugging packages.
 
 Hence, they are neither minimal, nor hardened because of the debugging packages' added surface.
 
-### Contracts
+##### Contracts
 
 The following contracts can be consumed:
 
@@ -47,13 +47,13 @@ The following contracts can be consumed:
 /bin/ready      # if readinessProbe was set
 ```
 
-## How to extend?
+#### How to extend?
 
 A Standard or Debug Image doesn't have a package manager available in the environment.
 
 Hence, to extend the image you have two options:
 
-### Nix-based extension
+##### Nix-based extension
 
 ```nix
 rec {
@@ -70,7 +70,7 @@ rec {
 }
 ```
 
-### Dockerfile-based extension
+##### Dockerfile-based extension
 
 ```Dockerfile
 FROM alpine AS builder

@@ -128,7 +128,16 @@ in {
       preprocessor = {
         mermaid.command = "mdbook-mermaid";
       };
-      output.html.additional-js = ["static/mermaid.min.js" "static/mermaid-init.js"];
+      output.html = {
+        additional-js = [
+          "theme/mermaid.min.js"
+          "theme/mermaid-init.js"
+          "theme/pagetoc.js"
+        ];
+        additional-css = [
+          "theme/pagetoc.css"
+        ];
+      };
     };
     packages = [nixpkgs.mdbook-mermaid];
     hook.mode = "copy"; # let CI pick it up outside of devshell

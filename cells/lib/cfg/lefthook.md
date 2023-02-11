@@ -1,4 +1,4 @@
-# [`lefthook`][lefthook]
+### [`lefthook`][lefthook]
 
 A fast (parallel execution) and elegant git hook manager.
 

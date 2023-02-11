@@ -1,4 +1,4 @@
-# `mkOperable`
+### `mkOperable`
 
 ... is a function interface into the [second layer of packaging][packaging-second] of the Standard SDLC Packaging pattern.
 

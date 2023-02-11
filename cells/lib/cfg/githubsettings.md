@@ -1,4 +1,4 @@
-# `githubsettings`
+### `githubsettings`
 
 Syncs repository settings defined in `.github/settings.yml` to GitHub, enabling Pull Requests for repository settings.
 

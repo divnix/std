@@ -1,4 +1,4 @@
-# [`just`][just]
+### [`just`][just]
 
 Just is a general purpose command runner with syntax inspired by `make`.
 

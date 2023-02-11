@@ -1,4 +1,4 @@
-# [`conform`][conform]
+### [`conform`][conform]
 
 Conform your code to policies, e.g. in a pre-commit hook.
 

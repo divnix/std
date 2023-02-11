@@ -1,4 +1,4 @@
-# [`adrgen`][adrgen]
+### [`adrgen`][adrgen]
 
 A great tool to manage Architecture Decision Records.
 

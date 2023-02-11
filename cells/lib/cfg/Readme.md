@@ -1,4 +1,4 @@
-# The `std` Nixago Pebbles
+## The Cfg Library
 
 Standard comes packages with some [Nixago][nixago] Pebbles for easy
 downstream re-use.

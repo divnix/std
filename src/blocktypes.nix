@@ -5,6 +5,7 @@ in {
   runnables = import ./blocktypes/runnables.nix {inherit nixpkgs mkCommand sharedActions;};
   installables = import ./blocktypes/installables.nix {inherit nixpkgs mkCommand sharedActions;};
   functions = import ./blocktypes/functions.nix {inherit nixpkgs mkCommand;};
+  anything = import ./blocktypes/anything.nix {inherit nixpkgs mkCommand;};
   data = import ./blocktypes/data.nix {inherit nixpkgs mkCommand;};
   devshells = import ./blocktypes/devshells.nix {inherit nixpkgs mkCommand sharedActions;};
   containers = import ./blocktypes/containers.nix {inherit nixpkgs mkCommand sharedActions;};

@@ -1,4 +1,4 @@
-# `mkOCI`
+### `mkOCI`
 
 ... is a function to generate an OCI Image via [`nix2container`][n2c].
 
