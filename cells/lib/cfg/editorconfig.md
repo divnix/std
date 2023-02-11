@@ -9,5 +9,5 @@ Most editors understand this file and autoconfigure themselves accordingly.
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/std/nixago/editorconfig.nix}}
+{{#include ./../../../../cells/lib/cfg/editorconfig.nix}}
 ```

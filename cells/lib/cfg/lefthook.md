@@ -9,5 +9,5 @@ A fast (parallel execution) and elegant git hook manager.
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/std/nixago/lefthook.nix}}
+{{#include ./../../../../cells/lib/cfg/lefthook.nix}}
 ```

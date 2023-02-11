@@ -10,5 +10,5 @@ Please see the App's Homepage for the configuration schema.
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/std/nixago/githubsettings.nix}}
+{{#include ./../../../../cells/lib/cfg/githubsettings.nix}}
 ```

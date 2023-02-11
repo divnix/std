@@ -9,5 +9,5 @@ A code formatter to fromat the entire code tree extremly fast (in parallel and w
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/std/nixago/treefmt.nix}}
+{{#include ./../../../../cells/lib/cfg/treefmt.nix}}
 ```

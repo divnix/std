@@ -3,30 +3,30 @@
   cell,
 }: let
   inherit (inputs) nixpkgs;
-  inherit (inputs.cells) std;
+  inherit (inputs.cells) lib;
   l = nixpkgs.lib // builtins;
   inherit (import (inputs.self + /deprecation.nix) inputs) warnNixagoOutfactored;
 in
   l.mapAttrs (_: warnNixagoOutfactored) {
-    adrgen = std.nixago.adrgen {
+    adrgen = lib.cfg.adrgen {
       data = import ./nixago/adrgen.nix;
     };
-    editorconfig = std.nixago.editorconfig {
+    editorconfig = lib.cfg.editorconfig {
       data = import ./nixago/editorconfig.nix;
       hook.mode = "copy"; # already useful before entering the devshell
     };
-    conform = std.nixago.conform {
+    conform = lib.cfg.conform {
       data = import ./nixago/conform.nix;
     };
-    lefthook = std.nixago.lefthook {
+    lefthook = lib.cfg.lefthook {
       data = import ./nixago/lefthook.nix;
     };
-    mdbook = std.nixago.mdbook {
+    mdbook = lib.cfg.mdbook {
       data = import ./nixago/mdbook.nix;
       hook.mode = "copy"; # let CI pick it up outside of devshell
       packages = [std.packages.mdbook-kroki-preprocessor];
     };
-    treefmt = std.nixago.treefmt {
+    treefmt = lib.cfg.treefmt {
       data = import ./nixago/treefmt.nix;
       packages = [
         nixpkgs.alejandra
@@ -38,7 +38,7 @@ in
         export NODE_PATH=${nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules:$NODE_PATH
       '';
     };
-    githubsettings = std.nixago.githubsettings {
+    githubsettings = lib.cfg.githubsettings {
       data = import ./nixago/githubsettings.nix;
     };
   }

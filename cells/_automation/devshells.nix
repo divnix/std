@@ -10,13 +10,13 @@ in
     default = {...}: {
       name = "Standard";
       nixago = [
-        (std.nixago.conform {data = {inherit (inputs) cells;};})
-        (std.nixago.treefmt cell.configs.treefmt)
-        (std.nixago.editorconfig cell.configs.editorconfig)
-        (std.nixago.just cell.configs.just)
-        (std.nixago.githubsettings cell.configs.githubsettings)
-        std.nixago.lefthook
-        std.nixago.adrgen
+        (lib.cfg.conform {data = {inherit (inputs) cells;};})
+        (lib.cfg.treefmt cell.configs.treefmt)
+        (lib.cfg.editorconfig cell.configs.editorconfig)
+        (lib.cfg.just cell.configs.just)
+        (lib.cfg.githubsettings cell.configs.githubsettings)
+        lib.cfg.lefthook
+        lib.cfg.adrgen
       ];
       commands =
         [
@@ -53,7 +53,7 @@ in
 
     book = {...}: {
       nixago = [
-        (std.nixago.mdbook cell.configs.mdbook)
+        (lib.cfg.mdbook cell.configs.mdbook)
       ];
     };
 

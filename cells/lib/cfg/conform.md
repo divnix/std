@@ -7,13 +7,13 @@ commit scopes with your `cells` as follows:
 
 ```nix
 { inputs, cell}: let
-  inherit (inputs.std) std;
+  inherit (inputs.std) lib;
 in {
 
-  default = std.lib.mkShell {
+  default = lib.dev.mkShell {
     /* ... */
     nixago = [
-      (std.nixago.conform {data = {inherit (inputs) cells;};})
+      (lib.cfg.conform {data = {inherit (inputs) cells;};})
     ];
   };
 }
@@ -26,5 +26,5 @@ in {
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/std/nixago/conform.nix}}
+{{#include ./../../../../cells/lib/cfg/conform.nix}}
 ```

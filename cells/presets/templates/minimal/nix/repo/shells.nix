@@ -12,12 +12,12 @@ They conveniently also generate config files in their startup hook.
     # This is Standard's devshell integration.
     # It runs the startup hook when entering the shell.
     nixago = [
-      inputs.std.std.nixago.conform
-      (inputs.std.std.nixago.treefmt cell.config.treefmt)
-      (inputs.std.std.nixago.editorconfig cell.config.editorconfig)
-      (inputs.std.std.nixago.githubsettings cell.config.githubsettings)
-      (inputs.std.std.nixago.lefthook cell.config.lefthook)
-      (inputs.std.std.nixago.mdbook cell.config.mdbook)
+      inputs.std.lib.cfg.conform
+      (inputs.std.lib.cfg.treefmt cell.config.treefmt)
+      (inputs.std.lib.cfg.editorconfig cell.config.editorconfig)
+      (inputs.std.lib.cfg.githubsettings cell.config.githubsettings)
+      (inputs.std.lib.cfg.lefthook cell.config.lefthook)
+      (inputs.std.lib.cfg.mdbook cell.config.mdbook)
     ];
 
     commands = [

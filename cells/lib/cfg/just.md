@@ -13,14 +13,15 @@ will automatically be picked up in the devshell.
 ```nix
 { inputs, cell }:
 let
-  inherit (inputs.std) nixpkgs std;
+  inherit (inputs) nixpkgs;
+  inherit (inputs.std) lib;
 in
 {
 
-  default = std.lib.mkShell {
+  default = lib.dev.mkShell {
     /* ... */
     nixago = [
-      (std.nixago.just {
+      (lib.cfg.just {
         packages = [ nixpkgs.treefmt ];
         data = {
           tasks = {
@@ -61,5 +62,5 @@ It's also possible to override the interpreter for a task:
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/std/nixago/just.nix}}
+{{#include ./../../../../cells/lib/cfg/just.nix}}
 ```

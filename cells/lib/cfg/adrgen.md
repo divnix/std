@@ -9,5 +9,5 @@ A great tool to manage Architecture Decision Records.
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/std/nixago/adrgen.nix}}
+{{#include ./../../../../cells/lib/cfg/adrgen.nix}}
 ```
