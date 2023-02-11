@@ -5,8 +5,10 @@
         <meta charset="UTF-8">
         <title>The Standard Documentation</title>
         <meta name="robots" content="noindex" />
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -16,25 +18,29 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/pagetoc.css">
+
     </head>
     <body>
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -50,7 +56,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -62,7 +68,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -75,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="ARCHITECTURE.html">Design & Architecture</a></li><li class="chapter-item expanded affix "><a href="PITCH.html">Sales Pitch</a></li><li class="chapter-item expanded affix "><a href="COMPARE.html">Comparisions</a></li><li class="chapter-item expanded affix "><a href="ROADMAP.html">Roadmap</a></li><li class="chapter-item expanded affix "><li class="part-title">Tutorials</li><li class="chapter-item expanded "><a href="tutorials/walk-in-the-park.html"><strong aria-hidden="true">1.</strong> A walk in the park</a></li><li class="chapter-item expanded "><a href="tutorials/hello-world/index.html"><strong aria-hidden="true">2.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="tutorials/hello-moon/index.html"><strong aria-hidden="true">3.</strong> Hello Moon</a></li><li class="chapter-item expanded affix "><li class="part-title">How-To Guides</li><li class="chapter-item expanded "><a href="guides/growing-cells.html"><strong aria-hidden="true">4.</strong> Growing Cells</a></li><li class="chapter-item expanded "><a href="guides/incl.html"><strong aria-hidden="true">5.</strong> Include Filter</a></li><li class="chapter-item expanded "><a href="guides/envrc.html"><strong aria-hidden="true">6.</strong> Setup .envrc</a></li><li class="chapter-item expanded affix "><li class="part-title">Explanation</li><li class="chapter-item expanded "><a href="explain/why-nix.html"><strong aria-hidden="true">7.</strong> Why nix?</a></li><li class="chapter-item expanded "><a href="explain/why-std.html"><strong aria-hidden="true">8.</strong> Why std?</a></li><li class="chapter-item expanded "><a href="explain/architecture-decision-records/index.html"><strong aria-hidden="true">9.</strong> Architecture Decisions</a></li><li class="chapter-item expanded affix "><li class="part-title">Patterns</li><li class="chapter-item expanded "><a href="patterns/four-packaging-layers.html"><strong aria-hidden="true">10.</strong> The 4 Packaging Layers</a></li><li class="chapter-item expanded affix "><li class="part-title">Templates</li><li class="chapter-item expanded "><a href="templates/minimal.html"><strong aria-hidden="true">11.</strong> Minimal</a></li><li class="chapter-item expanded "><a href="templates/rust.html"><strong aria-hidden="true">12.</strong> Rust</a></li><li class="chapter-item expanded affix "><li class="part-title">Reference</li><li class="chapter-item expanded "><a href="reference/cli.html"><strong aria-hidden="true">13.</strong> TUI/CLI</a></li><li class="chapter-item expanded "><a href="reference/conventions.html"><strong aria-hidden="true">14.</strong> Conventions</a></li><li class="chapter-item expanded "><a href="reference/deprecations.html"><strong aria-hidden="true">15.</strong> Deprecations</a></li><li class="chapter-item expanded "><a href="reference/blocktypes.html"><strong aria-hidden="true">16.</strong> Builtin Block Types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/blocktypes/data-blocktype.html"><strong aria-hidden="true">16.1.</strong> Data</a></li><li class="chapter-item expanded "><a href="reference/blocktypes/functions-blocktype.html"><strong aria-hidden="true">16.2.</strong> Functions</a></li><li class="chapter-item expanded "><a href="reference/blocktypes/runnables-blocktype.html"><strong aria-hidden="true">16.3.</strong> Runnables</a></li><li class="chapter-item expanded "><a href="reference/blocktypes/installables-blocktype.html"><strong aria-hidden="true">16.4.</strong> Installables</a></li><li class="chapter-item expanded "><a href="reference/blocktypes/microvms-blocktype.html"><strong aria-hidden="true">16.5.</strong> Microvms</a></li><li class="chapter-item expanded "><a href="reference/blocktypes/devshells-blocktype.html"><strong aria-hidden="true">16.6.</strong> Devshells</a></li><li class="chapter-item expanded "><a href="reference/blocktypes/containers-blocktype.html"><strong aria-hidden="true">16.7.</strong> Containers</a></li><li class="chapter-item expanded "><a href="reference/blocktypes/nixago-blocktype.html"><strong aria-hidden="true">16.8.</strong> Nixago</a></li><li class="chapter-item expanded "><a href="reference/blocktypes/arion-blocktype.html"><strong aria-hidden="true">16.9.</strong> Arion</a></li><li class="chapter-item expanded "><a href="reference/blocktypes/nomad-job-manifests-blocktype.html"><strong aria-hidden="true">16.10.</strong> Nomad Job Manifests</a></li><li class="chapter-item expanded "><a href="reference/blocktypes/pkgs-blocktype.html"><strong aria-hidden="true">16.11.</strong> Pkgs</a></li></ol></li><li class="chapter-item expanded "><a href="reference/std/index.html"><strong aria-hidden="true">17.</strong> //std</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/std/errors/index.html"><strong aria-hidden="true">17.1.</strong> /errors</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/std/errors/removeBy.html"><strong aria-hidden="true">17.1.1.</strong> /removeBy</a></li><li class="chapter-item expanded "><a href="reference/std/errors/requireInput.html"><strong aria-hidden="true">17.1.2.</strong> /requireInput</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="reference/lib/index.html"><strong aria-hidden="true">18.</strong> //lib</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/lib/dev/index.html"><strong aria-hidden="true">18.1.</strong> /dev</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/lib/dev/mkMakes.html"><strong aria-hidden="true">18.1.1.</strong> /mkMakes</a></li><li class="chapter-item expanded "><a href="reference/lib/dev/mkShell.html"><strong aria-hidden="true">18.1.2.</strong> /mkShell</a></li><li class="chapter-item expanded "><a href="reference/lib/dev/mkNixago.html"><strong aria-hidden="true">18.1.3.</strong> /mkNixago</a></li><li class="chapter-item expanded "><a href="reference/lib/dev/mkArion.html"><strong aria-hidden="true">18.1.4.</strong> /mkArion</a></li></ol></li><li class="chapter-item expanded "><a href="reference/lib/ops/index.html"><strong aria-hidden="true">18.2.</strong> /ops</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/lib/ops/mkMicrovm.html"><strong aria-hidden="true">18.2.1.</strong> /mkMicrovm</a></li><li class="chapter-item expanded "><a href="reference/lib/ops/mkOperable.html"><strong aria-hidden="true">18.2.2.</strong> /mkOperable</a></li><li class="chapter-item expanded "><a href="reference/lib/ops/mkOCI.html"><strong aria-hidden="true">18.2.3.</strong> /mkOCI</a></li><li class="chapter-item expanded "><a href="reference/lib/ops/mkStandardOCI.html"><strong aria-hidden="true">18.2.4.</strong> /mkStandardOCI</a></li></ol></li><li class="chapter-item expanded "><a href="reference/lib/cfg/index.html"><strong aria-hidden="true">18.3.</strong> /cfg</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/lib/cfg/adrgen.html"><strong aria-hidden="true">18.3.1.</strong> /adrgen</a></li><li class="chapter-item expanded "><a href="reference/lib/cfg/conform.html"><strong aria-hidden="true">18.3.2.</strong> /conform</a></li><li class="chapter-item expanded "><a href="reference/lib/cfg/editorconfig.html"><strong aria-hidden="true">18.3.3.</strong> /editorconfig</a></li><li class="chapter-item expanded "><a href="reference/lib/cfg/just.html"><strong aria-hidden="true">18.3.4.</strong> /just</a></li><li class="chapter-item expanded "><a href="reference/lib/cfg/lefthook.html"><strong aria-hidden="true">18.3.5.</strong> /lefthook</a></li><li class="chapter-item expanded "><a href="reference/lib/cfg/mdbook.html"><strong aria-hidden="true">18.3.6.</strong> /mdbook</a></li><li class="chapter-item expanded "><a href="reference/lib/cfg/treefmt.html"><strong aria-hidden="true">18.3.7.</strong> /treefmt</a></li><li class="chapter-item expanded "><a href="reference/lib/cfg/githubsettings.html"><strong aria-hidden="true">18.3.8.</strong> /githubsettings</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="glossary.html"><strong aria-hidden="true">19.</strong> Glossary</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="ARCHITECTURE.html">Design & Architecture</a></li><li class="chapter-item expanded affix "><a href="PITCH.html">Sales Pitch</a></li><li class="chapter-item expanded affix "><a href="COMPARE.html">Comparisions</a></li><li class="chapter-item expanded affix "><a href="ROADMAP.html">Roadmap</a></li><li class="chapter-item expanded affix "><li class="part-title">Tutorials</li><li class="chapter-item expanded "><a href="tutorials/walk-in-the-park.html"><strong aria-hidden="true">1.</strong> A walk in the park</a></li><li class="chapter-item expanded "><a href="tutorials/hello-world/index.html"><strong aria-hidden="true">2.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="tutorials/hello-moon/index.html"><strong aria-hidden="true">3.</strong> Hello Moon</a></li><li class="chapter-item expanded affix "><li class="part-title">How-To Guides</li><li class="chapter-item expanded "><a href="guides/growing-cells.html"><strong aria-hidden="true">4.</strong> Growing Cells</a></li><li class="chapter-item expanded "><a href="guides/incl.html"><strong aria-hidden="true">5.</strong> Include Filter</a></li><li class="chapter-item expanded "><a href="guides/envrc.html"><strong aria-hidden="true">6.</strong> Setup .envrc</a></li><li class="chapter-item expanded affix "><li class="part-title">Explanation</li><li class="chapter-item expanded "><a href="explain/why-nix.html"><strong aria-hidden="true">7.</strong> Why nix?</a></li><li class="chapter-item expanded "><a href="explain/why-std.html"><strong aria-hidden="true">8.</strong> Why std?</a></li><li class="chapter-item expanded "><a href="explain/architecture-decision-records/index.html"><strong aria-hidden="true">9.</strong> Architecture Decisions</a></li><li class="chapter-item expanded affix "><li class="part-title">Patterns</li><li class="chapter-item expanded "><a href="patterns/four-packaging-layers.html"><strong aria-hidden="true">10.</strong> The 4 Packaging Layers</a></li><li class="chapter-item expanded affix "><li class="part-title">Templates</li><li class="chapter-item expanded "><a href="templates/minimal.html"><strong aria-hidden="true">11.</strong> Minimal</a></li><li class="chapter-item expanded "><a href="templates/rust.html"><strong aria-hidden="true">12.</strong> Rust</a></li><li class="chapter-item expanded affix "><li class="part-title">Reference</li><li class="chapter-item expanded "><a href="reference/cli.html"><strong aria-hidden="true">13.</strong> TUI/CLI</a></li><li class="chapter-item expanded "><a href="reference/conventions.html"><strong aria-hidden="true">14.</strong> Conventions</a></li><li class="chapter-item expanded "><a href="reference/deprecations.html"><strong aria-hidden="true">15.</strong> Deprecations</a></li><li class="chapter-item expanded "><a href="reference/blocktypes.html"><strong aria-hidden="true">16.</strong> Builtin Block Types</a></li><li class="chapter-item expanded "><a href="reference/lib.html"><strong aria-hidden="true">17.</strong> Cell: lib</a></li><li class="chapter-item expanded "><a href="reference/std.html"><strong aria-hidden="true">18.</strong> Cell: std</a></li><li class="chapter-item expanded "><a href="glossary.html"><strong aria-hidden="true">19.</strong> Glossary</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -83,7 +89,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -93,7 +99,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -110,6 +116,7 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -123,8 +130,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -1232,7 +1240,7 @@ Shouldn't have those smart people have known better?&quot;</li>
 <li>And from this realization, there's no coming back.</li>
 <li>And you'll have joined the <a href="https://discourse.nixos.org/t/nixos-foundation-participating-in-eus-next-generation-internet-initiative/2011">European Union</a>, <a href="https://discourse.nixos.org/t/mercury-bank-nix-engineers/13784">banks</a> and <a href="https://github.com/input-output-hk/cardano-world">blockchain companies</a> who also realized:
 we need to fix our utterly broken and insecure build systems!</li>
-<li>By that time, you'll have already assimilated the legendary <a href="http://users.ece.cmu.edu/%7Eganger/712.fall02/papers/p761-thompson.pdf">Ken Thompson's &quot;Reflections on Trusting Trust&quot;</a>.</li>
+<li>By that time, you'll have already assimilated the legendary <a href="http://users.ece.cmu.edu/~ganger/712.fall02/papers/p761-thompson.pdf">Ken Thompson's &quot;Reflections on Trusting Trust&quot;</a>.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="why-std"><a class="header" href="#why-std">Why std?</a></h1>
 <h2 id="problem"><a class="header" href="#problem">Problem</a></h2>
@@ -1895,90 +1903,89 @@ in {
   '';
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="builtin-block-types"><a class="header" href="#builtin-block-types">Builtin Block Types</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div class="sidetoc"><nav class="pagetoc"></nav></div>
+<h1 id="builtin-block-types"><a class="header" href="#builtin-block-types">Builtin Block Types</a></h1>
 <p>A few Block Types are packaged with <code>std</code>.</p>
 <p>In practical terms, Block Types distinguish themselves through the
 actions they provide to a particular Cell Block.</p>
 <p>It is entirely possible to define custom Block Types with custom
 Actions according to the needs of your project.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="data"><a class="header" href="#data">Data</a></h1>
+<h2 id="arion"><a class="header" href="#arion">Arion</a></h2>
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
 }: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the Data Blocktype for json serializable data.
+  Use the arion for arionCompose Jobs - https://docs.hercules-ci.com/arion/
 
   Available actions:
-    - write
-    - explore
-
-  For all actions is true:
-    Nix-proper 'stringContext'-carried dependency will be realized
-    to the store, if present.
+    - up
+    - ps
+    - stop
+    - rm
+    - config
+    - arion
   */
-  data = name: {
+  arion = name: {
     inherit name;
-    type = &quot;data&quot;;
+    type = &quot;arion&quot;;
     actions = {
       system,
       fragment,
       fragmentRelPath,
       target,
     }: let
-      inherit (nixpkgs.legacyPackages.${system}) pkgs;
-
-      # if target ? __std_data_wrapper, then we need to unpack from `.data`
-      json = pkgs.writeTextFile {
-        name = &quot;data.json&quot;;
-        text = builtins.toJSON (
-          if target ? __std_data_wrapper
-          then target.data
-          else target
-        );
-      };
-      jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
-      fx = [&quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
+      cmd = &quot;arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
     in [
       (mkCommand system {
-        name = &quot;write&quot;;
-        description = &quot;write to file&quot;;
-        command = &quot;echo ${json}&quot;;
+        name = &quot;up&quot;;
+        description = &quot;arion up&quot;;
+        command = ''
+          ${cmd} up &quot;$@&quot;
+        '';
       })
       (mkCommand system {
-        name = &quot;explore&quot;;
-        description = &quot;interactively explore&quot;;
-        command = l.concatStringsSep &quot;\t&quot; (jq ++ fx);
+        name = &quot;ps&quot;;
+        description = &quot;exec this arion task to ps&quot;;
+        command = ''
+          ${cmd} ps &quot;$@&quot;
+        '';
+      })
+      (mkCommand system {
+        name = &quot;stop&quot;;
+        description = &quot;arion stop&quot;;
+        command = ''
+          ${cmd} stop &quot;$@&quot;
+        '';
+      })
+      (mkCommand system {
+        name = &quot;rm&quot;;
+        description = &quot;arion rm&quot;;
+        command = ''
+          ${cmd} rm &quot;$@&quot;
+        '';
+      })
+      (mkCommand system {
+        name = &quot;config&quot;;
+        description = &quot;check the docker-compose yaml file&quot;;
+        command = ''
+          ${cmd} config &quot;$@&quot;
+        '';
+      })
+      (mkCommand system {
+        name = &quot;arion&quot;;
+        description = &quot;pass any command to arion&quot;;
+        command = ''
+          ${cmd} &quot;$@&quot;
+        '';
       })
     ];
   };
 in
-  data
+  arion
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="functions"><a class="header" href="#functions">Functions</a></h1>
-<pre><code class="language-nix">{
-  nixpkgs,
-  mkCommand,
-}: let
-  l = nixpkgs.lib // builtins;
-  /*
-  Use the Functions Blocktype for reusable nix functions that you would
-  call elswhere in the code.
-
-  Also use this for all types of modules and profiles, since they are
-  implemented as functions.
-
-  Consequently, there are no actions available for functions.
-  */
-  functions = name: {
-    inherit name;
-    type = &quot;functions&quot;;
-  };
-in
-  functions
-</code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="runnables"><a class="header" href="#runnables">Runnables</a></h1>
+<h2 id="runnables-todo-vs-installables"><a class="header" href="#runnables-todo-vs-installables">Runnables (todo: vs installables)</a></h2>
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
@@ -2006,7 +2013,7 @@ in
 in
   runnables
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="installables"><a class="header" href="#installables">Installables</a></h1>
+<h2 id="installables-todo-vs-runnables"><a class="header" href="#installables-todo-vs-runnables">Installables (todo: vs runnables)</a></h2>
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
@@ -2116,57 +2123,24 @@ in
 in
   installables
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="microvms"><a class="header" href="#microvms">Microvms</a></h1>
-<pre><code class="language-nix">{
-  nixpkgs,
-  mkCommand,
-}: let
-  lib = nixpkgs.lib // builtins;
+<h2 id="pkgs"><a class="header" href="#pkgs">Pkgs</a></h2>
+<pre><code class="language-nix">{...}: let
   /*
-  Use the Microvms Blocktype for Microvm.nix - https://github.com/astro/microvm.nix
+  Use the Pkgs Blocktype if you need to construct your custom
+  variant of nixpkgs with overlays.
 
-  Available actions:
-    - run
-    - console
-    - microvm
+  Targets will be excluded from the CLI / TUI  and thus not
+  slow them down.
   */
-
-  microvms = name: {
+  pkgs = name: {
     inherit name;
-    type = &quot;microvms&quot;;
-    actions = {
-      system,
-      fragment,
-      fragmentRelPath,
-      target,
-    }: [
-      (mkCommand system {
-        name = &quot;run&quot;;
-        description = &quot;run the microvm&quot;;
-        command = ''
-          ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-run
-        '';
-      })
-      (mkCommand system {
-        name = &quot;console&quot;;
-        description = &quot;enter the microvm console&quot;;
-        command = ''
-          ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-console
-        '';
-      })
-      (mkCommand system {
-        name = &quot;microvm&quot;;
-        description = &quot;pass any command to microvm&quot;;
-        command = ''
-          ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-&quot;$@&quot;
-        '';
-      })
-    ];
+    type = &quot;pkgs&quot;;
+    cli = false; # its special power
   };
 in
-  microvms
+  pkgs
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="devshells"><a class="header" href="#devshells">Devshells</a></h1>
+<h2 id="devshells"><a class="header" href="#devshells">Devshells</a></h2>
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
@@ -2236,7 +2210,55 @@ in
 in
   devshells
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="containers"><a class="header" href="#containers">Containers</a></h1>
+<h2 id="nixago"><a class="header" href="#nixago">Nixago</a></h2>
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
+  l = nixpkgs.lib // builtins;
+  /*
+  Use the Nixago Blocktype for nixago pebbles.
+
+  Use Nixago pebbles to ensure files are present
+  or symlinked into your repository. You may typically
+  use this for repo dotfiles.
+
+  For more information, see: https://github.com/nix-community/nixago.
+
+  Available actions:
+    - ensure
+    - explore
+
+  */
+  nixago = name: {
+    inherit name;
+    type = &quot;nixago&quot;;
+    actions = {
+      system,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: [
+      (mkCommand system {
+        name = &quot;populate&quot;;
+        description = &quot;populate this nixago file into the repo&quot;;
+        command = ''
+          ${target.install}/bin/nixago_shell_hook
+        '';
+      })
+      (mkCommand system {
+        name = &quot;explore&quot;;
+        description = &quot;interactively explore the nixago file&quot;;
+        command = ''
+          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat &quot;${target.configFile}&quot;
+        '';
+      })
+    ];
+  };
+in
+  nixago
+</code></pre>
+<h2 id="containers"><a class="header" href="#containers">Containers</a></h2>
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
@@ -2352,384 +2374,122 @@ in
 in
   containers
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="nixago"><a class="header" href="#nixago">Nixago</a></h1>
+<h2 id="data"><a class="header" href="#data">Data</a></h2>
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
 }: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the Nixago Blocktype for nixago pebbles.
-
-  Use Nixago pebbles to ensure files are present
-  or symlinked into your repository. You may typically
-  use this for repo dotfiles.
-
-  For more information, see: https://github.com/nix-community/nixago.
+  Use the Data Blocktype for json serializable data.
 
   Available actions:
-    - ensure
+    - write
     - explore
 
+  For all actions is true:
+    Nix-proper 'stringContext'-carried dependency will be realized
+    to the store, if present.
   */
-  nixago = name: {
+  data = name: {
     inherit name;
-    type = &quot;nixago&quot;;
-    actions = {
-      system,
-      fragment,
-      fragmentRelPath,
-      target,
-    }: [
-      (mkCommand system {
-        name = &quot;populate&quot;;
-        description = &quot;populate this nixago file into the repo&quot;;
-        command = ''
-          ${target.install}/bin/nixago_shell_hook
-        '';
-      })
-      (mkCommand system {
-        name = &quot;explore&quot;;
-        description = &quot;interactively explore the nixago file&quot;;
-        command = ''
-          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat &quot;${target.configFile}&quot;
-        '';
-      })
-    ];
-  };
-in
-  nixago
-</code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="arion"><a class="header" href="#arion">Arion</a></h1>
-<pre><code class="language-nix">{
-  nixpkgs,
-  mkCommand,
-}: let
-  l = nixpkgs.lib // builtins;
-  /*
-  Use the arion for arionCompose Jobs - https://docs.hercules-ci.com/arion/
-
-  Available actions:
-    - up
-    - ps
-    - stop
-    - rm
-    - config
-    - arion
-  */
-  arion = name: {
-    inherit name;
-    type = &quot;arion&quot;;
+    type = &quot;data&quot;;
     actions = {
       system,
       fragment,
       fragmentRelPath,
       target,
     }: let
-      cmd = &quot;arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
+      inherit (nixpkgs.legacyPackages.${system}) pkgs;
+
+      # if target ? __std_data_wrapper, then we need to unpack from `.data`
+      json = pkgs.writeTextFile {
+        name = &quot;data.json&quot;;
+        text = builtins.toJSON (
+          if target ? __std_data_wrapper
+          then target.data
+          else target
+        );
+      };
+      jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
+      fx = [&quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
     in [
       (mkCommand system {
-        name = &quot;up&quot;;
-        description = &quot;arion up&quot;;
-        command = ''
-          ${cmd} up &quot;$@&quot;
-        '';
+        name = &quot;write&quot;;
+        description = &quot;write to file&quot;;
+        command = &quot;echo ${json}&quot;;
       })
       (mkCommand system {
-        name = &quot;ps&quot;;
-        description = &quot;exec this arion task to ps&quot;;
-        command = ''
-          ${cmd} ps &quot;$@&quot;
-        '';
-      })
-      (mkCommand system {
-        name = &quot;stop&quot;;
-        description = &quot;arion stop&quot;;
-        command = ''
-          ${cmd} stop &quot;$@&quot;
-        '';
-      })
-      (mkCommand system {
-        name = &quot;rm&quot;;
-        description = &quot;arion rm&quot;;
-        command = ''
-          ${cmd} rm &quot;$@&quot;
-        '';
-      })
-      (mkCommand system {
-        name = &quot;config&quot;;
-        description = &quot;check the docker-compose yaml file&quot;;
-        command = ''
-          ${cmd} config &quot;$@&quot;
-        '';
-      })
-      (mkCommand system {
-        name = &quot;arion&quot;;
-        description = &quot;pass any command to arion&quot;;
-        command = ''
-          ${cmd} &quot;$@&quot;
-        '';
+        name = &quot;explore&quot;;
+        description = &quot;interactively explore&quot;;
+        command = l.concatStringsSep &quot;\t&quot; (jq ++ fx);
       })
     ];
   };
 in
-  arion
+  data
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="nomad-job-manfiests"><a class="header" href="#nomad-job-manfiests">Nomad Job Manfiests</a></h1>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
 <pre><code class="language-nix">{
   nixpkgs,
   mkCommand,
 }: let
   l = nixpkgs.lib // builtins;
   /*
-  Use the `nomadJobsManifest` Blocktype for rendering job descriptions
-  for the Nomad Cluster scheduler. Each named attribtute-set under the
-  block contains a valid Nomad job description, written in Nix.
+  Use the Functions Blocktype for reusable nix functions that you would
+  call elswhere in the code.
 
-  Available actions:
-    - render
-    - deploy
-    - explore
+  Also use this for all types of modules and profiles, since they are
+  implemented as functions.
+
+  Consequently, there are no actions available for functions.
   */
-  nomadJobManifests = name: {
-    __functor = import ./__functor.nix;
+  functions = name: {
     inherit name;
-    type = &quot;nomadJobManifests&quot;;
-
-    actions = {
-      system,
-      fragment,
-      fragmentRelPath,
-      target,
-    }: let
-      fx = &quot;${nixpkgs.legacyPackages.${system}.fx}/bin&quot;;
-      nomad = &quot;${nixpkgs.legacyPackages.${system}.nomad}/bin&quot;;
-      jq = &quot;${nixpkgs.legacyPackages.${system}.jq}/bin&quot;;
-      job = baseNameOf fragmentRelPath;
-      nixExpr = ''
-        x: let
-          job = builtins.mapAttrs (_: v: v // {meta = v.meta or {} // {rev = &quot;\&quot;$(git rev-parse --short HEAD)\&quot;&quot;;};}) x.job;
-        in
-          builtins.toFile \&quot;${job}.json\&quot; (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}))
-      '';
-      layout = ''
-        if test -z &quot;$PRJ_ROOT&quot;; then
-          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
-          exit 1
-        fi
-        if test -z &quot;$PRJ_DATA_DIR&quot;; then
-          echo &quot;PRJ_DATA_DIR is not set. Action aborting.&quot;
-          exit 1
-        fi
-        job_path=&quot;$PRJ_DATA_DIR/${dirOf fragmentRelPath}/${job}.json&quot;
-
-        # use Nomad bin in path if it exists, and only fallback on nixpkgs if it doesn't
-        PATH=&quot;$PATH:${nomad}&quot;
-      '';
-      render = ''
-        if test -z &quot;$PRJ_ROOT&quot;; then
-          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
-          exit 1
-        fi
-
-        echo &quot;Rendering to $job_path...&quot;
-
-        # use `PRJ_ROOT` to capture dirty state
-        if ! out=&quot;$(nix eval --no-allow-dirty --raw $PRJ_ROOT\#${fragment} --apply &quot;${nixExpr}&quot;)&quot;; then
-          &gt;&amp;2 echo &quot;error: Will not render jobs from a dirty tree, otherwise we cannot keep good track of deployment history.&quot;
-          exit 1
-        fi
-
-        nix build &quot;$out&quot; --out-link &quot;$job_path&quot; 2&gt;/dev/null
-
-        if status=$(nomad validate &quot;$job_path&quot;); then
-          echo &quot;$status for $job_path&quot;
-        fi
-      '';
-    in [
-      /*
-      The `render` action will take this Nix job descrition, convert it to JSON,
-      inject the git revision validate the manifest, after which it can be run or
-      planned with the Nomad cli or the `deploy` action.
-      */
-      (mkCommand system {
-        name = &quot;render&quot;;
-        description = &quot;build the JSON job description&quot;;
-        command =
-          # bash
-          ''
-            set -e
-
-            ${layout}
-
-            ${render}
-          '';
-      })
-      (mkCommand system {
-        name = &quot;deploy&quot;;
-        description = &quot;Deploy the job to Nomad&quot;;
-        command =
-          # bash
-          ''
-            set -e
-
-            ${layout}
-
-            PATH=$PATH:${jq}
-
-            if ! [[ -h &quot;$job_path&quot; ]] \
-              || [[ &quot;$(jq -r '.job[].meta.rev' &quot;$job_path&quot;)&quot; != &quot;$(git rev-parse --short HEAD)&quot; ]]
-            then ${render}
-            fi
-
-            if ! plan_results=$(nomad plan -force-color &quot;$job_path&quot;); then
-              echo &quot;$plan_results&quot;
-
-              cmd=&quot;$(echo &quot;$plan_results&quot; | grep 'nomad job run -check-index')&quot;
-
-              # prompt user interactiely except in CI
-              if ! [[ -v CI ]]; then
-                read -rp &quot;Deploy this job? (y/N)&quot; deploy
-
-                case &quot;$deploy&quot; in
-                [Yy])
-                  eval &quot;$cmd&quot;
-                  ;;
-                *)
-                  echo &quot;Exiting without deploying&quot;
-                  ;;
-                esac
-              else
-                eval &quot;$cmd&quot;
-              fi
-            else
-              echo &quot;Job hasn't changed since last deployment, nothing to deploy&quot;
-            fi
-          '';
-      })
-      (mkCommand system {
-        name = &quot;explore&quot;;
-        description = &quot;interactively explore the Job defintion&quot;;
-        command =
-          # bash
-          ''
-            set -e
-
-            ${layout}
-
-            if ! [[ -h &quot;$job_path&quot; ]]; then
-            ${render}
-            fi
-
-            PATH=$PATH:${fx}
-
-            fx &quot;$job_path&quot;
-          '';
-      })
-    ];
+    type = &quot;functions&quot;;
   };
 in
-  nomadJobManifests
+  functions
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="pkgs"><a class="header" href="#pkgs">Pkgs</a></h1>
-<pre><code class="language-nix">{...}: let
+<h2 id="anything"><a class="header" href="#anything">Anything</a></h2>
+<p><em>Note: while the implementation is the same as <code>functions</code>, the semantics are different. Implementations may diverge in the future.</em></p>
+<pre><code class="language-nix">{
+  nixpkgs,
+  mkCommand,
+}: let
+  l = nixpkgs.lib // builtins;
   /*
-  Use the Pkgs Blocktype if you need to construct your custom
-  variant of nixpkgs with overlays.
+  Use the Anything Blocktype as a fallback.
 
-  Targets will be excluded from the CLI / TUI  and thus not
-  slow them down.
+  It doesn't have actions.
   */
-  pkgs = name: {
+  anything = name: {
     inherit name;
-    type = &quot;pkgs&quot;;
-    cli = false; # its special power
+    type = &quot;anything&quot;;
   };
 in
-  pkgs
+  anything
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-cell"><a class="header" href="#the-std-cell">The <code>std</code> Cell</a></h1>
-<p>... is the only cell in <code>divnix/std</code> and provides only very limited functionality.</p>
-<ul>
-<li>It contains the TUI, in <code>./cli</code>.</li>
-<li>It contains a <code>devshellProfile</code> in <code>./devshellProfiles</code>.</li>
-<li>It contains a growing number of second level library functions in <code>./lib</code>.</li>
-<li>Packages that are used in std devshells are proxied in <code>./packages</code>.</li>
-</ul>
-<p>That's it.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="standard-error-message-functions"><a class="header" href="#standard-error-message-functions">Standard Error Message Functions</a></h1>
-<p>This Cell Block comprises several error message functions that can be used in different situations.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="removeby"><a class="header" href="#removeby"><code>removeBy</code></a></h1>
-<pre><code class="language-nix">{inputs}: time: body: let
-  l = inputs.nixpkgs.lib // builtins;
-  pad = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (20 - (l.stringLength time)));
-in
-  l.warn ''
-
-
-    ===============================================
-    !!!  🔥️  STANDARD DEPRECATION WARNING  🔥️   !!!
-    -----------------------------------------------
-    !!! Action required until scheduled removal !!!
-    !!! Scheduled Removal: ${pad}${time} !!!
-    -----------------------------------------------
-    On schedule, deprecated facilities will be
-    removed from Standard without further warning.
-    -----------------------------------------------
-    ${body}
-    ===============================================
-
-    ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳
-
-
-
-  ''
-</code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="requireinput"><a class="header" href="#requireinput"><code>requireInput</code></a></h1>
-<pre><code class="language-nix">{inputs}: input: url: target: let
-  l = inputs.nixpkgs.lib // builtins;
-
-  # other than `divnix/blank`
-  condition = inputs.${input}.sourceInfo.narHash != &quot;sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=&quot;;
-
-  trace = l.traceSeqN 1 inputs;
-in
-  assert l.assertMsg condition (trace ''
-
-    ===============================================
-    !!!  🚜️   STANDARD INPUT OVERLOADING   🚜️   !!!
-    -----------------------------------------------
-    In order to be able to use this target, an
-    extra input must be overloaded onto Standard
-    -----------------------------------------------
-    Target:      ${target}
-    Extra Input: ${input}
-    Url:         ${url}
-    -----------------------------------------------
-    To fix this, add this to your './flake.nix':
-
-      inputs.std.inputs.${input}.url =
-        &quot;${url}&quot;;
-
-    For reference, see current inputs to Standard
-    in the above trace.
-    ===============================================
-
-    🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥
-
-
-
-  ''); inputs
-</code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="the-standard-library"><a class="header" href="#the-standard-library">The Standard Library</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div class="sidetoc"><nav class="pagetoc"></nav></div>
+<h1 id="the-standard-library"><a class="header" href="#the-standard-library">The Standard Library</a></h1>
 <p>This library intends to cover the Software Delivery Life Cycle in the Standard way.</p>
 <p>Each Cell Block covers a specific SDLC topic.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="the-dev-library"><a class="header" href="#the-dev-library">The Dev Library</a></h1>
+<hr />
+<h2 id="the-dev-library"><a class="header" href="#the-dev-library">The Dev Library</a></h2>
 <p>This library covers <em>development</em> aspects of the SDLC.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="mkmakes-provides-an-interface-to-makes-tasks"><a class="header" href="#mkmakes-provides-an-interface-to-makes-tasks"><code>mkMakes</code> provides an interface to <code>makes</code> tasks</a></h1>
+<h3 id="mkarion"><a class="header" href="#mkarion"><code>mkArion</code></a></h3>
+<p>This is a transparent convenience proxy for <a href="https://github.com/hercules-ci/arion"><code>hercules-ci/arion</code>'s</a> <code>lib.build</code> function.</p>
+<p>However, the arion's <code>nixos</code> config option was removed.</p>
+<p>As Standard claims to be the integration layer it will not delegate integration via a foreign
+interface to commissioned tools, such as arion.</p>
+<p>This is a bridge towards and from docker-compose users. Making nixos part of the interface would
+likely alienate that bridge for those users.</p>
+<p>If you need a nixos-based container image, please check out the arion source code on how it's done.</p>
+<h3 id="mkmakes"><a class="header" href="#mkmakes"><code>mkMakes</code></a></h3>
+<p>... provides an interface to <code>makes</code> tasks</p>
 <p>This is an integration for <a href="https://github.com/fluidattacks/makes"><code>fluidattacks/makes</code></a>.</p>
 <p>A version that has this <a href="https://github.com/fluidattacks/makes/commit/cd8c4eda69e2ce8dc6f811973ba0d80070b4628a">patch</a> is a prerequisite.</p>
-<h2 id="usage-example"><a class="header" href="#usage-example">Usage example</a></h2>
+<h4 id="usage-example"><a class="header" href="#usage-example">Usage example</a></h4>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -2741,26 +2501,7 @@ in {
 </code></pre>
 <p><em>Some refactoring of the tasks may be necessary. Let the error messages be your friend.</em></p>
 <hr />
-<div style="break-before: page; page-break-before: always;"></div><h1 id="mkshell"><a class="header" href="#mkshell"><code>mkShell</code></a></h1>
-<p>This is a transparent convenience proxy for <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code>'s</a> <code>mkShell</code> function.</p>
-<p>It is enriched with a tight integration for <code>std</code> <a href="https://github.com/nix-community/nixago">Nixago</a> pebbles:</p>
-<pre><code class="language-nix">{ inputs, cell}: {
-  default = inputs.std.lib.dev.mkShell {
-    /* ... */
-    nixago = [
-      (cell.nixago.foo {
-        data.qux = &quot;xyz&quot;;
-        packages = [ pkgs.additional-package ];
-      })
-      cell.nixago.bar
-      cell.nixago.quz
-    ];
-  };
-}
-</code></pre>
-<p><em>Note, that you can extend any Nixago Pebble at the calling site
-via a built-in functor like in the example above.</em></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="mknixago"><a class="header" href="#mknixago"><code>mkNixago</code></a></h1>
+<h3 id="mknixago"><a class="header" href="#mknixago"><code>mkNixago</code></a></h3>
 <p>This is a transparent convenience proxy for <a href="https://github.com/nix-community/nixago"><code>nix-community/nixago</code>'s</a> <code>lib.${system}.make</code> function.</p>
 <p>It is enriched with a forward contract towards <code>std</code> enriched <code>mkShell</code> implementation.</p>
 <p>In order to define <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code>'s</a> <code>commands</code> &amp; <code>packages</code> alongside the Nixago pebble,
@@ -2775,32 +2516,12 @@ is used inside its <code>config.nixago</code>-option.</p>
   };
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="mkarion"><a class="header" href="#mkarion"><code>mkArion</code></a></h1>
-<p>This is a transparent convenience proxy for <a href="https://github.com/hercules-ci/arion"><code>hercules-ci/arion</code>'s</a> <code>lib.build</code> function.</p>
-<p>However, the arion's <code>nixos</code> config option was removed.</p>
-<p>As Standard claims to be the integration layer it will not delegate integration via a foreign
-interface to commissioned tools, such as arion.</p>
-<p>This is a bridge towards and from docker-compose users. Making nixos part of the interface would
-likely alienate that bridge for those users.</p>
-<p>If you need a nixos-based container image, please check out the arion source code on how it's done.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="the-ops-library"><a class="header" href="#the-ops-library">The Ops Library</a></h1>
-<p>This library covers <em>operational</em> aspects of the SDLC.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="mkmicrovm-provides-an-interface-to-microvm-tasks"><a class="header" href="#mkmicrovm-provides-an-interface-to-microvm-tasks"><code>mkMicrovm</code> provides an interface to <code>microvm</code> tasks</a></h1>
-<p>This is an integration for <a href="https://github.com/astro/microvm.nix"><code>astro/microvm.nix</code></a>.</p>
-<h2 id="usage-example-1"><a class="header" href="#usage-example-1">Usage example</a></h2>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
-  inherit (inputs.std.lib) ops;
-in {
-  # microvm &lt;module&gt;
-  myhost = ops.mkMicrovm ({ pkgs, lib, ... }: { networking.hostName = &quot;microvms-host&quot;;});
-}
-</code></pre>
+<p>{{#include ./lib/dev/mkShell.md}</p>
 <hr />
-<div style="break-before: page; page-break-before: always;"></div><h1 id="mkoperable"><a class="header" href="#mkoperable"><code>mkOperable</code></a></h1>
-<p>... is a function interface into the <a href="reference/lib/ops//patterns/four-packaging-layers.html#operable-layer">second layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
+<h2 id="the-ops-library"><a class="header" href="#the-ops-library">The Ops Library</a></h2>
+<p>This library covers <em>operational</em> aspects of the SDLC.</p>
+<h3 id="mkoperable"><a class="header" href="#mkoperable"><code>mkOperable</code></a></h3>
+<p>... is a function interface into the <a href="reference//patterns/four-packaging-layers.html#operable-layer">second layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
 <p>It's purpose is to provide an easy way to enrich a &quot;package&quot; into an &quot;operable&quot;.</p>
 <p>The function signature is as follows:</p>
 <pre><code class="language-nix">  /*
@@ -2818,7 +2539,7 @@ in {
   An operable for the given package.
   */
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="mkoci"><a class="header" href="#mkoci"><code>mkOCI</code></a></h1>
+<h3 id="mkoci"><a class="header" href="#mkoci"><code>mkOCI</code></a></h3>
 <p>... is a function to generate an OCI Image via <a href="https://github.com/nlewo/nix2container"><code>nix2container</code></a>.</p>
 <p>The function signature is as follows:</p>
 <pre><code class="language-nix">  /*
@@ -2840,9 +2561,9 @@ in {
   An OCI container image (created with nix2container).
   */
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="mkstandardoci"><a class="header" href="#mkstandardoci"><code>mkStandardOCI</code></a></h1>
-<p>... is a function interface into the <a href="reference/lib/ops//patterns/four-packaging-layers.html#oci-image-layer">third layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
-<p>It produces a Standard OCI Image from an <a href="reference/lib/ops/./mkOperable.html">&quot;operable&quot;</a>.</p>
+<h3 id="mkstandardoci"><a class="header" href="#mkstandardoci"><code>mkStandardOCI</code></a></h3>
+<p>... is a function interface into the <a href="reference//patterns/four-packaging-layers.html#oci-image-layer">third layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
+<p>It produces a Standard OCI Image from an <a href="reference/./mkOperable.html">&quot;operable&quot;</a>.</p>
 <p>The function signature is as follows:</p>
 <pre><code class="language-nix">  /*
   Creates an OCI container image using the given operable.
@@ -2864,9 +2585,9 @@ in {
   An OCI container image (created with nix2container).
   */
 </code></pre>
-<h2 id="the-standard-image"><a class="header" href="#the-standard-image">The Standard Image</a></h2>
+<h4 id="the-standard-image"><a class="header" href="#the-standard-image">The Standard Image</a></h4>
 <p>Standard images are minimal and hardened. They only contain required dependencies.</p>
-<h3 id="contracts"><a class="header" href="#contracts">Contracts</a></h3>
+<h5 id="contracts"><a class="header" href="#contracts">Contracts</a></h5>
 <p>The following contracts can be consumed:</p>
 <pre><code>/bin/entrypoint # always present
 /bin/runtime    # always present, drops into the runtime environment
@@ -2875,10 +2596,10 @@ in {
 </code></pre>
 <p>That's it. There is nothing more to see.</p>
 <p>All other dependencies are contained in <code>/nix/store/...</code>.</p>
-<h2 id="the-debug-image"><a class="header" href="#the-debug-image">The Debug Image</a></h2>
+<h4 id="the-debug-image"><a class="header" href="#the-debug-image">The Debug Image</a></h4>
 <p>Debug Images wrap the standard images and provide additional debugging packages.</p>
 <p>Hence, they are neither minimal, nor hardened because of the debugging packages' added surface.</p>
-<h3 id="contracts-1"><a class="header" href="#contracts-1">Contracts</a></h3>
+<h5 id="contracts-1"><a class="header" href="#contracts-1">Contracts</a></h5>
 <p>The following contracts can be consumed:</p>
 <pre><code>/bin/entrypoint # always present
 /bin/runtime    # always present, drops into the runtime environment
@@ -2886,10 +2607,10 @@ in {
 /bin/live       # if livenessProbe was set
 /bin/ready      # if readinessProbe was set
 </code></pre>
-<h2 id="how-to-extend"><a class="header" href="#how-to-extend">How to extend?</a></h2>
+<h4 id="how-to-extend"><a class="header" href="#how-to-extend">How to extend?</a></h4>
 <p>A Standard or Debug Image doesn't have a package manager available in the environment.</p>
 <p>Hence, to extend the image you have two options:</p>
-<h3 id="nix-based-extension"><a class="header" href="#nix-based-extension">Nix-based extension</a></h3>
+<h5 id="nix-based-extension"><a class="header" href="#nix-based-extension">Nix-based extension</a></h5>
 <pre><code class="language-nix">rec {
   upstream = n2c.pullImage {
     imageName = &quot;docker.io/my-upstream-image&quot;;
@@ -2903,7 +2624,7 @@ in {
   };
 }
 </code></pre>
-<h3 id="dockerfile-based-extension"><a class="header" href="#dockerfile-based-extension">Dockerfile-based extension</a></h3>
+<h5 id="dockerfile-based-extension"><a class="header" href="#dockerfile-based-extension">Dockerfile-based extension</a></h5>
 <pre><code class="language-Dockerfile">FROM alpine AS builder
 RUN apk --no-cache curl
 
@@ -2912,7 +2633,23 @@ COPY --from=builder /... /
 
 </code></pre>
 <p><em>Please refer to the official dockerfile documentation for more details.</em></p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="the-std-nixago-pebbles"><a class="header" href="#the-std-nixago-pebbles">The <code>std</code> Nixago Pebbles</a></h1>
+<h3 id="mkmicrovm"><a class="header" href="#mkmicrovm"><code>mkMicrovm</code></a></h3>
+<p>... provides an interface to <code>microvm</code> tasks</p>
+<p>This is an integration for <a href="https://github.com/astro/microvm.nix"><code>astro/microvm.nix</code></a>.</p>
+<h4 id="usage-example-1"><a class="header" href="#usage-example-1">Usage example</a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  inherit (inputs.std.lib) ops;
+in {
+  # microvm &lt;module&gt;
+  myhost = ops.mkMicrovm ({ pkgs, lib, ... }: { networking.hostName = &quot;microvms-host&quot;;});
+}
+</code></pre>
+<hr />
+<hr />
+<h2 id="the-cfg-library"><a class="header" href="#the-cfg-library">The Cfg Library</a></h2>
 <p>Standard comes packages with some <a href="https://github.com/nix-community/nixago">Nixago</a> Pebbles for easy
 downstream re-use.</p>
 <p>Some Pebbles may have a special integration for <code>std</code>.</p>
@@ -2920,8 +2657,8 @@ downstream re-use.</p>
 and add each Cell as a so called &quot;scope&quot; to its
 <a href="https://www.conventionalcommits.org/">Conventional Commit</a> configuration.</p>
 <hr />
-<p>If you're rather looking for Nixago Presets (i.e. pebbles that already have an opinionated default), please refer to the <a href="reference/lib/cfg/../../../reference/presets/nixago"><em>nixago presets</em></a>, instead.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="adrgen"><a class="header" href="#adrgen"><a href="https://github.com/asiermarques/adrgen"><code>adrgen</code></a></a></h1>
+<p>If you're rather looking for Nixago Presets (i.e. pebbles that already have an opinionated default), please refer to the <a href="reference/../../../reference/presets/nixago"><em>nixago presets</em></a>, instead.</p>
+<h3 id="adrgen"><a class="header" href="#adrgen"><a href="https://github.com/asiermarques/adrgen"><code>adrgen</code></a></a></h3>
 <p>A great tool to manage Architecture Decision Records.</p>
 <hr />
 <h4 id="definition"><a class="header" href="#definition">Definition:</a></h4>
@@ -2937,7 +2674,7 @@ in {
   commands = [{package = inputs.cells.std.packages.adrgen;}];
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="conform"><a class="header" href="#conform"><a href="https://github.com/siderolabs/conform"><code>conform</code></a></a></h1>
+<h3 id="conform"><a class="header" href="#conform"><a href="reference/conform.html"><code>conform</code></a></a></h3>
 <p>Conform your code to policies, e.g. in a pre-commit hook.</p>
 <p>This version is wrapped, it can auto-enhance the conventional
 commit scopes with your <code>cells</code> as follows:</p>
@@ -2990,7 +2727,7 @@ in {
   };
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="editorconfig"><a class="header" href="#editorconfig"><a href="https://github.com/editorconfig/"><code>editorconfig</code></a></a></h1>
+<h3 id="editorconfig"><a class="header" href="#editorconfig"><a href="https://github.com/editorconfig/"><code>editorconfig</code></a></a></h3>
 <p>Most editors understand this file and autoconfigure themselves accordingly.</p>
 <hr />
 <h4 id="definition-2"><a class="header" href="#definition-2">Definition:</a></h4>
@@ -3015,7 +2752,23 @@ in {
   packages = [nixpkgs.editorconfig-checker];
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="just"><a class="header" href="#just"><a href="https://github.com/casey/just"><code>just</code></a></a></h1>
+<h3 id="githubsettings"><a class="header" href="#githubsettings"><code>githubsettings</code></a></h3>
+<p>Syncs repository settings defined in <code>.github/settings.yml</code> to GitHub, enabling Pull Requests for repository settings.</p>
+<p>In order to use this, you also need to install <a href="https://github.com/apps/settings">Github Settings App</a>.
+Please see the App's Homepage for the configuration schema.</p>
+<hr />
+<h4 id="definition-3"><a class="header" href="#definition-3">Definition:</a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: {
+  data = {};
+  output = &quot;.github/settings.yml&quot;;
+  format = &quot;yaml&quot;;
+  hook.mode = &quot;copy&quot;; # let the Github Settings action pick it up outside of devshell
+}
+</code></pre>
+<h3 id="just"><a class="header" href="#just"><a href="https://github.com/casey/just"><code>just</code></a></a></h3>
 <p>Just is a general purpose command runner with syntax inspired by <code>make</code>.</p>
 <p>Tasks are configured via an attribute set where the name is the name of the task
 (i.e. <code>just &lt;task&gt;</code>) and the value is the task definition (see below for an
@@ -3064,7 +2817,7 @@ in
 # ...
 </code></pre>
 <hr />
-<h4 id="definition-3"><a class="header" href="#definition-3">Definition:</a></h4>
+<h4 id="definition-4"><a class="header" href="#definition-4">Definition:</a></h4>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -3107,10 +2860,10 @@ in {
   };
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="lefthook"><a class="header" href="#lefthook"><a href="https://github.com/evilmartians/lefthook"><code>lefthook</code></a></a></h1>
+<h3 id="lefthook"><a class="header" href="#lefthook"><a href="https://github.com/evilmartians/lefthook"><code>lefthook</code></a></a></h3>
 <p>A fast (parallel execution) and elegant git hook manager.</p>
 <hr />
-<h4 id="definition-4"><a class="header" href="#definition-4">Definition:</a></h4>
+<h4 id="definition-5"><a class="header" href="#definition-5">Definition:</a></h4>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -3141,12 +2894,12 @@ in {
   '';
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="mdbook"><a class="header" href="#mdbook"><a href="https://github.com/rust-lang/mdBook"><code>mdbook</code></a></a></h1>
+<h3 id="mdbook"><a class="header" href="#mdbook"><a href="https://github.com/rust-lang/mdBook"><code>mdbook</code></a></a></h3>
 <p>Write clean docs for humans.</p>
 <p>This version comes preset with this gem to make any
 Solution Architect extra happy: <a href="https://github.com/joelcourtney/mdbook-kroki-preprocessor"><code>mdbook-kroki-preprocessor</code></a></p>
 <hr />
-<h4 id="definition-5"><a class="header" href="#definition-5">Definition:</a></h4>
+<h4 id="definition-6"><a class="header" href="#definition-6">Definition:</a></h4>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -3180,10 +2933,10 @@ in {
   commands = [{package = nixpkgs.mdbook;}];
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="treefmt"><a class="header" href="#treefmt"><a href="https://github.com/numtide/treefmt"><code>treefmt</code></a></a></h1>
+<h3 id="treefmt"><a class="header" href="#treefmt"><a href="https://github.com/numtide/treefmt"><code>treefmt</code></a></a></h3>
 <p>A code formatter to fromat the entire code tree extremly fast (in parallel and with a smart cache).</p>
 <hr />
-<h4 id="definition-6"><a class="header" href="#definition-6">Definition:</a></h4>
+<h4 id="definition-7"><a class="header" href="#definition-7">Definition:</a></h4>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -3196,21 +2949,90 @@ in {
   commands = [{package = nixpkgs.treefmt;}];
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="githubsettings"><a class="header" href="#githubsettings"><code>githubsettings</code></a></h1>
-<p>Syncs repository settings defined in <code>.github/settings.yml</code> to GitHub, enabling Pull Requests for repository settings.</p>
-<p>In order to use this, you also need to install <a href="https://github.com/apps/settings">Github Settings App</a>.
-Please see the App's Homepage for the configuration schema.</p>
+<div style="break-before: page; page-break-before: always;"></div><div class="sidetoc"><nav class="pagetoc"></nav></div>
+<h1 id="the-std-cell"><a class="header" href="#the-std-cell">The <code>std</code> Cell</a></h1>
+<p>... is the only cell in <code>divnix/std</code> and provides only very limited functionality.</p>
+<ul>
+<li>It contains the TUI, in <code>./cli</code>.</li>
+<li>It contains a <code>devshellProfile</code> in <code>./devshellProfiles</code>.</li>
+<li>It contains a growing number of second level library functions in <code>./lib</code>.</li>
+<li>Packages that are used in std devshells are proxied in <code>./packages</code>.</li>
+</ul>
+<p>That's it.</p>
 <hr />
-<h4 id="definition-7"><a class="header" href="#definition-7">Definition:</a></h4>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: {
-  data = {};
-  output = &quot;.github/settings.yml&quot;;
-  format = &quot;yaml&quot;;
-  hook.mode = &quot;copy&quot;; # let the Github Settings action pick it up outside of devshell
-}
+<h2 id="the-std-tui--cli"><a class="header" href="#the-std-tui--cli">The <code>std</code> TUI / CLI</a></h2>
+<h3 id="usage-1"><a class="header" href="#usage-1">Usage</a></h3>
+<ul>
+<li>Enter a <code>std</code>ized repository.</li>
+<li>Enter it's devshell (which must include <code>//std/devshellProfiles:default</code>)</li>
+<li>Run <code>std</code>.</li>
+</ul>
+<p>It will show you around interactively and lead you very quickly to what you're looking for.</p>
+<p>It's self-documented on it's legend.</p>
+<hr />
+<h2 id="error-message-functions"><a class="header" href="#error-message-functions">Error Message Functions</a></h2>
+<p>This Cell Block comprises several error message functions that can be used in different situations.</p>
+<h3 id="removeby"><a class="header" href="#removeby"><code>removeBy</code></a></h3>
+<pre><code class="language-nix">{inputs}: time: body: let
+  l = inputs.nixpkgs.lib // builtins;
+  pad = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (20 - (l.stringLength time)));
+in
+  l.warn ''
+
+
+    ===============================================
+    !!!  🔥️  STANDARD DEPRECATION WARNING  🔥️   !!!
+    -----------------------------------------------
+    !!! Action required until scheduled removal !!!
+    !!! Scheduled Removal: ${pad}${time} !!!
+    -----------------------------------------------
+    On schedule, deprecated facilities will be
+    removed from Standard without further warning.
+    -----------------------------------------------
+    ${body}
+    ===============================================
+
+    ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳
+
+
+
+  ''
+</code></pre>
+<h3 id="requireinput"><a class="header" href="#requireinput"><code>requireInput</code></a></h3>
+<pre><code class="language-nix">{inputs}: input: url: target: let
+  l = inputs.nixpkgs.lib // builtins;
+
+  # other than `divnix/blank`
+  condition = inputs.${input}.sourceInfo.narHash != &quot;sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=&quot;;
+
+  trace = l.traceSeqN 1 inputs;
+in
+  assert l.assertMsg condition (trace ''
+
+    ===============================================
+    !!!  🚜️   STANDARD INPUT OVERLOADING   🚜️   !!!
+    -----------------------------------------------
+    In order to be able to use this target, an
+    extra input must be overloaded onto Standard
+    -----------------------------------------------
+    Target:      ${target}
+    Extra Input: ${input}
+    Url:         ${url}
+    -----------------------------------------------
+    To fix this, add this to your './flake.nix':
+
+      inputs.std.inputs.${input}.url =
+        &quot;${url}&quot;;
+
+    For reference, see current inputs to Standard
+    in the above trace.
+    ===============================================
+
+    🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥
+
+
+
+  ''); inputs
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="glossary"><a class="header" href="#glossary">Glossary</a></h1>
 <p><strong>Cell</strong></p>
@@ -3230,33 +3052,45 @@ Please see the App's Homepage for the configuration schema.</p>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
             </nav>
 
         </div>
 
-        <script type="text/javascript">
+
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript" src="static/mermaid.min.js"></script>
-        <script type="text/javascript" src="static/mermaid-init.js"></script>
-        <script type="text/javascript">
+        <script src="theme/mermaid.min.js"></script>
+        <script src="theme/mermaid-init.js"></script>
+        <script src="theme/pagetoc.js"></script>
+
+        <script>
         window.addEventListener('load', function() {
             window.setTimeout(window.print, 100);
         });
         </script>
+
     </body>
 </html>

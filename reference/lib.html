@@ -1,0 +1,676 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Cell: lib - The Standard Documentation</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/pagetoc.css">
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="../ARCHITECTURE.html">Design & Architecture</a></li><li class="chapter-item expanded affix "><a href="../PITCH.html">Sales Pitch</a></li><li class="chapter-item expanded affix "><a href="../COMPARE.html">Comparisions</a></li><li class="chapter-item expanded affix "><a href="../ROADMAP.html">Roadmap</a></li><li class="chapter-item expanded affix "><li class="part-title">Tutorials</li><li class="chapter-item expanded "><a href="../tutorials/walk-in-the-park.html"><strong aria-hidden="true">1.</strong> A walk in the park</a></li><li class="chapter-item expanded "><a href="../tutorials/hello-world/index.html"><strong aria-hidden="true">2.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="../tutorials/hello-moon/index.html"><strong aria-hidden="true">3.</strong> Hello Moon</a></li><li class="chapter-item expanded affix "><li class="part-title">How-To Guides</li><li class="chapter-item expanded "><a href="../guides/growing-cells.html"><strong aria-hidden="true">4.</strong> Growing Cells</a></li><li class="chapter-item expanded "><a href="../guides/incl.html"><strong aria-hidden="true">5.</strong> Include Filter</a></li><li class="chapter-item expanded "><a href="../guides/envrc.html"><strong aria-hidden="true">6.</strong> Setup .envrc</a></li><li class="chapter-item expanded affix "><li class="part-title">Explanation</li><li class="chapter-item expanded "><a href="../explain/why-nix.html"><strong aria-hidden="true">7.</strong> Why nix?</a></li><li class="chapter-item expanded "><a href="../explain/why-std.html"><strong aria-hidden="true">8.</strong> Why std?</a></li><li class="chapter-item expanded "><a href="../explain/architecture-decision-records/index.html"><strong aria-hidden="true">9.</strong> Architecture Decisions</a></li><li class="chapter-item expanded affix "><li class="part-title">Patterns</li><li class="chapter-item expanded "><a href="../patterns/four-packaging-layers.html"><strong aria-hidden="true">10.</strong> The 4 Packaging Layers</a></li><li class="chapter-item expanded affix "><li class="part-title">Templates</li><li class="chapter-item expanded "><a href="../templates/minimal.html"><strong aria-hidden="true">11.</strong> Minimal</a></li><li class="chapter-item expanded "><a href="../templates/rust.html"><strong aria-hidden="true">12.</strong> Rust</a></li><li class="chapter-item expanded affix "><li class="part-title">Reference</li><li class="chapter-item expanded "><a href="../reference/cli.html"><strong aria-hidden="true">13.</strong> TUI/CLI</a></li><li class="chapter-item expanded "><a href="../reference/conventions.html"><strong aria-hidden="true">14.</strong> Conventions</a></li><li class="chapter-item expanded "><a href="../reference/deprecations.html"><strong aria-hidden="true">15.</strong> Deprecations</a></li><li class="chapter-item expanded "><a href="../reference/blocktypes.html"><strong aria-hidden="true">16.</strong> Builtin Block Types</a></li><li class="chapter-item expanded "><a href="../reference/lib.html" class="active"><strong aria-hidden="true">17.</strong> Cell: lib</a></li><li class="chapter-item expanded "><a href="../reference/std.html"><strong aria-hidden="true">18.</strong> Cell: std</a></li><li class="chapter-item expanded "><a href="../glossary.html"><strong aria-hidden="true">19.</strong> Glossary</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Standard Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div class="sidetoc"><nav class="pagetoc"></nav></div>
+<h1 id="the-standard-library"><a class="header" href="#the-standard-library">The Standard Library</a></h1>
+<p>This library intends to cover the Software Delivery Life Cycle in the Standard way.</p>
+<p>Each Cell Block covers a specific SDLC topic.</p>
+<hr />
+<h2 id="the-dev-library"><a class="header" href="#the-dev-library">The Dev Library</a></h2>
+<p>This library covers <em>development</em> aspects of the SDLC.</p>
+<h3 id="mkarion"><a class="header" href="#mkarion"><code>mkArion</code></a></h3>
+<p>This is a transparent convenience proxy for <a href="https://github.com/hercules-ci/arion"><code>hercules-ci/arion</code>'s</a> <code>lib.build</code> function.</p>
+<p>However, the arion's <code>nixos</code> config option was removed.</p>
+<p>As Standard claims to be the integration layer it will not delegate integration via a foreign
+interface to commissioned tools, such as arion.</p>
+<p>This is a bridge towards and from docker-compose users. Making nixos part of the interface would
+likely alienate that bridge for those users.</p>
+<p>If you need a nixos-based container image, please check out the arion source code on how it's done.</p>
+<h3 id="mkmakes"><a class="header" href="#mkmakes"><code>mkMakes</code></a></h3>
+<p>... provides an interface to <code>makes</code> tasks</p>
+<p>This is an integration for <a href="https://github.com/fluidattacks/makes"><code>fluidattacks/makes</code></a>.</p>
+<p>A version that has this <a href="https://github.com/fluidattacks/makes/commit/cd8c4eda69e2ce8dc6f811973ba0d80070b4628a">patch</a> is a prerequisite.</p>
+<h4 id="usage-example"><a class="header" href="#usage-example">Usage example</a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  inherit (inputs.std.lib) dev;
+in {
+  task = ops.mkMakes ./path/to/make/task//main.nix {};
+}
+</code></pre>
+<p><em>Some refactoring of the tasks may be necessary. Let the error messages be your friend.</em></p>
+<hr />
+<h3 id="mknixago"><a class="header" href="#mknixago"><code>mkNixago</code></a></h3>
+<p>This is a transparent convenience proxy for <a href="https://github.com/nix-community/nixago"><code>nix-community/nixago</code>'s</a> <code>lib.${system}.make</code> function.</p>
+<p>It is enriched with a forward contract towards <code>std</code> enriched <code>mkShell</code> implementation.</p>
+<p>In order to define <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code>'s</a> <code>commands</code> &amp; <code>packages</code> alongside the Nixago pebble,
+just add the following attrset to the Nixago spec. It will be picked up automatically by <code>mkShell</code> when that pebble
+is used inside its <code>config.nixago</code>-option.</p>
+<pre><code class="language-nix">{ inputs, cell }: {
+  foo = inputs.std.lib.dev.mkNixago {
+    /* ... */
+    packages = [ /* ... */ ];
+    commands = [ /* ... */ ];
+    devshell = { /* ... */ }; # e.g. for startup hooks
+  };
+}
+</code></pre>
+<p>{{#include ./lib/dev/mkShell.md}</p>
+<hr />
+<h2 id="the-ops-library"><a class="header" href="#the-ops-library">The Ops Library</a></h2>
+<p>This library covers <em>operational</em> aspects of the SDLC.</p>
+<h3 id="mkoperable"><a class="header" href="#mkoperable"><code>mkOperable</code></a></h3>
+<p>... is a function interface into the <a href="/patterns/four-packaging-layers.html#operable-layer">second layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
+<p>It's purpose is to provide an easy way to enrich a &quot;package&quot; into an &quot;operable&quot;.</p>
+<p>The function signature is as follows:</p>
+<pre><code class="language-nix">  /*
+  Makes a package operable by configuring the necessary runtime environment.
+
+  Args:
+  package: The package to wrap.
+  runtimeScript: A bash script to run at runtime.
+  runtimeEnv: An attribute set of environment variables to set at runtime.
+  runtimeInputs: A list of packages to add to the runtime environment.
+  livenessProbe: An optional derivation to run to check if the program is alive.
+  readinessProbe: An optional derivation to run to check if the program is ready.
+
+  Returns:
+  An operable for the given package.
+  */
+</code></pre>
+<h3 id="mkoci"><a class="header" href="#mkoci"><code>mkOCI</code></a></h3>
+<p>... is a function to generate an OCI Image via <a href="https://github.com/nlewo/nix2container"><code>nix2container</code></a>.</p>
+<p>The function signature is as follows:</p>
+<pre><code class="language-nix">  /*
+  Creates an OCI container image
+
+  Args:
+  name: The name of the image.
+  entrypoint: The entrypoint of the image. Must be a derivation.
+  tag: Optional tag of the image (defaults to output hash)
+  setup: A list of setup tasks to run to configure the container.
+  uid: The user ID to run the container as.
+  gid: The group ID to run the container as.
+  perms: A list of permissions to set for the container.
+  labels: An attribute set of labels to set for the container. The keys are
+  automatically prefixed with &quot;org.opencontainers.image&quot;.
+  options: Additional options to pass to nix2container.buildImage.
+
+  Returns:
+  An OCI container image (created with nix2container).
+  */
+</code></pre>
+<h3 id="mkstandardoci"><a class="header" href="#mkstandardoci"><code>mkStandardOCI</code></a></h3>
+<p>... is a function interface into the <a href="/patterns/four-packaging-layers.html#oci-image-layer">third layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
+<p>It produces a Standard OCI Image from an <a href="./mkOperable.html">&quot;operable&quot;</a>.</p>
+<p>The function signature is as follows:</p>
+<pre><code class="language-nix">  /*
+  Creates an OCI container image using the given operable.
+
+  Args:
+  name: The name of the image.
+  operable: The operable to wrap in the image.
+  tag: Optional tag of the image (defaults to output hash)
+  setup: A list of setup tasks to run to configure the container.
+  uid: The user ID to run the container as.
+  gid: The group ID to run the container as.
+  perms: A list of permissions to set for the container.
+  labels: An attribute set of labels to set for the container. The keys are
+  automatically prefixed with &quot;org.opencontainers.image&quot;.
+  debug: Whether to include debug tools in the container (coreutils).
+  options: Additional options to pass to nix2container.
+
+  Returns:
+  An OCI container image (created with nix2container).
+  */
+</code></pre>
+<h4 id="the-standard-image"><a class="header" href="#the-standard-image">The Standard Image</a></h4>
+<p>Standard images are minimal and hardened. They only contain required dependencies.</p>
+<h5 id="contracts"><a class="header" href="#contracts">Contracts</a></h5>
+<p>The following contracts can be consumed:</p>
+<pre><code>/bin/entrypoint # always present
+/bin/runtime    # always present, drops into the runtime environment
+/bin/live       # if livenessProbe was set
+/bin/ready      # if readinessProbe was set
+</code></pre>
+<p>That's it. There is nothing more to see.</p>
+<p>All other dependencies are contained in <code>/nix/store/...</code>.</p>
+<h4 id="the-debug-image"><a class="header" href="#the-debug-image">The Debug Image</a></h4>
+<p>Debug Images wrap the standard images and provide additional debugging packages.</p>
+<p>Hence, they are neither minimal, nor hardened because of the debugging packages' added surface.</p>
+<h5 id="contracts-1"><a class="header" href="#contracts-1">Contracts</a></h5>
+<p>The following contracts can be consumed:</p>
+<pre><code>/bin/entrypoint # always present
+/bin/runtime    # always present, drops into the runtime environment
+/bin/debug      # always present, drops into the debugging environment
+/bin/live       # if livenessProbe was set
+/bin/ready      # if readinessProbe was set
+</code></pre>
+<h4 id="how-to-extend"><a class="header" href="#how-to-extend">How to extend?</a></h4>
+<p>A Standard or Debug Image doesn't have a package manager available in the environment.</p>
+<p>Hence, to extend the image you have two options:</p>
+<h5 id="nix-based-extension"><a class="header" href="#nix-based-extension">Nix-based extension</a></h5>
+<pre><code class="language-nix">rec {
+  upstream = n2c.pullImage {
+    imageName = &quot;docker.io/my-upstream-image&quot;;
+    imageDigest = &quot;sha256:fffff.....&quot;;
+    sha256 = &quot;sha256-ffffff...&quot;;
+  };
+  modified = n2c.buildImage {
+    name = &quot;docker.io/my-modified-image&quot;;
+    fromImage = upstream;
+    contents = [nixpkgs.bashInteractive];
+  };
+}
+</code></pre>
+<h5 id="dockerfile-based-extension"><a class="header" href="#dockerfile-based-extension">Dockerfile-based extension</a></h5>
+<pre><code class="language-Dockerfile">FROM alpine AS builder
+RUN apk --no-cache curl
+
+FROM docker.io/my-upstream-image
+COPY --from=builder /... /
+
+</code></pre>
+<p><em>Please refer to the official dockerfile documentation for more details.</em></p>
+<h3 id="mkmicrovm"><a class="header" href="#mkmicrovm"><code>mkMicrovm</code></a></h3>
+<p>... provides an interface to <code>microvm</code> tasks</p>
+<p>This is an integration for <a href="https://github.com/astro/microvm.nix"><code>astro/microvm.nix</code></a>.</p>
+<h4 id="usage-example-1"><a class="header" href="#usage-example-1">Usage example</a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  inherit (inputs.std.lib) ops;
+in {
+  # microvm &lt;module&gt;
+  myhost = ops.mkMicrovm ({ pkgs, lib, ... }: { networking.hostName = &quot;microvms-host&quot;;});
+}
+</code></pre>
+<hr />
+<hr />
+<h2 id="the-cfg-library"><a class="header" href="#the-cfg-library">The Cfg Library</a></h2>
+<p>Standard comes packages with some <a href="https://github.com/nix-community/nixago">Nixago</a> Pebbles for easy
+downstream re-use.</p>
+<p>Some Pebbles may have a special integration for <code>std</code>.</p>
+<p>For example, the <code>conform</code> Pebble can undestand <code>inputs.cells</code>
+and add each Cell as a so called &quot;scope&quot; to its
+<a href="https://www.conventionalcommits.org/">Conventional Commit</a> configuration.</p>
+<hr />
+<p>If you're rather looking for Nixago Presets (i.e. pebbles that already have an opinionated default), please refer to the <a href="../../../reference/presets/nixago"><em>nixago presets</em></a>, instead.</p>
+<h3 id="adrgen"><a class="header" href="#adrgen"><a href="https://github.com/asiermarques/adrgen"><code>adrgen</code></a></a></h3>
+<p>A great tool to manage Architecture Decision Records.</p>
+<hr />
+<h4 id="definition"><a class="header" href="#definition">Definition:</a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  inherit (inputs) nixpkgs;
+in {
+  data = {};
+  output = &quot;adrgen.config.yml&quot;;
+  format = &quot;yaml&quot;;
+  commands = [{package = inputs.cells.std.packages.adrgen;}];
+}
+</code></pre>
+<h3 id="conform"><a class="header" href="#conform"><a href="conform.html"><code>conform</code></a></a></h3>
+<p>Conform your code to policies, e.g. in a pre-commit hook.</p>
+<p>This version is wrapped, it can auto-enhance the conventional
+commit scopes with your <code>cells</code> as follows:</p>
+<pre><code class="language-nix">{ inputs, cell}: let
+  inherit (inputs.std) lib;
+in {
+
+  default = lib.dev.mkShell {
+    /* ... */
+    nixago = [
+      (lib.cfg.conform {data = {inherit (inputs) cells;};})
+    ];
+  };
+}
+</code></pre>
+<hr />
+<h4 id="definition-1"><a class="header" href="#definition-1">Definition:</a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  l = nixpkgs.lib // builtins;
+  inherit (inputs) nixpkgs;
+in {
+  data = {};
+  format = &quot;yaml&quot;;
+  output = &quot;.conform.yaml&quot;;
+  packages = [nixpkgs.conform];
+  apply = d: {
+    policies =
+      []
+      ++ (l.optional (d ? commit) {
+        type = &quot;commit&quot;;
+        spec =
+          d.commit
+          // l.optionalAttrs (d ? cells) {
+            conventional =
+              d.commit.conventional
+              // {
+                scopes =
+                  d.commit.conventional.scopes
+                  ++ (l.subtractLists l.systems.doubles.all (l.attrNames d.cells));
+              };
+          };
+      })
+      ++ (l.optional (d ? license) {
+        type = &quot;license&quot;;
+        spec = d.license;
+      });
+  };
+}
+</code></pre>
+<h3 id="editorconfig"><a class="header" href="#editorconfig"><a href="https://github.com/editorconfig/"><code>editorconfig</code></a></a></h3>
+<p>Most editors understand this file and autoconfigure themselves accordingly.</p>
+<hr />
+<h4 id="definition-2"><a class="header" href="#definition-2">Definition:</a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  l = nixpkgs.lib // builtins;
+  inherit (inputs) nixpkgs;
+in {
+  data = {};
+  output = &quot;.editorconfig&quot;;
+  engine = request: let
+    inherit (request) data output;
+    name = l.baseNameOf output;
+    value = {
+      globalSection = {root = data.root or true;};
+      sections = l.removeAttrs data [&quot;root&quot;];
+    };
+  in
+    nixpkgs.writeText name (l.generators.toINIWithGlobalSection {} value);
+  packages = [nixpkgs.editorconfig-checker];
+}
+</code></pre>
+<h3 id="githubsettings"><a class="header" href="#githubsettings"><code>githubsettings</code></a></h3>
+<p>Syncs repository settings defined in <code>.github/settings.yml</code> to GitHub, enabling Pull Requests for repository settings.</p>
+<p>In order to use this, you also need to install <a href="https://github.com/apps/settings">Github Settings App</a>.
+Please see the App's Homepage for the configuration schema.</p>
+<hr />
+<h4 id="definition-3"><a class="header" href="#definition-3">Definition:</a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: {
+  data = {};
+  output = &quot;.github/settings.yml&quot;;
+  format = &quot;yaml&quot;;
+  hook.mode = &quot;copy&quot;; # let the Github Settings action pick it up outside of devshell
+}
+</code></pre>
+<h3 id="just"><a class="header" href="#just"><a href="https://github.com/casey/just"><code>just</code></a></a></h3>
+<p>Just is a general purpose command runner with syntax inspired by <code>make</code>.</p>
+<p>Tasks are configured via an attribute set where the name is the name of the task
+(i.e. <code>just &lt;task&gt;</code>) and the value is the task definition (see below for an
+example). The generated <code>Justfile</code> should be committed to allow non-Nix users to
+on-ramp without needing access to Nix.</p>
+<p>Task dependencies (i.e. <code>treefmt</code> below) should be included in <code>packages</code> and
+will automatically be picked up in the devshell.</p>
+<pre><code class="language-nix">{ inputs, cell }:
+let
+  inherit (inputs) nixpkgs;
+  inherit (inputs.std) lib;
+in
+{
+
+  default = lib.dev.mkShell {
+    /* ... */
+    nixago = [
+      (lib.cfg.just {
+        packages = [ nixpkgs.treefmt ];
+        data = {
+          tasks = {
+            fmt = {
+              description = &quot;Formats all changed source files&quot;;
+              content = ''
+                treefmt $(git diff --name-only --cached)
+              '';
+            };
+          };
+        };
+      })
+    ];
+  };
+}
+</code></pre>
+<p>It's also possible to override the interpreter for a task:</p>
+<pre><code class="language-nix">{
+# ...
+  hello = {
+    description = &quot;Prints hello world&quot;;
+    interpreter = nixpkgs.python3;
+    content = ''
+      print(&quot;Hello, world!&quot;)
+    '';
+  };
+}
+# ...
+</code></pre>
+<hr />
+<h4 id="definition-4"><a class="header" href="#definition-4">Definition:</a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  inherit (inputs) nixpkgs;
+  l = nixpkgs.lib // builtins;
+in {
+  data = {};
+  apply = d: let
+    # Transforms interpreter attribute if present
+    # nixpkgs.pkgname -&gt; nixpkgs.pkgname + '/bin/&lt;name&gt;'
+    getExe = x: &quot;${l.getBin x}/bin/${x.meta.mainProgram or (l.getName x)}&quot;;
+    final =
+      d
+      // {
+        tasks =
+          l.mapAttrs
+          (n: v:
+            v // l.optionalAttrs (v ? interpreter) {interpreter = getExe v.interpreter;})
+          d.tasks;
+      };
+  in {
+    data = final; # CUE expects structure to be wrapped with &quot;data&quot;
+  };
+  format = &quot;text&quot;;
+  output = &quot;Justfile&quot;;
+  packages = [nixpkgs.just];
+  hook = {
+    mode = &quot;copy&quot;;
+  };
+  engine = inputs.nixago.engines.cue {
+    files = [./just.cue];
+    flags = {
+      expression = &quot;rendered&quot;;
+      out = &quot;text&quot;;
+    };
+    postHook = ''
+      ${l.getExe nixpkgs.just} --unstable --fmt -f $out
+    '';
+  };
+}
+</code></pre>
+<h3 id="lefthook"><a class="header" href="#lefthook"><a href="https://github.com/evilmartians/lefthook"><code>lefthook</code></a></a></h3>
+<p>A fast (parallel execution) and elegant git hook manager.</p>
+<hr />
+<h4 id="definition-5"><a class="header" href="#definition-5">Definition:</a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  inherit (inputs) nixpkgs;
+  l = nixpkgs.lib // builtins;
+in {
+  data = {};
+  format = &quot;yaml&quot;;
+  output = &quot;lefthook.yml&quot;;
+  packages = [nixpkgs.lefthook];
+  hook.extra = d: let
+    # Add an extra hook for adding required stages whenever the file changes
+    skip_attrs = [
+      &quot;colors&quot;
+      &quot;extends&quot;
+      &quot;skip_output&quot;
+      &quot;source_dir&quot;
+      &quot;source_dir_local&quot;
+    ];
+    stages = l.attrNames (l.removeAttrs d skip_attrs);
+    stagesStr = l.concatStringsSep &quot; &quot; stages;
+  in ''
+    # Install configured hooks
+    for stage in ${stagesStr}; do
+      ${l.getExe nixpkgs.lefthook} add -f &quot;$stage&quot;
+    done
+  '';
+}
+</code></pre>
+<h3 id="mdbook"><a class="header" href="#mdbook"><a href="https://github.com/rust-lang/mdBook"><code>mdbook</code></a></a></h3>
+<p>Write clean docs for humans.</p>
+<p>This version comes preset with this gem to make any
+Solution Architect extra happy: <a href="https://github.com/joelcourtney/mdbook-kroki-preprocessor"><code>mdbook-kroki-preprocessor</code></a></p>
+<hr />
+<h4 id="definition-6"><a class="header" href="#definition-6">Definition:</a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  inherit (inputs) nixpkgs;
+in {
+  data = {};
+  output = &quot;book.toml&quot;;
+  format = &quot;toml&quot;;
+  hook.extra = d: let
+    sentinel = &quot;nixago-auto-created: mdbook-build-folder&quot;;
+    file = &quot;.gitignore&quot;;
+    str = ''
+      # ${sentinel}
+      ${d.build.build-dir or &quot;book&quot;}/**
+    '';
+  in ''
+    # Configure gitignore
+    create() {
+      echo -n &quot;${str}&quot; &gt; &quot;${file}&quot;
+    }
+    append() {
+      echo -en &quot;\n${str}&quot; &gt;&gt; &quot;${file}&quot;
+    }
+    if ! test -f &quot;${file}&quot;; then
+      create
+    elif ! grep -qF &quot;${sentinel}&quot; &quot;${file}&quot;; then
+      append
+    fi
+  '';
+  commands = [{package = nixpkgs.mdbook;}];
+}
+</code></pre>
+<h3 id="treefmt"><a class="header" href="#treefmt"><a href="https://github.com/numtide/treefmt"><code>treefmt</code></a></a></h3>
+<p>A code formatter to fromat the entire code tree extremly fast (in parallel and with a smart cache).</p>
+<hr />
+<h4 id="definition-7"><a class="header" href="#definition-7">Definition:</a></h4>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  inherit (inputs) nixpkgs;
+in {
+  data = {};
+  output = &quot;treefmt.toml&quot;;
+  format = &quot;toml&quot;;
+  commands = [{package = nixpkgs.treefmt;}];
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../reference/blocktypes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../reference/std.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../reference/blocktypes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../reference/std.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../theme/mermaid.min.js"></script>
+        <script src="../theme/mermaid-init.js"></script>
+        <script src="../theme/pagetoc.js"></script>
+
+
+    </body>
+</html>

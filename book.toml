@@ -8,7 +8,8 @@ title = "The Standard Documentation"
 build-dir = "book"
 
 [output.html]
-additional-js = ["static/mermaid.min.js", "static/mermaid-init.js"]
+additional-css = ["theme/pagetoc.css"]
+additional-js = ["theme/mermaid.min.js", "theme/mermaid-init.js", "theme/pagetoc.js"]
 
 [preprocessor.mermaid]
 command = "mdbook-mermaid"
