@@ -24,7 +24,7 @@ in
     mdbook = lib.cfg.mdbook {
       data = import ./nixago/mdbook.nix;
       hook.mode = "copy"; # let CI pick it up outside of devshell
-      packages = [std.packages.mdbook-kroki-preprocessor];
+      packages = [inputs.cells.std.packages.mdbook-kroki-preprocessor];
     };
     treefmt = lib.cfg.treefmt {
       data = import ./nixago/treefmt.nix;
