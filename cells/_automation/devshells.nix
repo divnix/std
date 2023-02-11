@@ -52,7 +52,9 @@ in
     };
 
     book = {...}: {
-      nixago = [cell.configs.mdbook];
+      nixago = [
+        (std.nixago.mdbook cell.configs.mdbook)
+      ];
     };
 
     checks = {...}: {
