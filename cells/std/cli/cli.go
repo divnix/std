@@ -86,6 +86,7 @@ The TUI does this automatically.`,
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		_, _, loadCmd, _, err := flake.LoadFlakeCmd()
+		loadCmd.Args = append(loadCmd.Args, "--trace-verbose")
 		if err != nil {
 			return fmt.Errorf("while loading flake (cmd '%v'): %w", loadCmd, err)
 		}

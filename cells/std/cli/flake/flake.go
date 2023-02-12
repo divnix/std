@@ -21,7 +21,7 @@ var (
 	currentSystemArgs      = []string{"eval", "--raw", "--impure", "--expr", "builtins.currentSystem"}
 	cellsFromArgs          = []string{"eval", "--raw"}
 	flakeCellsFromFragment = "%s#__std.cellsFrom"
-	flakeInitFragment      = "%s#__std.init"
+	flakeInitFragment      = "%s#__std.init.%s"
 	flakeActionsFragment   = "%s#__std.actions.%s.%s.%s.%s.%s"
 	flakeEvalJson          = []string{
 		"eval",
@@ -89,8 +89,13 @@ func getInitEvalCmdArgs() (string, []string, error) {
 		return "", nil, err
 	}
 
+	currentSystem, err := getCurrentSystem()
+	if err != nil {
+		return "", nil, err
+	}
+
 	return nix, append(
-		flakeEvalJson, fmt.Sprintf(flakeInitFragment, ".")), nil
+		flakeEvalJson, fmt.Sprintf(flakeInitFragment, ".", currentSystem)), nil
 }
 
 func GetActionEvalCmdArgs(c, o, t, a string) (string, []string, error) {

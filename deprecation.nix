@@ -3,7 +3,6 @@ inputs: let
 in {
   warnOldActionInterface = actions:
     removeBy "March 2023" ''
-
       The action interface has chaged from:
         { system, flake, fragment, fragmentRelPath }
       To:
@@ -15,7 +14,6 @@ in {
     '';
 
   warnNixagoOutfactored = removeBy "May 2023" ''
-
     std.presets.nixago has been outfactored into its own repository.
 
     Add to your flake.nix
@@ -31,9 +29,8 @@ in {
   '';
 
   warnNixagoMoved = removeBy "May 2023" ''
-
     In order to improve semantic clarity,
-    std.std.nixago has been moved to std.lib.configs.
+    std.std.nixago has been moved to std.lib.cfg.
 
     Replace accessors of
       `inputs.std.std.nixago`
