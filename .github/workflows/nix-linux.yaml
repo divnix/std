@@ -10,7 +10,7 @@ jobs:
 
       - uses: nixbuild/nix-quick-install-action@v21
         with:
-          nix_version: 2.9.2
+          nix_version: 2.10.3
           nix_conf: |
             experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
