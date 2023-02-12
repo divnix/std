@@ -167,27 +167,36 @@
 <h3 id="removeby"><a class="header" href="#removeby"><code>removeBy</code></a></h3>
 <pre><code class="language-nix">{inputs}: time: body: let
   l = inputs.nixpkgs.lib // builtins;
-  pad = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (20 - (l.stringLength time)));
+  ansi = import ./ansi.nix;
+  pad = s: let
+    n = 17;
+    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (n - (l.stringLength s)));
+  in
+    prefix + s;
+  indent = s: let
+    n = 5;
+    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
+    lines = l.splitString &quot;\n&quot; s;
+  in
+    &quot;  📝 │ &quot; + (l.concatStringsSep &quot;\n${prefix}│ &quot; lines);
+  warn = let
+    apply =
+      l.replaceStrings
+      (map (key: &quot;{${key}}&quot;) (l.attrNames ansi))
+      (l.attrValues ansi);
+  in
+    msg:
+      l.trace (apply &quot;🔥 {bold}{196}Standard Deprecation Notices - {220}run `std check' to show!{reset}&quot;)
+      l.traceVerbose (apply &quot;\n{202}${msg}{reset}&quot;);
 in
-  l.warn ''
-
-
-    ===============================================
-    !!!  🔥️  STANDARD DEPRECATION WARNING  🔥️   !!!
-    -----------------------------------------------
-    !!! Action required until scheduled removal !!!
-    !!! Scheduled Removal: ${pad}${time} !!!
-    -----------------------------------------------
-    On schedule, deprecated facilities will be
-    removed from Standard without further warning.
-    -----------------------------------------------
-    ${body}
-    ===============================================
-
-    ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳
-
-
-
+  warn ''
+    ─────┬─────────────────────────────────────────────────────────────────────────
+      💪 │ {bold}Action Required !{un-bold}
+    ─────┼─────────────────────────────────────────────────────────────────────────
+    {italic}${indent body}{un-italic}
+    ─────┼─────────────────────────────────────────────────────────────────────────
+      📅 │ {bold}Scheduled Removal: ${pad time}{un-bold}
+    ─────┴─────────────────────────────────────────────────────────────────────────
   ''
 </code></pre>
 <h3 id="requireinput"><a class="header" href="#requireinput"><code>requireInput</code></a></h3>
@@ -195,35 +204,70 @@ in
   l = inputs.nixpkgs.lib // builtins;
 
   # other than `divnix/blank`
-  condition = inputs.${input}.sourceInfo.narHash != &quot;sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=&quot;;
+  isBlank = input: inputs.${input}.sourceInfo.narHash == &quot;sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=&quot;;
 
-  trace = l.traceSeqN 1 inputs;
-in
-  assert l.assertMsg condition (trace ''
+  ansi = import ./ansi.nix;
 
-    ===============================================
-    !!!  🚜️   STANDARD INPUT OVERLOADING   🚜️   !!!
-    -----------------------------------------------
-    In order to be able to use this target, an
-    extra input must be overloaded onto Standard
-    -----------------------------------------------
-    Target:      ${target}
-    Extra Input: ${input}
-    Url:         ${url}
-    -----------------------------------------------
-    To fix this, add this to your './flake.nix':
+  pad = n: s: let
+    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
+  in
+    prefix + s;
+
+  indent = s: let
+    n = 5;
+    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
+    lines = l.splitString &quot;\n&quot; s;
+  in
+    l.concatStringsSep &quot;\n${prefix}│ &quot; lines;
+
+  warn = let
+    apply =
+      l.replaceStrings
+      (map (key: &quot;{${key}}&quot;) (l.attrNames ansi))
+      (l.attrValues ansi);
+  in
+    msg: l.trace (apply &quot;🚀 {bold}{200}Standard Input Overloading{reset}${msg}&quot;) &quot;&quot;;
+
+  body = ''
+    In order to use ${target}, add to {bold}flake.nix{un-bold}:
 
       inputs.std.inputs.${input}.url =
         &quot;${url}&quot;;
+  '';
 
-    For reference, see current inputs to Standard
-    in the above trace.
-    ===============================================
+  inputs' = let
+    names = l.attrNames (l.removeAttrs inputs [&quot;self&quot; &quot;cells&quot; &quot;blank&quot;]);
+    nameLengths = map l.stringLength names;
+    maxNameLength =
+      l.foldl'
+      (max: v:
+        if v &gt; max
+        then v
+        else max)
+      0
+      nameLengths;
 
-    🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥
+    lines =
+      l.map (
+        name: &quot;- ${name}${
+          if isBlank name
+          then pad (maxNameLength - (l.stringLength name)) &quot; | blanked out&quot;
+          else &quot;&quot;
+        }&quot;
+      )
+      names;
+  in
+    &quot;Declared Inputs:\n&quot; + (l.concatStringsSep &quot;\n&quot; lines);
+in
+  assert l.assertMsg (! (isBlank input)) (warn ''
 
-
-
+    ─────┬─────────────────────────────────────────────────────────────────────────
+      🏗️  │ {bold}Input Overloading for ${target}{un-bold}
+    ─────┼─────────────────────────────────────────────────────────────────────────
+      📝 │ {italic}${indent body}{un-italic}
+    ─────┼─────────────────────────────────────────────────────────────────────────
+      🙋 │ ${indent inputs'}
+    ─────┴─────────────────────────────────────────────────────────────────────────
   ''); inputs
 </code></pre>
 

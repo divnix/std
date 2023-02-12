@@ -714,23 +714,10 @@ in just a few seconds ✨</p>
 <h2 id="assumptions"><a class="header" href="#assumptions">Assumptions</a></h2>
 <p>This example consumes the following defaults or builtins:</p>
 <h3 id="default-cellblocks"><a class="header" href="#default-cellblocks"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L63-L67">Default <code>cellBlocks</code></a></a></h3>
-<pre><code class="language-nix">      (blockTypes.functions &quot;library&quot;)
-      (blockTypes.runnables &quot;apps&quot;)
-      (blockTypes.installables &quot;packages&quot;)
-    ],
-    systems ? [
+<pre><code class="language-nix">{{#include ../../../src/grow.nix:64:68}}
 </code></pre>
 <h3 id="default-systems"><a class="header" href="#default-systems"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L68-L77">Default <code>systems</code></a></a></h3>
-<pre><code class="language-nix">      # Tier 1
-      &quot;x86_64-linux&quot;
-      # Tier 2
-      &quot;aarch64-linux&quot;
-      &quot;x86_64-darwin&quot;
-      # Other platforms with sufficient support in stdenv which is not formally
-      # mandated by their platform tier.
-      &quot;aarch64-darwin&quot; # a lot of apple M1 already out there
-    ],
-    debug ? false,
+<pre><code class="language-nix">{{#include ../../../src/grow.nix:69:78}}
 </code></pre>
 <hr />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-moon"><a class="header" href="#hello-moon">Hello Moon</a></h1>
@@ -1835,27 +1822,36 @@ anyways.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="deprecations"><a class="header" href="#deprecations">Deprecations</a></h1>
 <pre><code class="language-nix">{inputs}: time: body: let
   l = inputs.nixpkgs.lib // builtins;
-  pad = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (20 - (l.stringLength time)));
+  ansi = import ./ansi.nix;
+  pad = s: let
+    n = 17;
+    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (n - (l.stringLength s)));
+  in
+    prefix + s;
+  indent = s: let
+    n = 5;
+    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
+    lines = l.splitString &quot;\n&quot; s;
+  in
+    &quot;  📝 │ &quot; + (l.concatStringsSep &quot;\n${prefix}│ &quot; lines);
+  warn = let
+    apply =
+      l.replaceStrings
+      (map (key: &quot;{${key}}&quot;) (l.attrNames ansi))
+      (l.attrValues ansi);
+  in
+    msg:
+      l.trace (apply &quot;🔥 {bold}{196}Standard Deprecation Notices - {220}run `std check' to show!{reset}&quot;)
+      l.traceVerbose (apply &quot;\n{202}${msg}{reset}&quot;);
 in
-  l.warn ''
-
-
-    ===============================================
-    !!!  🔥️  STANDARD DEPRECATION WARNING  🔥️   !!!
-    -----------------------------------------------
-    !!! Action required until scheduled removal !!!
-    !!! Scheduled Removal: ${pad}${time} !!!
-    -----------------------------------------------
-    On schedule, deprecated facilities will be
-    removed from Standard without further warning.
-    -----------------------------------------------
-    ${body}
-    ===============================================
-
-    ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳
-
-
-
+  warn ''
+    ─────┬─────────────────────────────────────────────────────────────────────────
+      💪 │ {bold}Action Required !{un-bold}
+    ─────┼─────────────────────────────────────────────────────────────────────────
+    {italic}${indent body}{un-italic}
+    ─────┼─────────────────────────────────────────────────────────────────────────
+      📅 │ {bold}Scheduled Removal: ${pad time}{un-bold}
+    ─────┴─────────────────────────────────────────────────────────────────────────
   ''
 </code></pre>
 <p>Please observe the following deprecations and their deprecation schedule:</p>
@@ -1864,7 +1860,6 @@ in
 in {
   warnOldActionInterface = actions:
     removeBy &quot;March 2023&quot; ''
-
       The action interface has chaged from:
         { system, flake, fragment, fragmentRelPath }
       To:
@@ -1876,7 +1871,6 @@ in {
     '';
 
   warnNixagoOutfactored = removeBy &quot;May 2023&quot; ''
-
     std.presets.nixago has been outfactored into its own repository.
 
     Add to your flake.nix
@@ -1892,9 +1886,8 @@ in {
   '';
 
   warnNixagoMoved = removeBy &quot;May 2023&quot; ''
-
     In order to improve semantic clarity,
-    std.std.nixago has been moved to std.lib.configs.
+    std.std.nixago has been moved to std.lib.cfg.
 
     Replace accessors of
       `inputs.std.std.nixago`
@@ -2975,27 +2968,36 @@ in {
 <h3 id="removeby"><a class="header" href="#removeby"><code>removeBy</code></a></h3>
 <pre><code class="language-nix">{inputs}: time: body: let
   l = inputs.nixpkgs.lib // builtins;
-  pad = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (20 - (l.stringLength time)));
+  ansi = import ./ansi.nix;
+  pad = s: let
+    n = 17;
+    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (n - (l.stringLength s)));
+  in
+    prefix + s;
+  indent = s: let
+    n = 5;
+    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
+    lines = l.splitString &quot;\n&quot; s;
+  in
+    &quot;  📝 │ &quot; + (l.concatStringsSep &quot;\n${prefix}│ &quot; lines);
+  warn = let
+    apply =
+      l.replaceStrings
+      (map (key: &quot;{${key}}&quot;) (l.attrNames ansi))
+      (l.attrValues ansi);
+  in
+    msg:
+      l.trace (apply &quot;🔥 {bold}{196}Standard Deprecation Notices - {220}run `std check' to show!{reset}&quot;)
+      l.traceVerbose (apply &quot;\n{202}${msg}{reset}&quot;);
 in
-  l.warn ''
-
-
-    ===============================================
-    !!!  🔥️  STANDARD DEPRECATION WARNING  🔥️   !!!
-    -----------------------------------------------
-    !!! Action required until scheduled removal !!!
-    !!! Scheduled Removal: ${pad}${time} !!!
-    -----------------------------------------------
-    On schedule, deprecated facilities will be
-    removed from Standard without further warning.
-    -----------------------------------------------
-    ${body}
-    ===============================================
-
-    ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳ ⏳
-
-
-
+  warn ''
+    ─────┬─────────────────────────────────────────────────────────────────────────
+      💪 │ {bold}Action Required !{un-bold}
+    ─────┼─────────────────────────────────────────────────────────────────────────
+    {italic}${indent body}{un-italic}
+    ─────┼─────────────────────────────────────────────────────────────────────────
+      📅 │ {bold}Scheduled Removal: ${pad time}{un-bold}
+    ─────┴─────────────────────────────────────────────────────────────────────────
   ''
 </code></pre>
 <h3 id="requireinput"><a class="header" href="#requireinput"><code>requireInput</code></a></h3>
@@ -3003,35 +3005,70 @@ in
   l = inputs.nixpkgs.lib // builtins;
 
   # other than `divnix/blank`
-  condition = inputs.${input}.sourceInfo.narHash != &quot;sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=&quot;;
+  isBlank = input: inputs.${input}.sourceInfo.narHash == &quot;sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=&quot;;
 
-  trace = l.traceSeqN 1 inputs;
-in
-  assert l.assertMsg condition (trace ''
+  ansi = import ./ansi.nix;
 
-    ===============================================
-    !!!  🚜️   STANDARD INPUT OVERLOADING   🚜️   !!!
-    -----------------------------------------------
-    In order to be able to use this target, an
-    extra input must be overloaded onto Standard
-    -----------------------------------------------
-    Target:      ${target}
-    Extra Input: ${input}
-    Url:         ${url}
-    -----------------------------------------------
-    To fix this, add this to your './flake.nix':
+  pad = n: s: let
+    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
+  in
+    prefix + s;
+
+  indent = s: let
+    n = 5;
+    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
+    lines = l.splitString &quot;\n&quot; s;
+  in
+    l.concatStringsSep &quot;\n${prefix}│ &quot; lines;
+
+  warn = let
+    apply =
+      l.replaceStrings
+      (map (key: &quot;{${key}}&quot;) (l.attrNames ansi))
+      (l.attrValues ansi);
+  in
+    msg: l.trace (apply &quot;🚀 {bold}{200}Standard Input Overloading{reset}${msg}&quot;) &quot;&quot;;
+
+  body = ''
+    In order to use ${target}, add to {bold}flake.nix{un-bold}:
 
       inputs.std.inputs.${input}.url =
         &quot;${url}&quot;;
+  '';
 
-    For reference, see current inputs to Standard
-    in the above trace.
-    ===============================================
+  inputs' = let
+    names = l.attrNames (l.removeAttrs inputs [&quot;self&quot; &quot;cells&quot; &quot;blank&quot;]);
+    nameLengths = map l.stringLength names;
+    maxNameLength =
+      l.foldl'
+      (max: v:
+        if v &gt; max
+        then v
+        else max)
+      0
+      nameLengths;
 
-    🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥
+    lines =
+      l.map (
+        name: &quot;- ${name}${
+          if isBlank name
+          then pad (maxNameLength - (l.stringLength name)) &quot; | blanked out&quot;
+          else &quot;&quot;
+        }&quot;
+      )
+      names;
+  in
+    &quot;Declared Inputs:\n&quot; + (l.concatStringsSep &quot;\n&quot; lines);
+in
+  assert l.assertMsg (! (isBlank input)) (warn ''
 
-
-
+    ─────┬─────────────────────────────────────────────────────────────────────────
+      🏗️  │ {bold}Input Overloading for ${target}{un-bold}
+    ─────┼─────────────────────────────────────────────────────────────────────────
+      📝 │ {italic}${indent body}{un-italic}
+    ─────┼─────────────────────────────────────────────────────────────────────────
+      🙋 │ ${indent inputs'}
+    ─────┴─────────────────────────────────────────────────────────────────────────
   ''); inputs
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="glossary"><a class="header" href="#glossary">Glossary</a></h1>
