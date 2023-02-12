@@ -1,1 +1,0 @@
-../../../../cells/lib/ops/mkMicrovm.md
