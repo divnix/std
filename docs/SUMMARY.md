@@ -9,8 +9,6 @@
 # Tutorials
 
 - [A walk in the park](tutorials/walk-in-the-park.md)
-- [Hello World](tutorials/hello-world/Readme.md)
-- [Hello Moon](tutorials/hello-moon/Readme.md)
 
 # How-To Guides
 
