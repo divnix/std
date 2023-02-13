@@ -1,0 +1,52 @@
+/*
+  CSS for rendering the Standard Refrerence page
+
+  You can modify it to customize the representation.
+*/
+
+/* Cell Reference */
+div.std-cell.std-no-readme {
+  display: block;
+}
+
+div.std-cell div.std-readme-md {
+  /* CSS rules */
+}
+
+div.std-cell h2 {
+  /* CSS rules */
+}
+
+div.std-cell h2 {
+  /* CSS rules */
+}
+
+/* Block Reference */
+div.std-block.std-no-readme {
+  display: block;
+}
+
+div.std-block div.std-readme-md {
+  /* CSS rules */
+}
+
+div.std-cell h3 {
+  /* CSS rules */
+}
+
+/* Target Reference */
+div.std-target.std-no-readme {
+  display: none;
+}
+
+div.std-target div.std-readme-md {
+  /* CSS rules */
+}
+
+div.std-target h4 {
+  /* CSS rules */
+}
+
+div.std-target h5 {
+  /* CSS rules */
+}

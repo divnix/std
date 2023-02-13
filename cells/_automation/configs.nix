@@ -127,6 +127,22 @@ in {
       };
       preprocessor = {
         mermaid.command = "mdbook-mermaid";
+        paisano-preprocessor = {
+          command = "mdbook-paisano-preprocessor";
+          assets_version = "0";
+          multi = [
+            {
+              registry = "..#__std.init";
+              chapter = "Cell: std";
+              cell = "std";
+            }
+            {
+              registry = "..#__std.init";
+              chapter = "Cell: lib";
+              cell = "lib";
+            }
+          ];
+        };
       };
       output.html = {
         additional-js = [
@@ -136,6 +152,7 @@ in {
         ];
         additional-css = [
           "theme/pagetoc.css"
+          "theme/mdbook-paisano-preprocessor.css"
         ];
       };
     };

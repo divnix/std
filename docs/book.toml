@@ -8,8 +8,23 @@ title = "The Standard Documentation"
 build-dir = "book"
 
 [output.html]
-additional-css = ["theme/pagetoc.css"]
+additional-css = ["theme/pagetoc.css", "theme/mdbook-paisano-preprocessor.css"]
 additional-js = ["theme/mermaid.min.js", "theme/mermaid-init.js", "theme/pagetoc.js"]
 
+[preprocessor]
 [preprocessor.mermaid]
 command = "mdbook-mermaid"
+
+[preprocessor.paisano-preprocessor]
+assets_version = "0"
+command = "mdbook-paisano-preprocessor"
+
+[[preprocessor.paisano-preprocessor.multi]]
+cell = "std"
+chapter = "Cell: std"
+registry = "..#__std.init"
+
+[[preprocessor.paisano-preprocessor.multi]]
+cell = "lib"
+chapter = "Cell: lib"
+registry = "..#__std.init"
