@@ -14,6 +14,7 @@
       '';
       targetDrv = target.drvPath;
       proviso =
+        l.toFile "build-proviso"
         # bash
         ''
           function proviso() {
