@@ -541,6 +541,7 @@ in
           ${target.copyToRegistry}/bin/copy-to-registry
         '';
         proviso =
+          l.toFile &quot;container-proviso&quot;
           # bash
           ''
             function proviso() {
