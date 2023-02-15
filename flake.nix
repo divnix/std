@@ -8,12 +8,11 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs.paisano.url = "github:divnix/paisano";
   inputs.paisano.inputs.nixpkgs.follows = "nixpkgs";
-  inputs.paisano.inputs.yants.follows = "yants";
-  inputs.yants.url = "github:divnix/yants";
-  inputs.yants.inputs.nixpkgs.follows = "nixpkgs";
+  # FIXME: inputs.paisano.inputs.yants.follows = "yants";
+  inputs.contracts.url = "github:yvan-sraka/contracts/yants-compatibility";
   inputs.dmerge.url = "github:divnix/data-merge";
   inputs.dmerge.inputs.nixlib.follows = "nixpkgs";
-  inputs.dmerge.inputs.yants.follows = "yants";
+  # FIXME: inputs.dmerge.inputs.yants.follows = "yants";
   inputs.blank.url = "github:divnix/blank";
   inputs.incl.url = "github:divnix/incl";
   inputs.incl.inputs.nixlib.follows = "nixpkgs";
@@ -74,13 +73,14 @@
         in
           nixConfig (import "${args.inputs.self}/flake.nix").nixConfig or {};
       };
+    yants = inputs.contracts.yants;
     grow = args: l.removeAttrs (growOn args) ["__functor"];
     flakeModule = import ./src/flakeModule.nix {
       inherit grow;
       inherit (inputs.paisano) harvest pick winnow;
       types = import (inputs.paisano + /types/defauls.nix) {
         inherit l;
-        inherit (inputs) yants;
+        inherit yants;
         paths = null;
       };
     };
