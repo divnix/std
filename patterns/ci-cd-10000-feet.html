@@ -1,0 +1,280 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>CI/CD — 10000ft flight height - The Standard Documentation</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/pagetoc.css">
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="../ARCHITECTURE.html">Design & Architecture</a></li><li class="chapter-item expanded affix "><a href="../PITCH.html">Sales Pitch</a></li><li class="chapter-item expanded affix "><a href="../COMPARE.html">Comparisions</a></li><li class="chapter-item expanded affix "><a href="../ROADMAP.html">Roadmap</a></li><li class="chapter-item expanded affix "><li class="part-title">Tutorials</li><li class="chapter-item expanded "><a href="../tutorials/walk-in-the-park.html"><strong aria-hidden="true">1.</strong> A walk in the park</a></li><li class="chapter-item expanded "><a href="../tutorials/hello-world/index.html"><strong aria-hidden="true">2.</strong> Hello World</a></li><li class="chapter-item expanded "><a href="../tutorials/hello-moon/index.html"><strong aria-hidden="true">3.</strong> Hello Moon</a></li><li class="chapter-item expanded affix "><li class="part-title">How-To Guides</li><li class="chapter-item expanded "><a href="../guides/growing-cells.html"><strong aria-hidden="true">4.</strong> Growing Cells</a></li><li class="chapter-item expanded "><a href="../guides/incl.html"><strong aria-hidden="true">5.</strong> Include Filter</a></li><li class="chapter-item expanded "><a href="../guides/envrc.html"><strong aria-hidden="true">6.</strong> Setup .envrc</a></li><li class="chapter-item expanded affix "><li class="part-title">Explanation</li><li class="chapter-item expanded "><a href="../explain/why-nix.html"><strong aria-hidden="true">7.</strong> Why nix?</a></li><li class="chapter-item expanded "><a href="../explain/why-std.html"><strong aria-hidden="true">8.</strong> Why std?</a></li><li class="chapter-item expanded "><a href="../explain/architecture-decision-records/index.html"><strong aria-hidden="true">9.</strong> Architecture Decisions</a></li><li class="chapter-item expanded affix "><li class="part-title">Patterns</li><li class="chapter-item expanded "><a href="../patterns/four-packaging-layers.html"><strong aria-hidden="true">10.</strong> The 4 Packaging Layers</a></li><li class="chapter-item expanded "><a href="../patterns/ci-cd-10000-feet.html" class="active"><strong aria-hidden="true">11.</strong> CI/CD — 10000ft flight height</a></li><li class="chapter-item expanded affix "><li class="part-title">Templates</li><li class="chapter-item expanded "><a href="../templates/minimal.html"><strong aria-hidden="true">12.</strong> Minimal</a></li><li class="chapter-item expanded "><a href="../templates/rust.html"><strong aria-hidden="true">13.</strong> Rust</a></li><li class="chapter-item expanded affix "><li class="part-title">Reference</li><li class="chapter-item expanded "><a href="../reference/cli.html"><strong aria-hidden="true">14.</strong> TUI/CLI</a></li><li class="chapter-item expanded "><a href="../reference/conventions.html"><strong aria-hidden="true">15.</strong> Conventions</a></li><li class="chapter-item expanded "><a href="../reference/deprecations.html"><strong aria-hidden="true">16.</strong> Deprecations</a></li><li class="chapter-item expanded "><a href="../reference/blocktypes.html"><strong aria-hidden="true">17.</strong> Builtin Block Types</a></li><li class="chapter-item expanded "><a href="../reference/lib.html"><strong aria-hidden="true">18.</strong> Cell: lib</a></li><li class="chapter-item expanded "><a href="../reference/std.html"><strong aria-hidden="true">19.</strong> Cell: std</a></li><li class="chapter-item expanded "><a href="../glossary.html"><strong aria-hidden="true">20.</strong> Glossary</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Standard Documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <blockquote>
+<p><em>Beware: This is an opinionated analysis.</em></p>
+<p><em>However, it helps to reason about CI/CD with Standard.
+Standard developed the concept of self-configuring CI through the Standard Registry.</em></p>
+</blockquote>
+<h1 id="overview"><a class="header" href="#overview">Overview</a></h1>
+<p>Let's look at Continuous Integration (CI) and Continuous Delivery (CD) from a 10000 feet flight height.</p>
+<p>For our visual analysis, we use the Business Process Modeling Notation (<a href="https://www.omg.org/spec/BPMN/2.0/">BPMN 2.0</a>).</p>
+<p>For an overview of the notation follow this <a href="https://camunda.com/bpmn/reference/">link</a>.
+But don't worry, we'll also walk you through the diagram.</p>
+<a href="ci-cd-10000-feet.svg" target="_blank">
+<img
+  alt="CI-CD BPMN Model"
+  title="Open the CI-CD BPMN Model in a new tab"
+  src="ci-cd-10000-feet.svg"
+  width="100%"
+>
+</a>
+<h2 id="general-phases"><a class="header" href="#general-phases">General Phases</a></h2>
+<p>There are four phases that further structure the process.</p>
+<pre class="mermaid">flowchart TD
+    linting([Linting])
+    building([Building])
+    deployment([Deployment])
+    probing([Probing &amp; Attestation])
+
+    linting --&gt; building
+    building --&gt; deployment
+    deployment --&gt; probing
+
+    click linting href &quot;#linting-phase&quot; &quot;Jump to the linting phase section&quot;
+    click building href &quot;#building-phase&quot; &quot;Jump to the building phase section&quot;
+    click deployment href &quot;#deployment-phase&quot; &quot;Jump to the deployment phase section&quot;
+    click probing href &quot;#probing-attestation-phase&quot; &quot;Jump to the probing &amp; attestation phase section&quot;
+</pre>
+<p>To automate these, we make use of the [Standard Registry][glossary-registry] that holds all data needed to build the pipeline.
+Its is data JSON-serializable so that any CI tool or helper library can auto-generate the pipeline from it.</p>
+<h3 id="linting-phase"><a class="header" href="#linting-phase">Linting Phase</a></h3>
+<p>The linting phase ensures that the code base is in good shape.
+This can involve verification of formatting, style and auto-generated code.</p>
+<p>Typically, these are simple repository tasks that call tools to get the job done.</p>
+<p>In the local development environment, you invoke these with your task runner of choice or even configure them in a pre-commit or pre-push hook.</p>
+<p>In addition, a Standard-ready CI, runs them first to ensure a short time-to-first-feedback.</p>
+<h3 id="building-phase"><a class="header" href="#building-phase">Building Phase</a></h3>
+<p>We rely on Nix's declarative build and dependency trees to set up an efficient, intelligently scheduled and reproducible build pipeline.</p>
+<p>The Nix cache ensures that no single build is done twice, as long as the build inputs, for example source code or dependencies, do not change.</p>
+<p>Since the full dependency tree is known beforehand, intelligent scheduling ensures that shared dependencies are built and cached first before dependent builds are enqueued.</p>
+<p>These properties lay on the foundation of reproducible builds.
+Thereby, an evaluator predicts expected output hashes ahead-of-time by recursively hashing over all dependencies' own output hashes.
+Since that evaluation is cheap when compared to a full build, it is calculated before even starting the first build and is exploited for smart scheduling of the build queue.</p>
+<p>An optimized build farm can make particular use of that ahead-of-time evaluation to further optimize overall build times.</p>
+<p>The Standard Registry holds all the data in machine readable format that is required by such build farms.</p>
+<h3 id="deployment-phase"><a class="header" href="#deployment-phase">Deployment Phase</a></h3>
+<p>The deployment phase renders service runtime configuration into manifests and pushes them to the API of a platform scheduler, such as Kubernetes.</p>
+<p>All reconciliation of the desired application runtime state is then the responsibility of a control loop built or plugged into that scheduler.</p>
+<h4 id="push-vs-pull-workflows"><a class="header" href="#push-vs-pull-workflows">Push vs Pull Workflows</a></h4>
+<p>The industry has diverging opinions about whether a deployment should be pull or push based.</p>
+<p>A pull based workflow is initiated by the target infrastructure polling for changes to the manifest source in regular intervals.</p>
+<p>The advantages of a pull based workflow include a reduced intrusion surface since any network connection will be strictly outgoing from the target infrastructure.</p>
+<p>A push based workflow, on the other hand, starts with CI which triggers deployment based on a particular precondition being met.</p>
+<p>Having the target infrastructure listening for incoming connections from the orchestrating CI is also the main disadvantage of the push based workflow, as it increases the intrusion surface.
+However, orchestrated workflows, as opposed to the pull-based choreographed ones, are usually easier to reason about and, thus, easier to maintain.</p>
+<p>A Standard-ready CI can typically cover simple deployments that follow a trivial render-and-push logic.</p>
+<p>For more advanced workflows and roll-out conditions, a suitable state machine is required.</p>
+<h3 id="probing--attestation-phase"><a class="header" href="#probing--attestation-phase">Probing &amp; Attestation Phase</a></h3>
+<p>The probing and attestation phase is highly situation specific.
+It cannot be adequately represented through Standard and requires an entirely different control loop.</p>
+<p>During this phase a mix of short- &amp; long-lived testing suites are run against a particular target environment, usually called &quot;testing&quot; or &quot;staging&quot;.</p>
+<p>Some of these suites can be automated in proper test scheduling frameworks, others are inherently manual.</p>
+<p>Test suites may include the likes of:</p>
+<ul>
+<li>Penetration Testing</li>
+<li>Property-Based Testing and Fuzzing</li>
+<li>Monkey Testing</li>
+<li>Load and Soak Testing</li>
+<li>End2End Testing</li>
+<li>Benchmarking</li>
+<li>Smoke Testing</li>
+<li>Runtime and Code Auditing</li>
+</ul>
+<hr />
+<p>In this pattern piece, we didn't cover the release process.
+But we'll follow up with a dedicated pattern piece shortly.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../patterns/four-packaging-layers.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../templates/minimal.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../patterns/four-packaging-layers.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../templates/minimal.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../theme/mermaid.min.js"></script>
+        <script src="../theme/mermaid-init.js"></script>
+        <script src="../theme/pagetoc.js"></script>
+
+
+    </body>
+</html>
