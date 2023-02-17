@@ -187,11 +187,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1676425802,
-        "narHash": "sha256-CCkCwW9tDfTRp7AkZeSduHIxAxaXIgAIJfHkFNKk09g=",
+        "lastModified": 1676656013,
+        "narHash": "sha256-Bai/Wn8F7vwU73Ig1Knn67cP9W0BunAUS0fuCC7WrOo=",
         "owner": "divnix",
         "repo": "paisano",
-        "rev": "3a3714790a58d4f43b74f1756234eb9ca6428836",
+        "rev": "2cb985f2df81ad39c2fbfe100e0dfc827964b90e",
         "type": "github"
       },
       "original": {
