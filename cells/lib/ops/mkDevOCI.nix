@@ -29,6 +29,7 @@ in
   perms: A list of permissions to set for the container.
   labels: An attribute set of labels to set for the container. The keys are
   automatically prefixed with "org.opencontainers.image".
+  config: Additional options to pass to nix2container.buildImage's config.
   options: Additional options to pass to nix2container.buildImage.
 
   Returns:
@@ -46,6 +47,7 @@ in
     setup ? [],
     perms ? [],
     labels ? {},
+    config ? {},
     options ? {},
   }: let
     # vscode defaults to "vscode" as the user
@@ -236,34 +238,37 @@ in
         nixGid = 1000;
 
         config =
-          {
-            Env =
-              [
-                # Tell direnv to find it's config in /etc
-                "DIRENV_CONFIG=/etc"
-                # Required by many tools
-                "HOME=/home/${user'}"
-                # Nix related environment variables
-                "NIX_CONF_DIR=/etc"
-                "NIX_PAGER=cat"
-                # This file is created when nixpkgs.cacert is copied to the root
-                "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
-                # Nix expects a user to be set
-                "USER=${user'}"
-              ]
-              ++ (l.optionals vscode [
-                # vscode ships with its own nodejs binary that it uploads when the
-                # container is started. It is, unfortunately, dynamically linked and
-                # we need to resort to some hackery to get it to run.
-                "LD_LIBRARY_PATH=${nixpkgs.stdenv.cc.cc.lib}/lib"
-              ])
-              ++ (l.optionals (! slim) [
-                # Include <nixpkgs> to support installing additional packages
-                "NIX_PATH=nixpkgs=${nixpkgs.path}"
-              ])
-              ++ (map envToList devshell.passthru.config.env);
-            Volumes = l.optionalAttrs vscode {"/vscode" = {};};
-          }
-          // (l.optionalAttrs (! vscode) {WorkingDir = "/work";});
+          l.recursiveUpdate (
+            {
+              Env =
+                [
+                  # Tell direnv to find it's config in /etc
+                  "DIRENV_CONFIG=/etc"
+                  # Required by many tools
+                  "HOME=/home/${user'}"
+                  # Nix related environment variables
+                  "NIX_CONF_DIR=/etc"
+                  "NIX_PAGER=cat"
+                  # This file is created when nixpkgs.cacert is copied to the root
+                  "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
+                  # Nix expects a user to be set
+                  "USER=${user'}"
+                ]
+                ++ (l.optionals vscode [
+                  # vscode ships with its own nodejs binary that it uploads when the
+                  # container is started. It is, unfortunately, dynamically linked and
+                  # we need to resort to some hackery to get it to run.
+                  "LD_LIBRARY_PATH=${nixpkgs.stdenv.cc.cc.lib}/lib"
+                ])
+                ++ (l.optionals (! slim) [
+                  # Include <nixpkgs> to support installing additional packages
+                  "NIX_PATH=nixpkgs=${nixpkgs.path}"
+                ])
+                ++ (map envToList devshell.passthru.config.env);
+              Volumes = l.optionalAttrs vscode {"/vscode" = {};};
+            }
+            // (l.optionalAttrs (! vscode) {WorkingDir = "/work";})
+          )
+          config;
       };
     }
