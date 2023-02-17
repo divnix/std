@@ -2632,11 +2632,11 @@ is used inside its <code>config.nixago</code>-option.</p>
   perms: A list of permissions to set for the container.
   labels: An attribute set of labels to set for the container. The keys are
   automatically prefixed with &quot;org.opencontainers.image&quot;.
+  config: Additional options to pass to nix2container.buildImage's config.
   options: Additional options to pass to nix2container.buildImage.
 
   Returns:
   An OCI container image (created with nix2container).
-  */
 </code></pre>
 <h3 id="mkstandardoci"><a class="header" href="#mkstandardoci"><code>mkStandardOCI</code></a></h3>
 <p>... is a function interface into the <a href="reference//patterns/four-packaging-layers.html#oci-image-layer">third layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
@@ -2656,11 +2656,11 @@ is used inside its <code>config.nixago</code>-option.</p>
   labels: An attribute set of labels to set for the container. The keys are
   automatically prefixed with &quot;org.opencontainers.image&quot;.
   debug: Whether to include debug tools in the container (coreutils).
+  config: Additional options to pass to nix2container.buildImage's config.
   options: Additional options to pass to nix2container.
 
   Returns:
   An OCI container image (created with nix2container).
-  */
 </code></pre>
 <h4 id="the-standard-image"><a class="header" href="#the-standard-image">The Standard Image</a></h4>
 <p>Standard images are minimal and hardened. They only contain required dependencies.</p>
