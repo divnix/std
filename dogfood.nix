@@ -13,7 +13,6 @@ growOn {
 
     # std
     (blockTypes.runnables "cli" {ci.build = true;})
-    (blockTypes.functions "devshellProfiles")
     (blockTypes.functions "errors")
     (blockTypes.nixago "nixago")
     (blockTypes.installables "packages" {ci.build = true;})

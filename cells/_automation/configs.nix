@@ -38,12 +38,6 @@ in {
           options = ["-i" "2" "-s" "-w"];
           includes = ["*.sh"];
         };
-
-        go = {
-          command = "gofmt";
-          options = ["-w"];
-          includes = ["*.go"];
-        };
         prettier = {
           excludes = ["**.min.js"];
         };
@@ -54,7 +48,6 @@ in {
       nixpkgs.nodePackages.prettier
       nixpkgs.nodePackages.prettier-plugin-toml
       nixpkgs.shfmt
-      nixpkgs.go
     ];
     devshell.startup.prettier-plugin-toml = l.stringsWithDeps.noDepEntry ''
       export NODE_PATH=${nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules:$NODE_PATH
@@ -101,10 +94,6 @@ in {
         trim_trailing_whitespace = "unset";
         indent_style = "unset";
         indent_size = "unset";
-      };
-      "{*.go,go.mod}" = {
-        indent_style = "tab";
-        indent_size = 4;
       };
     };
   };

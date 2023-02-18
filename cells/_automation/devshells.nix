@@ -18,37 +18,13 @@ in
         lib.cfg.lefthook
         lib.cfg.adrgen
       ];
-      commands =
-        [
-          {
-            package = nixpkgs.reuse;
-            category = "legal";
-          }
-          {
-            package = nixpkgs.delve;
-            category = "cli-dev";
-            name = "dlv";
-          }
-          {
-            package = nixpkgs.go;
-            category = "cli-dev";
-          }
-          {
-            package = nixpkgs.gotools;
-            category = "cli-dev";
-          }
-          {
-            package = nixpkgs.gopls;
-            category = "cli-dev";
-          }
-        ]
-        ++ l.optionals nixpkgs.stdenv.isLinux [
-          {
-            package = nixpkgs.golangci-lint;
-            category = "cli-dev";
-          }
-        ];
-      imports = [std.devshellProfiles.default book];
+      commands = [
+        {
+          package = nixpkgs.reuse;
+          category = "legal";
+        }
+      ];
+      imports = [book];
     };
 
     book = {...}: {
@@ -59,7 +35,6 @@ in
 
     checks = {...}: {
       name = "checks";
-      imports = [std.devshellProfiles.default];
       commands = [
         {
           name = "blocktype-data";

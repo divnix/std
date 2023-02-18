@@ -53,8 +53,5 @@ in
           */
         }
       ];
-      # Always import the `std` default devshellProfile to also install
-      # the `std` CLI/TUI into your Devshell.
-      imports = [std.devshellProfiles.default];
     };
   }
