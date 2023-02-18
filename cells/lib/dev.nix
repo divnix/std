@@ -16,4 +16,9 @@ in {
     l = inputs.nixpkgs.lib // builtins;
     inputs = requireInput "arion" "github:hercules-ci/arion" "std.lib.dev.mkArion";
   };
+
+  mkDevenvSrv = import ./dev/mkDevenvSrv.nix {
+    l = inputs.nixpkgs.lib // builtins;
+    inputs = requireInput "devenv" "github:cachix/devenv?dir=src/modules" "std.lib.dev.mkDevenvSrv";
+  };
 }

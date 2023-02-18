@@ -37,6 +37,7 @@
     microvm.follows = "blank";
     makes.follows = "blank";
     arion.follows = "blank";
+    devenv.follows = "blank";
   };
   outputs = inputs: let
     # this is a standard-specific contract to wrap the data block type with metadata

@@ -7,6 +7,46 @@
   l = inputs.nixpkgs.lib // builtins;
 in
   configuration: let
+    devenvModule = {
+      config,
+      lib,
+      ...
+    }:
+      with lib; let
+        cfg = config;
+      in {
+        options.devenv = mkOption {
+          type = types.anything;
+          default = null;
+          description = "Devenv configuration";
+        };
+        config = mkIf (cfg.devenv != null) {
+          env = [
+            {
+              name = "PRJ_STATE_DIR";
+              eval = "$PRJ_ROOT/.std/state";
+            }
+            {
+              name = "DEVENV_STATE";
+              eval = "$PRJ_ROOT/.std/state";
+            }
+          ];
+          commands = [
+            {
+              package = let
+                mkDevenvDevShellPackage = config:
+                  import (inputs.devenv + /src/devenv-devShell.nix) {
+                    inherit config;
+                    pkgs = inputs.nixpkgs;
+                  };
+              in
+                mkDevenvDevShellPackage cfg.devenv;
+              help = "Spin up development services";
+            }
+          ];
+        };
+      };
+
     nixagoModule = {
       config,
       lib,
@@ -57,5 +97,5 @@ in
       };
   in
     devshell.legacyPackages.mkShell {
-      imports = [configuration nixagoModule];
+      imports = [configuration nixagoModule devenvModule];
     }

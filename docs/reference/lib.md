@@ -14,6 +14,8 @@
 
 {{#include ./lib/dev/mkShell.md}
 
+{{#include ./lib/dev/mkDevenvSrv.md}
+
 ---
 
 {{#include ./lib/ops/Readme.md}}
