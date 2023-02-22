@@ -166,13 +166,14 @@ in {
       picked = mapAttrs (_: v: pick grown v) cfg.pick;
       harvested = mapAttrs (_: v: harvest grown v) cfg.harvest;
       winnowed = zipAttrsWith (n: v: winnow (head v) grown (head (tail v))) [cfg.winnowIf cfg.winnow];
-    in
+    in lib.mkIf (opt.grow.isDefined) (
       lib.foldl' lib.recursiveUpdate {} (
         [grown]
         ++ (lib.optionals opt.pick.isDefined [picked])
         ++ (lib.optionals (opt.winnow.isDefined && opt.winnowIf.isDefined) [winnowed])
         ++ (lib.optionals opt.harvest.isDefined [harvested])
-      );
+      )
+    );
 
     # exposes the raw scheme of the std layout inside flake-parts
     perInput = system: flake: {cells = flake.${system} or {};};
