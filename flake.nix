@@ -49,7 +49,7 @@
       __std_data_wrapper = true;
       inherit data meta;
     };
-    blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs;};
+    blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs n2c;};
     sharedActions = import ./src/actions.nix {inherit (inputs) nixpkgs;};
     l = inputs.nixpkgs.lib // builtins;
 

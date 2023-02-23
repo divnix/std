@@ -1,4 +1,7 @@
-{nixpkgs}: let
+{
+  nixpkgs,
+  n2c, # nix2container
+}: let
   sharedActions = import ./actions.nix {inherit nixpkgs;};
   mkCommand = import ./mkCommand.nix {inherit nixpkgs;};
 in {
@@ -8,7 +11,7 @@ in {
   anything = import ./blocktypes/anything.nix {inherit nixpkgs mkCommand;};
   data = import ./blocktypes/data.nix {inherit nixpkgs mkCommand;};
   devshells = import ./blocktypes/devshells.nix {inherit nixpkgs mkCommand sharedActions;};
-  containers = import ./blocktypes/containers.nix {inherit nixpkgs mkCommand sharedActions;};
+  containers = import ./blocktypes/containers.nix {inherit n2c nixpkgs mkCommand sharedActions;};
   files = import ./blocktypes/files.nix {inherit nixpkgs mkCommand;};
   microvms = import ./blocktypes/microvms.nix {inherit nixpkgs mkCommand;};
   nixago = import ./blocktypes/nixago.nix {inherit nixpkgs mkCommand;};

@@ -1,5 +1,6 @@
 {
   nixpkgs,
+  n2c, # nix2container
   mkCommand,
   sharedActions,
 }: let
@@ -22,7 +23,11 @@
       fragment,
       fragmentRelPath,
       target,
-    }: [
+    }: let
+      inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
+      copy-to = "${skopeo-nix2container}/bin/skopeo --insecure-policy copy nix:${target}";
+      imageRef = target.imageRefUnsafe or (builtins.unsafeDiscardStringContext "${target.imageName}:${target.imageTag}");
+    in [
       (sharedActions.build currentSystem target)
       (mkCommand currentSystem {
         name = "print-image";
@@ -35,11 +40,9 @@
       (mkCommand currentSystem {
         name = "publish";
         description = "copy the image to its remote registry";
-        command = let
-          image = target.imageRefUnsafe or "${target.imageName}:${target.imageTag}";
-        in ''
-          # docker://${builtins.unsafeDiscardStringContext image}
-          ${target.copyToRegistry}/bin/copy-to-registry
+        command = ''
+          # docker://${imageRef}
+          ${copy-to} docker://${imageRef} $@
         '';
         proviso =
           l.toFile "container-proviso"
@@ -89,25 +92,33 @@
           '';
       })
       (mkCommand currentSystem {
-        name = "copy-to-registry";
-        description = "copy the image to its remote registry";
+        name = "load";
+        description = "load image to the local docker daemon";
         command = ''
-          ${target.copyToRegistry}/bin/copy-to-registry
+          if command -v podman &> /dev/null; then
+             ixecontainerho "Podman detected: copy to local podman"
+            ${copy-to} containers-storage:${imageRef} $@
+          fi
+          if command -v docker &> /dev/null; then
+             echo "Docker detected: copy to local docker"
+            ${copy-to} docker-daemon:${imageRef} $@
+          fi
         '';
+      })
+      (mkCommand currentSystem {
+        name = "copy-to-registry";
+        description = "deprecated: use 'publish' instead";
+        command = "echo 'copy-to-registry' is deprecated; use 'publish' action instead && exit 1";
       })
       (mkCommand currentSystem {
         name = "copy-to-docker";
-        description = "copy the image to the local docker registry";
-        command = ''
-          ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
-        '';
+        description = "deprecated: use 'load' instead";
+        command = "echo 'copy-to-docker' is deprecated; use 'load' action instead && exit 1";
       })
       (mkCommand currentSystem {
         name = "copy-to-podman";
-        description = "copy the image to the local podman registry";
-        command = ''
-          ${target.copyToPodman}/bin/copy-to-podman
-        '';
+        description = "deprecated: use 'load' instead";
+        command = "echo 'copy-to-podman' is deprecated; use 'load' action instead && exit 1";
       })
     ];
   };
