@@ -26,7 +26,11 @@
     }: let
       inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
       copy-to = "${skopeo-nix2container}/bin/skopeo --insecure-policy copy nix:${target}";
-      imageRef = target.imageRefUnsafe or (builtins.unsafeDiscardStringContext "${target.imageName}:${target.imageTag}");
+      img = builtins.unsafeDiscardStringContext target.imageName;
+      tags = let
+        tags' = target.meta.tags or [(builtins.unsafeDiscardStringContext target.imageTag)];
+      in
+        builtins.toFile "${target.name}-tags" (builtins.unsafeDiscardStringContext (builtins.concatStringsSep "\n" tags'));
     in [
       (sharedActions.build currentSystem target)
       (mkCommand currentSystem {
@@ -41,8 +45,9 @@
         name = "publish";
         description = "copy the image to its remote registry";
         command = ''
-          # docker://${imageRef}
-          ${copy-to} docker://${imageRef} $@
+          for tag in $(<${tags}); do
+            ${copy-to} "docker://${img}:$tag" "$@"
+          done
         '';
         proviso =
           l.toFile "container-proviso"
@@ -57,8 +62,7 @@
 
             function get_images () {
               command nix show-derivation $@ \
-              | command jq -r '.[].env.text' \
-              | command grep -o 'docker://\S*'
+              | command jq -r '.[].env.__provisory'
             }
 
             drvs="$(command jq -r '.actionDrv | select(. != "null")' <<< "''${input[@]}")"
@@ -90,18 +94,28 @@
             output=$(command jq -cs '. += $p' --argjson p "$output" <<< "''${filtered[@]}")
             }
           '';
+
+        provisory = target.meta.provisory or "${img}:${target.imageTag}";
       })
       (mkCommand currentSystem {
         name = "load";
         description = "load image to the local docker daemon";
         command = ''
+          copy_tags() {
+            local storage=$1
+            shift
+
+            for tag in $(<${tags}); do
+              ${copy-to} "$storage:${img}:$tag" "$@"
+            done
+          }
           if command -v podman &> /dev/null; then
              ixecontainerho "Podman detected: copy to local podman"
-            ${copy-to} containers-storage:${imageRef} $@
+             copy_tags containers-storage "$@"
           fi
           if command -v docker &> /dev/null; then
              echo "Docker detected: copy to local docker"
-            ${copy-to} docker-daemon:${imageRef} $@
+             copy_tags docker-daemon "$@"
           fi
         '';
       })

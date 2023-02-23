@@ -38,6 +38,7 @@ in
     debug ? false,
     config ? {},
     options ? {},
+    meta ? {},
   }: let
     # Link useful paths into the container.
     runtimeEntryLink = "ln -s ${l.getExe operable.passthru.runtime} $out/bin/runtime";
@@ -69,7 +70,7 @@ in
     '';
   in
     cell.ops.mkOCI {
-      inherit name tag uid gid labels options perms config;
+      inherit name tag uid gid labels options perms config meta;
       entrypoint = operable';
       setup = [setupLinks] ++ setup;
       runtimeInputs = operable.passthru.runtimeInputs;
