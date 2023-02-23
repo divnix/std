@@ -38,6 +38,7 @@ in
     labels ? {},
     config ? {},
     options ? {},
+    meta ? {},
   }: let
     setupLinks = cell.ops.mkSetup "links" [] ''
       mkdir -p $out/bin
@@ -82,4 +83,6 @@ in
       }
       // l.optionalAttrs (tag != "") {inherit tag;};
   in
-    n2c.buildImage (l.recursiveUpdate options' options)
+    (n2c.buildImage (l.recursiveUpdate options' options)).overrideAttrs (prev: {
+      meta = (prev.meta or {}) // meta;
+    })
