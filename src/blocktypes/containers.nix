@@ -25,12 +25,36 @@
       target,
     }: let
       inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
-      copy-to = "${skopeo-nix2container}/bin/skopeo --insecure-policy copy nix:${target}";
       img = builtins.unsafeDiscardStringContext target.imageName;
       tags = let
         tags' = target.meta.tags or [(builtins.unsafeDiscardStringContext target.imageTag)];
       in
-        builtins.toFile "${target.name}-tags" (builtins.unsafeDiscardStringContext (builtins.concatStringsSep "\n" tags'));
+        builtins.toFile "${target.name}-tags.json" (builtins.unsafeDiscardStringContext (builtins.concatStringsSep "\n" tags'));
+      copyTags = let
+        skopeo = "skopeo --insecure-policy";
+      in ''
+        export PATH=${skopeo-nix2container}/bin:$PATH
+
+        copy_tags() {
+          local name tags source img
+          source=nix:${target}
+          tags=${tags}
+          name=$1
+          shift
+
+          for tag in $(<$tags); do
+            img="$name:$tag"
+            if ! [[ -v prev_img ]]; then
+              ${skopeo} copy $source "$img" "$@"
+            else
+              # speedup: copy from the previous tag to avoid superflous network bandwidth
+              ${skopeo} copy "$prev_img" "$img" "$@"
+            fi
+
+            prev_img="$img"
+          done
+        }
+      '';
     in [
       (sharedActions.build currentSystem target)
       (mkCommand currentSystem {
@@ -45,9 +69,9 @@
         name = "publish";
         description = "copy the image to its remote registry";
         command = ''
-          for tag in $(<${tags}); do
-            ${copy-to} "docker://${img}:$tag" "$@"
-          done
+          ${copyTags}
+
+          copy_tags docker://${img}
         '';
         proviso =
           l.toFile "container-proviso"
@@ -101,21 +125,15 @@
         name = "load";
         description = "load image to the local docker daemon";
         command = ''
-          copy_tags() {
-            local storage=$1
-            shift
+          ${copyTags}
 
-            for tag in $(<${tags}); do
-              ${copy-to} "$storage:${img}:$tag" "$@"
-            done
-          }
           if command -v podman &> /dev/null; then
              ixecontainerho "Podman detected: copy to local podman"
-             copy_tags containers-storage "$@"
+             copy_tags containers-storage:${img} "$@"
           fi
           if command -v docker &> /dev/null; then
              echo "Docker detected: copy to local docker"
-             copy_tags docker-daemon "$@"
+             copy_tags docker-daemon:${img} "$@"
           fi
         '';
       })
