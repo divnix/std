@@ -13,13 +13,13 @@
     inherit name;
     type = "runnables";
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: [
-      (sharedActions.build system target)
-      (sharedActions.run system target)
+      (sharedActions.build currentSystem target)
+      (sharedActions.run currentSystem target)
     ];
   };
 in

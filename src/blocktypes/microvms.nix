@@ -16,26 +16,26 @@
     inherit name;
     type = "microvms";
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: [
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "run";
         description = "run the microvm";
         command = ''
           ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-run
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "console";
         description = "enter the microvm console";
         command = ''
           ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-console
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "microvm";
         description = "pass any command to microvm";
         command = ''

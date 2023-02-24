@@ -4,8 +4,8 @@
 
   contextFreeDrv = target: l.unsafeDiscardStringContext target.drvPath;
 
-  build = system: target:
-    mkCommand system {
+  build = currentSystem: target:
+    mkCommand currentSystem {
       name = "build";
       description = "build it";
       command = ''
@@ -45,12 +45,12 @@
         '';
     };
 
-  run = system: target: let
+  run = currentSystem: target: let
     programName =
       target.meta.mainProgram
       or (l.getName target);
   in
-    mkCommand system {
+    mkCommand currentSystem {
       name = "run";
       description = "run it";
       # this is the exact sequence mentioned by the `nix run` docs

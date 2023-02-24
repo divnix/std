@@ -18,13 +18,13 @@
     inherit name;
     type = "containers";
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: [
-      (sharedActions.build system target)
-      (mkCommand system {
+      (sharedActions.build currentSystem target)
+      (mkCommand currentSystem {
         name = "print-image";
         description = "print out the image name & tag";
         command = ''
@@ -32,7 +32,7 @@
           echo "${target.imageName}:${target.imageTag}"
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "publish";
         description = "copy the image to its remote registry";
         command = let
@@ -88,21 +88,21 @@
             }
           '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "copy-to-registry";
         description = "copy the image to its remote registry";
         command = ''
           ${target.copyToRegistry}/bin/copy-to-registry
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "copy-to-docker";
         description = "copy the image to the local docker registry";
         command = ''
           ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "copy-to-podman";
         description = "copy the image to the local podman registry";
         command = ''
