@@ -21,23 +21,23 @@
     inherit name;
     type = "nixago";
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: [
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "populate";
         description = "populate this nixago file into the repo";
         command = ''
           ${target.install}/bin/nixago_shell_hook
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "explore";
         description = "interactively explore the nixago file";
         command = ''
-          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat "${target.configFile}"
+          ${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat "${target.configFile}"
         '';
       })
     ];

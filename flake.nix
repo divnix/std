@@ -6,7 +6,7 @@
   description = "The Nix Flakes framework for perfectionists with deadlines";
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-  inputs.paisano.url = "github:divnix/paisano";
+  inputs.paisano.url = "github:paisano-nix/core";
   inputs.paisano.inputs.nixpkgs.follows = "nixpkgs";
   inputs.paisano.inputs.yants.follows = "yants";
   inputs.yants.url = "github:divnix/yants";
@@ -55,8 +55,17 @@
         (blockTypes.installables "packages")
       ],
       ...
-    } @ args:
-      inputs.paisano.growOn (args // {inherit cellBlocks;}) {
+    } @ args: let
+      # preserve pos of `cellBlocks` if not using the default
+      args' =
+        args
+        // (
+          if args ? cellBlocks
+          then {}
+          else {inherit cellBlocks;}
+        );
+    in
+      inputs.paisano.growOn args' {
         # standard-specific quality-of-life assets
         __std.direnv_lib = ./direnv_lib.sh;
         __std.nixConfig = let

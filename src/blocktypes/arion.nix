@@ -18,49 +18,49 @@
     inherit name;
     type = "arion";
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: let
       cmd = "arion --prebuilt-file ${target.config.out.dockerComposeYaml}";
     in [
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "up";
         description = "arion up";
         command = ''
           ${cmd} up "$@"
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "ps";
         description = "exec this arion task to ps";
         command = ''
           ${cmd} ps "$@"
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "stop";
         description = "arion stop";
         command = ''
           ${cmd} stop "$@"
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "rm";
         description = "arion rm";
         command = ''
           ${cmd} rm "$@"
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "config";
         description = "check the docker-compose yaml file";
         command = ''
           ${cmd} config "$@"
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "arion";
         description = "pass any command to arion";
         command = ''
