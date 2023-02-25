@@ -20,12 +20,14 @@
       inherit inputs;
       systems = ["x86_64-linux"];
       cellsFrom = ./nix;
-      cellBlocks = [
-        (std.devshells "devshells")
-        (std.installables "packages")
+      cellBlocks = with std.blockTypes; [
+        (installables "packages")
+        # Contribution Environment
+        (devshells "shells")
+        (pkgs "rust")
       ];
     } {
-      devShells = std.harvest self ["_automation" "devshells"];
+      devShells = std.harvest self ["repo" "shells"];
       packages = std.harvest self ["hello" "packages"];
     };
 
