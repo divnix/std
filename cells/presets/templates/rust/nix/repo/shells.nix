@@ -16,7 +16,28 @@
       enableDefaultToolchain = true;
       tools = ["toolchain"]; # fenix collates them all in a convenience derivation
     };
+
+    devshell.startup.link-cargo-home = {
+      deps = [];
+      text = ''
+        # ensure CARGO_HOME is populated
+        mkdir -p $PRJ_DATA_DIR/cargo
+        ln -s -t $PRJ_DATA_DIR/cargo $(ls -d ${cell.rust.toolchain}/*)
+      '';
+    };
+
     env = [
+      {
+        # ensures subcommands are picked up from the right place
+        # but also needs to be writable; see link-cargo-home above
+        name = "CARGO_HOME";
+        eval = "$PRJ_DATA_DIR/cargo";
+      }
+      {
+        # ensure we know where rustup_home will be
+        name = "RUSTUP_HOME";
+        eval = "$PRJ_DATA_DIR/rustup";
+      }
       {
         name = "RUST_SRC_PATH";
         # accessing via toolchain doesn't fail if it's not there
@@ -45,6 +66,7 @@
           "rustc"
           "cargo"
           "rustfmt"
+          "rust-analyzer"
         ];
     in
       [
