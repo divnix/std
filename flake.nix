@@ -6,15 +6,20 @@
   description = "The Nix Flakes framework for perfectionists with deadlines";
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-  inputs.paisano.url = "github:paisano-nix/core";
-  inputs.paisano.inputs.nixpkgs.follows = "nixpkgs";
-  inputs.paisano.inputs.yants.follows = "yants";
+  inputs = {
+    paisano.url = "github:paisano-nix/core";
+    paisano.inputs.nixpkgs.follows = "nixpkgs";
+    paisano.inputs.yants.follows = "yants";
+    paisano-tui.url = "github:paisano-nix/tui";
+    paisano-tui.inputs.std.follows = "/";
+    paisano-tui.inputs.nixpkgs.follows = "blank";
+  };
+  inputs.blank.url = "github:divnix/blank";
   inputs.yants.url = "github:divnix/yants";
   inputs.yants.inputs.nixpkgs.follows = "nixpkgs";
   inputs.dmerge.url = "github:divnix/data-merge";
   inputs.dmerge.inputs.nixlib.follows = "nixpkgs";
   inputs.dmerge.inputs.yants.follows = "yants";
-  inputs.blank.url = "github:divnix/blank";
   inputs.incl.url = "github:divnix/incl";
   inputs.incl.inputs.nixlib.follows = "nixpkgs";
   /*
