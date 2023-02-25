@@ -1955,49 +1955,49 @@ Actions according to the needs of your project.</p>
     inherit name;
     type = &quot;arion&quot;;
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: let
       cmd = &quot;arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
     in [
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;up&quot;;
         description = &quot;arion up&quot;;
         command = ''
           ${cmd} up &quot;$@&quot;
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;ps&quot;;
         description = &quot;exec this arion task to ps&quot;;
         command = ''
           ${cmd} ps &quot;$@&quot;
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;stop&quot;;
         description = &quot;arion stop&quot;;
         command = ''
           ${cmd} stop &quot;$@&quot;
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;rm&quot;;
         description = &quot;arion rm&quot;;
         command = ''
           ${cmd} rm &quot;$@&quot;
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;config&quot;;
         description = &quot;check the docker-compose yaml file&quot;;
         command = ''
           ${cmd} config &quot;$@&quot;
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;arion&quot;;
         description = &quot;pass any command to arion&quot;;
         command = ''
@@ -2025,13 +2025,13 @@ in
     inherit name;
     type = &quot;runnables&quot;;
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: [
-      (sharedActions.build system target)
-      (sharedActions.run system target)
+      (sharedActions.build currentSystem target)
+      (sharedActions.run currentSystem target)
     ];
   };
 in
@@ -2062,14 +2062,14 @@ in
     inherit name;
     type = &quot;installables&quot;;
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: [
-      (sharedActions.build system target)
+      (sharedActions.build currentSystem target)
       # profile commands require a flake ref
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;install&quot;;
         description = &quot;install this target&quot;;
         command = ''
@@ -2081,7 +2081,7 @@ in
           nix profile install $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;upgrade&quot;;
         description = &quot;upgrade this target&quot;;
         command = ''
@@ -2093,7 +2093,7 @@ in
           nix profile upgrade $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;remove&quot;;
         description = &quot;remove this target&quot;;
         command = ''
@@ -2106,7 +2106,7 @@ in
         '';
       })
       # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;bundle&quot;;
         description = &quot;bundle this target&quot;;
         command = ''
@@ -2118,7 +2118,7 @@ in
           nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;bundleImage&quot;;
         description = &quot;bundle this target to image&quot;;
         command = ''
@@ -2130,7 +2130,7 @@ in
           nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;bundleAppImage&quot;;
         description = &quot;bundle this target to AppImage&quot;;
         command = ''
@@ -2184,15 +2184,15 @@ in
     inherit name;
     type = &quot;devshells&quot;;
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: let
       developDrv = mkDevelopDrv target;
     in [
-      (sharedActions.build system target)
-      (mkCommand system {
+      (sharedActions.build currentSystem target)
+      (mkCommand currentSystem {
         name = &quot;enter&quot;;
         description = &quot;enter this devshell&quot;;
         command = ''
@@ -2258,23 +2258,23 @@ in
     inherit name;
     type = &quot;nixago&quot;;
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: [
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;populate&quot;;
         description = &quot;populate this nixago file into the repo&quot;;
         command = ''
           ${target.install}/bin/nixago_shell_hook
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;explore&quot;;
         description = &quot;interactively explore the nixago file&quot;;
         command = ''
-          ${nixpkgs.legacyPackages.${system}.bat}/bin/bat &quot;${target.configFile}&quot;
+          ${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat &quot;${target.configFile}&quot;
         '';
       })
     ];
@@ -2303,13 +2303,13 @@ in
     inherit name;
     type = &quot;containers&quot;;
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: [
-      (sharedActions.build system target)
-      (mkCommand system {
+      (sharedActions.build currentSystem target)
+      (mkCommand currentSystem {
         name = &quot;print-image&quot;;
         description = &quot;print out the image name &amp; tag&quot;;
         command = ''
@@ -2317,7 +2317,7 @@ in
           echo &quot;${target.imageName}:${target.imageTag}&quot;
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;publish&quot;;
         description = &quot;copy the image to its remote registry&quot;;
         command = let
@@ -2373,21 +2373,21 @@ in
             }
           '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;copy-to-registry&quot;;
         description = &quot;copy the image to its remote registry&quot;;
         command = ''
           ${target.copyToRegistry}/bin/copy-to-registry
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;copy-to-docker&quot;;
         description = &quot;copy the image to the local docker registry&quot;;
         command = ''
           ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
         '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;copy-to-podman&quot;;
         description = &quot;copy the image to the local podman registry&quot;;
         command = ''
@@ -2420,12 +2420,12 @@ in
     inherit name;
     type = &quot;data&quot;;
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: let
-      inherit (nixpkgs.legacyPackages.${system}) pkgs;
+      inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
 
       # if target ? __std_data_wrapper, then we need to unpack from `.data`
       json = pkgs.writeTextFile {
@@ -2439,12 +2439,12 @@ in
       jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
       fx = [&quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
     in [
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;write&quot;;
         description = &quot;write to file&quot;;
         command = &quot;echo ${json}&quot;;
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = &quot;explore&quot;;
         description = &quot;interactively explore&quot;;
         command = l.concatStringsSep &quot;\t&quot; (jq ++ fx);
