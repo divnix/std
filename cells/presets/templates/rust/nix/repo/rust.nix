@@ -4,7 +4,8 @@
 }: let
   inherit (inputs.fenix) packages;
 
-  # change "stable" to "complete" for nightly rust
+  # change "stable" to "[minimal|default|complete|latest]" for nightly rust
+  # see: https://github.com/nix-community/fenix#usage
   rustPkgs = packages.stable;
   rustPkgs' =
     if rustPkgs ? rust-analyzer
