@@ -82,12 +82,6 @@
           package = std.cli.default;
           category = "std";
         }
-        # {
-        #   name = "rust-analyzer";
-        #   category = "rust dev";
-        #   package = cell.rust.rust-analyzer;
-        #   # help = nixpkgs.rust-analyzer.meta.description;
-        # }
       ]
       ++ rustCmds;
   };
