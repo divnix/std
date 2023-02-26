@@ -37,4 +37,13 @@ in {
     with
       `inputs.std.lib.cfg`
   '';
+  warnLegacyTag = removeBy "July 2023" ''
+    The legacy upstream nix2container tag interface is deprecated,
+    std.lib.ops.mkStandardOCI now takes a list of tags via `meta`.
+
+    Replace `tag` input of `mkStandardOCI` function
+      mkStandardOCI {tag = "foo";/* ... */}
+    with
+      mkStandardOCI {meta.tags = ["foo"]; /* ... */}
+  '';
 }
