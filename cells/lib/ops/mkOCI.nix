@@ -25,10 +25,13 @@ in
   Returns:
   An OCI container image (created with nix2container).
   */
-  {
+  args @ {
     name,
     entrypoint,
-    tag ? "",
+    tag ?
+      if meta ? tags && (l.length meta.tags) > 0
+      then l.head meta.tags
+      else "",
     setup ? [],
     layers ? [],
     runtimeInputs ? [],
@@ -81,6 +84,8 @@ in
         # Setup tasks can include permissions via the passthru.perms attribute
         perms = l.flatten ((l.map (s: l.optionalAttrs (s ? passthru && s.passthru ? perms) s.passthru.perms)) setup) ++ perms;
       }
-      // l.optionalAttrs (tag != "") {inherit tag;};
+      // l.throwIf (args ? tag && meta ? tags)
+      "mkOCI: use of `tag` and `meta.tags` arguments are not supported together. Remove the former."
+      (l.optionalAttrs (tag != "") {inherit tag;});
   in
     n2c.buildImage (l.recursiveUpdate options' options)

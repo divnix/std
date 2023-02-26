@@ -26,7 +26,7 @@ in
   Returns:
   An OCI container image (created with nix2container).
   */
-  {
+  args @ {
     name,
     operable,
     tag ? "",
@@ -70,7 +70,7 @@ in
     '';
   in
     cell.ops.mkOCI {
-      inherit name tag uid gid labels options perms config meta;
+      inherit name uid gid labels options perms config meta;
       entrypoint = operable';
       setup = [setupLinks] ++ setup;
       runtimeInputs = operable.passthru.runtimeInputs;
@@ -86,3 +86,8 @@ in
         })
       ];
     }
+    // l.throwIf (args ? tag && meta ? tags)
+    "mkStandardOCI: use of `tag` and `meta.tags` arguments are not supported together. Remove the former."
+    (l.optionalAttrs (tag != "") ((import "${inputs.self}/deprecation.nix" inputs).warnLegacyTag {
+      inherit tag;
+    }))
