@@ -46,7 +46,7 @@ in
     '';
     options' =
       {
-        inherit name;
+        inherit name meta;
 
         # Layers are nested to reduce duplicate paths in the image
         layers =
@@ -83,6 +83,4 @@ in
       }
       // l.optionalAttrs (tag != "") {inherit tag;};
   in
-    (n2c.buildImage (l.recursiveUpdate options' options)).overrideAttrs (prev: {
-      meta = (prev.meta or {}) // meta;
-    })
+    n2c.buildImage (l.recursiveUpdate options' options)

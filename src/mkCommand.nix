@@ -1,13 +1,10 @@
 {nixpkgs}: let
-  mkCommand = system: args: let
-    inherit (nixpkgs.legacyPackages.${system}) pkgs;
+  mkCommand = currentSystem: args: let
+    inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
   in
     args
     // {
-      command = (pkgs.writeShellScript "${args.name}" args.command).overrideAttrs (_:
-        pkgs.lib.optionalAttrs (args ? provisory) {
-          __provisory = builtins.unsafeDiscardStringContext args.provisory;
-        });
+      command = pkgs.writeShellScript "${args.name}" args.command;
     };
 in
   mkCommand
