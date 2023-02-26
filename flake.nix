@@ -73,20 +73,6 @@
       inputs.paisano.growOn args' {
         # standard-specific quality-of-life assets
         __std.direnv_lib = ./direnv_lib.sh;
-        __std.nixConfig = let
-          # FIXME: refactor when merged NixOS/nixpkgs#203999
-          nixConfig = l.generators.toKeyValue {
-            mkKeyValue = l.generators.mkKeyValueDefault {
-              mkValueString = v:
-                if l.isList v
-                then l.concatStringsSep " " v
-                else if (l.isPath v || v ? __toString)
-                then toString v
-                else l.generators.mkValueStringDefault {} v;
-            } " = ";
-          };
-        in
-          nixConfig (import "${args.inputs.self}/flake.nix").nixConfig or {};
       };
     grow = args: l.removeAttrs (growOn args) ["__functor"];
     flakeModule = import ./src/flakeModule.nix {
