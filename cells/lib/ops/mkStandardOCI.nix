@@ -20,6 +20,7 @@ in
   labels: An attribute set of labels to set for the container. The keys are
   automatically prefixed with "org.opencontainers.image".
   debug: Whether to include debug tools in the container (coreutils).
+  config: Additional options to pass to nix2container.buildImage's config.
   options: Additional options to pass to nix2container.
 
   Returns:
@@ -35,7 +36,9 @@ in
     perms ? [],
     labels ? {},
     debug ? false,
+    config ? {},
     options ? {},
+    meta ? {},
   }: let
     # Link useful paths into the container.
     runtimeEntryLink = "ln -s ${l.getExe operable.passthru.runtime} $out/bin/runtime";
@@ -67,7 +70,7 @@ in
     '';
   in
     cell.ops.mkOCI {
-      inherit name tag uid gid labels options perms;
+      inherit name tag uid gid labels options perms config meta;
       entrypoint = operable';
       setup = [setupLinks] ++ setup;
       runtimeInputs = operable.passthru.runtimeInputs;

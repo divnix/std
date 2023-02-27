@@ -17,15 +17,15 @@
     inherit name;
     type = "devshells";
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: let
       developDrv = mkDevelopDrv target;
     in [
-      (sharedActions.build system target)
-      (mkCommand system {
+      (sharedActions.build currentSystem target)
+      (mkCommand currentSystem {
         name = "enter";
         description = "enter this devshell";
         command = ''

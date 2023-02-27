@@ -18,12 +18,12 @@
     inherit name;
     type = "data";
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: let
-      inherit (nixpkgs.legacyPackages.${system}) pkgs;
+      inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
 
       # if target ? __std_data_wrapper, then we need to unpack from `.data`
       json = pkgs.writeTextFile {
@@ -37,12 +37,12 @@
       jq = ["${pkgs.jq}/bin/jq" "-r" "'.'" "${json}"];
       fx = ["|" "${pkgs.fx}/bin/fx"];
     in [
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "write";
         description = "write to file";
         command = "echo ${json}";
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "explore";
         description = "interactively explore";
         command = l.concatStringsSep "\t" (jq ++ fx);

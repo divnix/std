@@ -19,14 +19,14 @@
     type = "nomadJobManifests";
 
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: let
-      fx = "${nixpkgs.legacyPackages.${system}.fx}/bin";
-      nomad = "${nixpkgs.legacyPackages.${system}.nomad}/bin";
-      jq = "${nixpkgs.legacyPackages.${system}.jq}/bin";
+      fx = "${nixpkgs.legacyPackages.${currentSystem}.fx}/bin";
+      nomad = "${nixpkgs.legacyPackages.${currentSystem}.nomad}/bin";
+      jq = "${nixpkgs.legacyPackages.${currentSystem}.jq}/bin";
       job = baseNameOf fragmentRelPath;
       nixExpr = ''
         x: let
@@ -74,7 +74,7 @@
       inject the git revision validate the manifest, after which it can be run or
       planned with the Nomad cli or the `deploy` action.
       */
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "render";
         description = "build the JSON job description";
         command =
@@ -87,7 +87,7 @@
             ${render}
           '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "deploy";
         description = "Deploy the job to Nomad";
         command =
@@ -129,7 +129,7 @@
             fi
           '';
       })
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "explore";
         description = "interactively explore the Job defintion";
         command =

@@ -6,14 +6,19 @@
   description = "The Nix Flakes framework for perfectionists with deadlines";
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-  inputs.paisano.url = "github:divnix/paisano";
-  inputs.paisano.inputs.nixpkgs.follows = "nixpkgs";
-  # FIXME: inputs.paisano.inputs.yants.follows = "yants";
   inputs.contracts.url = "github:yvan-sraka/contracts/yants-compatibility";
+  inputs = {
+    paisano.url = "github:paisano-nix/core";
+    paisano.inputs.nixpkgs.follows = "nixpkgs";
+    # FIXME: paisano.inputs.yants.follows = "yants";
+    paisano-tui.url = "github:paisano-nix/tui";
+    paisano-tui.inputs.std.follows = "/";
+    paisano-tui.inputs.nixpkgs.follows = "blank";
+  };
+  inputs.blank.url = "github:divnix/blank";
   inputs.dmerge.url = "github:divnix/data-merge";
   inputs.dmerge.inputs.nixlib.follows = "nixpkgs";
   # FIXME: inputs.dmerge.inputs.yants.follows = "yants";
-  inputs.blank.url = "github:divnix/blank";
   inputs.incl.url = "github:divnix/incl";
   inputs.incl.inputs.nixlib.follows = "nixpkgs";
   /*
@@ -43,7 +48,7 @@
       __std_data_wrapper = true;
       inherit data meta;
     };
-    blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs;};
+    blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs n2c;};
     sharedActions = import ./src/actions.nix {inherit (inputs) nixpkgs;};
     l = inputs.nixpkgs.lib // builtins;
 
@@ -54,8 +59,17 @@
         (blockTypes.installables "packages")
       ],
       ...
-    } @ args:
-      inputs.paisano.growOn (args // {inherit cellBlocks;}) {
+    } @ args: let
+      # preserve pos of `cellBlocks` if not using the default
+      args' =
+        args
+        // (
+          if args ? cellBlocks
+          then {}
+          else {inherit cellBlocks;}
+        );
+    in
+      inputs.paisano.growOn args' {
         # standard-specific quality-of-life assets
         __std.direnv_lib = ./direnv_lib.sh;
         __std.nixConfig = let

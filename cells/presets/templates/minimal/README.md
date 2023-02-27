@@ -35,6 +35,5 @@ direnv reload
 <sub>You need to be <i>inside</i> the Contribution Environment.</sub>
 
 ```console
-mdbook build
-xdg-open ./docs/build/index.html
+mdbook build -o
 ```

@@ -19,6 +19,7 @@ in
   perms: A list of permissions to set for the container.
   labels: An attribute set of labels to set for the container. The keys are
   automatically prefixed with "org.opencontainers.image".
+  config: Additional options to pass to nix2container.buildImage's config.
   options: Additional options to pass to nix2container.buildImage.
 
   Returns:
@@ -35,15 +36,17 @@ in
     gid ? "65534",
     perms ? [],
     labels ? {},
+    config ? {},
     options ? {},
+    meta ? {},
   }: let
     setupLinks = cell.ops.mkSetup "links" [] ''
       mkdir -p $out/bin
       ln -s ${l.getExe entrypoint} $out/bin/entrypoint
     '';
-    config =
+    options' =
       {
-        inherit name;
+        inherit name meta;
 
         # Layers are nested to reduce duplicate paths in the image
         layers =
@@ -66,16 +69,18 @@ in
         maxLayers = 25;
         copyToRoot = [setupLinks] ++ setup;
 
-        config = {
-          User = uid;
-          Group = gid;
-          Entrypoint = ["/bin/entrypoint"];
-          Labels = l.mapAttrs' (n: v: l.nameValuePair "org.opencontainers.image.${n}" v) labels;
-        };
+        config =
+          l.recursiveUpdate {
+            User = uid;
+            Group = gid;
+            Entrypoint = ["/bin/entrypoint"];
+            Labels = l.mapAttrs' (n: v: l.nameValuePair "org.opencontainers.image.${n}" v) labels;
+          }
+          config;
 
         # Setup tasks can include permissions via the passthru.perms attribute
         perms = l.flatten ((l.map (s: l.optionalAttrs (s ? passthru && s.passthru ? perms) s.passthru.perms)) setup) ++ perms;
       }
       // l.optionalAttrs (tag != "") {inherit tag;};
   in
-    n2c.buildImage (l.recursiveUpdate config options)
+    n2c.buildImage (l.recursiveUpdate options' options)

@@ -1,5 +1,10 @@
 {nixpkgs}: let
-  writeShellScript = system: nixpkgs.legacyPackages.${system}.writeShellScript;
-  mkCommand = system: args: args // {command = writeShellScript system "${args.name}" args.command;};
+  mkCommand = currentSystem: args: let
+    inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
+  in
+    args
+    // {
+      command = pkgs.writeShellScript "${args.name}" args.command;
+    };
 in
   mkCommand

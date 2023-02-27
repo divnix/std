@@ -101,8 +101,8 @@ A: (1) dotfile proliferation
     data = {
       repository = {
         name = "CONFIGURE-ME";
+        inherit (import (inputs.self + /flake.nix)) description;
         homepage = "CONFIGURE-ME";
-        description = "CONFIGURE-ME";
         topics = "CONFIGURE-ME";
         default_branch = "main";
         allow_squash_merge = false;

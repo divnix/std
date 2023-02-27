@@ -13,15 +13,15 @@
     inherit name;
     type = "files";
     actions = {
-      system,
+      currentSystem,
       fragment,
       fragmentRelPath,
       target,
     }: let
       file = toString target;
-      bat = "${nixpkgs.legacyPackages.${system}.bat}/bin/bat";
+      bat = "${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat";
     in [
-      (mkCommand system {
+      (mkCommand currentSystem {
         name = "explore";
         description = "interactively explore with bat";
         command = ''

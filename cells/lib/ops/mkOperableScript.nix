@@ -2,8 +2,7 @@
   inputs,
   cell,
 }: let
-  inherit (inputs) nixpkgs std;
-  l = nixpkgs.lib // builtins;
+  l = inputs.nixpkgs.lib // builtins;
 in
   /*
   Makes a simple wrapper for executing an operable's package with args.
@@ -18,13 +17,34 @@ in
   */
   {
     package,
-    args ? {},
+    args ? [],
     bin ? "",
   }: let
-    # Cumulatively builds up arguments: args+=(\"name\" \"value\")\n....
-    args' = builtins.concatStringsSep "\n" (
-      l.mapAttrsToList (name: value: "args+=(\"${name}\" \"${value}\")") args
-    );
+    # Cumulatively builds up arguments...
+    args' = let
+      attrsToStr = {
+        set,
+        prefix ? "",
+        suffix ? "",
+      }:
+        builtins.concatStringsSep "\n" (
+          l.mapAttrsToList (name: value: ''${prefix}"${name}" "${toString value}"${suffix}'') set
+        );
+    in
+      if builtins.isAttrs args
+      then
+        attrsToStr {
+          set = args;
+          prefix = "args+=(";
+          suffix = ")";
+        }
+      else builtins.concatStringsSep "\n" (map (arg: ''args+=(${
+          if l.isList arg
+          then toString (map (str: ''"${toString str}"'') arg)
+          else if l.isAttrs arg
+          then attrsToStr {set = arg;}
+          else ''"${arg}"''
+        })'') args);
 
     # Parse out only the binary name from getExe
     exe = builtins.unsafeDiscardStringContext (l.baseNameOf (l.getExe package));
@@ -33,7 +53,7 @@ in
       then exe
       else bin;
   in ''
-    args+=()
+    declare -a args
     ${args'}
     exec ${package}/bin/${bin'} "''${args[@]}"
   ''
