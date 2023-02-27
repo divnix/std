@@ -37,7 +37,7 @@
         name = "explore";
         description = "interactively explore the nixago file";
         command = ''
-          ${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat "${target.configFile}"
+          ${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat "${target.config}"
         '';
       })
     ];
