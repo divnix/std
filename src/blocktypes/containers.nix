@@ -40,10 +40,10 @@
 
           for tag in $(<${tags'}); do
             if ! [[ -v prev_tag ]]; then
-              ${skopeo} copy nix:${target} "$uri:tag" "$@"
+              ${skopeo} copy nix:${target} "$uri:$tag" "$@"
             else
               # speedup: copy from the previous tag to avoid superflous network bandwidth
-              ${skopeo} copy "$uri:$prev_tag" "$uri:tag" "$@"
+              ${skopeo} copy "$uri:$prev_tag" "$uri:$tag" "$@"
             fi
 
             prev_tag="$tag"
