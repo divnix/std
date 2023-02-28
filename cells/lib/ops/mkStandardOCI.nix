@@ -41,7 +41,12 @@ in
     meta ? {},
   }: let
     # Link useful paths into the container.
-    runtimeEntryLink = "ln -s ${l.getExe operable.passthru.runtime} $out/bin/runtime";
+    runtimeEntryLink = let
+      runtimeShell = l.getExe operable.passthru.runtime;
+    in ''
+      ln -s ${runtimeShell} $out/bin/sh
+      ln -s ${runtimeShell} $out/bin/runtime
+    '';
     debugEntryLink = l.optionalString debug "ln -s ${l.getExe operable.passthru.debug} $out/bin/debug";
     livenessLink = l.optionalString (operable.passthru ? livenessProbe) "ln -s ${l.getExe operable.passthru.livenessProbe} $out/bin/live";
     readinessLink = l.optionalString (operable.passthru ? readinessProbe) "ln -s ${l.getExe operable.passthru.readinessProbe} $out/bin/ready";

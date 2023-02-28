@@ -70,7 +70,10 @@ in
           ++ layers;
 
         maxLayers = 25;
-        copyToRoot = [setupLinks] ++ setup;
+        copyToRoot = nixpkgs.buildEnv {
+          name = "root";
+          paths = [setupLinks] ++ setup;
+        };
 
         config =
           l.recursiveUpdate {
