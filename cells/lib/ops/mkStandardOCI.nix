@@ -2,7 +2,7 @@
   inputs,
   cell,
 }: let
-  inherit (inputs) nixpkgs std;
+  inherit (inputs) nixpkgs;
   l = nixpkgs.lib // builtins;
   n2c = inputs.n2c.packages.nix2container;
 in
@@ -62,7 +62,7 @@ in
       else operable;
 
     setupLinks = cell.ops.mkSetup "links" [] ''
-      mkdir -p $out/bin
+      mkdir -p $out/{bin,tmp}
       ${runtimeEntryLink}
       ${debugEntryLink}
       ${livenessLink}
