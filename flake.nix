@@ -92,7 +92,7 @@
     flakeModule = import ./src/flakeModule.nix {
       inherit grow;
       inherit (inputs.paisano) harvest pick winnow;
-      types = import (inputs.paisano + /types/defauls.nix) {
+      types = import (inputs.paisano + /types/default.nix) {
         inherit l;
         inherit (inputs) yants;
         paths = null;
