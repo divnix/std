@@ -17,31 +17,27 @@
         l.toFile "build-proviso"
         # bash
         ''
-          function proviso() {
-            local -n input=$1
-            local -n output=$2
+          # FIXME: merge upstream to avoid any need for runtime context
+          command nix build github:divnix/nix-uncached/v2.13.1
 
-            local drvs
-            local -a uncached
+          local -a drvs
+          eval "$(
+            command jq --raw-output '
+              "drvs=(\(map(.targetDrv|strings)|@sh))"
+            ' <<< "$1"
+          )"
 
-            # FIXME: merge upstream to avoid any need for runtime context
-            command nix build github:divnix/nix-uncached/v2.13.1
+          command jq --raw-output \
+            --argjson checked "$(./result/bin/nix-uncached ''${drvs[@]})" \
+          ' (
+              $checked | with_entries(select(.value == [])) | keys
+            ) as $cached
+            | map(select(
+              [.targetDrv] | IN($cached) | not
+            ))
+          ' <<< "$1"
 
-            drvs=$(command jq -r '.targetDrv | select(. != "null")' <<< "''${input[@]}")
-
-            uncached_json=$(result/bin/nix-uncached $drvs)
-
-            mapfile -t uncached < <(command jq -r 'to_entries[]|select(.value != [])|.key' <<< "$uncached_json")
-
-            if [[ -n ''${uncached[*]} ]]; then
-              local list filtered
-
-              list=$(command jq -ncR '[inputs]' <<< "''${uncached[@]}")
-              filtered=$(command jq -c 'select([.targetDrv] | inside($p))' --argjson p "$list" <<< "''${input[@]}")
-
-              output=$(command jq -cs '. += $p' --argjson p "$output" <<< "$filtered")
-            fi
-          }
+          unset drvs
         '';
     };
 

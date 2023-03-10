@@ -69,11 +69,33 @@
           ${copyFn}
           copy docker://${img}
         '';
-        proviso = l.toFile "container-proviso" ''
-          SKOPEO_INSPECT=${./proviso/skopeo-inspect.sh}
-          ${builtins.readFile ./proviso/publish.sh}
-        '';
         meta.images = map (tag: "${img}:${tag}") tags;
+        proviso = l.toFile "container-proviso" ''
+          function scopeo_inspect() {
+            local images=("$@")
+            for image in ''${images[@]}; do
+               if command &>/dev/null skopeo inspect --insecure-policy "docker://$image"; then
+                 echo "$image"
+               fi
+            done
+          }
+
+          declare -a images
+          eval "$(
+            command jq --raw-output '
+              "images=(\(map(.meta.images[0]|strings)|@sh))"
+            ' <<< "$1"
+          )"
+
+          command jq --raw-output \
+            --arg available "$(scopeo_inspect ''${images[@]})" \
+          ' map(select(
+              .meta.images[0] | inside($available) | not
+            ))
+          ' <<< "$1"
+
+          unset images
+        '';
       })
       (mkCommand currentSystem {
         name = "load";
