@@ -18,7 +18,7 @@
         # bash
         ''
           # FIXME: merge upstream to avoid any need for runtime context
-          command nix build github:divnix/nix-uncached/v2.13.1
+          command nix build github:divnix/nix-uncached?ref=refs/pull/2/head
 
           local -a drvs
           eval "$(
