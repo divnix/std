@@ -29,7 +29,6 @@
     mkOptionType
     showDefs
     showOption
-    types
     literalExpression
     ;
 
@@ -56,9 +55,9 @@
     merge = mergeHarvesterOption;
     emptyValue = {value = [];};
     inherit
-      (types.either
-        (types.listOf types.nonEmptyStr)
-        (types.listOf (types.listOf types.nonEmptyStr)))
+      (with lib.types; (either
+        (listOf nonEmptyStr)
+        (listOf (listOf nonEmptyStr))))
       check
       ;
   };
@@ -67,7 +66,11 @@
     name = "cellBlocks";
     description = "list of cell block";
     descriptionClass = "noun";
-    inherit (types.BlockTypes) check;
+    inherit
+      (types.BlockTypes
+        "Block Types usable in the Standard flake-parts module")
+      check
+      ;
   };
 
   opt = options.std;
@@ -83,11 +86,11 @@ in {
            - Find a good [walk-through here](https://jmgilman.github.io/std-book/).
            - And the general [documentation here](https://std.divnix.com/index.html).
         '';
-        type = types.submodule {
+        type = lib.types.submodule {
           options = {
             cellsFrom = mkOption {
               description = "Where Standard discovers Cells from.";
-              type = types.path;
+              type = with lib.types; path;
               example = literalExpression "./nix";
             };
             cellBlocks = mkOption {
@@ -103,7 +106,7 @@ in {
             };
             nixpkgsConfig = mkOption {
               description = "Nixpkgs configuration applied to `inputs.nixpkgs` (if that input exists).";
-              type = types.attrs;
+              type = with lib.types; attrs;
               example = literalExpression ''
                 { allowUnfree = true; }
               '';
@@ -113,7 +116,7 @@ in {
       };
       pick = mkOption {
         description = "Pick Standard outputs. Like `harvest` but remove the system for outputs that are system agnostic.";
-        type = types.attrsOf harvesterType;
+        type = with lib.types; attrsOf harvesterType;
         example = literalExpression ''
           {
             lib = [ "utils" "library" ];
@@ -122,7 +125,7 @@ in {
       };
       winnowIf = mkOption {
         description = "Set the predicates for `winnow`.";
-        type = types.attrsOf (types.functionTo (types.functionTo types.bool));
+        type = with lib.types; attrsOf (functionTo (functionTo bool));
         example = literalExpression ''
           {
             packages = n: v: n == "foo";
@@ -131,7 +134,7 @@ in {
       };
       winnow = mkOption {
         description = "Winnow Standard outputs. Like `harvest`, but with filters from the predicates of `winnowIf`.";
-        type = types.attrsOf harvesterType;
+        type = with lib.types; attrsOf harvesterType;
         example = literalExpression ''
           {
             packages = [ "app3" "packages" ];
@@ -140,7 +143,7 @@ in {
       };
       harvest = mkOption {
         description = "Harvest Standard outputs into a Nix-CLI-compatible form (a.k.a. the 'official' flake schema).";
-        type = types.attrsOf harvesterType;
+        type = with lib.types; attrsOf harvesterType;
         example = literalExpression ''
           {
             devShells = [ "toolchain" "devshells" ];
@@ -166,14 +169,15 @@ in {
       picked = mapAttrs (_: v: pick grown v) cfg.pick;
       harvested = mapAttrs (_: v: harvest grown v) cfg.harvest;
       winnowed = zipAttrsWith (n: v: winnow (head v) grown (head (tail v))) [cfg.winnowIf cfg.winnow];
-    in lib.mkIf (opt.grow.isDefined) (
-      lib.foldl' lib.recursiveUpdate {} (
-        [grown]
-        ++ (lib.optionals opt.pick.isDefined [picked])
-        ++ (lib.optionals (opt.winnow.isDefined && opt.winnowIf.isDefined) [winnowed])
-        ++ (lib.optionals opt.harvest.isDefined [harvested])
-      )
-    );
+    in
+      lib.mkIf (opt.grow.isDefined) (
+        lib.foldl' lib.recursiveUpdate {} (
+          [grown]
+          ++ (lib.optionals opt.pick.isDefined [picked])
+          ++ (lib.optionals (opt.winnow.isDefined && opt.winnowIf.isDefined) [winnowed])
+          ++ (lib.optionals opt.harvest.isDefined [harvested])
+        )
+      );
 
     # exposes the raw scheme of the std layout inside flake-parts
     perInput = system: flake: {cells = flake.${system} or {};};
