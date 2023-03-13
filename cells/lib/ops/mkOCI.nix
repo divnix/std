@@ -70,19 +70,21 @@ in
           ++ layers;
 
         maxLayers = 25;
-        copyToRoot = nixpkgs.buildEnv {
-          name = "root";
-          paths = [setupLinks] ++ setup;
-        };
+        copyToRoot =
+          [
+            (nixpkgs.buildEnv {
+              name = "root";
+              paths = [setupLinks] ++ setup;
+            })
+          ]
+          ++ options.copyToRoot or [];
 
-        config =
-          l.recursiveUpdate {
-            User = uid;
-            Group = gid;
-            Entrypoint = ["/bin/entrypoint"];
-            Labels = l.mapAttrs' (n: v: l.nameValuePair "org.opencontainers.image.${n}" v) labels;
-          }
-          config;
+        config = l.recursiveUpdate config {
+          User = uid;
+          Group = gid;
+          Entrypoint = ["/bin/entrypoint"];
+          Labels = l.mapAttrs' (n: v: l.nameValuePair "org.opencontainers.image.${n}" v) labels;
+        };
 
         # Setup tasks can include permissions via the passthru.perms attribute
         perms = l.flatten ((l.map (s: l.optionalAttrs (s ? passthru && s.passthru ? perms) s.passthru.perms)) setup) ++ perms;
@@ -91,4 +93,4 @@ in
       "mkOCI: use of `tag` and `meta.tags` arguments are not supported together. Remove the former."
       (l.optionalAttrs (tag != "") {inherit tag;});
   in
-    n2c.buildImage (l.recursiveUpdate options' options)
+    n2c.buildImage (l.recursiveUpdate options options')
