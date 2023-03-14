@@ -71,13 +71,15 @@
         '';
         meta.images = map (tag: "${img}:${tag}") tags;
         proviso = l.toFile "container-proviso" ''
+          function _scopeo_inspect() {
+            if command &>/dev/null skopeo inspect --insecure-policy "docker://$image"; then
+              echo "$image"
+            fi
+          }
+          export -f _scopeo_inspect
+
           function scopeo_inspect() {
-            local images=("$@")
-            for image in ''${images[@]}; do
-               if command &>/dev/null skopeo inspect --insecure-policy "docker://$image"; then
-                 echo "$image"
-               fi
-            done
+            echo "$@" | command xargs -n 1 -P 0 -I {} bash -c '_scopeo_inspect "$@"'
           }
 
           declare -a images
@@ -88,7 +90,7 @@
           )"
 
           command jq --raw-output \
-            --arg available "$(scopeo_inspect ''${images[@]})" \
+            --arg available "$(_scopeo_inspect ''${images[@]})" \
           ' map(select(
               .meta.images[0] | inside($available) | not
             ))
