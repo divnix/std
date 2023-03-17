@@ -74,25 +74,29 @@ in
       ${readinessLink}
     '';
   in
-    cell.ops.mkOCI {
-      inherit name uid gid labels options perms config meta;
-      entrypoint = operable';
-      setup = [setupLinks] ++ setup;
-      runtimeInputs = operable.passthru.runtimeInputs;
+    cell.ops.mkOCI (
+      {
+        inherit name uid gid labels options perms config meta;
+        entrypoint = operable';
+        setup = [setupLinks] ++ setup;
+        runtimeInputs = operable.passthru.runtimeInputs;
 
-      # Put liveness and readiness probes in a separate layer
-      layers = [
-        (n2c.buildLayer {
-          deps =
-            []
-            ++ (l.optionals (operable.passthru ? livenessProbe) [(n2c.buildLayer {deps = [operable.passthru.livenessProbe];})])
-            ++ (l.optionals (operable.passthru ? readinessProbe) [(n2c.buildLayer {deps = [operable.passthru.readinessProbe];})]);
-          maxLayers = 10;
+        # Put liveness and readiness probes in a separate layer
+        layers = [
+          (n2c.buildLayer {
+            deps =
+              []
+              ++ (l.optionals (operable.passthru ? livenessProbe) [(n2c.buildLayer {deps = [operable.passthru.livenessProbe];})])
+              ++ (l.optionals (operable.passthru ? readinessProbe) [(n2c.buildLayer {deps = [operable.passthru.readinessProbe];})]);
+            maxLayers = 10;
+          })
+        ];
+      }
+      // l.throwIf (args ? tag && meta ? tags)
+      "mkStandardOCI: use of `tag` and `meta.tags` arguments are not supported together. Remove the former."
+      (
+        l.optionalAttrs (tag != "") ((import "${inputs.self}/deprecation.nix" inputs).warnLegacyTag {
+          inherit tag;
         })
-      ];
-    }
-    // l.throwIf (args ? tag && meta ? tags)
-    "mkStandardOCI: use of `tag` and `meta.tags` arguments are not supported together. Remove the former."
-    (l.optionalAttrs (tag != "") ((import "${inputs.self}/deprecation.nix" inputs).warnLegacyTag {
-      inherit tag;
-    }))
+      )
+    )
