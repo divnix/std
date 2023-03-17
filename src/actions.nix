@@ -13,29 +13,23 @@
         nix build ${contextFreeDrv target}
       '';
       targetDrv = target.drvPath;
-      proviso =
+      proviso = let
+        filter = ./build-filter.jq;
+      in
         l.toFile "build-proviso"
         # bash
         ''
+          local -a drvs
+          eval "$(
+            command jq --raw-output '"drvs=(\(map(.targetDrv|strings)|@sh))"' <<< "$1"
+          )"
+
           # FIXME: merge upstream to avoid any need for runtime context
           command nix build github:divnix/nix-uncached?ref=refs/pull/2/head
 
-          local -a drvs
-          eval "$(
-            command jq --raw-output '
-              "drvs=(\(map(.targetDrv|strings)|@sh))"
-            ' <<< "$1"
-          )"
-
           command jq --raw-output \
             --argjson checked "$(./result/bin/nix-uncached ''${drvs[@]})" \
-          ' (
-              $checked | with_entries(select(.value == [])) | keys
-            ) as $cached
-            | map(select(
-              [.targetDrv] | IN($cached) | not
-            ))
-          ' <<< "$1"
+            --from-file ${filter} <<< "$1"
 
           unset drvs
         '';

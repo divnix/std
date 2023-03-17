@@ -70,34 +70,34 @@
           copy docker://${img}
         '';
         meta.images = map (tag: "${img}:${tag}") tags;
-        proviso = l.toFile "container-proviso" ''
-          function _scopeo_inspect() {
-            if command &>/dev/null skopeo inspect --insecure-policy "docker://$image"; then
-              echo "$image"
-            fi
-          }
-          export -f _scopeo_inspect
+        proviso = let
+          filter = ./container-publish-filter.jq;
+        in
+          l.toFile "container-proviso" ''
+            function _scopeo_inspect() {
+              if command &>/dev/null skopeo inspect --insecure-policy "docker://$image"; then
+                echo "$image"
+              fi
+            }
+            export -f _scopeo_inspect
 
-          function scopeo_inspect() {
-            echo "$@" | command xargs -n 1 -P 0 -I {} bash -c '_scopeo_inspect "$@"'
-          }
+            function scopeo_inspect() {
+              echo "$@" | command xargs -n 1 -P 0 -I {} bash -c '_scopeo_inspect "$@"'
+            }
 
-          declare -a images
-          eval "$(
-            command jq --raw-output '
-              "images=(\(map(.meta.images[0]|strings)|@sh))"
-            ' <<< "$1"
-          )"
+            declare -a images
+            eval "$(
+              command jq --raw-output '
+                "images=(\(map(.meta.images[0]|strings)|@sh))"
+              ' <<< "$1"
+            )"
 
-          command jq --raw-output \
-            --arg available "$(_scopeo_inspect ''${images[@]})" \
-          ' map(select(
-              .meta.images[0] | inside($available) | not
-            ))
-          ' <<< "$1"
+            command jq --raw-output \
+              --arg available "$(_scopeo_inspect ''${images[@]})" \
+              --from-file ${filter} <<< "$1"
 
-          unset images
-        '';
+            unset images
+          '';
       })
       (mkCommand currentSystem {
         name = "load";
