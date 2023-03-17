@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2022 The Standard Authors
 let
-  version = "0.15.0+dev";
+  version = nixpkgs.lib.fileContents (inputs.self + /VERSION);
 
   inherit (inputs) nixpkgs;
   inherit (nixpkgs.lib) licenses;
