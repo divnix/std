@@ -92,5 +92,12 @@ in
       // l.throwIf (args ? tag && meta ? tags)
       "mkOCI: use of `tag` and `meta.tags` arguments are not supported together. Remove the former."
       (l.optionalAttrs (tag != "") {inherit tag;});
+
+    image = n2c.buildImage (l.recursiveUpdate options options');
   in
-    n2c.buildImage (l.recursiveUpdate options options')
+    l.removeAttrs image [
+      "copyTo"
+      "copyToDockerDaemon"
+      "copyToPodman"
+      "copyToRegistry"
+    ]
