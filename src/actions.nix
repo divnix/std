@@ -24,11 +24,23 @@
             command jq --raw-output '"drvs=(\(map(.targetDrv|strings)|@sh))"' <<< "$1"
           )"
 
+          local -a outPaths
+
+          for drv in "''${drvs[@]}"; do
+            outPaths+=($(
+              nix show-derivation "$drv" \
+              | command jq \
+                --raw-output \
+                --arg drv "$drv" \
+                '. | .[$drv].outputs[][]'
+            ))
+          done
+
           # FIXME: merge upstream to avoid any need for runtime context
           command nix build github:divnix/nix-uncached?ref=refs/pull/3/head
 
           command jq --raw-output \
-            --argjson checked "$(./result/bin/nix-uncached ''${drvs[@]})" \
+            --argjson checked "$(./result/bin/nix-uncached ''${outPaths[@]})" \
             --from-file ${filter} <<< "$1"
 
           unset drvs
