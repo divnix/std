@@ -74,28 +74,24 @@
           filter = ./container-publish-filter.jq;
         in
           l.toFile "container-proviso" ''
-            function _scopeo_inspect() {
-              if command &>/dev/null skopeo inspect --insecure-policy "docker://$image"; then
+            function scopeo_inspect() {
+              local image
+              image="$1"
+              if command skopeo inspect --insecure-policy "docker://$image" &>/dev/null; then
                 echo "$image"
               fi
             }
-            export -f _scopeo_inspect
-
-            function scopeo_inspect() {
-              echo "$@" | command xargs -n 1 -P 0 -I {} bash -c '_scopeo_inspect "$@"'
-            }
-
-            declare -a images
-            eval "$(
-              command jq --raw-output '
-                "images=(\(map(.meta.images[0]|strings)|@sh))"
-              ' <<< "$1"
-            )"
+            export -f scopeo_inspect
 
             command jq --raw-output \
-              --arg available "$(_scopeo_inspect ''${images[@]})" \
-              --from-file ${filter} <<< "$1"
+              --from-file "${filter}" \
+              --arg available "$(
+                parallel -j0 scopeo_inspect ::: "$(
+                   command jq --raw-output 'map(.meta.images[0]|strings)[]' <<< "$1"
+                )"
+              )" <<< "$1"
 
+            unset -f scopeo_inspect
             unset images
           '';
       })
