@@ -25,7 +25,7 @@
           )"
 
           # FIXME: merge upstream to avoid any need for runtime context
-          command nix build github:divnix/nix-uncached?ref=refs/pull/2/head
+          command nix build github:divnix/nix-uncached?ref=refs/pull/3/head
 
           command jq --raw-output \
             --argjson checked "$(./result/bin/nix-uncached ''${drvs[@]})" \
