@@ -15,23 +15,46 @@
       targetDrv = target.drvPath;
       proviso = let
         filter = ./build-filter.jq;
+        extractor = ./build-fetched-extractor.sed;
       in
         l.toFile "build-proviso"
         # bash
         ''
-          local -a drvs
-          eval "$(
-            command jq --raw-output '"drvs=(\(map(.targetDrv|strings)|@sh))"' <<< "$1"
-          )"
+          function getUncachedDrvs {
+            local -a uncached
+            local drv
+            drv=$1
 
-          # FIXME: merge upstream to avoid any need for runtime context
-          command nix build github:divnix/nix-uncached?ref=refs/pull/3/head
+            mapfile -t uncached < <(
+              command nix-store --realise --dry-run "$drv" 2>&1 1>/dev/null \
+              | command sed -nrf ${extractor}
+            )
+
+            test ''${#uncached[@]} -eq 0 && return;
+
+            if (
+               command nix show-derivation ''${uncached[@]} 2> /dev/null \
+               | command jq --exit-status \
+               ' with_entries(
+                   select(.value|.env.preferLocalBuild != "1")
+                 ) | any
+               ' 1> /dev/null
+            ); then
+              echo "$drv"
+            fi
+          }
+
+          export -f getUncachedDrvs
 
           command jq --raw-output \
-            --argjson checked "$(./result/bin/nix-uncached ''${drvs[@]})" \
-            --from-file ${filter} <<< "$1"
+            --from-file ${filter} \
+            --arg uncachedDrvs "$(
+              parallel -j0 getUncachedDrvs ::: "$(
+                 command jq --raw-output 'map(.targetDrv|strings)[]' <<< "$1"
+              )"
+            )" <<< "$1"
 
-          unset drvs
+          unset -f getUncachedDrvs
         '';
     };
 
