@@ -6,20 +6,19 @@
   description = "The Nix Flakes framework for perfectionists with deadlines";
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+  inputs.contracts.url = "github:yvan-sraka/contracts/yants-compatibility";
   inputs = {
     paisano.url = "github:paisano-nix/core";
     paisano.inputs.nixpkgs.follows = "nixpkgs";
-    paisano.inputs.yants.follows = "yants";
+    # FIXME: paisano.inputs.yants.follows = "yants";
     paisano-tui.url = "github:paisano-nix/tui";
     paisano-tui.inputs.std.follows = "/";
     paisano-tui.inputs.nixpkgs.follows = "blank";
   };
   inputs.blank.url = "github:divnix/blank";
-  inputs.yants.url = "github:divnix/yants";
-  inputs.yants.inputs.nixpkgs.follows = "nixpkgs";
   inputs.dmerge.url = "github:divnix/data-merge";
   inputs.dmerge.inputs.nixlib.follows = "nixpkgs";
-  inputs.dmerge.inputs.yants.follows = "yants";
+  # FIXME: inputs.dmerge.inputs.yants.follows = "yants";
   inputs.incl.url = "github:divnix/incl";
   inputs.incl.inputs.nixlib.follows = "nixpkgs";
   /*
@@ -74,13 +73,14 @@
         # standard-specific quality-of-life assets
         __std.direnv_lib = ./direnv_lib.sh;
       };
+    yants = inputs.contracts.yants;
     grow = args: l.removeAttrs (growOn args) ["__functor"];
     flakeModule = import ./src/flakeModule.nix {
       inherit grow;
       inherit (inputs.paisano) harvest pick winnow;
       types = import (inputs.paisano + /types/default.nix) {
         inherit l;
-        inherit (inputs) yants;
+        inherit yants;
         paths = null;
       };
     };
