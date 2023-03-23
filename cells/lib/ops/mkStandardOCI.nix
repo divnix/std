@@ -56,8 +56,10 @@ in
       name = "debug-operable";
       runtimeInputs = [nixpkgs.coreutils];
       text = ''
-        set -x
-        sleep "''${DEBUG_SLEEP:-0}"
+        if [[ -v DEBUG_SLEEP ]]; then
+          >&2 "Sleeping for $DEBUG_SLEEP for debugging"
+          sleep "$DEBUG_SLEEP"
+        fi
         ${l.getExe operable} "$@"
       '';
     };
