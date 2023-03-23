@@ -40,7 +40,7 @@ in
       inherit runtimeEnv runtimeInputs runtimeShell;
       name = "runtime";
       text = ''
-        exec -a "$0" ${runtimeShellBin}
+        exec -a "$0" ${runtimeShellBin} "$@"
       '';
     };
 
