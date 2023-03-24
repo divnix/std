@@ -60,7 +60,7 @@ in
           >&2 "Sleeping for $DEBUG_SLEEP for debugging"
           sleep "$DEBUG_SLEEP"
         fi
-        ${l.getExe operable} "$@"
+        exec ${l.getExe operable} "$@"
       '';
     };
     operable' =
