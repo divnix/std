@@ -1,5 +1,5 @@
-# If the line 'will be fetched' is matched ...
-/will be fetched/ {
+# If the line 'will be built' is matched ...
+/will be built/ {
     # Create a label to iterate over dervivations
     :b
 
