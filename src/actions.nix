@@ -15,7 +15,7 @@
       targetDrv = target.drvPath;
       proviso = let
         filter = ./build-filter.jq;
-        extractor = ./build-fetched-extractor.sed;
+        extractor = ./build-uncached-extractor.sed;
       in
         l.toFile "build-proviso"
         # bash
