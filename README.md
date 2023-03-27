@@ -101,7 +101,9 @@ But hey! It means: we can progress together!
     #    Run for example: 'mkdir nix/mycell'
     # 2. Each <block>.nix or <block>/default.nix within it becomes a "Cell Block"
     #    Run for example: '$EDITOR nix/mycell/packages.nix' - see example content below
-    cellsFrom = ./nix;
+    cellsFrom = ./nix/cells;
+    overlaysFrom = ./nix/overlays/;
+    packagesFrom = ./nix/packages/;
     # 3. Only blocks with these names [here: "packages" & "devshells"] are picked up by Standard
     #    It's a bit like the output type system of your flake project (hint: CLI & TUI!!)
     cellBlocks = with std.blockTypes; [
