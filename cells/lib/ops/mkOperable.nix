@@ -13,6 +13,8 @@ in
   runtimeScript: A bash script to run at runtime.
   runtimeEnv: An attribute set of environment variables to set at runtime.
   runtimeInputs: A list of packages to add to the runtime environment.
+  runtimeShell: The runtime shell. Defaults to bash.
+  debugInputs: A list of packages available in the debug shell.
   livenessProbe: An optional derivation to run to check if the program is alive.
   readinessProbe: An optional derivation to run to check if the program is ready.
 
