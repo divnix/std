@@ -25,10 +25,10 @@ in {
     postInstall = ''
       mv $out/bin/paisano $out/bin/${pname}
 
-      installShellCompletion --cmd std \
-        --bash <($out/bin/std _carapace bash) \
-        --fish <($out/bin/std _carapace fish) \
-        --zsh <($out/bin/std _carapace zsh)
+      installShellCompletion --cmd ${pname} \
+        --bash <($out/bin/${pname} _carapace bash) \
+        --fish <($out/bin/${pname} _carapace fish) \
+        --zsh <($out/bin/${pname} _carapace zsh)
     '';
 
     ldflags = [
