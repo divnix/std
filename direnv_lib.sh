@@ -69,7 +69,7 @@ use_std() {
 
   mkdir -p "$(direnv_layout_dir)/$block/$organ/$target"
 
-  enter="$(nix build "$PWD#__std.actions.$system.$block.$organ.$target.enter" "${nix_args[@]}" --print-out-paths --profile "$profile_path/enter-action")"
+  enter="$(nix build "git+file://$PWD#__std.actions.$system.$block.$organ.$target.enter" "${nix_args[@]}" --print-out-paths --profile "$profile_path/enter-action")"
   export STD_DIRENV=1
   eval "$(<"$enter")"
   # this is not true
