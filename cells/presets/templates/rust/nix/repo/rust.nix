@@ -4,7 +4,8 @@
 }: let
   inherit (inputs) fenix;
 
-  # change "stable" to "[minimal|default|complete|latest]" for nightly rust
+  # you may change "default" to any of "[minimal|default|complete|latest]" for variants
+  # see upstream fenix documentation for details
   rustPkgs = builtins.removeAttrs fenix.packages.default ["withComponents" "name" "type"];
 in
   # export fenix toolchain as it's own package set
