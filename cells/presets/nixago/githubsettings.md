@@ -3,7 +3,7 @@
 This preset defines some default Github labels to help you organize your project better.
 
 ```nix
-{{#include ./../../../../cells/presets/nixago/githubsettings.nix}}
+{{#include ../../cells/presets/nixago/githubsettings.nix}}
 ```
 
 In order to use this preset, you also need to install [Github Settings App](https://github.com/apps/settings).

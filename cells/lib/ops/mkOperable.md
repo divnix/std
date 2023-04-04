@@ -7,7 +7,7 @@ It's purpose is to provide an easy way to enrich a "package" into an "operable".
 The function signature is as follows:
 
 ```nix
-{{#include ../../../../cells/lib/ops/mkOperable.nix:8:21}}
+{{#include ../../cells/lib/ops/mkOperable.nix:8:22}}
 ```
 
 [packaging-second]: /patterns/four-packaging-layers.md#operable-layer

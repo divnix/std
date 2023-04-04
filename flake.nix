@@ -13,6 +13,9 @@
     paisano-tui.url = "github:paisano-nix/tui";
     paisano-tui.inputs.std.follows = "/";
     paisano-tui.inputs.nixpkgs.follows = "blank";
+    paisano-mdbook-preprocessor.url = "github:paisano-nix/mdbook-paisano-preprocessor";
+    paisano-mdbook-preprocessor.inputs.std.follows = "/";
+    paisano-mdbook-preprocessor.inputs.nixpkgs.follows = "nixpkgs";
   };
   inputs.blank.url = "github:divnix/blank";
   inputs.yants.url = "github:divnix/yants";

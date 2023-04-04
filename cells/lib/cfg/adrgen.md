@@ -9,5 +9,5 @@
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/lib/cfg/adrgen.nix}}
+{{#include ../../cells/lib/cfg/adrgen.nix}}
 ```

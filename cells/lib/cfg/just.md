@@ -62,5 +62,5 @@ It's also possible to override the interpreter for a task:
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/lib/cfg/just.nix}}
+{{#include ../../cells/lib/cfg/just.nix}}
 ```

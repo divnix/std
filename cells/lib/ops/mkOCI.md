@@ -5,7 +5,7 @@
 The function signature is as follows:
 
 ```nix
-{{#include ../../../../cells/lib/ops/mkOCI.nix:9:26}}
+{{#include ../../cells/lib/ops/mkOCI.nix:9:26}}
 ```
 
 [n2c]: https://github.com/nlewo/nix2container

@@ -9,7 +9,16 @@ build-dir = "book"
 
 [output.html]
 additional-css = ["theme/pagetoc.css"]
-additional-js = ["theme/mermaid.min.js", "theme/mermaid-init.js", "theme/pagetoc.js"]
+additional-js = ["theme/pagetoc.js"]
 
-[preprocessor.mermaid]
-command = "mdbook-mermaid"
+[preprocessor.paisano-preprocessor]
+before = ["links"]
+registry = "..#__std.init"
+
+[[preprocessor.paisano-preprocessor.multi]]
+cell = "lib"
+chapter = "Cell: lib"
+
+[[preprocessor.paisano-preprocessor.multi]]
+cell = "std"
+chapter = "Cell: std"

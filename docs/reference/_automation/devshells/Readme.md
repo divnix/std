@@ -1,1 +1,0 @@
-../../../../cells/_automation/devshells/Readme.md

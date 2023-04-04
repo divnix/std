@@ -126,20 +126,27 @@ in {
         build-dir = "book";
       };
       preprocessor = {
-        mermaid.command = "mdbook-mermaid";
+        paisano-preprocessor = {
+          before = ["links"];
+          registry = "..#__std.init";
+          multi = [
+            {
+              chapter = "Cell: lib";
+              cell = "lib";
+            }
+            {
+              chapter = "Cell: std";
+              cell = "std";
+            }
+          ];
+        };
       };
       output.html = {
-        additional-js = [
-          "theme/mermaid.min.js"
-          "theme/mermaid-init.js"
-          "theme/pagetoc.js"
-        ];
-        additional-css = [
-          "theme/pagetoc.css"
-        ];
+        additional-js = ["theme/pagetoc.js"];
+        additional-css = ["theme/pagetoc.css"];
       };
     };
-    packages = [nixpkgs.mdbook-mermaid];
+    packages = [inputs.paisano-mdbook-preprocessor.packages.default];
     hook.mode = "copy"; # let CI pick it up outside of devshell
   };
   githubsettings = {

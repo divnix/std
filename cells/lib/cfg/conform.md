@@ -26,5 +26,5 @@ in {
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/lib/cfg/conform.nix}}
+{{#include ../../cells/lib/cfg/conform.nix}}
 ```

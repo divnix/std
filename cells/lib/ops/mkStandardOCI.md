@@ -7,7 +7,7 @@ It produces a Standard OCI Image from an ["operable"][operable].
 The function signature is as follows:
 
 ```nix
-{{#include ../../../../cells/lib/ops/mkStandardOCI.nix:9:27}}
+{{#include ../../cells/lib/ops/mkStandardOCI.nix:9:27}}
 ```
 
 #### The Standard Image

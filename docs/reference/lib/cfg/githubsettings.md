@@ -1,1 +1,0 @@
-../../../../cells/lib/cfg/githubsettings.md

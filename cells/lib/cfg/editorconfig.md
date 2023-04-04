@@ -9,5 +9,5 @@ Most editors understand the [`.editorconfig`][editorconfig] file and autoconfigu
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/lib/cfg/editorconfig.nix}}
+{{#include ../../cells/lib/cfg/editorconfig.nix}}
 ```

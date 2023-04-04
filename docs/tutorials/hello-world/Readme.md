@@ -45,18 +45,31 @@ This example consumes the following defaults or builtins:
 ### [Default `cellBlocks`][grow-nix-default-cellblocks]
 
 ```nix
-{{#include ../../../src/grow.nix:64:68}}
+{
+  cellBlocks ? [
+    (blockTypes.functions "library")
+    (blockTypes.runnables "apps")
+    (blockTypes.installables "packages")
+  ],
+  ...
+} @ args:
 ```
 
 ### [Default `systems`][grow-nix-default-systems]
 
 ```nix
-{{#include ../../../src/grow.nix:69:78}}
+{
+  systems ? [
+    "x86_64-linux"
+    "aarch64-linux"
+    "x86_64-darwin"
+    "aarch64-darwin"
+  ],
+  ...
+} @ cfg:
 ```
 
 ---
 
 [std]: https://github.com/divnix/std
 [here]: https://github.com/divnix/std/tree/main/docs/tutorials/hello-world
-[grow-nix-default-cellblocks]: https://github.com/divnix/std/blob/main/src/grow.nix#L63-L67
-[grow-nix-default-systems]: https://github.com/divnix/std/blob/main/src/grow.nix#L68-L77

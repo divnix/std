@@ -9,5 +9,5 @@ A [code-tree formatter][treefmt] to fromat the entire code tree extremly fast (i
 #### Definition:
 
 ```nix
-{{#include ./../../../../cells/lib/cfg/treefmt.nix}}
+{{#include ../../cells/lib/cfg/treefmt.nix}}
 ```
