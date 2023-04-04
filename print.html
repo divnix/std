@@ -713,11 +713,26 @@ to running your first application
 in just a few seconds ✨</p>
 <h2 id="assumptions"><a class="header" href="#assumptions">Assumptions</a></h2>
 <p>This example consumes the following defaults or builtins:</p>
-<h3 id="default-cellblocks"><a class="header" href="#default-cellblocks"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L63-L67">Default <code>cellBlocks</code></a></a></h3>
-<pre><code class="language-nix">{{#include ../../../src/grow.nix:64:68}}
+<h3 id="default-cellblocksgrow-nix-default-cellblocks"><a class="header" href="#default-cellblocksgrow-nix-default-cellblocks">[Default <code>cellBlocks</code>][grow-nix-default-cellblocks]</a></h3>
+<pre><code class="language-nix">{
+  cellBlocks ? [
+    (blockTypes.functions &quot;library&quot;)
+    (blockTypes.runnables &quot;apps&quot;)
+    (blockTypes.installables &quot;packages&quot;)
+  ],
+  ...
+} @ args:
 </code></pre>
-<h3 id="default-systems"><a class="header" href="#default-systems"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L68-L77">Default <code>systems</code></a></a></h3>
-<pre><code class="language-nix">{{#include ../../../src/grow.nix:69:78}}
+<h3 id="default-systemsgrow-nix-default-systems"><a class="header" href="#default-systemsgrow-nix-default-systems">[Default <code>systems</code>][grow-nix-default-systems]</a></h3>
+<pre><code class="language-nix">{
+  systems ? [
+    &quot;x86_64-linux&quot;
+    &quot;aarch64-linux&quot;
+    &quot;x86_64-darwin&quot;
+    &quot;aarch64-darwin&quot;
+  ],
+  ...
+} @ cfg:
 </code></pre>
 <hr />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-moon"><a class="header" href="#hello-moon">Hello Moon</a></h1>
@@ -1564,7 +1579,7 @@ Alongside, we explore ways how teams can structure their collaboration on packag
 <h2 id="the-layers"><a class="header" href="#the-layers">The Layers</a></h2>
 <p>The Standard layers of packaging are designed to bring both participants together around a framework that holds software supply chain security dear and attackers out.</p>
 <p>By providing a shared mental model for flexible, yet structured collaboration, it successfully circumnavigates some of the pitfalls of the underlying technology.</p>
-<pre class="mermaid">flowchart TD
+<pre><code class="language-mermaid">flowchart TD
     packaging([Packaging])
     operable([Operable])
     image([OCI-Image])
@@ -1577,7 +1592,7 @@ Alongside, we explore ways how teams can structure their collaboration on packag
     click operable href &quot;#operable-layer&quot; &quot;Jump to the operable layer section&quot;
     click image href &quot;#oci-image-layer&quot; &quot;Jump to the OCI image layer section&quot;
     click scheduler href &quot;#scheduler-chart-layer&quot; &quot;Jump to the scheduler chart layer section&quot;
-</pre>
+</code></pre>
 <h3 id="packaging-layer"><a class="header" href="#packaging-layer">Packaging Layer</a></h3>
 <p>This layer builds the pristine executable application as written by the developer with the building tools of the developer.</p>
 <p>However, to ensure the software supply chain requirements, these build instructions are run in the context of a very restricted build environment provided by Nix.</p>
@@ -1636,7 +1651,7 @@ But don't worry, we'll also walk you through the diagram.</p>
 </a>
 <h2 id="general-phases"><a class="header" href="#general-phases">General Phases</a></h2>
 <p>There are four phases that further structure the process.</p>
-<pre class="mermaid">flowchart TD
+<pre><code class="language-mermaid">flowchart TD
     linting([Linting])
     building([Building])
     deployment([Deployment])
@@ -1650,7 +1665,7 @@ But don't worry, we'll also walk you through the diagram.</p>
     click building href &quot;#building-phase&quot; &quot;Jump to the building phase section&quot;
     click deployment href &quot;#deployment-phase&quot; &quot;Jump to the deployment phase section&quot;
     click probing href &quot;#probing-attestation-phase&quot; &quot;Jump to the probing &amp; attestation phase section&quot;
-</pre>
+</code></pre>
 <p>To automate these, we make use of the [Standard Registry][glossary-registry] that holds all data needed to build the pipeline.
 Its is data JSON-serializable so that any CI tool or helper library can auto-generate the pipeline from it.</p>
 <h3 id="linting-phase"><a class="header" href="#linting-phase">Linting Phase</a></h3>
@@ -1924,6 +1939,15 @@ in {
       `inputs.std.std.nixago`
     with
       `inputs.std.lib.cfg`
+  '';
+  warnLegacyTag = removeBy &quot;July 2023&quot; ''
+    The legacy upstream nix2container tag interface is deprecated,
+    std.lib.ops.mkStandardOCI now takes a list of tags via `meta`.
+
+    Replace `tag` input of `mkStandardOCI` function
+      mkStandardOCI {tag = &quot;foo&quot;;/* ... */}
+    with
+      mkStandardOCI {meta.tags = [&quot;foo&quot;]; /* ... */}
   '';
 }
 </code></pre>
@@ -2274,7 +2298,7 @@ in
         name = &quot;explore&quot;;
         description = &quot;interactively explore the nixago file&quot;;
         command = ''
-          ${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat &quot;${target.configFile}&quot;
+          ${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat &quot;${target.config}&quot;
         '';
       })
     ];
@@ -2285,6 +2309,7 @@ in
 <h2 id="containers"><a class="header" href="#containers">Containers</a></h2>
 <pre><code class="language-nix">{
   nixpkgs,
+  n2c, # nix2container
   mkCommand,
   sharedActions,
 }: let
@@ -2294,9 +2319,8 @@ in
 
   Available actions:
     - print-image
-    - copy-to-registry
-    - copy-to-podman
-    - copy-to-docker
+    - publish
+    - load
   */
   containers = name: {
     __functor = import ./__functor.nix;
@@ -2307,92 +2331,108 @@ in
       fragment,
       fragmentRelPath,
       target,
-    }: [
+    }: let
+      inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
+      img = builtins.unsafeDiscardStringContext target.imageName;
+      tags = target.meta.tags or [(builtins.unsafeDiscardStringContext target.imageTag)];
+      tags' =
+        builtins.toFile &quot;${target.name}-tags.json&quot; (builtins.unsafeDiscardStringContext (builtins.concatStringsSep &quot;\n&quot; tags));
+      copyFn = let
+        skopeo = &quot;skopeo --insecure-policy&quot;;
+      in ''
+        export PATH=${skopeo-nix2container}/bin:$PATH
+
+        copy() {
+          local uri prev_tag
+          uri=$1
+          shift
+
+          for tag in $(&lt;${tags'}); do
+            if ! [[ -v prev_tag ]]; then
+              ${skopeo} copy nix:${target} &quot;$uri:$tag&quot; &quot;$@&quot;
+            else
+              # speedup: copy from the previous tag to avoid superflous network bandwidth
+              ${skopeo} copy &quot;$uri:$prev_tag&quot; &quot;$uri:$tag&quot; &quot;$@&quot;
+            fi
+
+            prev_tag=&quot;$tag&quot;
+          done
+        }
+      '';
+    in [
       (sharedActions.build currentSystem target)
       (mkCommand currentSystem {
         name = &quot;print-image&quot;;
-        description = &quot;print out the image name &amp; tag&quot;;
+        description = &quot;print out the image name with all tags&quot;;
         command = ''
           echo
-          echo &quot;${target.imageName}:${target.imageTag}&quot;
+          for tag in $(&lt;${tags'}); do
+            echo &quot;${img}:$tag&quot;
+          done
         '';
       })
       (mkCommand currentSystem {
         name = &quot;publish&quot;;
         description = &quot;copy the image to its remote registry&quot;;
-        command = let
-          image = target.imageRefUnsafe or &quot;${target.imageName}:${target.imageTag}&quot;;
-        in ''
-          # docker://${builtins.unsafeDiscardStringContext image}
-          ${target.copyToRegistry}/bin/copy-to-registry
+        command = ''
+          ${copyFn}
+          copy docker://${img}
         '';
-        proviso =
-          l.toFile &quot;container-proviso&quot;
-          # bash
-          ''
-            function proviso() {
-            local -n input=$1
-            local -n output=$2
-
-            local -a images
-            local delim=&quot;$RANDOM&quot;
-
-            function get_images () {
-              command nix show-derivation $@ \
-              | command jq -r '.[].env.text' \
-              | command grep -o 'docker://\S*'
-            }
-
-            drvs=&quot;$(command jq -r '.actionDrv | select(. != &quot;null&quot;)' &lt;&lt;&lt; &quot;''${input[@]}&quot;)&quot;
-
-            mapfile -t images &lt; &lt;(get_images $drvs)
-
-            command cat &lt;&lt; &quot;$delim&quot; &gt; /tmp/check.sh
-            #!/usr/bin/env bash
-            if ! command skopeo inspect --insecure-policy &quot;$1&quot; &amp;&gt;/dev/null; then
-            echo &quot;$1&quot; &gt;&gt; /tmp/no_exist
-            fi
-            $delim
-
-            chmod +x /tmp/check.sh
-
-            rm -f /tmp/no_exist
-
-            echo &quot;''${images[@]}&quot; \
-            | command xargs -n 1 -P 0 /tmp/check.sh
-
-            declare -a filtered
-
-            for i in &quot;''${!images[@]}&quot;; do
-              if command grep &quot;''${images[$i]}&quot; /tmp/no_exist &amp;&gt;/dev/null; then
-                filtered+=(&quot;''${input[$i]}&quot;)
+        meta.images = map (tag: &quot;${img}:${tag}&quot;) tags;
+        proviso = let
+          filter = ./container-publish-filter.jq;
+        in
+          l.toFile &quot;container-proviso&quot; ''
+            function scopeo_inspect() {
+              local image
+              image=&quot;$1&quot;
+              if command skopeo inspect --insecure-policy &quot;docker://$image&quot; &amp;&gt;/dev/null; then
+                echo &quot;$image&quot;
               fi
-            done
-
-            output=$(command jq -cs '. += $p' --argjson p &quot;$output&quot; &lt;&lt;&lt; &quot;''${filtered[@]}&quot;)
             }
+            export -f scopeo_inspect
+
+            command jq --raw-output \
+              --from-file &quot;${filter}&quot; \
+              --arg available &quot;$(
+                parallel -j0 scopeo_inspect ::: &quot;$(
+                   command jq --raw-output 'map(.meta.images[0]|strings)[]' &lt;&lt;&lt; &quot;$1&quot;
+                )&quot;
+              )&quot; &lt;&lt;&lt; &quot;$1&quot;
+
+            unset -f scopeo_inspect
+            unset images
           '';
       })
       (mkCommand currentSystem {
-        name = &quot;copy-to-registry&quot;;
-        description = &quot;copy the image to its remote registry&quot;;
+        name = &quot;load&quot;;
+        description = &quot;load image to the local docker daemon&quot;;
         command = ''
-          ${target.copyToRegistry}/bin/copy-to-registry
+          ${copyFn}
+          if command -v podman &amp;&gt; /dev/null; then
+             echo &quot;Podman detected: copy to local podman&quot;
+             copy containers-storage:${img} &quot;$@&quot;
+          fi
+          if command -v docker &amp;&gt; /dev/null; then
+             echo &quot;Docker detected: copy to local docker&quot;
+             copy docker-daemon:${img} &quot;$@&quot;
+          fi
         '';
+      })
+      (mkCommand currentSystem {
+        name = &quot;copy-to-registry&quot;;
+        description = &quot;deprecated: use 'publish' instead&quot;;
+        command = &quot;echo 'copy-to-registry' is deprecated; use 'publish' action instead &amp;&amp; exit 1&quot;;
       })
       (mkCommand currentSystem {
         name = &quot;copy-to-docker&quot;;
-        description = &quot;copy the image to the local docker registry&quot;;
-        command = ''
-          ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
-        '';
+        description = &quot;deprecated: use 'load' instead&quot;;
+        command = &quot;echo 'copy-to-docker' is deprecated; use 'load' action instead &amp;&amp; exit 1&quot;;
       })
       (mkCommand currentSystem {
         name = &quot;copy-to-podman&quot;;
-        description = &quot;copy the image to the local podman registry&quot;;
-        command = ''
-          ${target.copyToPodman}/bin/copy-to-podman
-        '';
+        description = &quot;deprecated: use 'load' instead&quot;;
+        command = &quot;echo 'copy-to-podman' is deprecated; use 'load' action instead &amp;&amp; exit 1&quot;;
       })
     ];
   };
@@ -2496,25 +2536,57 @@ in
   anything
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><div class="sidetoc"><nav class="pagetoc"></nav></div>
-<h1 id="the-standard-library"><a class="header" href="#the-standard-library">The Standard Library</a></h1>
+<p><em>Autogenerated documentation from <code>./cells/lib/*</code>.</em></p>
+<div class="std-cell">
+<h1 id="cells-lib">
+<a class="header" href="reference/lib.html#cells-lib">Cell: <code>lib</code></a>
+</h1>
+<div class="std-readme-md">
+<h2 id="the-standard-library"><a class="header" href="#the-standard-library">The Standard Library</a></h2>
 <p>This library intends to cover the Software Delivery Life Cycle in the Standard way.</p>
 <p>Each Cell Block covers a specific SDLC topic.</p>
-<hr />
-<h2 id="the-dev-library"><a class="header" href="#the-dev-library">The Dev Library</a></h2>
+</div>
+</div>
+<div class="std-block">
+<h2 id="blocks-dev">
+<a class="header" href="reference/lib.html#blocks-dev">Block: <code>dev</code></a>
+</h2>
+<div class="std-readme-md">
+<h4 id="the-dev-library"><a class="header" href="#the-dev-library">The Dev Library</a></h4>
 <p>This library covers <em>development</em> aspects of the SDLC.</p>
-<h3 id="mkarion"><a class="header" href="#mkarion"><code>mkArion</code></a></h3>
-<p>This is a transparent convenience proxy for <a href="https://github.com/hercules-ci/arion"><code>hercules-ci/arion</code>'s</a> <code>lib.build</code> function.</p>
-<p>However, the arion's <code>nixos</code> config option was removed.</p>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-mkArion">
+<a class="header" href="reference/lib.html#targets-mkArion">Target: <code>mkArion</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="mkarion"><a class="header" href="#mkarion"><code>mkArion</code></a></h6>
+<p>This is a transparent convenience proxy for <a href="https://github.com/hercules-ci/arion"><code>hercules-ci/arion</code>’s</a> <code>lib.build</code> function.</p>
+<p>However, the arion’s <code>nixos</code> config option was removed.</p>
 <p>As Standard claims to be the integration layer it will not delegate integration via a foreign
 interface to commissioned tools, such as arion.</p>
 <p>This is a bridge towards and from docker-compose users. Making nixos part of the interface would
 likely alienate that bridge for those users.</p>
-<p>If you need a nixos-based container image, please check out the arion source code on how it's done.</p>
-<h3 id="mkmakes"><a class="header" href="#mkmakes"><code>mkMakes</code></a></h3>
-<p>... provides an interface to <code>makes</code> tasks</p>
+<p>If you need a nixos-based container image, please check out the arion source code on how it’s done.</p>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-mkMakes">
+<a class="header" href="reference/lib.html#targets-mkMakes">Target: <code>mkMakes</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="mkmakes"><a class="header" href="#mkmakes"><code>mkMakes</code></a></h6>
+<p>… provides an interface to <code>makes</code> tasks</p>
 <p>This is an integration for <a href="https://github.com/fluidattacks/makes"><code>fluidattacks/makes</code></a>.</p>
 <p>A version that has this <a href="https://github.com/fluidattacks/makes/commit/cd8c4eda69e2ce8dc6f811973ba0d80070b4628a">patch</a> is a prerequisite.</p>
-<h4 id="usage-example"><a class="header" href="#usage-example">Usage example</a></h4>
+<h6 id="usage-example"><a class="header" href="#usage-example">Usage example</a></h6>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -2526,10 +2598,20 @@ in {
 </code></pre>
 <p><em>Some refactoring of the tasks may be necessary. Let the error messages be your friend.</em></p>
 <hr />
-<h3 id="mknixago"><a class="header" href="#mknixago"><code>mkNixago</code></a></h3>
-<p>This is a transparent convenience proxy for <a href="https://github.com/nix-community/nixago"><code>nix-community/nixago</code>'s</a> <code>lib.${system}.make</code> function.</p>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-mkNixago">
+<a class="header" href="reference/lib.html#targets-mkNixago">Target: <code>mkNixago</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="mknixago"><a class="header" href="#mknixago"><code>mkNixago</code></a></h6>
+<p>This is a transparent convenience proxy for <a href="https://github.com/nix-community/nixago"><code>nix-community/nixago</code>’s</a> <code>lib.${system}.make</code> function.</p>
 <p>It is enriched with a forward contract towards <code>std</code> enriched <code>mkShell</code> implementation.</p>
-<p>In order to define <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code>'s</a> <code>commands</code> &amp; <code>packages</code> alongside the Nixago pebble,
+<p>In order to define <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code>’s</a> <code>commands</code> &amp; <code>packages</code> alongside the Nixago pebble,
 just add the following attrset to the Nixago spec. It will be picked up automatically by <code>mkShell</code> when that pebble
 is used inside its <code>config.nixago</code>-option.</p>
 <pre><code class="language-nix">{ inputs, cell }: {
@@ -2541,31 +2623,81 @@ is used inside its <code>config.nixago</code>-option.</p>
   };
 }
 </code></pre>
-<p>{{#include ./lib/dev/mkShell.md}</p>
-<hr />
-<h2 id="the-ops-library"><a class="header" href="#the-ops-library">The Ops Library</a></h2>
-<p>This library covers <em>operational</em> aspects of the SDLC.</p>
-<h3 id="mkoperable"><a class="header" href="#mkoperable"><code>mkOperable</code></a></h3>
-<p>... is a function interface into the <a href="reference//patterns/four-packaging-layers.html#operable-layer">second layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
-<p>It's purpose is to provide an easy way to enrich a &quot;package&quot; into an &quot;operable&quot;.</p>
-<p>The function signature is as follows:</p>
-<pre><code class="language-nix">  /*
-  Makes a package operable by configuring the necessary runtime environment.
-
-  Args:
-  package: The package to wrap.
-  runtimeScript: A bash script to run at runtime.
-  runtimeEnv: An attribute set of environment variables to set at runtime.
-  runtimeInputs: A list of packages to add to the runtime environment.
-  livenessProbe: An optional derivation to run to check if the program is alive.
-  readinessProbe: An optional derivation to run to check if the program is ready.
-
-  Returns:
-  An operable for the given package.
-  */
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-mkShell">
+<a class="header" href="reference/lib.html#targets-mkShell">Target: <code>mkShell</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="mkshell"><a class="header" href="#mkshell"><code>mkShell</code></a></h6>
+<p>This is a transparent convenience proxy for <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code>’s</a> <code>mkShell</code> function.</p>
+<p>It is enriched with a tight integration for <code>std</code> <a href="https://github.com/nix-community/nixago">Nixago</a> pebbles:</p>
+<pre><code class="language-nix">{ inputs, cell}: {
+  default = inputs.std.lib.dev.mkShell {
+    /* ... */
+    nixago = [
+      (cell.nixago.foo {
+        data.qux = &quot;xyz&quot;;
+        packages = [ pkgs.additional-package ];
+      })
+      cell.nixago.bar
+      cell.nixago.quz
+    ];
+  };
+}
 </code></pre>
-<h3 id="mkoci"><a class="header" href="#mkoci"><code>mkOCI</code></a></h3>
-<p>... is a function to generate an OCI Image via <a href="https://github.com/nlewo/nix2container"><code>nix2container</code></a>.</p>
+<p><em>Note, that you can extend any Nixago Pebble at the calling site
+via a built-in functor like in the example above.</em></p>
+</div>
+</div>
+<div class="std-block">
+<h2 id="blocks-ops">
+<a class="header" href="reference/lib.html#blocks-ops">Block: <code>ops</code></a>
+</h2>
+<div class="std-readme-md">
+<h4 id="the-ops-library"><a class="header" href="#the-ops-library">The Ops Library</a></h4>
+<p>This library covers <em>operational</em> aspects of the SDLC.</p>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-mkMicrovm">
+<a class="header" href="reference/lib.html#targets-mkMicrovm">Target: <code>mkMicrovm</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="mkmicrovm"><a class="header" href="#mkmicrovm"><code>mkMicrovm</code></a></h6>
+<p>… provides an interface to <code>microvm</code> tasks</p>
+<p>This is an integration for <a href="https://github.com/astro/microvm.nix"><code>astro/microvm.nix</code></a>.</p>
+<h6 id="usage-example-1"><a class="header" href="#usage-example-1">Usage example</a></h6>
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  inherit (inputs.std.lib) ops;
+in {
+  # microvm &lt;module&gt;
+  myhost = ops.mkMicrovm ({ pkgs, lib, ... }: { networking.hostName = &quot;microvms-host&quot;;});
+}
+</code></pre>
+<hr />
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-mkOCI">
+<a class="header" href="reference/lib.html#targets-mkOCI">Target: <code>mkOCI</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="mkoci"><a class="header" href="#mkoci"><code>mkOCI</code></a></h6>
+<p>… is a function to generate an OCI Image via <a href="https://github.com/nlewo/nix2container"><code>nix2container</code></a>.</p>
 <p>The function signature is as follows:</p>
 <pre><code class="language-nix">  /*
   Creates an OCI container image
@@ -2586,9 +2718,49 @@ is used inside its <code>config.nixago</code>-option.</p>
   Returns:
   An OCI container image (created with nix2container).
 </code></pre>
-<h3 id="mkstandardoci"><a class="header" href="#mkstandardoci"><code>mkStandardOCI</code></a></h3>
-<p>... is a function interface into the <a href="reference//patterns/four-packaging-layers.html#oci-image-layer">third layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
-<p>It produces a Standard OCI Image from an <a href="reference/./mkOperable.html">&quot;operable&quot;</a>.</p>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-mkOperable">
+<a class="header" href="reference/lib.html#targets-mkOperable">Target: <code>mkOperable</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="mkoperable"><a class="header" href="#mkoperable"><code>mkOperable</code></a></h6>
+<p>… is a function interface into the <a href="reference//patterns/four-packaging-layers.html#operable-layer">second layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
+<p>It’s purpose is to provide an easy way to enrich a “package” into an “operable”.</p>
+<p>The function signature is as follows:</p>
+<pre><code class="language-nix">  /*
+  Makes a package operable by configuring the necessary runtime environment.
+
+  Args:
+  package: The package to wrap.
+  runtimeScript: A bash script to run at runtime.
+  runtimeEnv: An attribute set of environment variables to set at runtime.
+  runtimeInputs: A list of packages to add to the runtime environment.
+  runtimeShell: The runtime shell. Defaults to bash.
+  debugInputs: A list of packages available in the debug shell.
+  livenessProbe: An optional derivation to run to check if the program is alive.
+  readinessProbe: An optional derivation to run to check if the program is ready.
+
+  Returns:
+  An operable for the given package.
+</code></pre>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-mkStandardOCI">
+<a class="header" href="reference/lib.html#targets-mkStandardOCI">Target: <code>mkStandardOCI</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="mkstandardoci"><a class="header" href="#mkstandardoci"><code>mkStandardOCI</code></a></h6>
+<p>… is a function interface into the <a href="reference//patterns/four-packaging-layers.html#oci-image-layer">third layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
+<p>It produces a Standard OCI Image from an <a href="reference/./mkOperable.html">“operable”</a>.</p>
 <p>The function signature is as follows:</p>
 <pre><code class="language-nix">  /*
   Creates an OCI container image using the given operable.
@@ -2610,21 +2782,21 @@ is used inside its <code>config.nixago</code>-option.</p>
   Returns:
   An OCI container image (created with nix2container).
 </code></pre>
-<h4 id="the-standard-image"><a class="header" href="#the-standard-image">The Standard Image</a></h4>
+<h6 id="the-standard-image"><a class="header" href="#the-standard-image">The Standard Image</a></h6>
 <p>Standard images are minimal and hardened. They only contain required dependencies.</p>
-<h5 id="contracts"><a class="header" href="#contracts">Contracts</a></h5>
+<h6 id="contracts"><a class="header" href="#contracts">Contracts</a></h6>
 <p>The following contracts can be consumed:</p>
 <pre><code>/bin/entrypoint # always present
 /bin/runtime    # always present, drops into the runtime environment
 /bin/live       # if livenessProbe was set
 /bin/ready      # if readinessProbe was set
 </code></pre>
-<p>That's it. There is nothing more to see.</p>
+<p>That’s it. There is nothing more to see.</p>
 <p>All other dependencies are contained in <code>/nix/store/...</code>.</p>
-<h4 id="the-debug-image"><a class="header" href="#the-debug-image">The Debug Image</a></h4>
+<h6 id="the-debug-image"><a class="header" href="#the-debug-image">The Debug Image</a></h6>
 <p>Debug Images wrap the standard images and provide additional debugging packages.</p>
-<p>Hence, they are neither minimal, nor hardened because of the debugging packages' added surface.</p>
-<h5 id="contracts-1"><a class="header" href="#contracts-1">Contracts</a></h5>
+<p>Hence, they are neither minimal, nor hardened because of the debugging packages’ added surface.</p>
+<h6 id="contracts-1"><a class="header" href="#contracts-1">Contracts</a></h6>
 <p>The following contracts can be consumed:</p>
 <pre><code>/bin/entrypoint # always present
 /bin/runtime    # always present, drops into the runtime environment
@@ -2632,10 +2804,10 @@ is used inside its <code>config.nixago</code>-option.</p>
 /bin/live       # if livenessProbe was set
 /bin/ready      # if readinessProbe was set
 </code></pre>
-<h4 id="how-to-extend"><a class="header" href="#how-to-extend">How to extend?</a></h4>
-<p>A Standard or Debug Image doesn't have a package manager available in the environment.</p>
+<h6 id="how-to-extend"><a class="header" href="#how-to-extend">How to extend?</a></h6>
+<p>A Standard or Debug Image doesn’t have a package manager available in the environment.</p>
 <p>Hence, to extend the image you have two options:</p>
-<h5 id="nix-based-extension"><a class="header" href="#nix-based-extension">Nix-based extension</a></h5>
+<h6 id="nix-based-extension"><a class="header" href="#nix-based-extension">Nix-based extension</a></h6>
 <pre><code class="language-nix">rec {
   upstream = n2c.pullImage {
     imageName = &quot;docker.io/my-upstream-image&quot;;
@@ -2649,7 +2821,7 @@ is used inside its <code>config.nixago</code>-option.</p>
   };
 }
 </code></pre>
-<h5 id="dockerfile-based-extension"><a class="header" href="#dockerfile-based-extension">Dockerfile-based extension</a></h5>
+<h6 id="dockerfile-based-extension"><a class="header" href="#dockerfile-based-extension">Dockerfile-based extension</a></h6>
 <pre><code class="language-Dockerfile">FROM alpine AS builder
 RUN apk --no-cache curl
 
@@ -2658,35 +2830,36 @@ COPY --from=builder /... /
 
 </code></pre>
 <p><em>Please refer to the official dockerfile documentation for more details.</em></p>
-<h3 id="mkmicrovm"><a class="header" href="#mkmicrovm"><code>mkMicrovm</code></a></h3>
-<p>... provides an interface to <code>microvm</code> tasks</p>
-<p>This is an integration for <a href="https://github.com/astro/microvm.nix"><code>astro/microvm.nix</code></a>.</p>
-<h4 id="usage-example-1"><a class="header" href="#usage-example-1">Usage example</a></h4>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
-  inherit (inputs.std.lib) ops;
-in {
-  # microvm &lt;module&gt;
-  myhost = ops.mkMicrovm ({ pkgs, lib, ... }: { networking.hostName = &quot;microvms-host&quot;;});
-}
-</code></pre>
-<hr />
-<hr />
-<h2 id="the-cfg-library"><a class="header" href="#the-cfg-library">The Cfg Library</a></h2>
+</div>
+</div>
+<div class="std-block">
+<h2 id="blocks-cfg">
+<a class="header" href="reference/lib.html#blocks-cfg">Block: <code>cfg</code></a>
+</h2>
+<div class="std-readme-md">
+<h4 id="the-cfg-library"><a class="header" href="#the-cfg-library">The Cfg Library</a></h4>
 <p>Standard comes packages with some <a href="https://github.com/nix-community/nixago">Nixago</a> Pebbles for easy
 downstream re-use.</p>
 <p>Some Pebbles may have a special integration for <code>std</code>.</p>
 <p>For example, the <code>conform</code> Pebble can undestand <code>inputs.cells</code>
-and add each Cell as a so called &quot;scope&quot; to its
+and add each Cell as a so called “scope” to its
 <a href="https://www.conventionalcommits.org/">Conventional Commit</a> configuration.</p>
 <hr />
-<p>If you're rather looking for Nixago Presets (i.e. pebbles that already have an opinionated default), please refer to the <a href="reference/../../../reference/presets/nixago"><em>nixago presets</em></a>, instead.</p>
-<h3 id="adrgen"><a class="header" href="#adrgen"><code>adrgen</code></a></h3>
+<p>If you’re rather looking for Nixago Presets (i.e. pebbles that already have an opinionated default), please refer to the <a href="reference/../../../reference/presets/nixago"><em>nixago presets</em></a>, instead.</p>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-adrgen">
+<a class="header" href="reference/lib.html#targets-adrgen">Target: <code>adrgen</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="adrgen"><a class="header" href="#adrgen"><code>adrgen</code></a></h6>
 <p><a href="https://github.com/asiermarques/adrgen"><code>adrgen</code></a> is a great tool to manage Architecture Decision Records.</p>
 <hr />
-<h4 id="definition"><a class="header" href="#definition">Definition:</a></h4>
+<h6 id="definition"><a class="header" href="#definition">Definition:</a></h6>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -2699,8 +2872,18 @@ in {
   commands = [{package = inputs.cells.std.packages.adrgen;}];
 }
 </code></pre>
-<h3 id="conform"><a class="header" href="#conform"><code>conform</code></a></h3>
-<p><a href="reference/conform.html">Conform</a> your code to policies, e.g. in a pre-commit hook.</p>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-conform">
+<a class="header" href="reference/lib.html#targets-conform">Target: <code>conform</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="conform"><a class="header" href="#conform"><code>conform</code></a></h6>
+<p><a href="https://github.com/siderolabs/conform">Conform</a> your code to policies, e.g. in a pre-commit hook.</p>
 <p>This version is wrapped, it can auto-enhance the conventional
 commit scopes with your <code>cells</code> as follows:</p>
 <pre><code class="language-nix">{ inputs, cell}: let
@@ -2716,7 +2899,7 @@ in {
 }
 </code></pre>
 <hr />
-<h4 id="definition-1"><a class="header" href="#definition-1">Definition:</a></h4>
+<h6 id="definition-1"><a class="header" href="#definition-1">Definition:</a></h6>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -2752,10 +2935,20 @@ in {
   };
 }
 </code></pre>
-<h3 id="editorconfig"><a class="header" href="#editorconfig"><code>editorconfig</code></a></h3>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-editorconfig">
+<a class="header" href="reference/lib.html#targets-editorconfig">Target: <code>editorconfig</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="editorconfig"><a class="header" href="#editorconfig"><code>editorconfig</code></a></h6>
 <p>Most editors understand the <a href="https://github.com/editorconfig/"><code>.editorconfig</code></a> file and autoconfigure themselves accordingly.</p>
 <hr />
-<h4 id="definition-2"><a class="header" href="#definition-2">Definition:</a></h4>
+<h6 id="definition-2"><a class="header" href="#definition-2">Definition:</a></h6>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -2777,12 +2970,22 @@ in {
   packages = [nixpkgs.editorconfig-checker];
 }
 </code></pre>
-<h3 id="githubsettings"><a class="header" href="#githubsettings"><code>githubsettings</code></a></h3>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-githubsettings">
+<a class="header" href="reference/lib.html#targets-githubsettings">Target: <code>githubsettings</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="githubsettings"><a class="header" href="#githubsettings"><code>githubsettings</code></a></h6>
 <p>Syncs repository settings defined in <code>.github/settings.yml</code> to GitHub, enabling Pull Requests for repository settings.</p>
 <p>In order to use this, you also need to install <a href="https://github.com/apps/settings">Github Settings App</a>.
-Please see the App's Homepage for the configuration schema.</p>
+Please see the App’s Homepage for the configuration schema.</p>
 <hr />
-<h4 id="definition-3"><a class="header" href="#definition-3">Definition:</a></h4>
+<h6 id="definition-3"><a class="header" href="#definition-3">Definition:</a></h6>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -2793,7 +2996,17 @@ Please see the App's Homepage for the configuration schema.</p>
   hook.mode = &quot;copy&quot;; # let the Github Settings action pick it up outside of devshell
 }
 </code></pre>
-<h3 id="just"><a class="header" href="#just"><code>just</code></a></h3>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-just">
+<a class="header" href="reference/lib.html#targets-just">Target: <code>just</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="just"><a class="header" href="#just"><code>just</code></a></h6>
 <p><a href="https://github.com/casey/just">Just</a> is a general purpose command runner with syntax inspired by <code>make</code>.</p>
 <p>Tasks are configured via an attribute set where the name is the name of the task
 (i.e. <code>just &lt;task&gt;</code>) and the value is the task definition (see below for an
@@ -2828,7 +3041,7 @@ in
   };
 }
 </code></pre>
-<p>It's also possible to override the interpreter for a task:</p>
+<p>It’s also possible to override the interpreter for a task:</p>
 <pre><code class="language-nix">{
 # ...
   hello = {
@@ -2842,7 +3055,7 @@ in
 # ...
 </code></pre>
 <hr />
-<h4 id="definition-4"><a class="header" href="#definition-4">Definition:</a></h4>
+<h6 id="definition-4"><a class="header" href="#definition-4">Definition:</a></h6>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -2885,10 +3098,20 @@ in {
   };
 }
 </code></pre>
-<h3 id="lefthook"><a class="header" href="#lefthook"><code>lefthook</code></a></h3>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-lefthook">
+<a class="header" href="reference/lib.html#targets-lefthook">Target: <code>lefthook</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="lefthook"><a class="header" href="#lefthook"><code>lefthook</code></a></h6>
 <p><a href="https://github.com/evilmartians/lefthook">Lefthook</a> is a fast (parallel execution) and elegant git hook manager.</p>
 <hr />
-<h4 id="definition-5"><a class="header" href="#definition-5">Definition:</a></h4>
+<h6 id="definition-5"><a class="header" href="#definition-5">Definition:</a></h6>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -2919,12 +3142,22 @@ in {
   '';
 }
 </code></pre>
-<h3 id="mdbook"><a class="header" href="#mdbook"><code>mdbook</code></a></h3>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-mdbook">
+<a class="header" href="reference/lib.html#targets-mdbook">Target: <code>mdbook</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="mdbook"><a class="header" href="#mdbook"><code>mdbook</code></a></h6>
 <p>Write clean docs for humans with <a href="https://github.com/rust-lang/mdBook"><code>mdbook</code></a>.</p>
 <p>This version comes preset with this gem to make any
 Solution Architect extra happy: <a href="https://github.com/joelcourtney/mdbook-kroki-preprocessor"><code>mdbook-kroki-preprocessor</code></a></p>
 <hr />
-<h4 id="definition-6"><a class="header" href="#definition-6">Definition:</a></h4>
+<h6 id="definition-6"><a class="header" href="#definition-6">Definition:</a></h6>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -2958,10 +3191,20 @@ in {
   commands = [{package = nixpkgs.mdbook;}];
 }
 </code></pre>
-<h3 id="treefmt"><a class="header" href="#treefmt"><code>treefmt</code></a></h3>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-treefmt">
+<a class="header" href="reference/lib.html#targets-treefmt">Target: <code>treefmt</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="treefmt"><a class="header" href="#treefmt"><code>treefmt</code></a></h6>
 <p>A <a href="https://github.com/numtide/treefmt">code-tree formatter</a> to fromat the entire code tree extremly fast (in parallel and with a smart cache).</p>
 <hr />
-<h4 id="definition-7"><a class="header" href="#definition-7">Definition:</a></h4>
+<h6 id="definition-7"><a class="header" href="#definition-7">Definition:</a></h6>
 <pre><code class="language-nix">{
   inputs,
   cell,
@@ -2974,30 +3217,118 @@ in {
   commands = [{package = nixpkgs.treefmt;}];
 }
 </code></pre>
+</div>
+</div>
 <div style="break-before: page; page-break-before: always;"></div><div class="sidetoc"><nav class="pagetoc"></nav></div>
-<h1 id="the-std-cell"><a class="header" href="#the-std-cell">The <code>std</code> Cell</a></h1>
-<p>... is the only cell in <code>divnix/std</code> and provides only very limited functionality.</p>
+<p><em>Autogenerated documentation from <code>./cells/std/*</code>.</em></p>
+<div class="std-cell">
+<h1 id="cells-std">
+<a class="header" href="reference/std.html#cells-std">Cell: <code>std</code></a>
+</h1>
+<div class="std-readme-md">
+<h2 id="the-std-cell"><a class="header" href="#the-std-cell">The <code>std</code> Cell</a></h2>
+<p>… is the only cell in <code>divnix/std</code> and provides only very limited functionality.</p>
 <ul>
 <li>It contains the TUI, in <code>./cli</code>.</li>
 <li>It contains a <code>devshellProfile</code> in <code>./devshellProfiles</code>.</li>
 <li>It contains a growing number of second level library functions in <code>./lib</code>.</li>
 <li>Packages that are used in std devshells are proxied in <code>./packages</code>.</li>
 </ul>
-<p>That's it.</p>
+<p>That’s it.</p>
+</div>
+</div>
+<div class="std-blockstd-no-readme">
+<h2 id="blocks-cli">
+<a class="header" href="reference/std.html#blocks-cli">Block: <code>cli</code></a>
+</h2>
+<div class="std-readme-md">
+<small><i>No documentation</i></small>
+</div>
+</div>
+<div class="std-block">
+<h2 id="blocks-devshellProfiles">
+<a class="header" href="reference/std.html#blocks-devshellProfiles">Block: <code>devshellProfiles</code></a>
+</h2>
+<div class="std-readme-md">
+<h3 id="stds-devshellprofiles"><a class="header" href="#stds-devshellprofiles"><code>std</code>’s <code>devshellProfiles</code></a></h3>
+<p>This Cell Block only exports a single <code>default</code> devshellProfile.</p>
+<p>Any <code>std</code>ized repository should include this into its <a href="https://github.com/numtide/devshell"><code>numtide/devshell</code></a>
+in order to provide any visitor with the fully pre-configured <code>std</code> TUI.</p>
+<p>It also wires &amp; instantiates a decent ADR tool. Or were you planning to hack away
+without some minimal conscious effort of decision making and recording? 😅</p>
+<h3 id="usage-example-2"><a class="header" href="#usage-example-2">Usage Example</a></h3>
+<pre><code class="language-nix"># ./nix/_automation/devshells.nix
+{
+  inputs,
+  cell,
+}: let
+  l = nixpkgs.lib // builtins;
+  inherit (inputs) nixpkgs;
+  inherit (inputs.std) std;
+in
+  l.mapAttrs (_: std.lib.mkShell) {
+    # `default` is a special target in newer nix versions
+    # see: harvesting below
+    default = {
+      name = &quot;My Devshell&quot;;
+      # make `std` available in the numtide/devshell
+      imports = [ std.devshellProfiles.default ];
+    };
+  }
+</code></pre>
+<pre><code class="language-nix"># ./flake.nix
+{
+  inputs.std.url = &quot;github:divnix/std&quot;;
+
+  outputs = inputs:
+    inputs.std.growOn {
+      inherit inputs;
+      cellsFrom = ./nix;
+      cellBlocks = [
+        /* ... */
+        (inputs.std.blockTypes.devshells &quot;devshells&quot;)
+      ];
+    }
+    # soil for compatiblity ...
+    {
+      # ... with `nix develop` - `default` is a special target for `nix develop`
+      devShells = inputs.std.harvest inputs.self [&quot;automation&quot; &quot;devshells&quot;];
+    };
+}
+</code></pre>
 <hr />
-<h2 id="the-std-tui--cli"><a class="header" href="#the-std-tui--cli">The <code>std</code> TUI / CLI</a></h2>
-<h4 id="usage-1"><a class="header" href="#usage-1">Usage</a></h4>
-<ul>
-<li>Enter a <code>std</code>ized repository.</li>
-<li>Enter it's devshell (which must include <code>//std/devshellProfiles:default</code>)</li>
-<li>Run <code>std</code>.</li>
-</ul>
-<p>It will show you around interactively and lead you very quickly to what you're looking for.</p>
-<p>It's self-documented on it's legend.</p>
-<hr />
-<h2 id="error-message-functions"><a class="header" href="#error-message-functions">Error Message Functions</a></h2>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-default">
+<a class="header" href="reference/std.html#targets-default">Target: <code>default</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<p>This Cell Block has only a single target, called <code>default</code>.</p>
+<p>Please consult the Cell Block’s Readme for more information.</p>
+</div>
+</div>
+<div class="std-block">
+<h2 id="blocks-errors">
+<a class="header" href="reference/std.html#blocks-errors">Block: <code>errors</code></a>
+</h2>
+<div class="std-readme-md">
+<h4 id="error-message-functions"><a class="header" href="#error-message-functions">Error Message Functions</a></h4>
 <p>This Cell Block comprises several error message functions that can be used in different situations.</p>
-<h3 id="removeby"><a class="header" href="#removeby"><code>removeBy</code></a></h3>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-removeBy">
+<a class="header" href="reference/std.html#targets-removeBy">Target: <code>removeBy</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="removeby"><a class="header" href="#removeby"><code>removeBy</code></a></h6>
 <pre><code class="language-nix">{inputs}: time: body: let
   l = inputs.nixpkgs.lib // builtins;
   ansi = import ./ansi.nix;
@@ -3032,7 +3363,17 @@ in
     ─────┴─────────────────────────────────────────────────────────────────────────
   ''
 </code></pre>
-<h3 id="requireinput"><a class="header" href="#requireinput"><code>requireInput</code></a></h3>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-requireInput">
+<a class="header" href="reference/std.html#targets-requireInput">Target: <code>requireInput</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="requireinput"><a class="header" href="#requireinput"><code>requireInput</code></a></h6>
 <pre><code class="language-nix">{inputs}: input: url: target: let
   l = inputs.nixpkgs.lib // builtins;
 
@@ -3103,6 +3444,24 @@ in
     ─────┴─────────────────────────────────────────────────────────────────────────
   ''); inputs
 </code></pre>
+</div>
+</div>
+<div class="std-blockstd-no-readme">
+<h2 id="blocks-nixago">
+<a class="header" href="reference/std.html#blocks-nixago">Block: <code>nixago</code></a>
+</h2>
+<div class="std-readme-md">
+<small><i>No documentation</i></small>
+</div>
+</div>
+<div class="std-blockstd-no-readme">
+<h2 id="blocks-packages">
+<a class="header" href="reference/std.html#blocks-packages">Block: <code>packages</code></a>
+</h2>
+<div class="std-readme-md">
+<small><i>No documentation</i></small>
+</div>
+</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="glossary"><a class="header" href="#glossary">Glossary</a></h1>
 <p><strong>Cell</strong></p>
 <p>: A Cell is the folder name of the first level under <code>${cellsFrom}</code>. They represent a coherent semantic collection of functionality.</p>
@@ -3151,8 +3510,6 @@ in
         <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="theme/mermaid.min.js"></script>
-        <script src="theme/mermaid-init.js"></script>
         <script src="theme/pagetoc.js"></script>
 
         <script>

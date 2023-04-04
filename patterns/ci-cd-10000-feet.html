@@ -161,7 +161,7 @@ But don't worry, we'll also walk you through the diagram.</p>
 </a>
 <h2 id="general-phases"><a class="header" href="#general-phases">General Phases</a></h2>
 <p>There are four phases that further structure the process.</p>
-<pre class="mermaid">flowchart TD
+<pre><code class="language-mermaid">flowchart TD
     linting([Linting])
     building([Building])
     deployment([Deployment])
@@ -175,7 +175,7 @@ But don't worry, we'll also walk you through the diagram.</p>
     click building href &quot;#building-phase&quot; &quot;Jump to the building phase section&quot;
     click deployment href &quot;#deployment-phase&quot; &quot;Jump to the deployment phase section&quot;
     click probing href &quot;#probing-attestation-phase&quot; &quot;Jump to the probing &amp; attestation phase section&quot;
-</pre>
+</code></pre>
 <p>To automate these, we make use of the [Standard Registry][glossary-registry] that holds all data needed to build the pipeline.
 Its is data JSON-serializable so that any CI tool or helper library can auto-generate the pipeline from it.</p>
 <h3 id="linting-phase"><a class="header" href="#linting-phase">Linting Phase</a></h3>
@@ -271,8 +271,6 @@ But we'll follow up with a dedicated pattern piece shortly.</p>
         <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../theme/mermaid.min.js"></script>
-        <script src="../theme/mermaid-init.js"></script>
         <script src="../theme/pagetoc.js"></script>
 
 

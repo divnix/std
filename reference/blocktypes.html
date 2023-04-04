@@ -488,7 +488,7 @@ in
         name = &quot;explore&quot;;
         description = &quot;interactively explore the nixago file&quot;;
         command = ''
-          ${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat &quot;${target.configFile}&quot;
+          ${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat &quot;${target.config}&quot;
         '';
       })
     ];
@@ -499,6 +499,7 @@ in
 <h2 id="containers"><a class="header" href="#containers">Containers</a></h2>
 <pre><code class="language-nix">{
   nixpkgs,
+  n2c, # nix2container
   mkCommand,
   sharedActions,
 }: let
@@ -508,9 +509,8 @@ in
 
   Available actions:
     - print-image
-    - copy-to-registry
-    - copy-to-podman
-    - copy-to-docker
+    - publish
+    - load
   */
   containers = name: {
     __functor = import ./__functor.nix;
@@ -521,92 +521,108 @@ in
       fragment,
       fragmentRelPath,
       target,
-    }: [
+    }: let
+      inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
+      img = builtins.unsafeDiscardStringContext target.imageName;
+      tags = target.meta.tags or [(builtins.unsafeDiscardStringContext target.imageTag)];
+      tags' =
+        builtins.toFile &quot;${target.name}-tags.json&quot; (builtins.unsafeDiscardStringContext (builtins.concatStringsSep &quot;\n&quot; tags));
+      copyFn = let
+        skopeo = &quot;skopeo --insecure-policy&quot;;
+      in ''
+        export PATH=${skopeo-nix2container}/bin:$PATH
+
+        copy() {
+          local uri prev_tag
+          uri=$1
+          shift
+
+          for tag in $(&lt;${tags'}); do
+            if ! [[ -v prev_tag ]]; then
+              ${skopeo} copy nix:${target} &quot;$uri:$tag&quot; &quot;$@&quot;
+            else
+              # speedup: copy from the previous tag to avoid superflous network bandwidth
+              ${skopeo} copy &quot;$uri:$prev_tag&quot; &quot;$uri:$tag&quot; &quot;$@&quot;
+            fi
+
+            prev_tag=&quot;$tag&quot;
+          done
+        }
+      '';
+    in [
       (sharedActions.build currentSystem target)
       (mkCommand currentSystem {
         name = &quot;print-image&quot;;
-        description = &quot;print out the image name &amp; tag&quot;;
+        description = &quot;print out the image name with all tags&quot;;
         command = ''
           echo
-          echo &quot;${target.imageName}:${target.imageTag}&quot;
+          for tag in $(&lt;${tags'}); do
+            echo &quot;${img}:$tag&quot;
+          done
         '';
       })
       (mkCommand currentSystem {
         name = &quot;publish&quot;;
         description = &quot;copy the image to its remote registry&quot;;
-        command = let
-          image = target.imageRefUnsafe or &quot;${target.imageName}:${target.imageTag}&quot;;
-        in ''
-          # docker://${builtins.unsafeDiscardStringContext image}
-          ${target.copyToRegistry}/bin/copy-to-registry
+        command = ''
+          ${copyFn}
+          copy docker://${img}
         '';
-        proviso =
-          l.toFile &quot;container-proviso&quot;
-          # bash
-          ''
-            function proviso() {
-            local -n input=$1
-            local -n output=$2
-
-            local -a images
-            local delim=&quot;$RANDOM&quot;
-
-            function get_images () {
-              command nix show-derivation $@ \
-              | command jq -r '.[].env.text' \
-              | command grep -o 'docker://\S*'
-            }
-
-            drvs=&quot;$(command jq -r '.actionDrv | select(. != &quot;null&quot;)' &lt;&lt;&lt; &quot;''${input[@]}&quot;)&quot;
-
-            mapfile -t images &lt; &lt;(get_images $drvs)
-
-            command cat &lt;&lt; &quot;$delim&quot; &gt; /tmp/check.sh
-            #!/usr/bin/env bash
-            if ! command skopeo inspect --insecure-policy &quot;$1&quot; &amp;&gt;/dev/null; then
-            echo &quot;$1&quot; &gt;&gt; /tmp/no_exist
-            fi
-            $delim
-
-            chmod +x /tmp/check.sh
-
-            rm -f /tmp/no_exist
-
-            echo &quot;''${images[@]}&quot; \
-            | command xargs -n 1 -P 0 /tmp/check.sh
-
-            declare -a filtered
-
-            for i in &quot;''${!images[@]}&quot;; do
-              if command grep &quot;''${images[$i]}&quot; /tmp/no_exist &amp;&gt;/dev/null; then
-                filtered+=(&quot;''${input[$i]}&quot;)
+        meta.images = map (tag: &quot;${img}:${tag}&quot;) tags;
+        proviso = let
+          filter = ./container-publish-filter.jq;
+        in
+          l.toFile &quot;container-proviso&quot; ''
+            function scopeo_inspect() {
+              local image
+              image=&quot;$1&quot;
+              if command skopeo inspect --insecure-policy &quot;docker://$image&quot; &amp;&gt;/dev/null; then
+                echo &quot;$image&quot;
               fi
-            done
-
-            output=$(command jq -cs '. += $p' --argjson p &quot;$output&quot; &lt;&lt;&lt; &quot;''${filtered[@]}&quot;)
             }
+            export -f scopeo_inspect
+
+            command jq --raw-output \
+              --from-file &quot;${filter}&quot; \
+              --arg available &quot;$(
+                parallel -j0 scopeo_inspect ::: &quot;$(
+                   command jq --raw-output 'map(.meta.images[0]|strings)[]' &lt;&lt;&lt; &quot;$1&quot;
+                )&quot;
+              )&quot; &lt;&lt;&lt; &quot;$1&quot;
+
+            unset -f scopeo_inspect
+            unset images
           '';
       })
       (mkCommand currentSystem {
-        name = &quot;copy-to-registry&quot;;
-        description = &quot;copy the image to its remote registry&quot;;
+        name = &quot;load&quot;;
+        description = &quot;load image to the local docker daemon&quot;;
         command = ''
-          ${target.copyToRegistry}/bin/copy-to-registry
+          ${copyFn}
+          if command -v podman &amp;&gt; /dev/null; then
+             echo &quot;Podman detected: copy to local podman&quot;
+             copy containers-storage:${img} &quot;$@&quot;
+          fi
+          if command -v docker &amp;&gt; /dev/null; then
+             echo &quot;Docker detected: copy to local docker&quot;
+             copy docker-daemon:${img} &quot;$@&quot;
+          fi
         '';
+      })
+      (mkCommand currentSystem {
+        name = &quot;copy-to-registry&quot;;
+        description = &quot;deprecated: use 'publish' instead&quot;;
+        command = &quot;echo 'copy-to-registry' is deprecated; use 'publish' action instead &amp;&amp; exit 1&quot;;
       })
       (mkCommand currentSystem {
         name = &quot;copy-to-docker&quot;;
-        description = &quot;copy the image to the local docker registry&quot;;
-        command = ''
-          ${target.copyToDockerDaemon}/bin/copy-to-docker-daemon
-        '';
+        description = &quot;deprecated: use 'load' instead&quot;;
+        command = &quot;echo 'copy-to-docker' is deprecated; use 'load' action instead &amp;&amp; exit 1&quot;;
       })
       (mkCommand currentSystem {
         name = &quot;copy-to-podman&quot;;
-        description = &quot;copy the image to the local podman registry&quot;;
-        command = ''
-          ${target.copyToPodman}/bin/copy-to-podman
-        '';
+        description = &quot;deprecated: use 'load' instead&quot;;
+        command = &quot;echo 'copy-to-podman' is deprecated; use 'load' action instead &amp;&amp; exit 1&quot;;
       })
     ];
   };
@@ -756,8 +772,6 @@ in
         <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../theme/mermaid.min.js"></script>
-        <script src="../theme/mermaid-init.js"></script>
         <script src="../theme/pagetoc.js"></script>
 
 

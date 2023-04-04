@@ -196,7 +196,7 @@ Alongside, we explore ways how teams can structure their collaboration on packag
 <h2 id="the-layers"><a class="header" href="#the-layers">The Layers</a></h2>
 <p>The Standard layers of packaging are designed to bring both participants together around a framework that holds software supply chain security dear and attackers out.</p>
 <p>By providing a shared mental model for flexible, yet structured collaboration, it successfully circumnavigates some of the pitfalls of the underlying technology.</p>
-<pre class="mermaid">flowchart TD
+<pre><code class="language-mermaid">flowchart TD
     packaging([Packaging])
     operable([Operable])
     image([OCI-Image])
@@ -209,7 +209,7 @@ Alongside, we explore ways how teams can structure their collaboration on packag
     click operable href &quot;#operable-layer&quot; &quot;Jump to the operable layer section&quot;
     click image href &quot;#oci-image-layer&quot; &quot;Jump to the OCI image layer section&quot;
     click scheduler href &quot;#scheduler-chart-layer&quot; &quot;Jump to the scheduler chart layer section&quot;
-</pre>
+</code></pre>
 <h3 id="packaging-layer"><a class="header" href="#packaging-layer">Packaging Layer</a></h3>
 <p>This layer builds the pristine executable application as written by the developer with the building tools of the developer.</p>
 <p>However, to ensure the software supply chain requirements, these build instructions are run in the context of a very restricted build environment provided by Nix.</p>
@@ -295,8 +295,6 @@ This technique is also a promising approach to increase the effectiveness of the
         <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../theme/mermaid.min.js"></script>
-        <script src="../theme/mermaid-init.js"></script>
         <script src="../theme/pagetoc.js"></script>
 
 

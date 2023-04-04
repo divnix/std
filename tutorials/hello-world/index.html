@@ -193,11 +193,26 @@ to running your first application
 in just a few seconds ✨</p>
 <h2 id="assumptions"><a class="header" href="#assumptions">Assumptions</a></h2>
 <p>This example consumes the following defaults or builtins:</p>
-<h3 id="default-cellblocks"><a class="header" href="#default-cellblocks"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L63-L67">Default <code>cellBlocks</code></a></a></h3>
-<pre><code class="language-nix">{{#include ../../../src/grow.nix:64:68}}
+<h3 id="default-cellblocksgrow-nix-default-cellblocks"><a class="header" href="#default-cellblocksgrow-nix-default-cellblocks">[Default <code>cellBlocks</code>][grow-nix-default-cellblocks]</a></h3>
+<pre><code class="language-nix">{
+  cellBlocks ? [
+    (blockTypes.functions &quot;library&quot;)
+    (blockTypes.runnables &quot;apps&quot;)
+    (blockTypes.installables &quot;packages&quot;)
+  ],
+  ...
+} @ args:
 </code></pre>
-<h3 id="default-systems"><a class="header" href="#default-systems"><a href="https://github.com/divnix/std/blob/main/src/grow.nix#L68-L77">Default <code>systems</code></a></a></h3>
-<pre><code class="language-nix">{{#include ../../../src/grow.nix:69:78}}
+<h3 id="default-systemsgrow-nix-default-systems"><a class="header" href="#default-systemsgrow-nix-default-systems">[Default <code>systems</code>][grow-nix-default-systems]</a></h3>
+<pre><code class="language-nix">{
+  systems ? [
+    &quot;x86_64-linux&quot;
+    &quot;aarch64-linux&quot;
+    &quot;x86_64-darwin&quot;
+    &quot;aarch64-darwin&quot;
+  ],
+  ...
+} @ cfg:
 </code></pre>
 <hr />
 
@@ -247,8 +262,6 @@ in just a few seconds ✨</p>
         <script src="../../book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../theme/mermaid.min.js"></script>
-        <script src="../../theme/mermaid-init.js"></script>
         <script src="../../theme/pagetoc.js"></script>
 
 
