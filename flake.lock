@@ -322,11 +322,11 @@
         "std": []
       },
       "locked": {
-        "lastModified": 1677364491,
-        "narHash": "sha256-fmcv9QmtcYLHFh/wsO63PjlgAc3mlXgrUF8JZDhgS7Q=",
+        "lastModified": 1680654400,
+        "narHash": "sha256-Qdpio+ldhUK3zfl22Mhf8HUULdUOJXDWDdO7MIK69OU=",
         "owner": "paisano-nix",
         "repo": "mdbook-paisano-preprocessor",
-        "rev": "e47dd23e9b81990265d1aec935f91cf501e79a34",
+        "rev": "11a8fc47f574f194a7ae7b8b98001f6143ba4cf1",
         "type": "github"
       },
       "original": {
