@@ -147,21 +147,9 @@
 from there on.</p>
 <pre><code class="language-bash">#! /bin/sh
 
-# SPDX-FileCopyrightText: 2022 David Arnold &lt;dgx.arnold@gmail.com&gt;
-# SPDX-FileCopyrightText: 2022 Kevin Amado &lt;kamadorueda@gmail.com&gt;
-#
-# SPDX-License-Identifier: Unlicense
+source &quot;$(fetchurl &quot;https://raw.githubusercontent.com/paisano-nix/direnv/main/lib&quot; &quot;sha256-XKqDMz+VtF8VSJ4yOok4mO1xxXUZbD1t2yC0JmEXrCI=&quot;)&quot;
 
-source &quot;$(
-  nix eval \
-  --no-update-lock-file \
-  --no-write-lock-file \
-  --no-warn-dirty \
-  --accept-flake-config \
-  .#__std.direnv_lib 2&gt;/dev/null \
-  || nix eval .#__std.direnv_lib # show the errors
-)&quot;
-use std cells //_automation/devshells:default
+use envreload //_automation/devshells/default //_automation/configs
 </code></pre>
 <blockquote>
 <p><strong>NOTE:</strong>
