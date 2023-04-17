@@ -343,11 +343,11 @@
         "std": []
       },
       "locked": {
-        "lastModified": 1680306311,
-        "narHash": "sha256-sqAEyHWG86iKKgueblykuh7rzLLlsIQMFF9tYPTXjls=",
+        "lastModified": 1681695765,
+        "narHash": "sha256-XixzZ+rSjY08yWcpqXk4/ts8+hjZgPrdHFW67KTOkE0=",
         "owner": "paisano-nix",
         "repo": "tui",
-        "rev": "1c84e604adb8907bc20ee5030bb124020ac79ace",
+        "rev": "ad7ba7a1cbc0302103a25d1262c9eb55c0939223",
         "type": "github"
       },
       "original": {

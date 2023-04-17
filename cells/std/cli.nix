@@ -18,7 +18,7 @@ in {
 
     src = inputs.paisano-tui.sourceInfo + /src;
 
-    vendorHash = "sha256-1le14dcr2b8TDUNdhIFbZGX3khQoCcEZRH86eqlZaQE=";
+    vendorHash = "sha256-ja0nFWdWqieq8m6cSKAhE1ibeN0fODDCC837jw0eCnE=";
 
     nativeBuildInputs = [nixpkgs.installShellFiles];
 
