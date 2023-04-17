@@ -6,6 +6,34 @@
   inherit (inputs.cells) std presets;
   l = nixpkgs.lib // builtins;
 in {
+  cog = {
+    output = "cog.toml";
+    commands = [{package = nixpkgs.cocogitto;}];
+    data = {
+      tag_prefix = "v";
+      branch_whitelist = ["main" "release/**"];
+      ignore_merge_commits = true;
+      pre_bump_hooks = [
+        ''git switch -c "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')"''
+        "echo {{version}} > ./VERSION"
+      ];
+      post_bump_hooks = [
+        ''git push --set-upstream origin "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')"''
+        "git push origin {{version}}"
+        "cog -q changelog --at v{{version}}"
+        "git switch main"
+        "echo {{version+minor-dev}} > ./VERSION"
+        "git add VERSION"
+      ];
+      changelog = {
+        path = "CHANGELOG.md";
+        template = "remote";
+        remote = "github.com";
+        repository = "std";
+        owner = "divnix";
+      };
+    };
+  };
   treefmt = {
     data = {
       global.excludes = [

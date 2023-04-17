@@ -17,6 +17,7 @@ in
         (lib.cfg.githubsettings cell.configs.githubsettings)
         lib.cfg.lefthook
         lib.cfg.adrgen
+        (lib.dev.mkNixago cell.configs.cog)
       ];
       commands =
         [
