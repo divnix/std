@@ -19,9 +19,11 @@ in {
       ];
       post_bump_hooks = [
         ''git push --set-upstream origin "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')"''
-        "git push origin {{version}}"
+        "git push origin v{{version}}"
         "cog -q changelog --at v{{version}}"
         "git switch main"
+        ''git merge "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')"''
+        "git push"
         "echo {{version+minor-dev}} > ./VERSION"
         "git add VERSION"
       ];
