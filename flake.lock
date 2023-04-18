@@ -343,15 +343,16 @@
         "std": []
       },
       "locked": {
-        "lastModified": 1681695765,
-        "narHash": "sha256-XixzZ+rSjY08yWcpqXk4/ts8+hjZgPrdHFW67KTOkE0=",
+        "lastModified": 1681847764,
+        "narHash": "sha256-mdd7PJW1BZvxy0cIKsPfAO+ohVl/V7heE5ZTAHzTdv8=",
         "owner": "paisano-nix",
         "repo": "tui",
-        "rev": "ad7ba7a1cbc0302103a25d1262c9eb55c0939223",
+        "rev": "3096bad91cae73ab8ab3367d31f8a143d248a244",
         "type": "github"
       },
       "original": {
         "owner": "paisano-nix",
+        "ref": "0.1.1",
         "repo": "tui",
         "type": "github"
       }
