@@ -10,7 +10,7 @@
     paisano.url = "github:paisano-nix/core";
     paisano.inputs.nixpkgs.follows = "nixpkgs";
     paisano.inputs.yants.follows = "yants";
-    paisano-tui.url = "github:paisano-nix/tui";
+    paisano-tui.url = "github:paisano-nix/tui/0.1.1";
     paisano-tui.inputs.std.follows = "/";
     paisano-tui.inputs.nixpkgs.follows = "blank";
     paisano-mdbook-preprocessor.url = "github:paisano-nix/mdbook-paisano-preprocessor";
