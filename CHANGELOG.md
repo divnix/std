@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.21.3](https://github.com/divnix/std/compare/v0.21.2..v0.21.3) - 2023-05-04
+#### Miscellaneous Chores
+- fix cog patch release workflow starting from release branch - ([78d50ae](https://github.com/divnix/std/commit/78d50aeb0d65e3b4a334e6cda84b98d9575a4f41)) - David Arnold
+- bump nixago and devshell for feature and fix - ([80d0215](https://github.com/divnix/std/commit/80d0215b963fbed0b8c1e7952df6510bd9b5701a)) - David Arnold
+- bump nixago with nixpkgs-unfree fixes - ([39c474c](https://github.com/divnix/std/commit/39c474ccb8fb6d81c6e5b645ba86affc020de8df)) - David Arnold
+- fix cog version instrumentation - ([0c01f9c](https://github.com/divnix/std/commit/0c01f9cc9dd09440cf60ef2f2d09ed03500af85f)) - David Arnold
+
+- - -
+
 ## [v0.21.1](https://github.com/divnix/std/compare/v0.21.0..v0.21.1) - 2023-04-17
 #### Features
 - migrate to employ paisano direnv support; direnv_lib.sh compat - ([df0eb70](https://github.com/divnix/std/commit/df0eb7046e00d97f386aef7f764e91f11d6a2ec6)) - David Arnold
