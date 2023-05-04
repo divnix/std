@@ -8,11 +8,11 @@
 result
 
 # nixago: ignore-linked-files
-cog.toml
-adrgen.config.yml
-.conform.yaml
-treefmt.toml
-lefthook.yml
+/cog.toml
+/adrgen.config.yml
+/lefthook.yml
+/.conform.yaml
+/treefmt.toml
 
 # nixago-auto-created: mdbook-build-folder
 docs/book/**
