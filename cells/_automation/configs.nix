@@ -22,6 +22,7 @@ in {
         "git push origin v{{version}}"
         "cog -q changelog --at v{{version}}"
         "git switch main"
+        ''git checkout "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')" -- ./VERSION''
         ''git merge "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')"''
         "git push"
         "echo {{version+minor-dev}} > ./VERSION"
