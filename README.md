@@ -167,7 +167,7 @@ And here is the [Book][book], a very good walk-trough. Start here!
 
 ###### Examples in the Wild
 
-This [GitHub search query](https://github.com/search?p=7&q=%22divnix%2Fstd%22+filename%3Aflake.nix&type=Code) holds a pretty good answer.
+This [GitHub search query](https://github.com/search?p=7&q=%22divnix%2Fstd%22+path%3Aflake.nix&type=Code) holds a pretty good answer.
 
 ## Why?
 
