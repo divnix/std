@@ -1090,7 +1090,7 @@ in {
 from there on.</p>
 <pre><code class="language-bash">#! /bin/sh
 
-source &quot;$(fetchurl &quot;https://raw.githubusercontent.com/paisano-nix/direnv/main/lib&quot; &quot;sha256-XKqDMz+VtF8VSJ4yOok4mO1xxXUZbD1t2yC0JmEXrCI=&quot;)&quot;
+source &quot;$(fetchurl &quot;https://raw.githubusercontent.com/paisano-nix/direnv/main/lib&quot; &quot;sha256-R3K8Flvbovj4IOvdlWNtQKLMMSQV464WjG9eU29ixHk=&quot;)&quot;
 
 use envreload //_automation/devshells/default //_automation/configs
 </code></pre>
@@ -2343,6 +2343,7 @@ in
               # speedup: copy from the previous tag to avoid superflous network bandwidth
               ${skopeo} copy &quot;$uri:$prev_tag&quot; &quot;$uri:$tag&quot; &quot;$@&quot;
             fi
+            echo &quot;Done: $uri:$tag&quot;
 
             prev_tag=&quot;$tag&quot;
           done

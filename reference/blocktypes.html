@@ -544,6 +544,7 @@ in
               # speedup: copy from the previous tag to avoid superflous network bandwidth
               ${skopeo} copy &quot;$uri:$prev_tag&quot; &quot;$uri:$tag&quot; &quot;$@&quot;
             fi
+            echo &quot;Done: $uri:$tag&quot;
 
             prev_tag=&quot;$tag&quot;
           done
