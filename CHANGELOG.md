@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.21.4](https://github.com/divnix/std/compare/v0.21.3..v0.21.4) - 2023-05-12
+#### Bug Fixes
+- update envrc hash for direnv lib - ([9dd89f2](https://github.com/divnix/std/commit/9dd89f2bf2e86fc1f738a43ff11dbe19c40df40e)) - David Arnold
+- bump tui fixes - ([aa8e3be](https://github.com/divnix/std/commit/aa8e3be90326f76a09bed625a77a532bd3a10da7)) - David Arnold
+#### Documentation
+- fix emojis in mdbook - ([0384c91](https://github.com/divnix/std/commit/0384c91ce21f2ad4d8068a3a970ce89a52b0618c)) - figsoda
+#### Features
+- **(containers)** identify image during copy - ([3038e86](https://github.com/divnix/std/commit/3038e8615c259969d697d4cbde7a5bf295488c4b)) - David Arnold
+#### Miscellaneous Chores
+- fix patch release version file handling - ([3aa2051](https://github.com/divnix/std/commit/3aa2051ac180b74e0227f5a4645fe4a1476b537a)) - David Arnold
+- bump nixago and devshell for feature and fix - ([5623107](https://github.com/divnix/std/commit/562310786b998bf52bd02bf7ac6bfcc743e8d45d)) - David Arnold
+- bump nixago with nixpkgs-unfree fixes - ([a0f9dd3](https://github.com/divnix/std/commit/a0f9dd33cff37e2c532e2c236d011e2ecd77286d)) - David Arnold
+- fix cog version instrumentation - ([33be14a](https://github.com/divnix/std/commit/33be14a48ffc9daea706acea51a7a8f557798692)) - David Arnold
+
+- - -
+
 ## [v0.21.3](https://github.com/divnix/std/compare/v0.21.2..v0.21.3) - 2023-05-04
 #### Miscellaneous Chores
 - fix cog patch release workflow starting from release branch - ([78d50ae](https://github.com/divnix/std/commit/78d50aeb0d65e3b4a334e6cda84b98d9575a4f41)) - David Arnold
