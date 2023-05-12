@@ -17,20 +17,20 @@ A helpful analogy would be that this person not only uses and configures our con
 It is essential to have an understanding of what they value, so let's try to get an overview.
 We'll make use of a high level value matrix with simple sentiment scores:
 
-- :heart_eyes: &rarr; <i>"absolutely love it!!!"</i>
-- :smile: &rarr; <i>"feels pretty good."</i>
-- :neutral_face: &rarr; <i>"whatever?!?"</i>
+- 😍 &rarr; <i>"absolutely love it!!!"</i>
+- 😄 &rarr; <i>"feels pretty good."</i>
+- 😐 &rarr; <i>"whatever?!?"</i>
 
 |                                                  | Software Sponsor [Principal] | Provider of SDLC Automation [Agent] | Consumer of SDLC Automation [Agent] |
 | ------------------------------------------------ | :--------------------------: | :---------------------------------: | :---------------------------------: |
-| Productivity                                     |         :heart_eyes:         |            :heart_eyes:             |              :smiley:               |
-| Code Organization                                |           :smiley:           |            :heart_eyes:             |              :smiley:               |
-| Mental Model & Learning                          |           :smiley:           |            :heart_eyes:             |              :smiley:               |
-| Batteries Included                               |        :neutral_face:        |            :heart_eyes:             |           :neutral_face:            |
-| Community and Ecosystem                          |        :neutral_face:        |            :heart_eyes:             |              :smiley:               |
-| Reproducibility & Software Supply Chain Security |         :heart_eyes:         |            :heart_eyes:             |           :neutral_face:            |
-| Modularity & Incremental Adoption                |           :smiley:           |              :smiley:               |            :heart_eyes:             |
-| Developer Experience & Onboarding Story          |           :smiley:           |              :smiley:               |            :heart_eyes:             |
+| Productivity                                     |              😍              |                 😍                  |                 😄                  |
+| Code Organization                                |              😄              |                 😍                  |                 😄                  |
+| Mental Model & Learning                          |              😄              |                 😍                  |                 😄                  |
+| Batteries Included                               |              😐              |                 😍                  |                 😐                  |
+| Community and Ecosystem                          |              😐              |                 😍                  |                 😄                  |
+| Reproducibility & Software Supply Chain Security |              😍              |                 😍                  |                 😐                  |
+| Modularity & Incremental Adoption                |              😄              |                 😄                  |                 😍                  |
+| Developer Experience & Onboarding Story          |              😄              |                 😄                  |                 😍                  |
 
 So, this is for you and your team, if you:
 
