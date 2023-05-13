@@ -74,12 +74,36 @@ in
       then debugOperable
       else operable;
 
-    setupLinks = cell.ops.mkSetup "links" [] ''
-      mkdir -p $out/bin
-      ${runtimeEntryLink}
-      ${debugEntryLink}
-      ${livenessLink}
-      ${readinessLink}
+    inherit (nixpkgs.dockerTools) caCertificates;
+    setupLinks =
+      cell.ops.mkSetup "links" [
+        {
+          regex = "/bin";
+          mode = "0555";
+        }
+      ] ''
+        mkdir -p $out/bin
+        ${runtimeEntryLink}
+        ${debugEntryLink}
+        ${livenessLink}
+        ${readinessLink}
+      '';
+
+    users = cell.ops.mkUser {
+      user = "nobody";
+      group = "nogroup";
+      uid = "65534";
+      gid = "65534";
+      withRoot = true;
+      withHome = true;
+    };
+
+    tmp = nixpkgs.runCommand "tmp" {} ''
+      mkdir -p $out/tmp
+    '';
+
+    nss = nixpkgs.writeTextDir "etc/nsswitch.conf" ''
+      hosts: files dns
     '';
 
     tag' =
@@ -98,6 +122,9 @@ in
         {
           # mkStandardOCI differentiators over mkOCI
           # - live & readiness probes
+          # - user & nss setup
+          # - world writable /tmp & curl's certificates bundle
+          # - env setup w.r.t. certs for ssl-library ecosysystems
           layers = [
             # Put liveness and readiness probes in a separate layer
             (n2c.buildLayer {
@@ -107,6 +134,21 @@ in
                 ++ (l.optionals hasReadinessProbe [(n2c.buildLayer {deps = [readinessProbe];})]);
             })
           ];
-          setup = prepend [setupLinks];
+          setup = prepend [setupLinks users nss];
+          options.copyToRoot = append [tmp caCertificates];
+          perms = prepend [
+            {
+              path = tmp;
+              regex = ".*";
+              mode = "0777";
+            }
+          ];
+          config.Env = append [
+            # compatibility
+            #  - openssl
+            "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
+            #  - Haskell x509-system
+            "SYSTEM_CERTIFICATE_PATH=/etc/ssl/certs/ca-bundle.crt"
+          ];
         }
       )
