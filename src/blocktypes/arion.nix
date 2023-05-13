@@ -23,7 +23,8 @@
       fragmentRelPath,
       target,
     }: let
-      cmd = "arion --prebuilt-file ${target.config.out.dockerComposeYaml}";
+      pkgs = nixpkgs.legacyPackages.${currentSystem};
+      cmd = "${pkgs.arion}/bin/arion --prebuilt-file ${target.config.out.dockerComposeYaml}";
     in [
       (mkCommand currentSystem {
         name = "up";
