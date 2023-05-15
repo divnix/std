@@ -174,7 +174,8 @@ Actions according to the needs of your project.</p>
       fragmentRelPath,
       target,
     }: let
-      cmd = &quot;arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
+      pkgs = nixpkgs.legacyPackages.${currentSystem};
+      cmd = &quot;${pkgs.arion}/bin/arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
     in [
       (mkCommand currentSystem {
         name = &quot;up&quot;;
