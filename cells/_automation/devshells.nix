@@ -64,7 +64,7 @@ in
       commands = [
         {
           name = "blocktype-data";
-          command = "cat $(std //_tests/data/example:write)";
+          command = "cat $(tail -n1 <<< $(std //_tests/data/example:write))";
         }
         {
           name = "blocktype-devshells";
