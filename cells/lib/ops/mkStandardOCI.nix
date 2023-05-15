@@ -2,7 +2,7 @@
   inputs,
   cell,
 }: let
-  inherit (inputs) nixpkgs;
+  inherit (inputs) nixpkgs dmerge;
   l = nixpkgs.lib // builtins;
   n2c = inputs.n2c.packages.nix2container;
 in
@@ -40,16 +40,22 @@ in
     options ? {},
     meta ? {},
   }: let
+    inherit (operable) passthru;
+    inherit (operable.passthru) livenessProbe readinessProbe runtimeInputs runtime debug;
+
+    hasLivenessProbe = passthru ? livenessProbe;
+    hasReadinessProbe = passthru ? readinessProbe;
+    hasDebug = args.debug or false;
+
     # Link useful paths into the container.
-    runtimeEntryLink = let
-      runtimeShell = l.getExe operable.passthru.runtime;
-    in ''
+    runtimeShell = l.getExe runtime;
+    runtimeEntryLink = ''
       ln -s ${runtimeShell} $out/bin/sh
       ln -s ${runtimeShell} $out/bin/runtime
     '';
-    debugEntryLink = l.optionalString debug "ln -s ${l.getExe operable.passthru.debug} $out/bin/debug";
-    livenessLink = l.optionalString (operable.passthru ? livenessProbe) "ln -s ${l.getExe operable.passthru.livenessProbe} $out/bin/live";
-    readinessLink = l.optionalString (operable.passthru ? readinessProbe) "ln -s ${l.getExe operable.passthru.readinessProbe} $out/bin/ready";
+    debugEntryLink = l.optionalString hasDebug "ln -s ${l.getExe debug} $out/bin/debug";
+    livenessLink = l.optionalString hasLivenessProbe "ln -s ${l.getExe livenessProbe} $out/bin/live";
+    readinessLink = l.optionalString hasReadinessProbe "ln -s ${l.getExe readinessProbe} $out/bin/ready";
 
     # Wrap the operable with sleep if debug is enabled
     debugOperable = cell.ops.writeScript {
@@ -64,7 +70,7 @@ in
       '';
     };
     operable' =
-      if debug
+      if hasDebug
       then debugOperable
       else operable;
 
@@ -75,30 +81,32 @@ in
       ${livenessLink}
       ${readinessLink}
     '';
-  in
-    cell.ops.mkOCI (
-      {
-        inherit name uid gid labels options perms config meta;
-        entrypoint = operable';
-        setup = [setupLinks] ++ setup;
-        runtimeInputs = operable.passthru.runtimeInputs;
 
-        # Put liveness and readiness probes in a separate layer
-        layers = [
-          (n2c.buildLayer {
-            deps =
-              []
-              ++ (l.optionals (operable.passthru ? livenessProbe) [(n2c.buildLayer {deps = [operable.passthru.livenessProbe];})])
-              ++ (l.optionals (operable.passthru ? readinessProbe) [(n2c.buildLayer {deps = [operable.passthru.readinessProbe];})]);
-            maxLayers = 10;
-          })
-        ];
-      }
-      // l.throwIf (args ? tag && meta ? tags)
+    tag' =
+      l.throwIf (args ? tag && meta ? tags)
       "mkStandardOCI: use of `tag` and `meta.tags` arguments are not supported together. Remove the former."
-      (
-        l.optionalAttrs (tag != "") ((import "${inputs.self}/deprecation.nix" inputs).warnLegacyTag {
-          inherit tag;
-        })
+      l.optionalString (tag != "") ((import "${inputs.self}/deprecation.nix" inputs).warnLegacyTag tag);
+  in
+    with dmerge;
+      cell.ops.mkOCI (
+        merge
+        {
+          inherit name uid gid labels options perms config meta setup runtimeInputs;
+          entrypoint = operable';
+          tag = tag'; # ideally ''
+        }
+        {
+          # mkStandardOCI differentiators over mkOCI
+          # - live & readiness probes
+          layers = [
+            # Put liveness and readiness probes in a separate layer
+            (n2c.buildLayer {
+              maxLayers = 10;
+              deps =
+                (l.optionals hasLivenessProbe [(n2c.buildLayer {deps = [livenessProbe];})])
+                ++ (l.optionals hasReadinessProbe [(n2c.buildLayer {deps = [readinessProbe];})]);
+            })
+          ];
+          setup = prepend [setupLinks];
+        }
       )
-    )
