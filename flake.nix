@@ -18,13 +18,19 @@
     paisano-mdbook-preprocessor.inputs.nixpkgs.follows = "nixpkgs";
   };
   inputs.blank.url = "github:divnix/blank";
-  inputs.yants.url = "github:divnix/yants";
-  inputs.yants.inputs.nixpkgs.follows = "nixpkgs";
-  inputs.dmerge.url = "github:divnix/data-merge";
-  inputs.dmerge.inputs.nixlib.follows = "nixpkgs";
-  inputs.dmerge.inputs.yants.follows = "yants";
-  inputs.incl.url = "github:divnix/incl";
-  inputs.incl.inputs.nixlib.follows = "nixpkgs";
+  inputs.yants = {
+    url = "github:divnix/yants";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+  inputs.dmerge = {
+    url = "github:divnix/dmerge/0.2.0";
+    inputs.nixlib.follows = "nixpkgs";
+    inputs.yants.follows = "yants";
+  };
+  inputs.incl = {
+    url = "github:divnix/incl";
+    inputs.nixlib.follows = "nixpkgs";
+  };
   /*
   Auxiliar inputs used in builtin libraries or for the dev environment.
   */
