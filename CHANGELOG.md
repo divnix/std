@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.22.0](https://github.com/divnix/std/compare/v0.21.4..v0.22.0) - 2023-05-17
+#### Bug Fixes
+- flaky test - ([dbc7761](https://github.com/divnix/std/commit/dbc7761a64b55e780360c3b1c3c92aee24fb2c18)) - David Arnold
+- arion action by providing the arion bin - ([0d8be65](https://github.com/divnix/std/commit/0d8be654f8f811457a0ecacda9b1776599fc7096)) - David Arnold
+#### Features
+- improve std image - ([27a83ce](https://github.com/divnix/std/commit/27a83ce436ef5d0162e7ab00dde7ca5ae908cb52)) - David Arnold
+- bump dmerge - add prepend and fresh array-merge-rhs - ([45b431a](https://github.com/divnix/std/commit/45b431ae09df98e046bcc8271aa209bdfc87444d)) - David Arnold
+#### Miscellaneous Chores
+- **(version)** pin v0.22.0-dev - ([bcabab5](https://github.com/divnix/std/commit/bcabab562f34c7c29a8afdb44221b3dcd07da6ee)) - David Arnold
+#### Refactoring
+- clarify the std oci additions by using dmerge for sep of conc. - ([6432c73](https://github.com/divnix/std/commit/6432c739897b409a0b342aa7b0b2075521e4dd44)) - David Arnold
+
+- - -
+
 ## [v0.21.4](https://github.com/divnix/std/compare/v0.21.3..v0.21.4) - 2023-05-12
 #### Bug Fixes
 - update envrc hash for direnv lib - ([9dd89f2](https://github.com/divnix/std/commit/9dd89f2bf2e86fc1f738a43ff11dbe19c40df40e)) - David Arnold
