@@ -51,11 +51,11 @@ in
     cell.ops.mkSetup "users" perms ''
       mkdir -p $out/etc/pam.d
 
-      echo "${user}:x:${uid}:${gid}::${l.optionalString withHome "/home/${user}"}:${shell}" > $out/etc/passwd
-      echo "${user}:!x:::::::" > $out/etc/shadow
+      echo "${user}:x:${uid}:${gid}::${l.optionalString withHome "/home/${user}"}:${shell}" >> $out/etc/passwd
+      echo "${user}:!x:::::::" >> $out/etc/shadow
 
-      echo "${group}:x:${gid}:" > $out/etc/group
-      echo "${group}:x::" > $out/etc/gshadow
+      echo "${group}:x:${gid}:" >> $out/etc/group
+      echo "${group}:x::" >> $out/etc/gshadow
 
       ${withRootStr}
 
