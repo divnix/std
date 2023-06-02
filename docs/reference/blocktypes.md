@@ -52,6 +52,17 @@ Actions according to the needs of your project.
 {{#include ../../lib/blockTypes/containers.nix}}
 ```
 
+## Terra
+
+Block type for managing [Terranix] configuration for [Terraform].
+
+[Terranix]: https://terranix.org/
+[Terraform]: https://www.terraform.io/
+
+```nix
+{{#include ../../src/blocktypes/terra.nix}}
+```
+
 ## Data
 
 ```nix

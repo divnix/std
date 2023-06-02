@@ -192,6 +192,16 @@
         description = "run namaka tests against snapshots";
         name = "check";
       }
+      {
+        command = <derivation review>;
+        description = "review pending namaka checks";
+        name = "review";
+      }
+      {
+        command = <derivation clean>;
+        description = "clean up pending namaka checks";
+        name = "clean";
+      }
     ];
     name = "namaka";
     type = "namaka";
@@ -255,5 +265,41 @@
     ];
     name = "runnables";
     type = "runnables";
+  };
+  terra = {
+    actions = [
+      {
+        command = <derivation init>;
+        description = "tf init";
+        name = "init";
+      }
+      {
+        command = <derivation plan>;
+        description = "tf plan";
+        name = "plan";
+      }
+      {
+        command = <derivation apply>;
+        description = "tf apply";
+        name = "apply";
+      }
+      {
+        command = <derivation state>;
+        description = "tf state";
+        name = "state";
+      }
+      {
+        command = <derivation refresh>;
+        description = "tf refresh";
+        name = "refresh";
+      }
+      {
+        command = <derivation destroy>;
+        description = "tf destroy";
+        name = "destroy";
+      }
+    ];
+    name = "terra";
+    type = "terra";
   };
 }

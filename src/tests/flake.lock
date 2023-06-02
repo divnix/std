@@ -508,16 +508,20 @@
         ],
         "paisano": "paisano",
         "paisano-tui": "paisano-tui",
+        "terranix": [
+          "std",
+          "blank"
+        ],
         "yants": "yants"
       },
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-cWj9dV3co7UgCgLrkkg9rooRCEs2cnT3fsK+mlps7mQ=",
-        "path": "/nix/store/iz4fxdw2hy4kqma6y0g4qxr582wq2ljj-source",
+        "narHash": "sha256-a5pNTCB2DmT5ZS9wM3sdQ/HRGeiqmFEzvOYQd1RkaEA=",
+        "path": "/nix/store/p5nqydpz17dgj9dz6xk52cyr84y2vqag-source",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/iz4fxdw2hy4kqma6y0g4qxr582wq2ljj-source",
+        "path": "/nix/store/p5nqydpz17dgj9dz6xk52cyr84y2vqag-source",
         "type": "path"
       }
     },

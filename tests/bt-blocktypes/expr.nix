@@ -6,6 +6,7 @@
 builtins.mapAttrs (
   n: f: let
     action = builtins.removeAttrs ({
+        terra = f n "myrepo";
       }
       .${n}
       or (f n)) ["__functor"];
