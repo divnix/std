@@ -41,6 +41,7 @@
     n2c.follows = "blank";
     devshell.follows = "blank";
     nixago.follows = "blank";
+    terranix.follows = "blank";
     microvm.follows = "blank";
     makes.follows = "blank";
     arion.follows = "blank";

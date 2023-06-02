@@ -213,6 +213,9 @@
         "nixpkgs": "nixpkgs_2",
         "paisano": "paisano",
         "paisano-tui": "paisano-tui",
+        "terranix": [
+          "blank"
+        ],
         "yants": "yants"
       }
     },
