@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.23.0](https://github.com/divnix/std/compare/v0.22.0..v0.23.0) - 2023-06-03
+#### Bug Fixes
+- mkUser script to keep /etc/{passwd,shadow,group,gshadow} from being overwritten - ([959f54d](https://github.com/divnix/std/commit/959f54d6698ff7fea01e4e6d8e5d7d95fcf66844)) - Gytis Ivaskevicius
+#### Miscellaneous Chores
+- **(version)** setup dev version - ([909682b](https://github.com/divnix/std/commit/909682bcdc81c4c7d8ba09bfac0a770f8e782244)) - David Arnold
+#### Refactoring
+- adopt paisano v0.1.0 api - ([00bfdaa](https://github.com/divnix/std/commit/00bfdaadbe95bb0c61311284c5e979f74cee976f)) - David Arnold
+
+- - -
+
 ## [v0.22.0](https://github.com/divnix/std/compare/v0.21.4..v0.22.0) - 2023-05-17
 #### Bug Fixes
 - flaky test - ([dbc7761](https://github.com/divnix/std/commit/dbc7761a64b55e780360c3b1c3c92aee24fb2c18)) - David Arnold
