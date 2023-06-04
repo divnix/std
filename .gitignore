@@ -7,6 +7,14 @@
 /**/flake.lock
 result
 
+# prj-spec dirs
+# <https://github.com/numtide/prj-spec>
+.bin
+.cache
+.config
+.data
+.run
+
 # nixago: ignore-linked-files
 /cog.toml
 /adrgen.config.yml
