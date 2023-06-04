@@ -3,10 +3,11 @@
   cell,
 }: let
   inherit (inputs.std) std lib;
-  inherit (inputs) nixpkgs fenix;
+  inherit (inputs) nixpkgs;
   inherit (inputs.cells) hello;
 
   l = nixpkgs.lib // builtins;
+
   dev = lib.dev.mkShell {
     packages = [
       nixpkgs.pkg-config

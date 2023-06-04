@@ -8,10 +8,14 @@ A: (1) dotfile proliferation
    (3) potentially share / re-use configuration data - keeping it in sync
 */
 {
+  inputs,
+  cell,
+}: {
   # Tool Homepage: https://editorconfig.org/
   editorconfig = {
     data = {
       root = true;
+
       "*" = {
         end_of_line = "lf";
         insert_final_newline = true;
@@ -20,9 +24,26 @@ A: (1) dotfile proliferation
         indent_style = "space";
         indent_size = 2;
       };
+
+      "*.{diff,patch}" = {
+        end_of_line = "unset";
+        insert_final_newline = "unset";
+        trim_trailing_whitespace = "unset";
+        indent_size = "unset";
+      };
+
       "*.md" = {
         max_line_length = "off";
         trim_trailing_whitespace = false;
+      };
+
+      "{LICENSES/**,LICENSE}" = {
+        end_of_line = "unset";
+        insert_final_newline = "unset";
+        trim_trailing_whitespace = "unset";
+        charset = "unset";
+        indent_style = "unset";
+        indent_size = "unset";
       };
     };
   };

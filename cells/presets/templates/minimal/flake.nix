@@ -10,7 +10,7 @@
       cellsFrom = ./nix;
       cellBlocks = with std.blockTypes; [
         # Development Environments
-        (nixago "config")
+        (nixago "configs")
         (devshells "shells")
       ];
     };
