@@ -1,3 +1,4 @@
+# export fenix toolchain as its own package set
 {
   inputs,
   cell,
@@ -8,13 +9,12 @@
   # see upstream fenix documentation for details
   rustPkgs = builtins.removeAttrs fenix.packages.default ["withComponents" "name" "type"];
 in
-  # export fenix toolchain as it's own package set
+  # add rust-analyzer from nightly, if not present
   if rustPkgs ? rust-analyzer
   then rustPkgs
   else
     rustPkgs
     // {
-      # add rust-analyzer from nightly, if not present
       inherit (fenix.packages) rust-analyzer;
       toolchain = fenix.packages.combine [
         (builtins.attrValues rustPkgs)

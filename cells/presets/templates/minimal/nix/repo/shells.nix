@@ -4,20 +4,25 @@ This file holds reproducible shells with commands in them.
 They conveniently also generate config files in their startup hook.
 */
 {
+  inputs,
+  cell,
+}: let
+  inherit (inputs.std) lib;
+in {
   # Tool Homepage: https://numtide.github.io/devshell/
-  default = inputs.std.lib.dev.mkShell {
+  default = lib.dev.mkShell {
     name = "CONFIGURE-ME";
 
     # Tool Homepage: https://nix-community.github.io/nixago/
     # This is Standard's devshell integration.
     # It runs the startup hook when entering the shell.
     nixago = [
-      inputs.std.lib.cfg.conform
-      (inputs.std.lib.cfg.treefmt cell.config.treefmt)
-      (inputs.std.lib.cfg.editorconfig cell.config.editorconfig)
-      (inputs.std.lib.cfg.githubsettings cell.config.githubsettings)
-      (inputs.std.lib.cfg.lefthook cell.config.lefthook)
-      (inputs.std.lib.cfg.mdbook cell.config.mdbook)
+      lib.cfg.conform
+      (lib.cfg.treefmt cell.configs.treefmt)
+      (lib.cfg.editorconfig cell.configs.editorconfig)
+      (lib.cfg.githubsettings cell.configs.githubsettings)
+      (lib.cfg.lefthook cell.configs.lefthook)
+      (lib.cfg.mdbook cell.configs.mdbook)
     ];
 
     commands = [

@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "A very basic flake for Rust development";
 
   inputs.std.url = "github:divnix/std";
   inputs.std.inputs.nixpkgs.follows = "nixpkgs";
