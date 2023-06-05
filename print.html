@@ -1088,9 +1088,10 @@ in {
 <p>Standard provides an extension to the <code>stdlib</code> via <code>direnv_lib.sh</code>.</p>
 <p>The integrity hash below ensures it is downloaded only once and cached
 from there on.</p>
-<pre><code class="language-bash">#! /bin/sh
+<pre><code class="language-bash">#!/bin/sh
 
-source &quot;$(fetchurl &quot;https://raw.githubusercontent.com/paisano-nix/direnv/main/lib&quot; &quot;sha256-R3K8Flvbovj4IOvdlWNtQKLMMSQV464WjG9eU29ixHk=&quot;)&quot;
+# shellcheck disable=SC1090
+. &quot;$(fetchurl &quot;https://raw.githubusercontent.com/paisano-nix/direnv/main/lib&quot; &quot;sha256-R3K8Flvbovj4IOvdlWNtQKLMMSQV464WjG9eU29ixHk=&quot;)&quot;
 
 use envreload //_automation/devshells/default //_automation/configs
 </code></pre>
