@@ -7,7 +7,7 @@
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs = {
-    paisano.url = "github:paisano-nix/core/0.1.0";
+    paisano.url = "github:paisano-nix/core/paisano-haumea";
     paisano.inputs.nixpkgs.follows = "nixpkgs";
     paisano.inputs.yants.follows = "yants";
     paisano-tui.url = "github:paisano-nix/tui/0.1.1";

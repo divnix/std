@@ -90,7 +90,7 @@
     },
     "fenix": {
       "inputs": {
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": "nixpkgs_2",
         "rust-analyzer-src": "rust-analyzer-src"
       },
       "locked": {
@@ -182,15 +182,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1681176209,
-        "narHash": "sha256-bJLDun6esIyWtwRVXcsgzGbh4UKu8wJDrPgykqPyzmg=",
+        "lastModified": 1681167397,
+        "narHash": "sha256-p2ZUoEsCNV35B/Gdi0b72rvopva4JJm1jeB1eqfN4wU=",
         "owner": "nix-community",
         "repo": "haumea",
-        "rev": "b915b66b27da3a595d77b139e945bb0a2fcac926",
+        "rev": "828fcac006f534f83071e5ed5b0280a5391aa95e",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
+        "ref": "v0.2.0",
         "repo": "haumea",
         "type": "github"
       }
@@ -264,28 +265,6 @@
         "type": "github"
       }
     },
-    "namaka_2": {
-      "inputs": {
-        "haumea": [
-          "paisano",
-          "haumea"
-        ],
-        "nixpkgs": "nixpkgs_2"
-      },
-      "locked": {
-        "lastModified": 1681604203,
-        "narHash": "sha256-oA/fW/85GmSNprghgAnZi0XeVMvW9xVuCYprzPw2hz0=",
-        "owner": "nix-community",
-        "repo": "namaka",
-        "rev": "1550ddc025334cff2e8ec9021256473b2ffb27e5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "namaka",
-        "type": "github"
-      }
-    },
     "nixago": {
       "inputs": {
         "flake-utils": [
@@ -330,22 +309,6 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1680758185,
-        "narHash": "sha256-sCVWwfnk7zEX8Z+OItiH+pcSklrlsLZ4TJTtnxAYREw=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "0e19daa510e47a40e06257e205965f3b96ce0ac9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_3": {
-      "locked": {
         "lastModified": 1677063315,
         "narHash": "sha256-qiB4ajTeAOVnVSAwCNEEkoybrAlA+cpeiBxLobHndE8=",
         "owner": "nixos",
@@ -360,44 +323,27 @@
         "type": "github"
       }
     },
-    "nosys": {
-      "locked": {
-        "lastModified": 1668010795,
-        "narHash": "sha256-JBDVBnos8g0toU7EhIIqQ1If5m/nyBqtHhL3sicdPwI=",
-        "owner": "divnix",
-        "repo": "nosys",
-        "rev": "feade0141487801c71ff55623b421ed535dbdefa",
-        "type": "github"
-      },
-      "original": {
-        "owner": "divnix",
-        "repo": "nosys",
-        "type": "github"
-      }
-    },
     "paisano": {
       "inputs": {
         "haumea": "haumea_2",
-        "namaka": "namaka_2",
         "nixpkgs": [
           "nixpkgs"
         ],
-        "nosys": "nosys",
         "yants": [
           "yants"
         ]
       },
       "locked": {
-        "lastModified": 1685757649,
-        "narHash": "sha256-gu21uo35i5OguZ5laGpqIFgVRcowbjvLn2mxSyNKZfQ=",
+        "lastModified": 1686006828,
+        "narHash": "sha256-BWodT/nIGgXcK7QFEPGgiavGd000Xt177GUhfohTtKw=",
         "owner": "paisano-nix",
         "repo": "core",
-        "rev": "db53b8a8e2e3e557bf5ec5842b7a52ee5de04e87",
+        "rev": "f1cfff57ceabb1e8fec4afe7c9b458ed40ba7896",
         "type": "github"
       },
       "original": {
         "owner": "paisano-nix",
-        "ref": "0.1.0",
+        "ref": "paisano-haumea",
         "repo": "core",
         "type": "github"
       }
