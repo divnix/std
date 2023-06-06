@@ -1,6 +1,6 @@
 {
   inputs,
-  cell,
+  scope,
 }: let
   inherit (import (inputs.self + /deprecation.nix) inputs) warnNixagoMoved;
 in

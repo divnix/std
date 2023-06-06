@@ -1,4 +1,7 @@
 {
+  inputs,
+  scope,
+}: {
   lib,
   buildGoModule,
   fetchFromGitHub,

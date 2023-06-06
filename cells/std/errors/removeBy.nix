@@ -1,4 +1,7 @@
-{inputs}: time: body: let
+{
+  inputs,
+  scope,
+}: time: body: let
   l = inputs.nixpkgs.lib // builtins;
   ansi = import ./ansi.nix;
   pad = s: let

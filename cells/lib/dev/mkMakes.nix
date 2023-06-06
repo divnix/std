@@ -1,11 +1,9 @@
-{
-  l,
-  inputs,
-}: let
+let
   inherit (inputs) nixpkgs makes;
+  inherit (inputs.nixpkgs) lib;
 
-  makes' = l.fix (
-    l.extends
+  makes' = lib.fix (
+    lib.extends
     (
       _: _: {
         inherit inputs;
@@ -20,4 +18,4 @@
     .__unfix__
   );
 in
-  l.customisation.callPackageWith makes'
+  lib.customisation.callPackageWith makes'

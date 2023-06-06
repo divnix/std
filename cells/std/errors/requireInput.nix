@@ -1,4 +1,7 @@
-{inputs}: input: url: target: let
+{
+  inputs,
+  scope,
+}: input: url: target: let
   l = inputs.nixpkgs.lib // builtins;
 
   # other than `divnix/blank`

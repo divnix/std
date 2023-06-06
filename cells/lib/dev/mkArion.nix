@@ -1,8 +1,6 @@
-{
-  inputs,
-  l,
-}: let
+let
   inherit (inputs) arion nixpkgs;
+  inherit (inputs.nixpkgs) lib;
 
   disabledNotice = ''
     divnix/std disabled arion's nixos instrumentation.
@@ -29,9 +27,9 @@
       (arion + /src/nix/service/nixos-init.nix)
     ];
     imports = [
-      (l.mkRemovedOptionModule ["nixos" "configuration"] disabledNotice)
-      (l.mkRemovedOptionModule ["nixos" "build"] disabledNotice)
-      (l.mkRemovedOptionModule ["nixos" "evaluatedConfig"] disabledNotice)
+      (lib.mkRemovedOptionModule ["nixos" "configuration"] disabledNotice)
+      (lib.mkRemovedOptionModule ["nixos" "build"] disabledNotice)
+      (lib.mkRemovedOptionModule ["nixos" "evaluatedConfig"] disabledNotice)
     ];
   };
 in

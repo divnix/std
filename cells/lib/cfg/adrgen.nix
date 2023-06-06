@@ -1,9 +1,8 @@
 {
   inputs,
-  cell,
-}: let
-  inherit (inputs) nixpkgs;
-in {
+  scope,
+}:
+inputs.cells.lib.dev.mkNixago {
   data = {};
   output = "adrgen.config.yml";
   format = "yaml";

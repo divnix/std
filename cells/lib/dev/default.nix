@@ -1,18 +1,12 @@
-{
-  inputs,
-  cell,
-}: let
+let
   inherit (inputs.cells.std.errors) requireInput;
 in {
-  mkShell = import ./dev/mkShell.nix {inherit inputs cell;};
-  mkNixago = import ./dev/mkNixago.nix {inherit inputs cell;};
-
-  mkMakes = import ./dev/mkMakes.nix {
+  mkMakes = import ./mkMakes.nix {
     l = inputs.nixpkgs.lib // builtins;
     inputs = requireInput "makes" "github:fluidattacks/makes" "std.lib.dev.mkMakes";
   };
 
-  mkArion = import ./dev/mkArion.nix {
+  mkArion = import ./mkArion.nix {
     l = inputs.nixpkgs.lib // builtins;
     inputs = requireInput "arion" "github:hercules-ci/arion" "std.lib.dev.mkArion";
   };

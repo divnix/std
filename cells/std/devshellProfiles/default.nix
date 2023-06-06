@@ -1,9 +1,10 @@
 {
   inputs,
-  cell,
+  scope,
 }: let
   l = nixpkgs.lib // builtins;
   nixpkgs = inputs.nixpkgs;
+  inherit (inputs.cells) std;
 in {
   default = {config, ...}: let
     cfg = config.std;
@@ -18,7 +19,7 @@ in {
 
         $(type -p menu &>/dev/null && menu)
       '';
-      commands = [{package = cell.cli.default;}];
+      commands = [{package = std.cli.default;}];
     };
   };
 }

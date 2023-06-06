@@ -1,6 +1,6 @@
 {
   inputs,
-  cell,
+  scope,
 }: let
   inherit (inputs) devshell nixago;
 

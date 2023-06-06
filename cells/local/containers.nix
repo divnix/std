@@ -1,14 +1,15 @@
 {
   inputs,
-  cell,
+  scope,
 }: let
-  inherit (inputs.cells) nixpkgs lib;
+  inherit (inputs) nixpkgs;
+  inherit (inputs.cells) lib;
   l = nixpkgs.lib // builtins;
 in {
   dev = lib.ops.mkDevOCI {
     name = "docker.io/std-dev";
     tag = "latest";
-    devshell = cell.devshells.default;
+    devshell = scope.devshells.default;
     labels = {
       title = "std-dev";
       version = "0.1.0";
@@ -22,7 +23,7 @@ in {
   vscode = lib.ops.mkDevOCI {
     name = "docker.io/std-vscode";
     tag = "latest";
-    devshell = cell.devshells.default;
+    devshell = scope.devshells.default;
     vscode = true;
     labels = {
       title = "std-dev";

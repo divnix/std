@@ -1,11 +1,10 @@
 {
   inputs,
-  cell,
-}: let
-  inherit (inputs) nixpkgs;
-in {
+  scope,
+}:
+inputs.cells.lib.dev.mkNixago {
   data = {};
   output = "treefmt.toml";
   format = "toml";
-  commands = [{package = nixpkgs.treefmt;}];
+  commands = [{package = inputs.nixpkgs.treefmt;}];
 }

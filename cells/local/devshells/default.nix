@@ -1,23 +1,20 @@
-{
-  inputs,
-  cell,
-}: let
+let
   l = nixpkgs.lib // builtins;
   inherit (inputs) nixpkgs;
-  inherit (inputs.cells) std lib;
+  inherit (inputs.cells) std lib local;
 in
   l.mapAttrs (_: lib.dev.mkShell) rec {
     default = {...}: {
       name = "Standard";
       nixago = [
         (lib.cfg.conform {data = {inherit (inputs) cells;};})
-        (lib.cfg.treefmt cell.configs.treefmt)
-        (lib.cfg.editorconfig cell.configs.editorconfig)
-        (lib.cfg.just cell.configs.just)
-        (lib.cfg.githubsettings cell.configs.githubsettings)
+        (lib.cfg.treefmt local.configs.treefmt)
+        (lib.cfg.editorconfig local.configs.editorconfig)
+        (lib.cfg.just local.configs.just)
+        (lib.cfg.githubsettings local.configs.githubsettings)
         lib.cfg.lefthook
-        lib.cfg.adrgen
-        (lib.dev.mkNixago cell.configs.cog)
+        # lib.cfg.adrgen
+        (lib.dev.mkNixago local.configs.cog)
       ];
       commands =
         [
@@ -54,7 +51,7 @@ in
 
     book = {...}: {
       nixago = [
-        (lib.cfg.mdbook cell.configs.mdbook)
+        (lib.cfg.mdbook local.configs.mdbook)
       ];
     };
 
@@ -63,12 +60,8 @@ in
       imports = [std.devshellProfiles.default];
       commands = [
         {
-          name = "blocktype-data";
-          command = "cat $(tail -n1 <<< $(std //_tests/data/example:write))";
-        }
-        {
           name = "blocktype-devshells";
-          command = "std //_automation/devshell/default:enter -- echo OK";
+          command = "std //local/devshell/default:enter -- echo OK";
         }
         {
           name = "blocktype-runnables";

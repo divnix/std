@@ -1,9 +1,7 @@
 {
   inputs,
-  cell,
-}: let
-  inherit (inputs) nixpkgs;
-in {
+  scope,
+}: (inputs.cells.lib.dev.mkNixago {
   data = {};
   output = "book.toml";
   format = "toml";
@@ -28,5 +26,5 @@ in {
       append
     fi
   '';
-  commands = [{package = nixpkgs.mdbook;}];
-}
+  commands = [{package = inputs.nixpkgs.mdbook;}];
+})

@@ -1,6 +1,6 @@
 {
   inputs,
-  cell,
+  scope,
 }: let
   inherit (inputs) nixpkgs;
   inherit (inputs.cells) std presets;

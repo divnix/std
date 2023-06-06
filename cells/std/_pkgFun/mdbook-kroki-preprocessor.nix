@@ -1,4 +1,7 @@
 {
+  inputs,
+  scope,
+}: {
   rustPlatform,
   pkg-config,
   lib,

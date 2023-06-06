@@ -1,7 +1,8 @@
 {
   inputs,
-  cell,
-}: {
+  scope,
+}:
+inputs.cells.lib.dev.mkNixago {
   data = {};
   output = ".github/settings.yml";
   format = "yaml";

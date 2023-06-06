@@ -5,7 +5,7 @@ let
   inherit (inputs) nixpkgs;
   inherit (nixpkgs.lib) licenses;
 in {
-  default = cell.cli.std;
+  default = scope.cli.std;
 
   std = nixpkgs.buildGoModule rec {
     inherit version;
