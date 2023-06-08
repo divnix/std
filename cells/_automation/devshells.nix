@@ -68,7 +68,7 @@ in
         }
         {
           name = "blocktype-devshells";
-          command = "std //_automation/devshell/default:enter -- echo OK";
+          command = "std //_automation/devshells/default:enter -- echo OK";
         }
         {
           name = "blocktype-runnables";
