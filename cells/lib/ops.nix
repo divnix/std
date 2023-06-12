@@ -3,8 +3,10 @@
   cell,
 }: let
   inherit (inputs.cells.std.errors) requireInput;
-  inherit (import "${inputs.self}/deprecation.nix" inputs) warnWriteShellEntrypoint;
+  inherit (inputs.nixpkgs) lib;
 in {
+  hashOfPath = path: baseNameOf (lib.head (lib.splitString "-" path));
+
   mkMicrovm = import ./ops/mkMicrovm.nix {
     inputs = requireInput "microvm" "github:astro/microvm.nix" "std.lib.ops.mkMicrovm";
   };
@@ -18,4 +20,8 @@ in {
   mkOCI = import ./ops/mkOCI.nix {inherit inputs cell;};
   mkDevOCI = import ./ops/mkDevOCI.nix {inherit inputs cell;};
   mkStandardOCI = import ./ops/mkStandardOCI.nix {inherit inputs cell;};
+
+  revise = import ./ops/revise.nix {inherit inputs cell;};
+  revisePackage = import ./ops/revisePackage.nix {inherit inputs cell;};
+  reviseOCI = import ./ops/reviseOCI.nix {inherit inputs cell;};
 }
