@@ -14,19 +14,32 @@ in {
       branch_whitelist = ["main" "release/**"];
       ignore_merge_commits = true;
       pre_bump_hooks = [
-        ''git switch -c "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')" || git switch "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')" && git merge main''
         "echo {{version}} > ./VERSION"
+        ''
+          branch="$(echo "release/{{version}}" | sed 's/\.[^.]*$//')"
+          if [ `git rev-parse --verify $branch 2>/dev/null` ]
+          then
+            git switch -m "$branch" || exit 1
+            git merge main
+          else
+            git switch -c "$branch" || exit 1
+          fi
+        ''
       ];
       post_bump_hooks = [
-        ''git push --set-upstream origin "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')"''
-        "git push origin v{{version}}"
+        ''
+          branch="$(echo "release/{{version}}" | sed 's/\.[^.]*$//')"
+          git push --set-upstream origin "$branch"
+          git push origin v{{version}}
+
+          git switch main
+          git merge "$branch" --no-commit --no-ff
+          echo {{version+minor-dev}} > ./VERSION
+          git add VERSION
+          git commit -m "chore: sync with release"
+          git push origin main
+        ''
         "cog -q changelog --at v{{version}}"
-        "git switch main"
-        ''git checkout "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')" -- ./VERSION''
-        ''git merge "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')"''
-        "git push"
-        "echo {{version+minor-dev}} > ./VERSION"
-        "git add VERSION"
       ];
       changelog = {
         path = "CHANGELOG.md";
