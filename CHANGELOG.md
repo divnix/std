@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.23.1](https://github.com/divnix/std/compare/v0.23.0..v0.23.1) - 2023-06-15
+#### Bug Fixes
+- use recent enough nixpkgs lib version for haumea - ([6d9499f](https://github.com/divnix/std/commit/6d9499fea8c917545e58d03d22e6a78955598a6d)) - David Arnold
+- ci with new std-action compatible version - ([d6bcee9](https://github.com/divnix/std/commit/d6bcee9c35fb4a905b51c39e4d5ca842e9a421eb)) - David Arnold
+- add prj-spec dirs to gitignore - ([658683f](https://github.com/divnix/std/commit/658683f3edeb64c4f39a3bcee76d29adef84c4f0)) - Chris Montgomery
+- `.envrc`: shellcheck - ([3947897](https://github.com/divnix/std/commit/39478974cfdfac63d57c7d4900498659dda7c088)) - Chris Montgomery
+#### Features
+- update templates - ([304c835](https://github.com/divnix/std/commit/304c83597314d4a554997b11af42fbf412ac855c)) - Chris Montgomery
+#### Miscellaneous Chores
+- **(version)** setup dev version - ([bfd146c](https://github.com/divnix/std/commit/bfd146cd229016ec3353bdac1b9513f0b7c1605d)) - David Arnold
+- fix release automation for patch releases - ([7d353de](https://github.com/divnix/std/commit/7d353dee098d213c787b4c6caf34cbba86593684)) - David Arnold
+
+- - -
+
 ## [v0.23.0](https://github.com/divnix/std/compare/v0.22.0..v0.23.0) - 2023-06-03
 #### Bug Fixes
 - mkUser script to keep /etc/{passwd,shadow,group,gshadow} from being overwritten - ([959f54d](https://github.com/divnix/std/commit/959f54d6698ff7fea01e4e6d8e5d7d95fcf66844)) - Gytis Ivaskevicius
