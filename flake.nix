@@ -7,7 +7,7 @@
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs = {
-    paisano.url = "github:paisano-nix/core/0.1.0";
+    paisano.url = "github:paisano-nix/core/0.1.1";
     paisano.inputs.nixpkgs.follows = "nixpkgs";
     paisano.inputs.yants.follows = "yants";
     paisano-tui.url = "github:paisano-nix/tui/0.1.1";
@@ -20,16 +20,15 @@
   inputs.blank.url = "github:divnix/blank";
   inputs.yants = {
     url = "github:divnix/yants";
-    inputs.nixpkgs.follows = "nixpkgs";
+    inputs.nixpkgs.follows = "dmerge/nixlib";
   };
   inputs.dmerge = {
-    url = "github:divnix/dmerge/0.2.0";
-    inputs.nixlib.follows = "nixpkgs";
+    url = "github:divnix/dmerge/0.2.1";
     inputs.yants.follows = "yants";
   };
   inputs.incl = {
     url = "github:divnix/incl";
-    inputs.nixlib.follows = "nixpkgs";
+    inputs.nixlib.follows = "dmerge/nixlib";
   };
   /*
   Auxiliar inputs used in builtin libraries or for the dev environment.
