@@ -14,7 +14,7 @@ in {
       branch_whitelist = ["main" "release/**"];
       ignore_merge_commits = true;
       pre_bump_hooks = [
-        ''git switch -c "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')" || git switch "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')"''
+        ''git switch -c "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')" || git switch "$(echo "release/{{version}}" | sed 's/\.[^.]*$//')" && git merge main''
         "echo {{version}} > ./VERSION"
       ];
       post_bump_hooks = [
