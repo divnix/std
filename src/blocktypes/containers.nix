@@ -24,10 +24,8 @@
       target,
     }: let
       inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
-      img = builtins.unsafeDiscardStringContext target.imageName;
-      tags = target.meta.tags or [(builtins.unsafeDiscardStringContext target.imageTag)];
       tags' =
-        builtins.toFile "${target.name}-tags.json" (builtins.unsafeDiscardStringContext (builtins.concatStringsSep "\n" tags));
+        builtins.toFile "${target.name}-tags.json" (builtins.concatStringsSep "\n" target.image.tags);
       copyFn = let
         skopeo = "skopeo --insecure-policy";
       in ''
@@ -55,11 +53,11 @@
       (sharedActions.build currentSystem target)
       (mkCommand currentSystem {
         name = "print-image";
-        description = "print out the image name with all tags";
+        description = "print out the image.repo with all tags";
         command = ''
           echo
           for tag in $(<${tags'}); do
-            echo "${img}:$tag"
+            echo "${target.image.repo}:$tag"
           done
         '';
       })
@@ -68,9 +66,9 @@
         description = "copy the image to its remote registry";
         command = ''
           ${copyFn}
-          copy docker://${img}
+          copy docker://${target.image.repo}
         '';
-        meta.images = map (tag: "${img}:${tag}") tags;
+        meta.image = target.image.name;
         proviso = let
           filter = ./container-publish-filter.jq;
         in
@@ -88,7 +86,7 @@
               --from-file "${filter}" \
               --arg available "$(
                 parallel -j0 scopeo_inspect ::: "$(
-                   command jq --raw-output 'map(.meta.images[0]|strings)[]' <<< "$1"
+                   command jq --raw-output 'map(.meta.image|strings)[]' <<< "$1"
                 )"
               )" <<< "$1"
 
@@ -103,11 +101,11 @@
           ${copyFn}
           if command -v podman &> /dev/null; then
              echo "Podman detected: copy to local podman"
-             copy containers-storage:${img} "$@"
+             copy containers-storage:${target.image.repo} "$@"
           fi
           if command -v docker &> /dev/null; then
              echo "Docker detected: copy to local docker"
-             copy docker-daemon:${img} "$@"
+             copy docker-daemon:${target.image.repo} "$@"
           fi
         '';
       })

@@ -29,7 +29,7 @@ in
   args @ {
     name,
     operable,
-    tag ? "",
+    tag ? null,
     setup ? [],
     uid ? "65534",
     gid ? "65534",
@@ -40,11 +40,10 @@ in
     options ? {},
     meta ? {},
   }: let
-    inherit (operable) passthru;
-    inherit (operable.passthru) livenessProbe readinessProbe runtimeInputs runtime debug;
+    inherit (operable) livenessProbe readinessProbe runtimeInputs runtime debug;
 
-    hasLivenessProbe = passthru ? livenessProbe;
-    hasReadinessProbe = passthru ? readinessProbe;
+    hasLivenessProbe = operable ? livenessProbe;
+    hasReadinessProbe = operable ? readinessProbe;
     hasDebug = args.debug or false;
 
     # Link useful paths into the container.
@@ -105,19 +104,15 @@ in
     nss = nixpkgs.writeTextDir "etc/nsswitch.conf" ''
       hosts: files dns
     '';
-
-    tag' =
-      l.throwIf (args ? tag && meta ? tags)
-      "mkStandardOCI: use of `tag` and `meta.tags` arguments are not supported together. Remove the former."
-      l.optionalString (tag != "") ((import "${inputs.self}/deprecation.nix" inputs).warnLegacyTag tag);
   in
     with dmerge;
+      l.throwIf (args ? tag && meta ? tags)
+      "mkStandardOCI: use of `tag` and `meta.tags` arguments are not supported together. Remove the former."
       cell.ops.mkOCI (
         merge
         {
-          inherit name uid gid labels options perms config meta setup runtimeInputs;
+          inherit name tag uid gid labels options perms config meta setup runtimeInputs;
           entrypoint = operable';
-          tag = tag'; # ideally ''
         }
         {
           # mkStandardOCI differentiators over mkOCI

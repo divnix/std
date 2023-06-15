@@ -30,6 +30,7 @@ in
     debugInputs ? [],
     livenessProbe ? null,
     readinessProbe ? null,
+    meta ? {},
   }: let
     # nixpkgs.runtimeShell is a path to the shell, not a derivation
     runtimeShellBin =
@@ -69,18 +70,20 @@ in
       '';
     };
   in
-    (cell.ops.writeScript
-      ({
-          inherit runtimeInputs runtimeEnv;
-          name = "operable-${package.name}";
-          text = ''
-            ${runtimeScript}
-          '';
-        }
-        // l.optionalAttrs (runtimeShell != null) {
-          inherit runtimeShell;
-        }))
-    // {
+    cell.ops.lazyDerivation {
+      inherit meta;
+      derivation =
+        cell.ops.writeScript
+        ({
+            inherit runtimeInputs runtimeEnv;
+            name = "operable-${package.name}";
+            text = ''
+              ${runtimeScript}
+            '';
+          }
+          // l.optionalAttrs (runtimeShell != null) {
+            inherit runtimeShell;
+          });
       passthru =
         # These attributes are useful for informing later stages
         {

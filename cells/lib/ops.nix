@@ -14,6 +14,7 @@ in {
   mkSetup = import ./ops/mkSetup.nix {inherit inputs cell;};
   mkUser = import ./ops/mkUser.nix {inherit inputs cell;};
   writeScript = import ./ops/writeScript.nix {inherit inputs cell;};
+  lazyDerivation = import ./ops/lazyDerivation.nix {inherit inputs cell;};
 
   mkOCI = import ./ops/mkOCI.nix {inherit inputs cell;};
   mkDevOCI = import ./ops/mkDevOCI.nix {inherit inputs cell;};

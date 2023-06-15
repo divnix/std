@@ -42,7 +42,7 @@ in
     vscode ? false,
     slim ? false,
     user ? "user",
-    tag ? "",
+    tag ? null,
     pkgs ? [],
     setup ? [],
     perms ? [],
