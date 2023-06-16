@@ -64,8 +64,13 @@
     },
     "dmerge": {
       "inputs": {
-        "haumea": "haumea",
-        "nixlib": "nixlib",
+        "haumea": [
+          "haumea"
+        ],
+        "nixlib": [
+          "haumea",
+          "nixpkgs"
+        ],
         "yants": [
           "yants"
         ]
@@ -87,7 +92,7 @@
     },
     "fenix": {
       "inputs": {
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs_3",
         "rust-analyzer-src": "rust-analyzer-src"
       },
       "locked": {
@@ -152,10 +157,7 @@
     },
     "haumea": {
       "inputs": {
-        "nixpkgs": [
-          "dmerge",
-          "nixlib"
-        ]
+        "nixpkgs": "nixpkgs"
       },
       "locked": {
         "lastModified": 1685133229,
@@ -175,8 +177,8 @@
     "incl": {
       "inputs": {
         "nixlib": [
-          "dmerge",
-          "nixlib"
+          "haumea",
+          "nixpkgs"
         ]
       },
       "locked": {
@@ -242,7 +244,7 @@
         "type": "github"
       }
     },
-    "nixlib": {
+    "nixpkgs": {
       "locked": {
         "lastModified": 1681001314,
         "narHash": "sha256-5sDnCLdrKZqxLPK4KA8+f4A3YKO/u6ElpMILvX0g72c=",
@@ -257,7 +259,7 @@
         "type": "github"
       }
     },
-    "nixpkgs": {
+    "nixpkgs_2": {
       "locked": {
         "lastModified": 1675940568,
         "narHash": "sha256-epG6pOT9V0kS+FUqd7R6/CWkgnZx2DMT5Veqo+y6G3c=",
@@ -273,7 +275,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
+    "nixpkgs_3": {
       "locked": {
         "lastModified": 1677063315,
         "narHash": "sha256-qiB4ajTeAOVnVSAwCNEEkoybrAlA+cpeiBxLobHndE8=",
@@ -405,6 +407,7 @@
         "devshell": "devshell",
         "dmerge": "dmerge",
         "flake-utils": "flake-utils",
+        "haumea": "haumea",
         "incl": "incl",
         "makes": [
           "blank"
@@ -414,7 +417,7 @@
         ],
         "n2c": "n2c",
         "nixago": "nixago",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "paisano": "paisano",
         "paisano-mdbook-preprocessor": "paisano-mdbook-preprocessor",
         "paisano-tui": "paisano-tui",
@@ -468,8 +471,8 @@
     "yants": {
       "inputs": {
         "nixpkgs": [
-          "dmerge",
-          "nixlib"
+          "haumea",
+          "nixpkgs"
         ]
       },
       "locked": {

@@ -20,15 +20,20 @@
   inputs.blank.url = "github:divnix/blank";
   inputs.yants = {
     url = "github:divnix/yants";
-    inputs.nixpkgs.follows = "dmerge/nixlib";
+    inputs.nixpkgs.follows = "haumea/nixpkgs";
   };
   inputs.dmerge = {
     url = "github:divnix/dmerge/0.2.1";
+    inputs.haumea.follows = "haumea";
     inputs.yants.follows = "yants";
+    inputs.nixlib.follows = "haumea/nixpkgs";
+  };
+  inputs.haumea = {
+    url = "github:nix-community/haumea/v0.2.2";
   };
   inputs.incl = {
     url = "github:divnix/incl";
-    inputs.nixlib.follows = "dmerge/nixlib";
+    inputs.nixlib.follows = "haumea/nixpkgs";
   };
   /*
   Auxiliar inputs used in builtin libraries or for the dev environment.
@@ -51,21 +56,22 @@
     makes.follows = "blank";
     arion.follows = "blank";
   };
-  outputs = inputs: let
-    # this is a standard-specific contract to wrap the data block type with metadata
-    dataWith = meta: data: {
-      __std_data_wrapper = true;
-      inherit data meta;
+  outputs = {
+    nixpkgs,
+    haumea,
+    paisano,
+    ...
+  } @ inputs: let
+    lib = haumea.lib.load {
+      src = ./lib;
+      inputs = (removeAttrs inputs ["self"]) // {inherit grow;};
     };
-    blockTypes = import ./src/blocktypes.nix {inherit (inputs) nixpkgs n2c;};
-    sharedActions = import ./src/actions.nix {inherit (inputs) nixpkgs;};
-    l = inputs.nixpkgs.lib // builtins;
 
     growOn = {
       cellBlocks ? [
-        (blockTypes.functions "library")
-        (blockTypes.runnables "apps")
-        (blockTypes.installables "packages")
+        (lib.blockTypes.functions "library")
+        (lib.blockTypes.runnables "apps")
+        (lib.blockTypes.installables "packages")
       ],
       ...
     } @ args: let
@@ -78,33 +84,23 @@
           else {inherit cellBlocks;}
         );
     in
-      inputs.paisano.growOn args' {
+      paisano.growOn args' {
         # standard-specific quality-of-life assets
         __std.direnv_lib = ./direnv_lib.sh;
       };
-    grow = args: l.removeAttrs (growOn args) ["__functor"];
-    flakeModule = import ./src/flakeModule.nix {
-      inherit grow;
-      inherit (inputs.paisano) harvest pick winnow;
-      types = import (inputs.paisano + /types/default.nix) {
-        inherit l;
-        inherit (inputs) yants;
-        paths = null;
-      };
-    };
+    grow = args: removeAttrs (growOn args) ["__functor"];
   in
     {
       inherit (inputs) yants dmerge incl; # convenience re-exports
-      inherit blockTypes sharedActions dataWith;
-      inherit (blockTypes) runnables installables functions data devshells containers files microvms nixago nomadJobManifests;
+      inherit (lib) blockTypes dataWith flakeModule;
       inherit grow growOn;
-      inherit (inputs.paisano) pick harvest winnow;
-      systems = l.systems.doubles;
-      inherit flakeModule;
+      inherit (paisano) pick harvest winnow;
+      systems = nixpkgs.lib.systems.doubles;
     }
     # on our own account ...
     // (import ./dogfood.nix {
-      inherit inputs blockTypes growOn;
-      inherit (inputs.paisano) pick harvest;
+      inherit inputs growOn;
+      inherit (lib) blockTypes;
+      inherit (paisano) pick harvest;
     });
 }

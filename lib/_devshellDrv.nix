@@ -1,6 +1,6 @@
 # remove once upstream nixpkgs includes the `developDerivation`
 # https://github.com/NixOS/nixpkgs/pull/206915
-drv: let
+_: drv: let
   inherit (drv) drvAttrs;
   getEnv = builtins.toFile "get-env.sh" ''
 
