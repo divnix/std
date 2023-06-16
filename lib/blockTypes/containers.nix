@@ -15,6 +15,7 @@ Available actions:
 let
   inherit (root) mkCommand actions;
   inherit (super) addSelectorFunctor;
+  inherit (builtins) readFile toFile;
 in
   name: {
     __functor = addSelectorFunctor;
@@ -28,6 +29,15 @@ in
     }: let
       inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
       inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
+
+      provisoDrv = pkgs.substituteAll {
+        src = ./containers-proviso.sh;
+        filter = ./containers-publish-filter.jq;
+      };
+      proviso =
+        # toFile ensures it get's build
+        toFile provisoDrv.name
+        (readFile (toString provisoDrv));
 
       tags' =
         builtins.toFile "${target.name}-tags.json" (builtins.concatStringsSep "\n" target.image.tags);
@@ -67,10 +77,7 @@ in
           copy docker://${target.image.repo}
         '' {
           meta.image = target.image.name;
-          proviso = pkgs.substituteAll {
-            src = ./containers-proviso.sh;
-            filter = ./containers-publish-filter.jq;
-          };
+          inherit proviso;
         })
       (mkCommand currentSystem "load" "load image to the local docker daemon" ''
         ${copyFn}
