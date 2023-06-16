@@ -27,6 +27,8 @@ in
       target,
     }: let
       inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
+      inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
+
       tags' =
         builtins.toFile "${target.name}-tags.json" (builtins.concatStringsSep "\n" target.image.tags);
       copyFn = let
@@ -65,7 +67,7 @@ in
           copy docker://${target.image.repo}
         '' {
           meta.image = target.image.name;
-          proviso = nixpkgs.substituteAll {
+          proviso = pkgs.substituteAll {
             src = ./containers-proviso.sh;
             filter = ./containers-publish-filter.jq;
           };

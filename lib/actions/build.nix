@@ -7,9 +7,10 @@
   inherit (super) contextFreeDrv;
 in
   currentSystem: target: let
+    pkgs = nixpkgs.legacyPackages.${currentSystem};
     args = {
       targetDrv = target.drvPath;
-      proviso = nixpkgs.substituteAll {
+      proviso = pkgs.substituteAll {
         src = ./build-proviso.sh;
         filter = ./build-filter.jq;
         extractor = ./build-uncached-extractor.sed;
