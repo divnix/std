@@ -143,7 +143,7 @@
                     <main>
                         <h1 id="hello-moon"><a class="header" href="#hello-moon">Hello Moon</a></h1>
 <p><em>A slightly more complete <a href="../hello-world">hello world</a> tutorial.</em></p>
-<p>This tutorial implements a very typical <code>_automation</code> Cell and its Cell Blocks for a somewhat bigger project.
+<p>This tutorial implements a very typical <code>local</code> Cell and its Cell Blocks for a somewhat bigger project.
 It also makes use of more advanced functions of <code>std</code>.
 Namely:</p>
 <ul>
@@ -187,7 +187,7 @@ In order to familiarize yourself with them, please have a quick glance at the <a
         custom Cell Blocks (i.e. &quot;typed outputs&quot;)
         */
         cellBlocks = [
-          (blockTypes.devshells &quot;devshells&quot;)
+          (blockTypes.devshells &quot;shells&quot;)
           (blockTypes.nixago &quot;nixago&quot;)
         ];
 
@@ -206,7 +206,7 @@ In order to familiarize yourself with them, please have a quick glance at the <a
       # Soil ...
       # 1) layer for compat with the nix CLI
       {
-        devShells = harvest inputs.self [&quot;_automation&quot; &quot;devshells&quot;];
+        devShells = harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
       }
       # 2) there can be various layers; `growOn` is a variadic function
       {};
@@ -216,8 +216,8 @@ In order to familiarize yourself with them, please have a quick glance at the <a
 This is gentle so that our colleagues know immediately which files to either look or never look at depending on where they stand.</p>
 <p>We also used <code>std.growOn</code> instead of <code>std.grow</code> so that we can add compatibility layers of &quot;soil&quot;.</p>
 <p>Furthermore, we only defined two Cell Blocks: <code>nixago</code> &amp; <code>devshells</code>. More on them follows...</p>
-<h4 id="nix_automation"><a class="header" href="#nix_automation"><code>./nix/_automation/*</code></a></h4>
-<p>Next, we define a <code>_automation</code> cell.
+<h4 id="nixlocal"><a class="header" href="#nixlocal"><code>./nix/local/*</code></a></h4>
+<p>Next, we define a <code>local</code> cell.
 Each project will have some amount of automation.
 This can be repository automation, such as code generation.
 Or it can be a CI/CD specification.
@@ -237,143 +237,24 @@ In here, we wire up two tools from the Nix ecosystem: <a href="https://github.co
 <p>Integration Tools however combine them into a polished user story and experience.</p>
 <p>The Nix ecosystem is very rich in <em>component tools</em>, however only few <em>integration tools</em> exist at the time of writing.</p>
 </blockquote>
-<h4 id="nix_automationdevshellsnix"><a class="header" href="#nix_automationdevshellsnix"><code>./nix/_automation/devshells.nix</code></a></h4>
+<h4 id="nixlocalshellsnix"><a class="header" href="#nixlocalshellsnix"><code>./nix/local/shells.nix</code></a></h4>
 <p>Let's start with the <code>cell.devshells</code> Cell Block and work our way backwards to the <code>cell.nixago</code> Cell Block below.</p>
 <blockquote>
 <p><strong>More semantic background:</strong></p>
-<p>I could also reference them as <code>inputs.cells._automation.devshells</code> &amp; <code>inputs.cells._automation.nixago</code>.</p>
+<p>I could also reference them as <code>inputs.cells.local.devshells</code> &amp; <code>inputs.cells.local.nixago</code>.</p>
 <p>But, because we are sticking with the local Cell context, we don't want to confuse the future code reader.
 Instead, we gently hint at the locality by just referring them via the <code>cell</code> context.</p>
 </blockquote>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
-  /*
-  I usually just find it very handy to alias all things library onto `l`...
-  The distinction between `builtins` and `nixpkgs.lib` has little practical
-  relevance, in most scenarios.
-  */
-  l = nixpkgs.lib // builtins;
-
-  /*
-  It is good practice to in-scope:
-  - inputs by *name*
-  - other Cells by their *Cell names*
-  - the local Cell Blocks by their *Block names*.
-
-  However, for `std`, we make an exeption and in-scope, despite being an
-  input, its primary Cell with the same name as well as the dev lib.
-  */
-  inherit (inputs) nixpkgs;
-  inherit (inputs.std) std lib;
-  inherit (cell) nixago;
-in
-  # we use Standard's mkShell wrapper for its Nixago integration
-  l.mapAttrs (_: lib.dev.mkShell) {
-    default = {...}: {
-      name = &quot;My Devshell&quot;;
-      # This `nixago` option is a courtesy of the `std` horizontal
-      # integration between Devshell and Nixago
-      nixago = [
-        # off-the-shelve from `std`
-        (lib.cfg.conform {data = {inherit (inputs) cells;};})
-        lib.cfg.lefthook
-        lib.cfg.adrgen
-        # modified from the local Cell
-        nixago.treefmt
-        nixago.editorconfig
-        nixago.mdbook
-      ];
-      # Devshell handily represents `commands` as part of
-      # its Message Of The Day (MOTD) or the built-in `menu` command.
-      commands = [
-        {
-          package = nixpkgs.reuse;
-          category = &quot;legal&quot;;
-          /*
-          For display, reuse already has both a `pname` &amp; `meta.description`.
-          Hence, we don't need to inline these - they are autodetected:
-
-          name = &quot;reuse&quot;;
-          description = &quot;Reuse is a tool to manage a project's LICENCES&quot;;
-          */
-        }
-      ];
-      # Always import the `std` default devshellProfile to also install
-      # the `std` CLI/TUI into your Devshell.
-      imports = [std.devshellProfiles.default];
-    };
-  }
+<pre><code class="language-nix">{{#include ./nix/local/devshells.nix}}
 </code></pre>
 <p>The <code>nixago = [];</code> option in this definition is a special integration provided by the <a href="../../reference/lib/dev/mkShell.html">Standard's <code>devshell</code>-wrapper (<code>std.lib.mkShell</code>)</a>.</p>
 <p><em>This is how <code>std</code> delivers on its promise of being a (horizontal) integration tool that wraps (vertical) component tools into a polished user story and experience.</em></p>
 <p>Because we made use of <code>std.harvest</code> in the flake, you now can actually test out the devshell via the Nix CLI compat layer by just running <code>nix develop -c &quot;$SHELL&quot;</code> in the directory of the flake.
 For a more elegant method of entering a development shell read on the <a href="#direnv">direnv</a> section below.</p>
-<h4 id="nix_automationnixagonix"><a class="header" href="#nix_automationnixagonix"><code>./nix/_automation/nixago.nix</code></a></h4>
+<h4 id="nixlocalnixagonix"><a class="header" href="#nixlocalnixagonix"><code>./nix/local/nixago.nix</code></a></h4>
 <p>As we have seen above, the <code>nixago</code> option in the <code>cell.devshells</code> Cell Block references Targets from both <code>lib.cfg</code>.
 While you can explore <code>lib.cfg</code> <a href="https://github.com/divnix/std/blob/main/cells/lib/cfg.nix">here</a>, let's now have a closer look at <code>cell.nixago</code>:</p>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
-  inherit (inputs) nixpkgs;
-  inherit (inputs.std) lib;
-  /*
-  While these are strictly specializations of the available
-  Nixago Pebbles at `lib.cfg.*`, it would be entirely
-  possible to define a completely new pebble inline
-  */
-in {
-  /*
-  treefmt: https://github.com/numtide/treefmt
-  */
-  treefmt = lib.cfg.treefmt {
-    # we use the data attribute to modify the
-    # target data structure via a simple data overlay
-    # (`divnix/data-merge` / `std.dmerge`) mechanism.
-    data.formatter.go = {
-      command = &quot;gofmt&quot;;
-      options = [&quot;-w&quot;];
-      includes = [&quot;*.go&quot;];
-    };
-    # for the `std.lib.dev.mkShell` integration with nixago,
-    # we also hint which packages should be made available
-    # in the environment for this &quot;Nixago Pebble&quot;
-    packages = [nixpkgs.go];
-  };
-
-  /*
-  editorconfig: https://editorconfig.org/
-  */
-  editorconfig = lib.cfg.editorconfig {
-    data = {
-      # the actual target data structure depends on the
-      # Nixago Pebble, and ultimately, on the tool to configure
-      &quot;*.xcf&quot; = {
-        charset = &quot;unset&quot;;
-        end_of_line = &quot;unset&quot;;
-        insert_final_newline = &quot;unset&quot;;
-        trim_trailing_whitespace = &quot;unset&quot;;
-        indent_style = &quot;unset&quot;;
-        indent_size = &quot;unset&quot;;
-      };
-      &quot;{*.go,go.mod}&quot; = {
-        indent_style = &quot;tab&quot;;
-        indent_size = 4;
-      };
-    };
-  };
-
-  /*
-  mdbook: https://rust-lang.github.io/mdBook
-  */
-  mdbook = lib.cfg.mdbook {
-    data = {
-      book.title = &quot;The Standard Book&quot;;
-    };
-  };
-}
+<pre><code class="language-nix">{{#include ./nix/local/nixago.nix}}
 </code></pre>
 <p>In this Cell Block, we have been modifying some built-in convenience <code>lib.cfg.*</code> pebbles.
 The way <code>data</code> is merged upon the existing pebble is via a simple left-hand-side/right-hand-site <code>data-merge</code> (<code>std.dmerge</code>).</p>
@@ -415,7 +296,7 @@ That's not what you want.</p>
 <p>In this case, invoking <code>$SHELL</code> correctly is taken care for you by the Block Type's <code>enter</code> Action.</p>
 <pre><code class="language-bash"># fetch `std`
 $ nix shell github:divnix/std
-$ std //_automation/devshells/default:enter
+$ std //local/devshells/default:enter
 </code></pre>
 <p>Since we have declared the devshell Cell Block as a <code>blockTypes.devshells</code>, <code>std</code> auments it's Targets with the Block Type Actions.</p>
 <p>See <a href="../../reference/blocktypes/devshells-blocktype.html"><code>blockTypes.devshells</code></a> for more details on the available Actions and their implementation.</p>
@@ -424,7 +305,7 @@ $ std //_automation/devshells/default:enter
 <p>You can also explore the nixago configuration via the Nixago Block Type's <code>explore</code>-Action.</p>
 <pre><code class="language-bash"># fetch `std`
 $ nix shell github:divnix/std
-$ std //_automation/nixago/treefmt:explore
+$ std //local/nixago/treefmt:explore
 </code></pre>
 <p>See <a href="../../reference/blocktypess/nixago-blocktype.html"><code>blockTypes.nixago</code></a> for more details on the available Actions and their implementation.</p>
 <h2 id="direnv"><a class="header" href="#direnv">direnv</a></h2>
@@ -434,7 +315,7 @@ Enter <a href="https://direnv.net"><code>direnv</code></a> — the original (aga
 <p>Before you continue, first install direnv according to it's <a href="https://direnv.net/docs/installation.html">install instructions</a>.
 It's super simple &amp; super useful ™ and you should do it <em>right now</em> if you haven't yet.</p>
 <p>Please learn how to enable <code>direnv</code> in this project by following the <a href="../../guides/envrc.html">direnv how-to</a>.</p>
-<p>In this case, you would adapt the relevant line to: <strong><code>use std nix //_automation/devshells:default</code></strong>.</p>
+<p>In this case, you would adapt the relevant line to: <strong><code>use std nix //local/shells:default</code></strong>.</p>
 <p>Now, you can simply <code>cd</code> into that directory, and the devshells is being loaded.
 The MOTD will be shown, too.</p>
 <p>The first time, you need to teach the <code>direnv</code> daemon to trust the <code>.envrc</code> file via <code>direnv allow</code>.

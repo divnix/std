@@ -150,7 +150,7 @@ from there on.</p>
 # shellcheck disable=SC1090
 . &quot;$(fetchurl &quot;https://raw.githubusercontent.com/paisano-nix/direnv/main/lib&quot; &quot;sha256-R3K8Flvbovj4IOvdlWNtQKLMMSQV464WjG9eU29ixHk=&quot;)&quot;
 
-use envreload //_automation/devshells/default //_automation/configs
+use envreload //local/shells/default //local/configs
 </code></pre>
 <blockquote>
 <p><strong>NOTE:</strong>
@@ -161,90 +161,12 @@ to <code>use std</code> <strong><code>nix</code></strong> <code>//...</code> and
 <p>It is used to automatically set up file watches on files that could modify the
 current devshell, discoverable through these or similar logs during loading:</p>
 <pre><code class="language-console">direnv: loading https://raw.githubusercontent.com/divnix/std/...
-direnv: using std cells //_automation/devshells:default
-direnv: Watching: cells/_automation/devshells.nix
-direnv: Watching: cells/_automation/devshells (recursively)
+direnv: using std cells //local/shells:default
+direnv: Watching: cells/local/shells.nix
+direnv: Watching: cells/local/shells (recursively)
 </code></pre>
 <p>For reference, the above example loads the <code>default</code> devshell from:</p>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
-  l = nixpkgs.lib // builtins;
-  inherit (inputs) nixpkgs;
-  inherit (inputs.cells) std lib;
-in
-  l.mapAttrs (_: lib.dev.mkShell) rec {
-    default = {...}: {
-      name = &quot;Standard&quot;;
-      nixago = [
-        (lib.cfg.conform {data = {inherit (inputs) cells;};})
-        (lib.cfg.treefmt cell.configs.treefmt)
-        (lib.cfg.editorconfig cell.configs.editorconfig)
-        (lib.cfg.just cell.configs.just)
-        (lib.cfg.githubsettings cell.configs.githubsettings)
-        lib.cfg.lefthook
-        lib.cfg.adrgen
-        (lib.dev.mkNixago cell.configs.cog)
-      ];
-      commands =
-        [
-          {
-            package = nixpkgs.reuse;
-            category = &quot;legal&quot;;
-          }
-          {
-            package = nixpkgs.delve;
-            category = &quot;cli-dev&quot;;
-            name = &quot;dlv&quot;;
-          }
-          {
-            package = nixpkgs.go;
-            category = &quot;cli-dev&quot;;
-          }
-          {
-            package = nixpkgs.gotools;
-            category = &quot;cli-dev&quot;;
-          }
-          {
-            package = nixpkgs.gopls;
-            category = &quot;cli-dev&quot;;
-          }
-        ]
-        ++ l.optionals nixpkgs.stdenv.isLinux [
-          {
-            package = nixpkgs.golangci-lint;
-            category = &quot;cli-dev&quot;;
-          }
-        ];
-      imports = [std.devshellProfiles.default book];
-    };
-
-    book = {...}: {
-      nixago = [
-        (lib.cfg.mdbook cell.configs.mdbook)
-      ];
-    };
-
-    checks = {...}: {
-      name = &quot;checks&quot;;
-      imports = [std.devshellProfiles.default];
-      commands = [
-        {
-          name = &quot;blocktype-data&quot;;
-          command = &quot;cat $(tail -n1 &lt;&lt;&lt; $(std //_tests/data/example:write))&quot;;
-        }
-        {
-          name = &quot;blocktype-devshells&quot;;
-          command = &quot;std //_automation/devshells/default:enter -- echo OK&quot;;
-        }
-        {
-          name = &quot;blocktype-runnables&quot;;
-          command = &quot;std //std/cli/default:run -- std OK&quot;;
-        }
-      ];
-    };
-  }
+<pre><code class="language-nix">{{#include ../../cells/local/shells.nix}}
 </code></pre>
 
                     </main>

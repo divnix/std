@@ -27,7 +27,7 @@
         custom Cell Blocks (i.e. "typed outputs")
         */
         cellBlocks = [
-          (blockTypes.devshells "devshells")
+          (blockTypes.devshells "shells")
           (blockTypes.nixago "nixago")
         ];
 
@@ -46,7 +46,7 @@
       # Soil ...
       # 1) layer for compat with the nix CLI
       {
-        devShells = harvest inputs.self ["_automation" "devshells"];
+        devShells = harvest inputs.self ["local" "shells"];
       }
       # 2) there can be various layers; `growOn` is a variadic function
       {};

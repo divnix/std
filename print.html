@@ -225,11 +225,11 @@ But hey! It means: we can progress together!</p>
     # 2. Each &lt;block&gt;.nix or &lt;block&gt;/default.nix within it becomes a &quot;Cell Block&quot;
     #    Run for example: '$EDITOR nix/mycell/packages.nix' - see example content below
     cellsFrom = ./nix;
-    # 3. Only blocks with these names [here: &quot;packages&quot; &amp; &quot;devshells&quot;] are picked up by Standard
+    # 3. Only blocks with these names [here: &quot;packages&quot; &amp; &quot;shells&quot;] are picked up by Standard
     #    It's a bit like the output type system of your flake project (hint: CLI &amp; TUI!!)
     cellBlocks = with std.blockTypes; [
       (installables &quot;packages&quot; {ci.build = true;})
-      (devshells &quot;devshells&quot; {ci.build = true;})
+      (devshells &quot;shells&quot; {ci.build = true;})
     ];
   }
   # 4. Run 'nix run github:divnix/std'
@@ -238,7 +238,7 @@ But hey! It means: we can progress together!</p>
   #  - but can use anything that produces flake outputs (e.g. flake-parts or flake-utils)
   # 5. Run: nix run .
   {
-    devShells = std.harvest self [&quot;mycell&quot; &quot;devshells&quot;];
+    devShells = std.harvest self [&quot;mycell&quot; &quot;shells&quot;];
     packages = std.harvest self [&quot;mycell&quot; &quot;packages&quot;];
   };
 }
@@ -264,7 +264,7 @@ It further dogfoods itself and implements utilities in its own <a href="https://
 }:
 growOn {
   inherit inputs;
-  cellsFrom = ./cells;
+  cellsFrom = ./src;
   cellBlocks = [
     ## For downstream use
 
@@ -285,22 +285,18 @@ growOn {
 
     ## For local use in the Standard repository
 
-    # _automation
-    (blockTypes.devshells &quot;devshells&quot; {ci.build = true;})
+    # local
+    (blockTypes.devshells &quot;shells&quot; {ci.build = true;})
     (blockTypes.nixago &quot;configs&quot;)
     (blockTypes.containers &quot;containers&quot;)
     # (blockTypes.tasks &quot;tasks&quot;) # TODO: implement properly
-
-    # _tests
-    (blockTypes.data &quot;data&quot;)
-    (blockTypes.files &quot;files&quot;)
   ];
 }
 # Soil (&quot;compatibile with the entire world&quot;)
 {
-  devShells = harvest inputs.self [&quot;_automation&quot; &quot;devshells&quot;];
+  devShells = harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
   packages = harvest inputs.self [[&quot;std&quot; &quot;cli&quot;] [&quot;std&quot; &quot;packages&quot;]];
-  templates = pick inputs.self [&quot;presets&quot; &quot;templates&quot;];
+  templates = pick inputs.self [&quot;std&quot; &quot;templates&quot;];
 }
 </code></pre>
 <p><em>That's it. <code>std.grow</code> is a &quot;smart&quot; importer of your <code>nix</code> code and is designed to keep boilerplate at bay. In the so called &quot;Soil&quot; compatibility layer, you can do whatever your heart desires. For example put <code>flake-utils</code> or <code>flake-parts</code> patterns here. Or, as in the above example, just make your stuff play nicely with the Nix CLI.</em></p>
@@ -591,7 +587,7 @@ Depending on the domain schema, it can be a <em>lossy</em> convergence, though, 
       /* snip */
     }
     {
-      devShells = std.harvest self [&quot;automation&quot; &quot;devshells&quot;];
+      devShells = std.harvest self [&quot;automation&quot; &quot;shells&quot;];
       packages = std.harvest self [[&quot;std&quot; &quot;cli&quot;] [&quot;std&quot; &quot;packages&quot;]];
       templates = std.pick self [&quot;presets&quot; &quot;templates&quot;];
     };
@@ -736,7 +732,7 @@ in just a few seconds ✨</p>
 <hr />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-moon"><a class="header" href="#hello-moon">Hello Moon</a></h1>
 <p><em>A slightly more complete <a href="tutorials/hello-moon/../hello-world">hello world</a> tutorial.</em></p>
-<p>This tutorial implements a very typical <code>_automation</code> Cell and its Cell Blocks for a somewhat bigger project.
+<p>This tutorial implements a very typical <code>local</code> Cell and its Cell Blocks for a somewhat bigger project.
 It also makes use of more advanced functions of <code>std</code>.
 Namely:</p>
 <ul>
@@ -780,7 +776,7 @@ In order to familiarize yourself with them, please have a quick glance at the <a
         custom Cell Blocks (i.e. &quot;typed outputs&quot;)
         */
         cellBlocks = [
-          (blockTypes.devshells &quot;devshells&quot;)
+          (blockTypes.devshells &quot;shells&quot;)
           (blockTypes.nixago &quot;nixago&quot;)
         ];
 
@@ -799,7 +795,7 @@ In order to familiarize yourself with them, please have a quick glance at the <a
       # Soil ...
       # 1) layer for compat with the nix CLI
       {
-        devShells = harvest inputs.self [&quot;_automation&quot; &quot;devshells&quot;];
+        devShells = harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
       }
       # 2) there can be various layers; `growOn` is a variadic function
       {};
@@ -809,8 +805,8 @@ In order to familiarize yourself with them, please have a quick glance at the <a
 This is gentle so that our colleagues know immediately which files to either look or never look at depending on where they stand.</p>
 <p>We also used <code>std.growOn</code> instead of <code>std.grow</code> so that we can add compatibility layers of &quot;soil&quot;.</p>
 <p>Furthermore, we only defined two Cell Blocks: <code>nixago</code> &amp; <code>devshells</code>. More on them follows...</p>
-<h4 id="nix_automation"><a class="header" href="#nix_automation"><code>./nix/_automation/*</code></a></h4>
-<p>Next, we define a <code>_automation</code> cell.
+<h4 id="nixlocal"><a class="header" href="#nixlocal"><code>./nix/local/*</code></a></h4>
+<p>Next, we define a <code>local</code> cell.
 Each project will have some amount of automation.
 This can be repository automation, such as code generation.
 Or it can be a CI/CD specification.
@@ -830,143 +826,24 @@ In here, we wire up two tools from the Nix ecosystem: <a href="https://github.co
 <p>Integration Tools however combine them into a polished user story and experience.</p>
 <p>The Nix ecosystem is very rich in <em>component tools</em>, however only few <em>integration tools</em> exist at the time of writing.</p>
 </blockquote>
-<h4 id="nix_automationdevshellsnix"><a class="header" href="#nix_automationdevshellsnix"><code>./nix/_automation/devshells.nix</code></a></h4>
+<h4 id="nixlocalshellsnix"><a class="header" href="#nixlocalshellsnix"><code>./nix/local/shells.nix</code></a></h4>
 <p>Let's start with the <code>cell.devshells</code> Cell Block and work our way backwards to the <code>cell.nixago</code> Cell Block below.</p>
 <blockquote>
 <p><strong>More semantic background:</strong></p>
-<p>I could also reference them as <code>inputs.cells._automation.devshells</code> &amp; <code>inputs.cells._automation.nixago</code>.</p>
+<p>I could also reference them as <code>inputs.cells.local.devshells</code> &amp; <code>inputs.cells.local.nixago</code>.</p>
 <p>But, because we are sticking with the local Cell context, we don't want to confuse the future code reader.
 Instead, we gently hint at the locality by just referring them via the <code>cell</code> context.</p>
 </blockquote>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
-  /*
-  I usually just find it very handy to alias all things library onto `l`...
-  The distinction between `builtins` and `nixpkgs.lib` has little practical
-  relevance, in most scenarios.
-  */
-  l = nixpkgs.lib // builtins;
-
-  /*
-  It is good practice to in-scope:
-  - inputs by *name*
-  - other Cells by their *Cell names*
-  - the local Cell Blocks by their *Block names*.
-
-  However, for `std`, we make an exeption and in-scope, despite being an
-  input, its primary Cell with the same name as well as the dev lib.
-  */
-  inherit (inputs) nixpkgs;
-  inherit (inputs.std) std lib;
-  inherit (cell) nixago;
-in
-  # we use Standard's mkShell wrapper for its Nixago integration
-  l.mapAttrs (_: lib.dev.mkShell) {
-    default = {...}: {
-      name = &quot;My Devshell&quot;;
-      # This `nixago` option is a courtesy of the `std` horizontal
-      # integration between Devshell and Nixago
-      nixago = [
-        # off-the-shelve from `std`
-        (lib.cfg.conform {data = {inherit (inputs) cells;};})
-        lib.cfg.lefthook
-        lib.cfg.adrgen
-        # modified from the local Cell
-        nixago.treefmt
-        nixago.editorconfig
-        nixago.mdbook
-      ];
-      # Devshell handily represents `commands` as part of
-      # its Message Of The Day (MOTD) or the built-in `menu` command.
-      commands = [
-        {
-          package = nixpkgs.reuse;
-          category = &quot;legal&quot;;
-          /*
-          For display, reuse already has both a `pname` &amp; `meta.description`.
-          Hence, we don't need to inline these - they are autodetected:
-
-          name = &quot;reuse&quot;;
-          description = &quot;Reuse is a tool to manage a project's LICENCES&quot;;
-          */
-        }
-      ];
-      # Always import the `std` default devshellProfile to also install
-      # the `std` CLI/TUI into your Devshell.
-      imports = [std.devshellProfiles.default];
-    };
-  }
+<pre><code class="language-nix">{{#include ./nix/local/devshells.nix}}
 </code></pre>
 <p>The <code>nixago = [];</code> option in this definition is a special integration provided by the <a href="tutorials/hello-moon/../../reference/lib/dev/mkShell.html">Standard's <code>devshell</code>-wrapper (<code>std.lib.mkShell</code>)</a>.</p>
 <p><em>This is how <code>std</code> delivers on its promise of being a (horizontal) integration tool that wraps (vertical) component tools into a polished user story and experience.</em></p>
 <p>Because we made use of <code>std.harvest</code> in the flake, you now can actually test out the devshell via the Nix CLI compat layer by just running <code>nix develop -c &quot;$SHELL&quot;</code> in the directory of the flake.
 For a more elegant method of entering a development shell read on the <a href="tutorials/hello-moon/index.html#direnv">direnv</a> section below.</p>
-<h4 id="nix_automationnixagonix"><a class="header" href="#nix_automationnixagonix"><code>./nix/_automation/nixago.nix</code></a></h4>
+<h4 id="nixlocalnixagonix"><a class="header" href="#nixlocalnixagonix"><code>./nix/local/nixago.nix</code></a></h4>
 <p>As we have seen above, the <code>nixago</code> option in the <code>cell.devshells</code> Cell Block references Targets from both <code>lib.cfg</code>.
 While you can explore <code>lib.cfg</code> <a href="https://github.com/divnix/std/blob/main/cells/lib/cfg.nix">here</a>, let's now have a closer look at <code>cell.nixago</code>:</p>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
-  inherit (inputs) nixpkgs;
-  inherit (inputs.std) lib;
-  /*
-  While these are strictly specializations of the available
-  Nixago Pebbles at `lib.cfg.*`, it would be entirely
-  possible to define a completely new pebble inline
-  */
-in {
-  /*
-  treefmt: https://github.com/numtide/treefmt
-  */
-  treefmt = lib.cfg.treefmt {
-    # we use the data attribute to modify the
-    # target data structure via a simple data overlay
-    # (`divnix/data-merge` / `std.dmerge`) mechanism.
-    data.formatter.go = {
-      command = &quot;gofmt&quot;;
-      options = [&quot;-w&quot;];
-      includes = [&quot;*.go&quot;];
-    };
-    # for the `std.lib.dev.mkShell` integration with nixago,
-    # we also hint which packages should be made available
-    # in the environment for this &quot;Nixago Pebble&quot;
-    packages = [nixpkgs.go];
-  };
-
-  /*
-  editorconfig: https://editorconfig.org/
-  */
-  editorconfig = lib.cfg.editorconfig {
-    data = {
-      # the actual target data structure depends on the
-      # Nixago Pebble, and ultimately, on the tool to configure
-      &quot;*.xcf&quot; = {
-        charset = &quot;unset&quot;;
-        end_of_line = &quot;unset&quot;;
-        insert_final_newline = &quot;unset&quot;;
-        trim_trailing_whitespace = &quot;unset&quot;;
-        indent_style = &quot;unset&quot;;
-        indent_size = &quot;unset&quot;;
-      };
-      &quot;{*.go,go.mod}&quot; = {
-        indent_style = &quot;tab&quot;;
-        indent_size = 4;
-      };
-    };
-  };
-
-  /*
-  mdbook: https://rust-lang.github.io/mdBook
-  */
-  mdbook = lib.cfg.mdbook {
-    data = {
-      book.title = &quot;The Standard Book&quot;;
-    };
-  };
-}
+<pre><code class="language-nix">{{#include ./nix/local/nixago.nix}}
 </code></pre>
 <p>In this Cell Block, we have been modifying some built-in convenience <code>lib.cfg.*</code> pebbles.
 The way <code>data</code> is merged upon the existing pebble is via a simple left-hand-side/right-hand-site <code>data-merge</code> (<code>std.dmerge</code>).</p>
@@ -1008,7 +885,7 @@ That's not what you want.</p>
 <p>In this case, invoking <code>$SHELL</code> correctly is taken care for you by the Block Type's <code>enter</code> Action.</p>
 <pre><code class="language-bash"># fetch `std`
 $ nix shell github:divnix/std
-$ std //_automation/devshells/default:enter
+$ std //local/devshells/default:enter
 </code></pre>
 <p>Since we have declared the devshell Cell Block as a <code>blockTypes.devshells</code>, <code>std</code> auments it's Targets with the Block Type Actions.</p>
 <p>See <a href="tutorials/hello-moon/../../reference/blocktypes/devshells-blocktype.html"><code>blockTypes.devshells</code></a> for more details on the available Actions and their implementation.</p>
@@ -1017,7 +894,7 @@ $ std //_automation/devshells/default:enter
 <p>You can also explore the nixago configuration via the Nixago Block Type's <code>explore</code>-Action.</p>
 <pre><code class="language-bash"># fetch `std`
 $ nix shell github:divnix/std
-$ std //_automation/nixago/treefmt:explore
+$ std //local/nixago/treefmt:explore
 </code></pre>
 <p>See <a href="tutorials/hello-moon/../../reference/blocktypess/nixago-blocktype.html"><code>blockTypes.nixago</code></a> for more details on the available Actions and their implementation.</p>
 <h2 id="direnv"><a class="header" href="#direnv">direnv</a></h2>
@@ -1027,7 +904,7 @@ Enter <a href="https://direnv.net"><code>direnv</code></a> — the original (aga
 <p>Before you continue, first install direnv according to it's <a href="https://direnv.net/docs/installation.html">install instructions</a>.
 It's super simple &amp; super useful ™ and you should do it <em>right now</em> if you haven't yet.</p>
 <p>Please learn how to enable <code>direnv</code> in this project by following the <a href="tutorials/hello-moon/../../guides/envrc.html">direnv how-to</a>.</p>
-<p>In this case, you would adapt the relevant line to: <strong><code>use std nix //_automation/devshells:default</code></strong>.</p>
+<p>In this case, you would adapt the relevant line to: <strong><code>use std nix //local/shells:default</code></strong>.</p>
 <p>Now, you can simply <code>cd</code> into that directory, and the devshells is being loaded.
 The MOTD will be shown, too.</p>
 <p>The first time, you need to teach the <code>direnv</code> daemon to trust the <code>.envrc</code> file via <code>direnv allow</code>.
@@ -1092,7 +969,7 @@ from there on.</p>
 # shellcheck disable=SC1090
 . &quot;$(fetchurl &quot;https://raw.githubusercontent.com/paisano-nix/direnv/main/lib&quot; &quot;sha256-R3K8Flvbovj4IOvdlWNtQKLMMSQV464WjG9eU29ixHk=&quot;)&quot;
 
-use envreload //_automation/devshells/default //_automation/configs
+use envreload //local/shells/default //local/configs
 </code></pre>
 <blockquote>
 <p><strong>NOTE:</strong>
@@ -1103,90 +980,12 @@ to <code>use std</code> <strong><code>nix</code></strong> <code>//...</code> and
 <p>It is used to automatically set up file watches on files that could modify the
 current devshell, discoverable through these or similar logs during loading:</p>
 <pre><code class="language-console">direnv: loading https://raw.githubusercontent.com/divnix/std/...
-direnv: using std cells //_automation/devshells:default
-direnv: Watching: cells/_automation/devshells.nix
-direnv: Watching: cells/_automation/devshells (recursively)
+direnv: using std cells //local/shells:default
+direnv: Watching: cells/local/shells.nix
+direnv: Watching: cells/local/shells (recursively)
 </code></pre>
 <p>For reference, the above example loads the <code>default</code> devshell from:</p>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
-  l = nixpkgs.lib // builtins;
-  inherit (inputs) nixpkgs;
-  inherit (inputs.cells) std lib;
-in
-  l.mapAttrs (_: lib.dev.mkShell) rec {
-    default = {...}: {
-      name = &quot;Standard&quot;;
-      nixago = [
-        (lib.cfg.conform {data = {inherit (inputs) cells;};})
-        (lib.cfg.treefmt cell.configs.treefmt)
-        (lib.cfg.editorconfig cell.configs.editorconfig)
-        (lib.cfg.just cell.configs.just)
-        (lib.cfg.githubsettings cell.configs.githubsettings)
-        lib.cfg.lefthook
-        lib.cfg.adrgen
-        (lib.dev.mkNixago cell.configs.cog)
-      ];
-      commands =
-        [
-          {
-            package = nixpkgs.reuse;
-            category = &quot;legal&quot;;
-          }
-          {
-            package = nixpkgs.delve;
-            category = &quot;cli-dev&quot;;
-            name = &quot;dlv&quot;;
-          }
-          {
-            package = nixpkgs.go;
-            category = &quot;cli-dev&quot;;
-          }
-          {
-            package = nixpkgs.gotools;
-            category = &quot;cli-dev&quot;;
-          }
-          {
-            package = nixpkgs.gopls;
-            category = &quot;cli-dev&quot;;
-          }
-        ]
-        ++ l.optionals nixpkgs.stdenv.isLinux [
-          {
-            package = nixpkgs.golangci-lint;
-            category = &quot;cli-dev&quot;;
-          }
-        ];
-      imports = [std.devshellProfiles.default book];
-    };
-
-    book = {...}: {
-      nixago = [
-        (lib.cfg.mdbook cell.configs.mdbook)
-      ];
-    };
-
-    checks = {...}: {
-      name = &quot;checks&quot;;
-      imports = [std.devshellProfiles.default];
-      commands = [
-        {
-          name = &quot;blocktype-data&quot;;
-          command = &quot;cat $(tail -n1 &lt;&lt;&lt; $(std //_tests/data/example:write))&quot;;
-        }
-        {
-          name = &quot;blocktype-devshells&quot;;
-          command = &quot;std //_automation/devshells/default:enter -- echo OK&quot;;
-        }
-        {
-          name = &quot;blocktype-runnables&quot;;
-          command = &quot;std //std/cli/default:run -- std OK&quot;;
-        }
-      ];
-    };
-  }
+<pre><code class="language-nix">{{#include ../../cells/local/shells.nix}}
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="why-nix"><a class="header" href="#why-nix">Why <code>nix</code>?</a></h1>
 <p>A lot of people write a lot of confusing stuff about nix.</p>
@@ -1903,38 +1702,450 @@ actions they provide to a particular Cell Block.</p>
 <p>It is entirely possible to define custom Block Types with custom
 Actions according to the needs of your project.</p>
 <h2 id="arion"><a class="header" href="#arion">Arion</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/arion.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+}:
+/*
+Use the arion for arionCompose Jobs - https://docs.hercules-ci.com/arion/
+
+Available actions:
+  - up
+  - ps
+  - stop
+  - rm
+  - config
+  - arion
+*/
+let
+  inherit (root) mkCommand;
+in
+  name: {
+    inherit name;
+    type = &quot;arion&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: let
+      pkgs = nixpkgs.legacyPackages.${currentSystem};
+      cmd = &quot;${pkgs.arion}/bin/arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
+    in [
+      (mkCommand currentSystem &quot;up&quot; &quot;arion up&quot; ''${cmd} up &quot;$@&quot; '' {})
+      (mkCommand currentSystem &quot;ps&quot; &quot;exec this arion task to ps&quot; ''${cmd} ps &quot;$@&quot; '' {})
+      (mkCommand currentSystem &quot;stop&quot; &quot;arion stop&quot; ''${cmd} stop &quot;$@&quot; '' {})
+      (mkCommand currentSystem &quot;rm&quot; &quot;arion rm&quot; ''${cmd} rm &quot;$@&quot; '' {})
+      (mkCommand currentSystem &quot;config&quot; &quot;check the docker-compose yaml file&quot; ''${cmd} config &quot;$@&quot; '' {})
+      (mkCommand currentSystem &quot;arion&quot; &quot;pass any command to arion&quot; ''${cmd} &quot;$@&quot; '' {})
+    ];
+  }
 </code></pre>
 <h2 id="runnables-todo-vs-installables"><a class="header" href="#runnables-todo-vs-installables">Runnables (todo: vs installables)</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/runnables.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+  super,
+}:
+/*
+Use the Runnables Blocktype for targets that you want to
+make accessible with a 'run' action on the TUI.
+*/
+let
+  inherit (root) mkCommand actions;
+  inherit (super) addSelectorFunctor;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = &quot;runnables&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: [
+      (actions.build currentSystem target)
+      (actions.run currentSystem target)
+    ];
+  }
 </code></pre>
 <h2 id="installables-todo-vs-runnables"><a class="header" href="#installables-todo-vs-runnables">Installables (todo: vs runnables)</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/installables.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+  super,
+}:
+/*
+Use the Installables Blocktype for targets that you want to
+make availabe for installation into the user's nix profile.
+
+Available actions:
+  - install
+  - upgrade
+  - remove
+  - build
+  - bundle
+  - bundleImage
+  - bundleAppImage
+*/
+let
+  inherit (root) mkCommand actions;
+  inherit (super) addSelectorFunctor;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = &quot;installables&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: [
+      (actions.build currentSystem target)
+      # profile commands require a flake ref
+      (mkCommand currentSystem &quot;install&quot; &quot;install this target&quot; ''
+        # ${target}
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        nix profile install $PRJ_ROOT#${fragment}
+      '' {})
+      (mkCommand currentSystem &quot;upgrade&quot; &quot;upgrade this target&quot; ''
+        # ${target}
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        nix profile upgrade $PRJ_ROOT#${fragment}
+      '' {})
+      (mkCommand currentSystem &quot;remove&quot; &quot;remove this target&quot; ''
+        # ${target}
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        nix profile remove $PRJ_ROOT#${fragment}
+      '' {})
+      # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
+      (mkCommand currentSystem &quot;bundle&quot; &quot;bundle this target&quot; ''
+        # ${target}
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
+      '' {})
+      (mkCommand currentSystem &quot;bundleImage&quot; &quot;bundle this target to image&quot; ''
+        # ${target}
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
+      '' {})
+      (mkCommand currentSystem &quot;bundleAppImage&quot; &quot;bundle this target to AppImage&quot; ''
+        # ${target}
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        nix bundle --bundler github:ralismark/nix-appimage --refresh $PRJ_ROOT#${fragment}
+      '' {})
+    ];
+  }
 </code></pre>
 <h2 id="pkgs"><a class="header" href="#pkgs">Pkgs</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/pkgs.nix}}
+<pre><code class="language-nix">_:
+/*
+Use the Pkgs Blocktype if you need to construct your custom
+variant of nixpkgs with overlays.
+
+Targets will be excluded from the CLI / TUI  and thus not
+slow them down.
+*/
+name: {
+  inherit name;
+  type = &quot;pkgs&quot;;
+  cli = false; # its special power
+}
 </code></pre>
 <h2 id="devshells"><a class="header" href="#devshells">Devshells</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/devshells.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+  super,
+}:
+/*
+Use the Devshells Blocktype for devShells.
+
+Available actions:
+  - build
+  - enter
+*/
+let
+  inherit (root) mkCommand actions devshellDrv;
+  inherit (super) addSelectorFunctor;
+  inherit (builtins) unsafeDiscardStringContext;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = &quot;devshells&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: let
+      developDrv = devshellDrv target;
+    in [
+      (actions.build currentSystem target)
+      (mkCommand currentSystem &quot;enter&quot; &quot;enter this devshell&quot; ''
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        if test -z &quot;$PRJ_DATA_DIR&quot;; then
+          echo &quot;PRJ_DATA_DIR is not set. Action aborting.&quot;
+          exit 1
+        fi
+        profile_path=&quot;$PRJ_DATA_DIR/${fragmentRelPath}&quot;
+        mkdir -p &quot;$profile_path&quot;
+        # ${developDrv}
+        nix_args=(
+          &quot;${unsafeDiscardStringContext developDrv.drvPath}&quot;
+          &quot;--no-update-lock-file&quot;
+          &quot;--no-write-lock-file&quot;
+          &quot;--no-warn-dirty&quot;
+          &quot;--accept-flake-config&quot;
+          &quot;--no-link&quot;
+          &quot;--build-poll-interval&quot; &quot;0&quot;
+          &quot;--builders-use-substitutes&quot;
+        )
+        nix build &quot;''${nix_args[@]}&quot; --profile &quot;$profile_path/shell-profile&quot;
+        _SHELL=&quot;$SHELL&quot;
+        eval &quot;$(nix print-dev-env ${developDrv})&quot;
+        SHELL=&quot;$_SHELL&quot;
+        if ! [[ -v STD_DIRENV ]]; then
+          if declare -F __devshell-motd &amp;&gt;/dev/null; then
+            __devshell-motd
+          fi
+          exec $SHELL -i
+        fi
+      '' {})
+    ];
+  }
 </code></pre>
 <h2 id="nixago"><a class="header" href="#nixago">Nixago</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/nixago.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+}:
+/*
+Use the Nixago Blocktype for nixago pebbles.
+
+Use Nixago pebbles to ensure files are present
+or symlinked into your repository. You may typically
+use this for repo dotfiles.
+
+For more information, see: https://github.com/nix-community/nixago.
+
+Available actions:
+  - ensure
+  - explore
+*/
+let
+  inherit (root) mkCommand;
+in
+  name: {
+    inherit name;
+    type = &quot;nixago&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: [
+      (mkCommand currentSystem &quot;populate&quot; &quot;populate this nixago file into the repo&quot; ''
+        ${target.install}/bin/nixago_shell_hook
+      '' {})
+      (mkCommand currentSystem &quot;explore&quot; &quot;interactively explore the nixago file&quot; ''
+        ${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat &quot;${target.config}&quot;
+      '' {})
+    ];
+  }
 </code></pre>
 <h2 id="containers"><a class="header" href="#containers">Containers</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/containers.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  n2c,
+  root,
+  super,
+}:
+/*
+Use the Containers Blocktype for OCI-images built with nix2container.
+
+Available actions:
+  - print-image
+  - publish
+  - load
+*/
+let
+  inherit (root) mkCommand actions;
+  inherit (super) addSelectorFunctor;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = &quot;containers&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: let
+      inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
+      inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
+
+      tags' =
+        builtins.toFile &quot;${target.name}-tags.json&quot; (builtins.concatStringsSep &quot;\n&quot; target.image.tags);
+      copyFn = let
+        skopeo = &quot;skopeo --insecure-policy&quot;;
+      in ''
+        export PATH=${skopeo-nix2container}/bin:$PATH
+
+        copy() {
+          local uri prev_tag
+          uri=$1
+          shift
+
+          for tag in $(&lt;${tags'}); do
+            if ! [[ -v prev_tag ]]; then
+              ${skopeo} copy nix:${target} &quot;$uri:$tag&quot; &quot;$@&quot;
+            else
+              # speedup: copy from the previous tag to avoid superflous network bandwidth
+              ${skopeo} copy &quot;$uri:$prev_tag&quot; &quot;$uri:$tag&quot; &quot;$@&quot;
+            fi
+            echo &quot;Done: $uri:$tag&quot;
+
+            prev_tag=&quot;$tag&quot;
+          done
+        }
+      '';
+    in [
+      (actions.build currentSystem target)
+      (mkCommand currentSystem &quot;print-image&quot; &quot;print out the image.repo with all tags&quot; ''
+        echo
+        for tag in $(&lt;${tags'}); do
+          echo &quot;${target.image.repo}:$tag&quot;
+        done
+      '' {})
+      (mkCommand currentSystem &quot;publish&quot; &quot;copy the image to its remote registry&quot; ''
+          ${copyFn}
+          copy docker://${target.image.repo}
+        '' {
+          meta.image = target.image.name;
+          proviso = pkgs.substituteAll {
+            src = ./containers-proviso.sh;
+            filter = ./containers-publish-filter.jq;
+          };
+        })
+      (mkCommand currentSystem &quot;load&quot; &quot;load image to the local docker daemon&quot; ''
+        ${copyFn}
+        if command -v podman &amp;&gt; /dev/null; then
+           echo &quot;Podman detected: copy to local podman&quot;
+           copy containers-storage:${target.image.repo} &quot;$@&quot;
+        fi
+        if command -v docker &amp;&gt; /dev/null; then
+           echo &quot;Docker detected: copy to local docker&quot;
+           copy docker-daemon:${target.image.repo} &quot;$@&quot;
+        fi
+      '' {})
+    ];
+  }
 </code></pre>
 <h2 id="data"><a class="header" href="#data">Data</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/data.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+}:
+/*
+Use the Data Blocktype for json serializable data.
+
+Available actions:
+  - write
+  - explore
+
+For all actions is true:
+  Nix-proper 'stringContext'-carried dependency will be realized
+  to the store, if present.
+*/
+let
+  inherit (root) mkCommand;
+  inherit (builtins) toJSON concatStringsSep;
+in
+  name: {
+    inherit name;
+    type = &quot;data&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: let
+      inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
+
+      # if target ? __std_data_wrapper, then we need to unpack from `.data`
+      json = pkgs.writeTextFile {
+        name = &quot;data.json&quot;;
+        text = toJSON (
+          if target ? __std_data_wrapper
+          then target.data
+          else target
+        );
+      };
+      jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
+      fx = [&quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
+    in [
+      (mkCommand currentSystem &quot;write&quot; &quot;write to file&quot; &quot;echo ${json}&quot; {})
+      (mkCommand currentSystem &quot;explore&quot; &quot;interactively explore&quot; (concatStringsSep &quot;\t&quot; (jq ++ fx)) {})
+    ];
+  }
 </code></pre>
 <h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/functions.nix}}
+<pre><code class="language-nix">_:
+/*
+Use the Functions Blocktype for reusable nix functions that you would
+call elswhere in the code.
+
+Also use this for all types of modules and profiles, since they are
+implemented as functions.
+
+Consequently, there are no actions available for functions.
+*/
+name: {
+  inherit name;
+  type = &quot;functions&quot;;
+}
 </code></pre>
 <h2 id="anything"><a class="header" href="#anything">Anything</a></h2>
 <p><em>Note: while the implementation is the same as <code>functions</code>, the semantics are different. Implementations may diverge in the future.</em></p>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/anything.nix}}
+<pre><code class="language-nix">_:
+/*
+Use the Anything Blocktype as a fallback.
+
+It doesn't have actions.
+*/
+name: {
+  inherit name;
+  type = &quot;anything&quot;;
+}
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><div class="sidetoc"><nav class="pagetoc"></nav></div>
-<p><em>Autogenerated documentation from <code>./cells/lib/*</code>.</em></p>
+<p><em>Autogenerated documentation from <code>./src/lib/*</code>.</em></p>
 <div class="std-cell">
 <h1 id="cells-lib">
 <a class="header" href="reference/lib.html#cells-lib">Cell: <code>lib</code></a>
@@ -2228,6 +2439,19 @@ COPY --from=builder /... /
 
 </code></pre>
 <p><em>Please refer to the official dockerfile documentation for more details.</em></p>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-readYAML">
+<a class="header" href="reference/lib.html#targets-readYAML">Target: <code>readYAML</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h6 id="readyaml"><a class="header" href="#readyaml"><code>readYAML</code></a></h6>
+<p>… is a function that parses YAML into Nix.</p>
+<p>The only argument is a <code>path</code>.</p>
 </div>
 </div>
 <div class="std-block">
@@ -2618,7 +2842,7 @@ in {
 </div>
 </div>
 <div style="break-before: page; page-break-before: always;"></div><div class="sidetoc"><nav class="pagetoc"></nav></div>
-<p><em>Autogenerated documentation from <code>./cells/std/*</code>.</em></p>
+<p><em>Autogenerated documentation from <code>./src/std/*</code>.</em></p>
 <div class="std-cell">
 <h1 id="cells-std">
 <a class="header" href="reference/std.html#cells-std">Cell: <code>std</code></a>
@@ -2655,7 +2879,7 @@ in order to provide any visitor with the fully pre-configured <code>std</code> T
 <p>It also wires &amp; instantiates a decent ADR tool. Or were you planning to hack away
 without some minimal conscious effort of decision making and recording? 😅</p>
 <h3 id="usage-example-2"><a class="header" href="#usage-example-2">Usage Example</a></h3>
-<pre><code class="language-nix"># ./nix/_automation/devshells.nix
+<pre><code class="language-nix"># ./nix/local/shells.nix
 {
   inputs,
   cell,
@@ -2684,13 +2908,13 @@ in
       cellsFrom = ./nix;
       cellBlocks = [
         /* ... */
-        (inputs.std.blockTypes.devshells &quot;devshells&quot;)
+        (inputs.std.blockTypes.devshells &quot;shells&quot;)
       ];
     }
     # soil for compatiblity ...
     {
       # ... with `nix develop` - `default` is a special target for `nix develop`
-      devShells = inputs.std.harvest inputs.self [&quot;automation&quot; &quot;devshells&quot;];
+      devShells = inputs.std.harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
     };
 }
 </code></pre>
@@ -2850,6 +3074,97 @@ in
 </h2>
 <div class="std-readme-md">
 <small><i>No documentation</i></small>
+</div>
+</div>
+<div class="std-block">
+<h2 id="blocks-templates">
+<a class="header" href="reference/std.html#blocks-templates">Block: <code>templates</code></a>
+</h2>
+<div class="std-readme-md">
+<h3 id="nix-templates"><a class="header" href="#nix-templates">Nix Templates</a></h3>
+<p>These are opinionated template projects designed to get you kick-started.</p>
+<p>You can make use of them through the Nix CLI, via:</p>
+<pre><code class="language-bash">cd my-new-project
+nix flake init -t github:divnix/std#&lt;template-name&gt;
+</code></pre>
+<p>Please consult the template section in the <a href="https://std.divnix.com/">docs</a> for an overview.</p>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-minimal">
+<a class="header" href="reference/std.html#targets-minimal">Target: <code>minimal</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h4 id="a-minimal-project-template-with-docs-1"><a class="header" href="#a-minimal-project-template-with-docs-1">A minimal project template with docs!</a></h4>
+<h5 id="included-configuration-1"><a class="header" href="#included-configuration-1">Included Configuration</a></h5>
+<ul>
+<li><a href="https://numtide.github.io/devshell/"><code>devshell</code></a> for your contribution environments!</li>
+<li><a href="https://numtide.github.io/treefmt/"><code>treefmt</code></a> for formatting all the things!</li>
+<li><a href="https://rust-lang.github.io/mdBook/"><code>mdbook</code></a> for making documentation part of your workflow!</li>
+<li><a href="https://github.com/evilmartians/lefthook"><code>lefthook</code></a> for commit discipline and a clean history!</li>
+<li><a href="https://github.com/apps/settings">GitHub Setting App</a> for configuring GitHub declaratively!</li>
+</ul>
+<h5 id="bootstrap-2"><a class="header" href="#bootstrap-2">Bootstrap</a></h5>
+<pre><code class="language-bash"># make a new empty project dir
+mkdir my-project
+cd my-project
+
+# grab the template
+nix flake init -t github:divnix/std#minimal
+
+# see which values to change
+grep -r --include=\*.nix 'CONFIGURE-ME' .
+
+# do some inititialization
+git init &amp;&amp; git add .
+
+# enter the devshell and effectuate repo configuration
+direnv allow
+
+git add . &amp;&amp; git commit -m &quot;feat: initial commit&quot;
+</code></pre>
+</div>
+</div>
+<div class="std-target">
+<h3 id="targets-rust">
+<a class="header" href="reference/std.html#targets-rust">Target: <code>rust</code></a>
+</h3>
+<small class="std-description"><i>
+No description
+<p></i></small></p>
+<div class="std-readme-md">
+<h4 id="standard-and-nix-and-rust-oh-my-1"><a class="header" href="#standard-and-nix-and-rust-oh-my-1">Standard, and Nix and Rust, oh my!</a></h4>
+<p>This template uses <a href="https://nixos.org">Nix</a> to create a sane development shell for
+Rust projects, <a href="https://github.com/divnix/std#readme">Standard</a> for keeping your Nix code well organized,
+<a href="https://github.com/nix-community/fenix#readme">Fenix</a> for pulling the latest rust binaries via Nix, and
+<a href="https://github.com/ipetkov/crane#readme">Crane</a> for building Rust projects in Nix incrementally, making
+quick iteration a breeze.</p>
+<p>Rust Analyzer is also wired up properly for immediate use from a
+terminal based editor with language server support. Need one with
+stellar Nix and Rust support? Try <a href="https://github.com/helix-editor/helix#readme">Helix</a>!</p>
+<h5 id="bootstrap-3"><a class="header" href="#bootstrap-3">Bootstrap</a></h5>
+<pre><code class="language-bash"># make a new empty project dir
+mkdir my-project
+cd my-project
+
+# grab the template
+nix flake init -t github:divnix/std#rust
+
+# do some inititialization
+git init &amp;&amp; git add .
+
+# enter the devshell
+direnv allow || nix develop
+
+# continue some inititialization
+cargo init # pass --lib for library projects
+cargo build # to generate Cargo.lock
+
+git add . &amp;&amp; git commit -m &quot;init&quot;
+</code></pre>
 </div>
 </div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="glossary"><a class="header" href="#glossary">Glossary</a></h1>

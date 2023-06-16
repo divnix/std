@@ -149,35 +149,447 @@ actions they provide to a particular Cell Block.</p>
 <p>It is entirely possible to define custom Block Types with custom
 Actions according to the needs of your project.</p>
 <h2 id="arion"><a class="header" href="#arion">Arion</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/arion.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+}:
+/*
+Use the arion for arionCompose Jobs - https://docs.hercules-ci.com/arion/
+
+Available actions:
+  - up
+  - ps
+  - stop
+  - rm
+  - config
+  - arion
+*/
+let
+  inherit (root) mkCommand;
+in
+  name: {
+    inherit name;
+    type = &quot;arion&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: let
+      pkgs = nixpkgs.legacyPackages.${currentSystem};
+      cmd = &quot;${pkgs.arion}/bin/arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
+    in [
+      (mkCommand currentSystem &quot;up&quot; &quot;arion up&quot; ''${cmd} up &quot;$@&quot; '' {})
+      (mkCommand currentSystem &quot;ps&quot; &quot;exec this arion task to ps&quot; ''${cmd} ps &quot;$@&quot; '' {})
+      (mkCommand currentSystem &quot;stop&quot; &quot;arion stop&quot; ''${cmd} stop &quot;$@&quot; '' {})
+      (mkCommand currentSystem &quot;rm&quot; &quot;arion rm&quot; ''${cmd} rm &quot;$@&quot; '' {})
+      (mkCommand currentSystem &quot;config&quot; &quot;check the docker-compose yaml file&quot; ''${cmd} config &quot;$@&quot; '' {})
+      (mkCommand currentSystem &quot;arion&quot; &quot;pass any command to arion&quot; ''${cmd} &quot;$@&quot; '' {})
+    ];
+  }
 </code></pre>
 <h2 id="runnables-todo-vs-installables"><a class="header" href="#runnables-todo-vs-installables">Runnables (todo: vs installables)</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/runnables.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+  super,
+}:
+/*
+Use the Runnables Blocktype for targets that you want to
+make accessible with a 'run' action on the TUI.
+*/
+let
+  inherit (root) mkCommand actions;
+  inherit (super) addSelectorFunctor;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = &quot;runnables&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: [
+      (actions.build currentSystem target)
+      (actions.run currentSystem target)
+    ];
+  }
 </code></pre>
 <h2 id="installables-todo-vs-runnables"><a class="header" href="#installables-todo-vs-runnables">Installables (todo: vs runnables)</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/installables.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+  super,
+}:
+/*
+Use the Installables Blocktype for targets that you want to
+make availabe for installation into the user's nix profile.
+
+Available actions:
+  - install
+  - upgrade
+  - remove
+  - build
+  - bundle
+  - bundleImage
+  - bundleAppImage
+*/
+let
+  inherit (root) mkCommand actions;
+  inherit (super) addSelectorFunctor;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = &quot;installables&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: [
+      (actions.build currentSystem target)
+      # profile commands require a flake ref
+      (mkCommand currentSystem &quot;install&quot; &quot;install this target&quot; ''
+        # ${target}
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        nix profile install $PRJ_ROOT#${fragment}
+      '' {})
+      (mkCommand currentSystem &quot;upgrade&quot; &quot;upgrade this target&quot; ''
+        # ${target}
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        nix profile upgrade $PRJ_ROOT#${fragment}
+      '' {})
+      (mkCommand currentSystem &quot;remove&quot; &quot;remove this target&quot; ''
+        # ${target}
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        nix profile remove $PRJ_ROOT#${fragment}
+      '' {})
+      # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
+      (mkCommand currentSystem &quot;bundle&quot; &quot;bundle this target&quot; ''
+        # ${target}
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
+      '' {})
+      (mkCommand currentSystem &quot;bundleImage&quot; &quot;bundle this target to image&quot; ''
+        # ${target}
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
+      '' {})
+      (mkCommand currentSystem &quot;bundleAppImage&quot; &quot;bundle this target to AppImage&quot; ''
+        # ${target}
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        nix bundle --bundler github:ralismark/nix-appimage --refresh $PRJ_ROOT#${fragment}
+      '' {})
+    ];
+  }
 </code></pre>
 <h2 id="pkgs"><a class="header" href="#pkgs">Pkgs</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/pkgs.nix}}
+<pre><code class="language-nix">_:
+/*
+Use the Pkgs Blocktype if you need to construct your custom
+variant of nixpkgs with overlays.
+
+Targets will be excluded from the CLI / TUI  and thus not
+slow them down.
+*/
+name: {
+  inherit name;
+  type = &quot;pkgs&quot;;
+  cli = false; # its special power
+}
 </code></pre>
 <h2 id="devshells"><a class="header" href="#devshells">Devshells</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/devshells.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+  super,
+}:
+/*
+Use the Devshells Blocktype for devShells.
+
+Available actions:
+  - build
+  - enter
+*/
+let
+  inherit (root) mkCommand actions devshellDrv;
+  inherit (super) addSelectorFunctor;
+  inherit (builtins) unsafeDiscardStringContext;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = &quot;devshells&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: let
+      developDrv = devshellDrv target;
+    in [
+      (actions.build currentSystem target)
+      (mkCommand currentSystem &quot;enter&quot; &quot;enter this devshell&quot; ''
+        if test -z &quot;$PRJ_ROOT&quot;; then
+          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
+          exit 1
+        fi
+        if test -z &quot;$PRJ_DATA_DIR&quot;; then
+          echo &quot;PRJ_DATA_DIR is not set. Action aborting.&quot;
+          exit 1
+        fi
+        profile_path=&quot;$PRJ_DATA_DIR/${fragmentRelPath}&quot;
+        mkdir -p &quot;$profile_path&quot;
+        # ${developDrv}
+        nix_args=(
+          &quot;${unsafeDiscardStringContext developDrv.drvPath}&quot;
+          &quot;--no-update-lock-file&quot;
+          &quot;--no-write-lock-file&quot;
+          &quot;--no-warn-dirty&quot;
+          &quot;--accept-flake-config&quot;
+          &quot;--no-link&quot;
+          &quot;--build-poll-interval&quot; &quot;0&quot;
+          &quot;--builders-use-substitutes&quot;
+        )
+        nix build &quot;''${nix_args[@]}&quot; --profile &quot;$profile_path/shell-profile&quot;
+        _SHELL=&quot;$SHELL&quot;
+        eval &quot;$(nix print-dev-env ${developDrv})&quot;
+        SHELL=&quot;$_SHELL&quot;
+        if ! [[ -v STD_DIRENV ]]; then
+          if declare -F __devshell-motd &amp;&gt;/dev/null; then
+            __devshell-motd
+          fi
+          exec $SHELL -i
+        fi
+      '' {})
+    ];
+  }
 </code></pre>
 <h2 id="nixago"><a class="header" href="#nixago">Nixago</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/nixago.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+}:
+/*
+Use the Nixago Blocktype for nixago pebbles.
+
+Use Nixago pebbles to ensure files are present
+or symlinked into your repository. You may typically
+use this for repo dotfiles.
+
+For more information, see: https://github.com/nix-community/nixago.
+
+Available actions:
+  - ensure
+  - explore
+*/
+let
+  inherit (root) mkCommand;
+in
+  name: {
+    inherit name;
+    type = &quot;nixago&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: [
+      (mkCommand currentSystem &quot;populate&quot; &quot;populate this nixago file into the repo&quot; ''
+        ${target.install}/bin/nixago_shell_hook
+      '' {})
+      (mkCommand currentSystem &quot;explore&quot; &quot;interactively explore the nixago file&quot; ''
+        ${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat &quot;${target.config}&quot;
+      '' {})
+    ];
+  }
 </code></pre>
 <h2 id="containers"><a class="header" href="#containers">Containers</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/containers.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  n2c,
+  root,
+  super,
+}:
+/*
+Use the Containers Blocktype for OCI-images built with nix2container.
+
+Available actions:
+  - print-image
+  - publish
+  - load
+*/
+let
+  inherit (root) mkCommand actions;
+  inherit (super) addSelectorFunctor;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = &quot;containers&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: let
+      inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
+      inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
+
+      tags' =
+        builtins.toFile &quot;${target.name}-tags.json&quot; (builtins.concatStringsSep &quot;\n&quot; target.image.tags);
+      copyFn = let
+        skopeo = &quot;skopeo --insecure-policy&quot;;
+      in ''
+        export PATH=${skopeo-nix2container}/bin:$PATH
+
+        copy() {
+          local uri prev_tag
+          uri=$1
+          shift
+
+          for tag in $(&lt;${tags'}); do
+            if ! [[ -v prev_tag ]]; then
+              ${skopeo} copy nix:${target} &quot;$uri:$tag&quot; &quot;$@&quot;
+            else
+              # speedup: copy from the previous tag to avoid superflous network bandwidth
+              ${skopeo} copy &quot;$uri:$prev_tag&quot; &quot;$uri:$tag&quot; &quot;$@&quot;
+            fi
+            echo &quot;Done: $uri:$tag&quot;
+
+            prev_tag=&quot;$tag&quot;
+          done
+        }
+      '';
+    in [
+      (actions.build currentSystem target)
+      (mkCommand currentSystem &quot;print-image&quot; &quot;print out the image.repo with all tags&quot; ''
+        echo
+        for tag in $(&lt;${tags'}); do
+          echo &quot;${target.image.repo}:$tag&quot;
+        done
+      '' {})
+      (mkCommand currentSystem &quot;publish&quot; &quot;copy the image to its remote registry&quot; ''
+          ${copyFn}
+          copy docker://${target.image.repo}
+        '' {
+          meta.image = target.image.name;
+          proviso = pkgs.substituteAll {
+            src = ./containers-proviso.sh;
+            filter = ./containers-publish-filter.jq;
+          };
+        })
+      (mkCommand currentSystem &quot;load&quot; &quot;load image to the local docker daemon&quot; ''
+        ${copyFn}
+        if command -v podman &amp;&gt; /dev/null; then
+           echo &quot;Podman detected: copy to local podman&quot;
+           copy containers-storage:${target.image.repo} &quot;$@&quot;
+        fi
+        if command -v docker &amp;&gt; /dev/null; then
+           echo &quot;Docker detected: copy to local docker&quot;
+           copy docker-daemon:${target.image.repo} &quot;$@&quot;
+        fi
+      '' {})
+    ];
+  }
 </code></pre>
 <h2 id="data"><a class="header" href="#data">Data</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/data.nix}}
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+}:
+/*
+Use the Data Blocktype for json serializable data.
+
+Available actions:
+  - write
+  - explore
+
+For all actions is true:
+  Nix-proper 'stringContext'-carried dependency will be realized
+  to the store, if present.
+*/
+let
+  inherit (root) mkCommand;
+  inherit (builtins) toJSON concatStringsSep;
+in
+  name: {
+    inherit name;
+    type = &quot;data&quot;;
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+    }: let
+      inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
+
+      # if target ? __std_data_wrapper, then we need to unpack from `.data`
+      json = pkgs.writeTextFile {
+        name = &quot;data.json&quot;;
+        text = toJSON (
+          if target ? __std_data_wrapper
+          then target.data
+          else target
+        );
+      };
+      jq = [&quot;${pkgs.jq}/bin/jq&quot; &quot;-r&quot; &quot;'.'&quot; &quot;${json}&quot;];
+      fx = [&quot;|&quot; &quot;${pkgs.fx}/bin/fx&quot;];
+    in [
+      (mkCommand currentSystem &quot;write&quot; &quot;write to file&quot; &quot;echo ${json}&quot; {})
+      (mkCommand currentSystem &quot;explore&quot; &quot;interactively explore&quot; (concatStringsSep &quot;\t&quot; (jq ++ fx)) {})
+    ];
+  }
 </code></pre>
 <h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/functions.nix}}
+<pre><code class="language-nix">_:
+/*
+Use the Functions Blocktype for reusable nix functions that you would
+call elswhere in the code.
+
+Also use this for all types of modules and profiles, since they are
+implemented as functions.
+
+Consequently, there are no actions available for functions.
+*/
+name: {
+  inherit name;
+  type = &quot;functions&quot;;
+}
 </code></pre>
 <h2 id="anything"><a class="header" href="#anything">Anything</a></h2>
 <p><em>Note: while the implementation is the same as <code>functions</code>, the semantics are different. Implementations may diverge in the future.</em></p>
-<pre><code class="language-nix">{{#include ../../src/blocktypes/anything.nix}}
+<pre><code class="language-nix">_:
+/*
+Use the Anything Blocktype as a fallback.
+
+It doesn't have actions.
+*/
+name: {
+  inherit name;
+  type = &quot;anything&quot;;
+}
 </code></pre>
 
                     </main>

@@ -224,11 +224,11 @@ But hey! It means: we can progress together!</p>
     # 2. Each &lt;block&gt;.nix or &lt;block&gt;/default.nix within it becomes a &quot;Cell Block&quot;
     #    Run for example: '$EDITOR nix/mycell/packages.nix' - see example content below
     cellsFrom = ./nix;
-    # 3. Only blocks with these names [here: &quot;packages&quot; &amp; &quot;devshells&quot;] are picked up by Standard
+    # 3. Only blocks with these names [here: &quot;packages&quot; &amp; &quot;shells&quot;] are picked up by Standard
     #    It's a bit like the output type system of your flake project (hint: CLI &amp; TUI!!)
     cellBlocks = with std.blockTypes; [
       (installables &quot;packages&quot; {ci.build = true;})
-      (devshells &quot;devshells&quot; {ci.build = true;})
+      (devshells &quot;shells&quot; {ci.build = true;})
     ];
   }
   # 4. Run 'nix run github:divnix/std'
@@ -237,7 +237,7 @@ But hey! It means: we can progress together!</p>
   #  - but can use anything that produces flake outputs (e.g. flake-parts or flake-utils)
   # 5. Run: nix run .
   {
-    devShells = std.harvest self [&quot;mycell&quot; &quot;devshells&quot;];
+    devShells = std.harvest self [&quot;mycell&quot; &quot;shells&quot;];
     packages = std.harvest self [&quot;mycell&quot; &quot;packages&quot;];
   };
 }
@@ -263,7 +263,7 @@ It further dogfoods itself and implements utilities in its own <a href="https://
 }:
 growOn {
   inherit inputs;
-  cellsFrom = ./cells;
+  cellsFrom = ./src;
   cellBlocks = [
     ## For downstream use
 
@@ -284,22 +284,18 @@ growOn {
 
     ## For local use in the Standard repository
 
-    # _automation
-    (blockTypes.devshells &quot;devshells&quot; {ci.build = true;})
+    # local
+    (blockTypes.devshells &quot;shells&quot; {ci.build = true;})
     (blockTypes.nixago &quot;configs&quot;)
     (blockTypes.containers &quot;containers&quot;)
     # (blockTypes.tasks &quot;tasks&quot;) # TODO: implement properly
-
-    # _tests
-    (blockTypes.data &quot;data&quot;)
-    (blockTypes.files &quot;files&quot;)
   ];
 }
 # Soil (&quot;compatibile with the entire world&quot;)
 {
-  devShells = harvest inputs.self [&quot;_automation&quot; &quot;devshells&quot;];
+  devShells = harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
   packages = harvest inputs.self [[&quot;std&quot; &quot;cli&quot;] [&quot;std&quot; &quot;packages&quot;]];
-  templates = pick inputs.self [&quot;presets&quot; &quot;templates&quot;];
+  templates = pick inputs.self [&quot;std&quot; &quot;templates&quot;];
 }
 </code></pre>
 <p><em>That's it. <code>std.grow</code> is a &quot;smart&quot; importer of your <code>nix</code> code and is designed to keep boilerplate at bay. In the so called &quot;Soil&quot; compatibility layer, you can do whatever your heart desires. For example put <code>flake-utils</code> or <code>flake-parts</code> patterns here. Or, as in the above example, just make your stuff play nicely with the Nix CLI.</em></p>
