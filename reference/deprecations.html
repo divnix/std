@@ -180,42 +180,6 @@ in
 <pre><code class="language-nix">inputs: let
   removeBy = import ./cells/std/errors/removeBy.nix {inherit inputs;};
 in {
-  warnOldActionInterface = actions:
-    removeBy &quot;March 2023&quot; ''
-      The action interface has chaged from:
-        { system, flake, fragment, fragmentRelPath }
-      To:
-        { system, target, fragment, fragmentRelPath }
-
-      Please adjust the following actions:
-
-      ${builtins.concatStringsSep &quot;\n&quot; (map (a: &quot; - ${a.name}: ${(builtins.unsafeGetAttrPos &quot;name&quot; a).file}&quot;) actions)}
-    '';
-
-  warnNixagoOutfactored = removeBy &quot;May 2023&quot; ''
-    std.presets.nixago has been outfactored into its own repository.
-
-    Add to your flake.nix
-
-    inputs.std-data-collection.url = &quot;github:divnix/std-data-collection&quot;;
-    inputs.std-data-collection.inputs.std.follows = &quot;std&quot;;
-    inputs.std-data-collection.inputs.nixpkgs.follows = &quot;nixpkgs&quot;;
-
-    Replace accessors of
-      `inputs.std.presets.nixago`
-    with
-      `inputs.std-data-collection.data.configs`
-  '';
-
-  warnNixagoMoved = removeBy &quot;May 2023&quot; ''
-    In order to improve semantic clarity,
-    std.std.nixago has been moved to std.lib.cfg.
-
-    Replace accessors of
-      `inputs.std.std.nixago`
-    with
-      `inputs.std.lib.cfg`
-  '';
 }
 </code></pre>
 
