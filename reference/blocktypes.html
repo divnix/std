@@ -524,10 +524,8 @@ in
       target,
     }: let
       inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
-      img = builtins.unsafeDiscardStringContext target.imageName;
-      tags = target.meta.tags or [(builtins.unsafeDiscardStringContext target.imageTag)];
       tags' =
-        builtins.toFile &quot;${target.name}-tags.json&quot; (builtins.unsafeDiscardStringContext (builtins.concatStringsSep &quot;\n&quot; tags));
+        builtins.toFile &quot;${target.name}-tags.json&quot; (builtins.concatStringsSep &quot;\n&quot; target.image.tags);
       copyFn = let
         skopeo = &quot;skopeo --insecure-policy&quot;;
       in ''
@@ -555,11 +553,11 @@ in
       (sharedActions.build currentSystem target)
       (mkCommand currentSystem {
         name = &quot;print-image&quot;;
-        description = &quot;print out the image name with all tags&quot;;
+        description = &quot;print out the image.repo with all tags&quot;;
         command = ''
           echo
           for tag in $(&lt;${tags'}); do
-            echo &quot;${img}:$tag&quot;
+            echo &quot;${target.image.repo}:$tag&quot;
           done
         '';
       })
@@ -568,9 +566,9 @@ in
         description = &quot;copy the image to its remote registry&quot;;
         command = ''
           ${copyFn}
-          copy docker://${img}
+          copy docker://${target.image.repo}
         '';
-        meta.images = map (tag: &quot;${img}:${tag}&quot;) tags;
+        meta.image = target.image.name;
         proviso = let
           filter = ./container-publish-filter.jq;
         in
@@ -588,7 +586,7 @@ in
               --from-file &quot;${filter}&quot; \
               --arg available &quot;$(
                 parallel -j0 scopeo_inspect ::: &quot;$(
-                   command jq --raw-output 'map(.meta.images[0]|strings)[]' &lt;&lt;&lt; &quot;$1&quot;
+                   command jq --raw-output 'map(.meta.image|strings)[]' &lt;&lt;&lt; &quot;$1&quot;
                 )&quot;
               )&quot; &lt;&lt;&lt; &quot;$1&quot;
 
@@ -603,11 +601,11 @@ in
           ${copyFn}
           if command -v podman &amp;&gt; /dev/null; then
              echo &quot;Podman detected: copy to local podman&quot;
-             copy containers-storage:${img} &quot;$@&quot;
+             copy containers-storage:${target.image.repo} &quot;$@&quot;
           fi
           if command -v docker &amp;&gt; /dev/null; then
              echo &quot;Docker detected: copy to local docker&quot;
-             copy docker-daemon:${img} &quot;$@&quot;
+             copy docker-daemon:${target.image.repo} &quot;$@&quot;
           fi
         '';
       })
