@@ -37,7 +37,7 @@ growOn {
 }
 # Soil ("compatibile with the entire world")
 {
-  devShells = harvest inputs.self ["local" "devshells"];
+  devShells = harvest inputs.self ["local" "shells"];
   packages = harvest inputs.self [["std" "cli"] ["std" "packages"]];
   templates = pick inputs.self ["std" "templates"];
 }
