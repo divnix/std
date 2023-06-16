@@ -1,1 +1,1 @@
-../../cells/presets/templates/minimal.md
+../../src/std/templates/minimal.md

@@ -106,7 +106,7 @@ in
                 example = literalExpression ''
                   with std.blockTypes; [
                     (installables "packages" {ci.build = true;})
-                    (devshells "devshells" {ci.build = true;})
+                    (devshells "shells" {ci.build = true;})
                     (containers "containers" {ci.publish = true;})
                   ]
                 '';
@@ -153,7 +153,7 @@ in
           type = with lib.types; attrsOf harvesterType;
           example = literalExpression ''
             {
-              devShells = [ "toolchain" "devshells" ];
+              devShells = [ "toolchain" "shells" ];
               packages = [
                 # a list of lists can "harvest" from multiple cells
                 [ "app1" "packages" ]

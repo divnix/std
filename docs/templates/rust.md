@@ -1,1 +1,1 @@
-../../cells/presets/templates/rust.md
+../../src/std/templates/rust.md

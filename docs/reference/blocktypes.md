@@ -13,55 +13,55 @@ Actions according to the needs of your project.
 ## Arion
 
 ```nix
-{{#include ../../src/blocktypes/arion.nix}}
+{{#include ../../lib/blockTypes/arion.nix}}
 ```
 
 ## Runnables (todo: vs installables)
 
 ```nix
-{{#include ../../src/blocktypes/runnables.nix}}
+{{#include ../../lib/blockTypes/runnables.nix}}
 ```
 
 ## Installables (todo: vs runnables)
 
 ```nix
-{{#include ../../src/blocktypes/installables.nix}}
+{{#include ../../lib/blockTypes/installables.nix}}
 ```
 
 ## Pkgs
 
 ```nix
-{{#include ../../src/blocktypes/pkgs.nix}}
+{{#include ../../lib/blockTypes/pkgs.nix}}
 ```
 
 ## Devshells
 
 ```nix
-{{#include ../../src/blocktypes/devshells.nix}}
+{{#include ../../lib/blockTypes/devshells.nix}}
 ```
 
 ## Nixago
 
 ```nix
-{{#include ../../src/blocktypes/nixago.nix}}
+{{#include ../../lib/blockTypes/nixago.nix}}
 ```
 
 ## Containers
 
 ```nix
-{{#include ../../src/blocktypes/containers.nix}}
+{{#include ../../lib/blockTypes/containers.nix}}
 ```
 
 ## Data
 
 ```nix
-{{#include ../../src/blocktypes/data.nix}}
+{{#include ../../lib/blockTypes/data.nix}}
 ```
 
 ## Functions
 
 ```nix
-{{#include ../../src/blocktypes/functions.nix}}
+{{#include ../../lib/blockTypes/functions.nix}}
 ```
 
 ## Anything
@@ -69,5 +69,5 @@ Actions according to the needs of your project.
 _Note: while the implementation is the same as `functions`, the semantics are different. Implementations may diverge in the future._
 
 ```nix
-{{#include ../../src/blocktypes/anything.nix}}
+{{#include ../../lib/blockTypes/anything.nix}}
 ```

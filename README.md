@@ -102,11 +102,11 @@ But hey! It means: we can progress together!
     # 2. Each <block>.nix or <block>/default.nix within it becomes a "Cell Block"
     #    Run for example: '$EDITOR nix/mycell/packages.nix' - see example content below
     cellsFrom = ./nix;
-    # 3. Only blocks with these names [here: "packages" & "devshells"] are picked up by Standard
+    # 3. Only blocks with these names [here: "packages" & "shells"] are picked up by Standard
     #    It's a bit like the output type system of your flake project (hint: CLI & TUI!!)
     cellBlocks = with std.blockTypes; [
       (installables "packages" {ci.build = true;})
-      (devshells "devshells" {ci.build = true;})
+      (devshells "shells" {ci.build = true;})
     ];
   }
   # 4. Run 'nix run github:divnix/std'
@@ -115,7 +115,7 @@ But hey! It means: we can progress together!
   #  - but can use anything that produces flake outputs (e.g. flake-parts or flake-utils)
   # 5. Run: nix run .
   {
-    devShells = std.harvest self ["mycell" "devshells"];
+    devShells = std.harvest self ["mycell" "shells"];
     packages = std.harvest self ["mycell" "packages"];
   };
 }

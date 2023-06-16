@@ -1,7 +1,0 @@
-[formatter.rust]
-command = "rustfmt"
-includes = ["*.rs"]
-
-[formatter.nix]
-command = "alejandra"
-includes = ["*.nix"]

@@ -7,7 +7,7 @@
 }:
 growOn {
   inherit inputs;
-  cellsFrom = ./cells;
+  cellsFrom = ./src;
   cellBlocks = [
     ## For downstream use
 
@@ -28,20 +28,16 @@ growOn {
 
     ## For local use in the Standard repository
 
-    # _automation
-    (blockTypes.devshells "devshells" {ci.build = true;})
+    # local
+    (blockTypes.devshells "shells" {ci.build = true;})
     (blockTypes.nixago "configs")
     (blockTypes.containers "containers")
     # (blockTypes.tasks "tasks") # TODO: implement properly
-
-    # _tests
-    (blockTypes.data "data")
-    (blockTypes.files "files")
   ];
 }
 # Soil ("compatibile with the entire world")
 {
-  devShells = harvest inputs.self ["_automation" "devshells"];
+  devShells = harvest inputs.self ["local" "devshells"];
   packages = harvest inputs.self [["std" "cli"] ["std" "packages"]];
-  templates = pick inputs.self ["presets" "templates"];
+  templates = pick inputs.self ["std" "templates"];
 }
