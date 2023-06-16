@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.23.2](https://github.com/divnix/std/compare/v0.23.1..v0.23.2) - 2023-06-16
+#### Features
+- start using lazyDerivation for faster TUI response times - ([0a513df](https://github.com/divnix/std/commit/0a513df838207666dd442a6e0a5676260788bd0d)) - David Arnold
+#### Miscellaneous Chores
+- fix cog patch release automation oversight - ([df4cd51](https://github.com/divnix/std/commit/df4cd51a2a179b6f45410dfacb4382bac046ae8f)) - David Arnold
+
+- - -
+
 ## [v0.23.1](https://github.com/divnix/std/compare/v0.23.0..v0.23.1) - 2023-06-15
 #### Bug Fixes
 - use recent enough nixpkgs lib version for haumea - ([6d9499f](https://github.com/divnix/std/commit/6d9499fea8c917545e58d03d22e6a78955598a6d)) - David Arnold
