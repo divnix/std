@@ -16,6 +16,8 @@ in {
   writeScript = import ./ops/writeScript.nix {inherit inputs cell;};
   lazyDerivation = import ./ops/lazyDerivation.nix {inherit inputs cell;};
 
+  readYAML = import ./ops/readYAML.nix {inherit inputs cell;};
+
   mkOCI = import ./ops/mkOCI.nix {inherit inputs cell;};
   mkDevOCI = import ./ops/mkDevOCI.nix {inherit inputs cell;};
   mkStandardOCI = import ./ops/mkStandardOCI.nix {inherit inputs cell;};
