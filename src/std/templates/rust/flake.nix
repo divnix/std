@@ -7,7 +7,6 @@
   inputs.fenix.url = "github:nix-community/fenix";
   inputs.crane.url = "github:ipetkov/crane";
   inputs.crane.inputs.nixpkgs.follows = "nixpkgs";
-  inputs.crane.inputs.flake-utils.follows = "std/flake-utils";
 
   inputs.nixpkgs.follows = "fenix/nixpkgs";
 
