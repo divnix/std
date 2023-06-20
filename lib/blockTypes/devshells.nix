@@ -29,15 +29,7 @@ in
     in [
       (actions.build currentSystem target)
       (mkCommand currentSystem "enter" "enter this devshell" ''
-        if test -z "$PRJ_ROOT"; then
-          echo "PRJ_ROOT is not set. Action aborting."
-          exit 1
-        fi
-        if test -z "$PRJ_DATA_DIR"; then
-          echo "PRJ_DATA_DIR is not set. Action aborting."
-          exit 1
-        fi
-        profile_path="$PRJ_DATA_DIR/${fragmentRelPath}"
+        profile_path="$PRJ_DATA_HOME/${fragmentRelPath}"
         mkdir -p "$profile_path"
         # ${developDrv}
         nix_args=(

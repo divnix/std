@@ -39,25 +39,12 @@ in
           builtins.toFile \"${job}.json\" (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}))
       '';
       layout = ''
-        if test -z "$PRJ_ROOT"; then
-          echo "PRJ_ROOT is not set. Action aborting."
-          exit 1
-        fi
-        if test -z "$PRJ_DATA_DIR"; then
-          echo "PRJ_DATA_DIR is not set. Action aborting."
-          exit 1
-        fi
-        job_path="$PRJ_DATA_DIR/${dirOf fragmentRelPath}/${job}.json"
+        job_path="$PRJ_DATA_HOME/${dirOf fragmentRelPath}/${job}.json"
 
         # use Nomad bin in path if it exists, and only fallback on nixpkgs if it doesn't
         PATH="$PATH:${nomad}"
       '';
       render = ''
-        if test -z "$PRJ_ROOT"; then
-          echo "PRJ_ROOT is not set. Action aborting."
-          exit 1
-        fi
-
         echo "Rendering to $job_path..."
 
         # use `PRJ_ROOT` to capture dirty state
