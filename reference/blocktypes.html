@@ -254,51 +254,27 @@ in
       # profile commands require a flake ref
       (mkCommand currentSystem &quot;install&quot; &quot;install this target&quot; ''
         # ${target}
-        if test -z &quot;$PRJ_ROOT&quot;; then
-          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
-          exit 1
-        fi
         nix profile install $PRJ_ROOT#${fragment}
       '' {})
       (mkCommand currentSystem &quot;upgrade&quot; &quot;upgrade this target&quot; ''
         # ${target}
-        if test -z &quot;$PRJ_ROOT&quot;; then
-          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
-          exit 1
-        fi
         nix profile upgrade $PRJ_ROOT#${fragment}
       '' {})
       (mkCommand currentSystem &quot;remove&quot; &quot;remove this target&quot; ''
         # ${target}
-        if test -z &quot;$PRJ_ROOT&quot;; then
-          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
-          exit 1
-        fi
         nix profile remove $PRJ_ROOT#${fragment}
       '' {})
       # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
       (mkCommand currentSystem &quot;bundle&quot; &quot;bundle this target&quot; ''
         # ${target}
-        if test -z &quot;$PRJ_ROOT&quot;; then
-          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
-          exit 1
-        fi
         nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
       '' {})
       (mkCommand currentSystem &quot;bundleImage&quot; &quot;bundle this target to image&quot; ''
         # ${target}
-        if test -z &quot;$PRJ_ROOT&quot;; then
-          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
-          exit 1
-        fi
         nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
       '' {})
       (mkCommand currentSystem &quot;bundleAppImage&quot; &quot;bundle this target to AppImage&quot; ''
         # ${target}
-        if test -z &quot;$PRJ_ROOT&quot;; then
-          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
-          exit 1
-        fi
         nix bundle --bundler github:ralismark/nix-appimage --refresh $PRJ_ROOT#${fragment}
       '' {})
     ];
@@ -351,15 +327,7 @@ in
     in [
       (actions.build currentSystem target)
       (mkCommand currentSystem &quot;enter&quot; &quot;enter this devshell&quot; ''
-        if test -z &quot;$PRJ_ROOT&quot;; then
-          echo &quot;PRJ_ROOT is not set. Action aborting.&quot;
-          exit 1
-        fi
-        if test -z &quot;$PRJ_DATA_DIR&quot;; then
-          echo &quot;PRJ_DATA_DIR is not set. Action aborting.&quot;
-          exit 1
-        fi
-        profile_path=&quot;$PRJ_DATA_DIR/${fragmentRelPath}&quot;
+        profile_path=&quot;$PRJ_DATA_HOME/${fragmentRelPath}&quot;
         mkdir -p &quot;$profile_path&quot;
         # ${developDrv}
         nix_args=(
