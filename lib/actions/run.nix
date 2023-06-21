@@ -12,4 +12,4 @@ in
   currentSystem: target: let
     programName = target.meta.mainProgram or (getName target);
   in
-    mkCommand currentSystem "run" "run it" ''${target.program or "${target}/bin/${programName}"} "$@" '' {}
+    mkCommand currentSystem "run" "run it" [] ''${target.program or "${target}/bin/${programName}"} "$@" '' {}

@@ -21,10 +21,10 @@ in
       target,
     }: let
       file = toString target;
-      bat = "${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat";
+      pkgs = nixpkgs.legacyPackages.${currentSystem};
     in [
-      (mkCommand currentSystem "explore" "interactively explore with bat" ''
-        ${bat} ${file}
+      (mkCommand currentSystem "explore" "interactively explore with bat" [pkgs.bat] ''
+        bat ${file}
       '' {})
     ];
   }

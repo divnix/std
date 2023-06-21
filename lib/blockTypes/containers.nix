@@ -41,11 +41,7 @@ in
 
       tags' =
         builtins.toFile "${target.name}-tags.json" (builtins.concatStringsSep "\n" target.image.tags);
-      copyFn = let
-        skopeo = "skopeo --insecure-policy";
-      in ''
-        export PATH=${skopeo-nix2container}/bin:$PATH
-
+      copyFn = ''
         copy() {
           local uri prev_tag
           uri=$1
@@ -53,10 +49,10 @@ in
 
           for tag in $(<${tags'}); do
             if ! [[ -v prev_tag ]]; then
-              ${skopeo} copy nix:${target} "$uri:$tag" "$@"
+              skopeo --insecure-policy copy nix:${target} "$uri:$tag" "$@"
             else
               # speedup: copy from the previous tag to avoid superflous network bandwidth
-              ${skopeo} copy "$uri:$prev_tag" "$uri:$tag" "$@"
+              skopeo --insecure-policy copy "$uri:$prev_tag" "$uri:$tag" "$@"
             fi
             echo "Done: $uri:$tag"
 
@@ -66,20 +62,20 @@ in
       '';
     in [
       (actions.build currentSystem target)
-      (mkCommand currentSystem "print-image" "print out the image.repo with all tags" ''
+      (mkCommand currentSystem "print-image" "print out the image.repo with all tags" [] ''
         echo
         for tag in $(<${tags'}); do
           echo "${target.image.repo}:$tag"
         done
       '' {})
-      (mkCommand currentSystem "publish" "copy the image to its remote registry" ''
+      (mkCommand currentSystem "publish" "copy the image to its remote registry" [skopeo-nix2container] ''
           ${copyFn}
           copy docker://${target.image.repo}
         '' {
           meta.image = target.image.name;
           inherit proviso;
         })
-      (mkCommand currentSystem "load" "load image to the local docker daemon" ''
+      (mkCommand currentSystem "load" "load image to the local docker daemon" [skopeo-nix2container] ''
         ${copyFn}
         if command -v podman &> /dev/null; then
            echo "Podman detected: copy to local podman"

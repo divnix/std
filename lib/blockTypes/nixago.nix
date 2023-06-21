@@ -26,12 +26,14 @@ in
       fragment,
       fragmentRelPath,
       target,
-    }: [
-      (mkCommand currentSystem "populate" "populate this nixago file into the repo" ''
+    }: let
+      pkgs = nixpkgs.legacyPackages.${currentSystem};
+    in [
+      (mkCommand currentSystem "populate" "populate this nixago file into the repo" [] ''
         ${target.install}/bin/nixago_shell_hook
       '' {})
-      (mkCommand currentSystem "explore" "interactively explore the nixago file" ''
-        ${nixpkgs.legacyPackages.${currentSystem}.bat}/bin/bat "${target.config}"
+      (mkCommand currentSystem "explore" "interactively explore the nixago file" [pkgs.bat] ''
+        bat "${target.config}"
       '' {})
     ];
   }

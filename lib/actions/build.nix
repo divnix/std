@@ -25,7 +25,7 @@ in
       inherit proviso;
     };
   in
-    mkCommand currentSystem "build" "build it" ''
+    mkCommand currentSystem "build" "build it" [] ''
       # ${target}
       nix build ${contextFreeDrv target}
     ''

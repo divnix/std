@@ -28,9 +28,7 @@ in
       fragmentRelPath,
       target,
     }: let
-      fx = "${nixpkgs.legacyPackages.${currentSystem}.fx}/bin";
-      nomad = "${nixpkgs.legacyPackages.${currentSystem}.nomad}/bin";
-      jq = "${nixpkgs.legacyPackages.${currentSystem}.jq}/bin";
+      pkgs = nixpkgs.legacyPackages.${currentSystem};
       job = baseNameOf fragmentRelPath;
       nixExpr = ''
         x: let
@@ -40,9 +38,6 @@ in
       '';
       layout = ''
         job_path="$PRJ_DATA_HOME/${dirOf fragmentRelPath}/${job}.json"
-
-        # use Nomad bin in path if it exists, and only fallback on nixpkgs if it doesn't
-        PATH="$PATH:${nomad}"
       '';
       render = ''
         echo "Rendering to $job_path..."
@@ -65,19 +60,17 @@ in
       inject the git revision validate the manifest, after which it can be run or
       planned with the Nomad cli or the `deploy` action.
       */
-      (mkCommand currentSystem "render" "build the JSON job description" ''
+      (mkCommand currentSystem "render" "build the JSON job description" [pkgs.nomad] ''
         set -e
 
         ${layout}
 
         ${render}
       '' {})
-      (mkCommand currentSystem "deploy" "Deploy the job to Nomad" ''
+      (mkCommand currentSystem "deploy" "Deploy the job to Nomad" [pkgs.nomad pkgs.jq] ''
         set -e
 
         ${layout}
-
-        PATH=$PATH:${jq}
 
         if ! [[ -h "$job_path" ]] \
           || [[ "$(jq -r '.job[].meta.rev' "$job_path")" != "$(git rev-parse --short HEAD)" ]]
@@ -108,7 +101,7 @@ in
           echo "Job hasn't changed since last deployment, nothing to deploy"
         fi
       '' {})
-      (mkCommand currentSystem "explore" "interactively explore the Job defintion" ''
+      (mkCommand currentSystem "explore" "interactively explore the Job defintion" [pkgs.nomad pkgs.fx] ''
         set -e
 
         ${layout}
@@ -116,8 +109,6 @@ in
         if ! [[ -h "$job_path" ]]; then
         ${render}
         fi
-
-        PATH=$PATH:${fx}
 
         fx "$job_path"
       '' {})
