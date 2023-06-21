@@ -20,6 +20,7 @@ Readme files are picked up by the TUI in the following places:
 
 ```
 ${cellsFrom}/${cell}/Readme.md
+${cellsFrom}/${cell}/${block}.md
 ${cellsFrom}/${cell}/${block}/Readme.md
 ${cellsFrom}/${cell}/${block}/${target}.md
 ```
