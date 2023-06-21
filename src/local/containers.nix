@@ -2,7 +2,8 @@
   inputs,
   cell,
 }: let
-  inherit (inputs.cells) nixpkgs lib;
+  inherit (inputs) nixpkgs;
+  inherit (inputs.std) lib;
   l = nixpkgs.lib // builtins;
 in {
   dev = lib.ops.mkDevOCI {

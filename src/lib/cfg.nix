@@ -1,8 +1,7 @@
 {
   inputs,
   cell,
-}:
-builtins.mapAttrs (_: inputs.cells.lib.dev.mkNixago) {
+}: {
   adrgen = import ./cfg/adrgen.nix {inherit inputs cell;};
   editorconfig = import ./cfg/editorconfig.nix {inherit inputs cell;};
   conform = import ./cfg/conform.nix {inherit inputs cell;};

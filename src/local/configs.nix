@@ -3,7 +3,7 @@
   cell,
 }: let
   inherit (inputs) nixpkgs;
-  inherit (inputs.cells) std presets;
+  inherit (inputs.std) std presets;
   l = nixpkgs.lib // builtins;
 in {
   cog = {

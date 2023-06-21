@@ -10,9 +10,10 @@
     paisano.url = "github:paisano-nix/core";
     paisano.inputs.nixpkgs.follows = "nixpkgs";
     paisano.inputs.yants.follows = "yants";
-    paisano-tui.url = "github:paisano-nix/tui/0.1.1";
-    paisano-tui.inputs.std.follows = "/";
-    paisano-tui.inputs.nixpkgs.follows = "blank";
+    paisano-tui = {
+        url = "github:paisano-nix/tui/0.1.1";
+        flake = false; # we're after the source code, only
+    };
   };
   inputs.blank.url = "github:divnix/blank";
   inputs.yants = {
@@ -36,18 +37,10 @@
   Auxiliar inputs used in builtin libraries or for the dev environment.
   */
   inputs = {
-    flake-utils.url = "github:numtide/flake-utils";
-    devshell.url = "github:numtide/devshell";
-    devshell.inputs.nixpkgs.follows = "nixpkgs";
-    nixago.url = "github:nix-community/nixago";
-    nixago.inputs.nixpkgs.follows = "nixpkgs";
-    nixago.inputs.nixago-exts.follows = "blank";
-    nixago.inputs.flake-utils.follows = "flake-utils";
-    n2c.url = "github:nlewo/nix2container";
-    n2c.inputs.nixpkgs.follows = "nixpkgs";
-    n2c.inputs.flake-utils.follows = "flake-utils";
-
     # Placeholder inputs that can be overloaded via follows
+    n2c.follows = "blank";
+    devshell.follows = "blank";
+    nixago.follows = "blank";
     microvm.follows = "blank";
     makes.follows = "blank";
     arion.follows = "blank";
