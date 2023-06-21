@@ -7,15 +7,12 @@
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs = {
-    paisano.url = "github:paisano-nix/core/0.1.1";
+    paisano.url = "github:paisano-nix/core";
     paisano.inputs.nixpkgs.follows = "nixpkgs";
     paisano.inputs.yants.follows = "yants";
     paisano-tui.url = "github:paisano-nix/tui/0.1.1";
     paisano-tui.inputs.std.follows = "/";
     paisano-tui.inputs.nixpkgs.follows = "blank";
-    paisano-mdbook-preprocessor.url = "github:paisano-nix/mdbook-paisano-preprocessor";
-    paisano-mdbook-preprocessor.inputs.std.follows = "/";
-    paisano-mdbook-preprocessor.inputs.nixpkgs.follows = "nixpkgs";
   };
   inputs.blank.url = "github:divnix/blank";
   inputs.yants = {
