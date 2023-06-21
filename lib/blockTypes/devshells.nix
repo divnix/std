@@ -28,7 +28,7 @@ in
       developDrv = devshellDrv target;
     in [
       (actions.build currentSystem target)
-      (mkCommand currentSystem "enter" "enter this devshell" ''
+      (mkCommand currentSystem "enter" "enter this devshell" [] ''
         profile_path="$PRJ_DATA_HOME/${fragmentRelPath}"
         mkdir -p "$profile_path"
         # ${developDrv}

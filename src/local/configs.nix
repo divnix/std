@@ -101,7 +101,7 @@ in {
       nixpkgs.go
     ];
     devshell.startup.prettier-plugin-toml = l.stringsWithDeps.noDepEntry ''
-      export NODE_PATH=${nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules:$NODE_PATH
+      export NODE_PATH=${nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules:''${NODE_PATH-}
     '';
   };
   editorconfig = {

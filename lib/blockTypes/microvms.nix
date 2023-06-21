@@ -19,13 +19,13 @@ in
       fragmentRelPath,
       target,
     }: [
-      (mkCommand currentSystem "run" "run the microvm" ''
+      (mkCommand currentSystem "run" "run the microvm" [] ''
         ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-run
       '' {})
-      (mkCommand currentSystem "console" "enter the microvm console" ''
+      (mkCommand currentSystem "console" "enter the microvm console" [] ''
         ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-console
       '' {})
-      (mkCommand currentSystem "microvm" "pass any command to microvm" ''
+      (mkCommand currentSystem "microvm" "pass any command to microvm" [] ''
         ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-"$@"
       '' {})
     ];

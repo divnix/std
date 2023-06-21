@@ -26,13 +26,13 @@ in
       target,
     }: let
       pkgs = nixpkgs.legacyPackages.${currentSystem};
-      cmd = "${pkgs.arion}/bin/arion --prebuilt-file ${target.config.out.dockerComposeYaml}";
+      cmd = "arion --prebuilt-file ${target.config.out.dockerComposeYaml}";
     in [
-      (mkCommand currentSystem "up" "arion up" ''${cmd} up "$@" '' {})
-      (mkCommand currentSystem "ps" "exec this arion task to ps" ''${cmd} ps "$@" '' {})
-      (mkCommand currentSystem "stop" "arion stop" ''${cmd} stop "$@" '' {})
-      (mkCommand currentSystem "rm" "arion rm" ''${cmd} rm "$@" '' {})
-      (mkCommand currentSystem "config" "check the docker-compose yaml file" ''${cmd} config "$@" '' {})
-      (mkCommand currentSystem "arion" "pass any command to arion" ''${cmd} "$@" '' {})
+      (mkCommand currentSystem "up" "arion up" [pkgs.arion] ''${cmd} up "$@" '' {})
+      (mkCommand currentSystem "ps" "exec this arion task to ps" [pkgs.arion] ''${cmd} ps "$@" '' {})
+      (mkCommand currentSystem "stop" "arion stop" [pkgs.arion] ''${cmd} stop "$@" '' {})
+      (mkCommand currentSystem "rm" "arion rm" [pkgs.arion] ''${cmd} rm "$@" '' {})
+      (mkCommand currentSystem "config" "check the docker-compose yaml file" [pkgs.arion] ''${cmd} config "$@" '' {})
+      (mkCommand currentSystem "arion" "pass any command to arion" [pkgs.arion] ''${cmd} "$@" '' {})
     ];
   }

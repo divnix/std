@@ -37,10 +37,10 @@ in
           else target
         );
       };
-      jq = ["${pkgs.jq}/bin/jq" "-r" "'.'" "${json}"];
-      fx = ["|" "${pkgs.fx}/bin/fx"];
     in [
-      (mkCommand currentSystem "write" "write to file" "echo ${json}" {})
-      (mkCommand currentSystem "explore" "interactively explore" (concatStringsSep "\t" (jq ++ fx)) {})
+      (mkCommand currentSystem "write" "write to file" [] "echo ${json}" {})
+      (mkCommand currentSystem "explore" "interactively explore" [pkgs.fx] (
+        concatStringsSep "\t" ["fx" json]
+      ) {})
     ];
   }
