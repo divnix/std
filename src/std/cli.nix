@@ -16,7 +16,7 @@ in {
       homepage = "https://github.com/divnix/std";
     };
 
-    src = inputs.paisano-tui.sourceInfo + /src;
+    src = inputs.paisano-tui + /src;
 
     vendorHash = "sha256-ja0nFWdWqieq8m6cSKAhE1ibeN0fODDCC837jw0eCnE=";
 

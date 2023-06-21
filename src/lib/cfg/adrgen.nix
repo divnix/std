@@ -7,5 +7,5 @@ in {
   data = {};
   output = "adrgen.config.yml";
   format = "yaml";
-  commands = [{package = inputs.cells.std.packages.adrgen;}];
+  commands = [{package = nixpkgs.adrgen;}];
 }

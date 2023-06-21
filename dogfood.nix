@@ -15,7 +15,6 @@ growOn {
     (blockTypes.runnables "cli" {ci.build = true;})
     (blockTypes.functions "devshellProfiles")
     (blockTypes.functions "errors")
-    (blockTypes.installables "packages" {ci.build = true;})
 
     # lib
     (blockTypes.functions "dev")

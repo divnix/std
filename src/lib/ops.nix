@@ -18,7 +18,16 @@ in {
 
   readYAML = import ./ops/readYAML.nix {inherit inputs cell;};
 
-  mkOCI = import ./ops/mkOCI.nix {inherit inputs cell;};
-  mkDevOCI = import ./ops/mkDevOCI.nix {inherit inputs cell;};
-  mkStandardOCI = import ./ops/mkStandardOCI.nix {inherit inputs cell;};
+  mkOCI = import ./ops/mkOCI.nix {
+    inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkOCI";
+    inherit cell;
+  };
+  mkDevOCI = import ./ops/mkDevOCI.nix {
+    inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkDevOCI";
+    inherit cell;
+  };
+  mkStandardOCI = import ./ops/mkStandardOCI.nix {
+    inputs = requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkStandardOCI";
+    inherit cell;
+  };
 }

@@ -4,19 +4,24 @@
 }: let
   l = nixpkgs.lib // builtins;
   inherit (inputs) nixpkgs;
-  inherit (inputs.cells) std lib;
+  inherit (inputs.std) std lib;
 in
   l.mapAttrs (_: lib.dev.mkShell) rec {
     default = {...}: {
       name = "Standard";
       nixago = [
-        (lib.cfg.conform {data = {inherit (inputs) cells;};})
-        (lib.cfg.treefmt cell.configs.treefmt)
-        (lib.cfg.editorconfig cell.configs.editorconfig)
-        (lib.cfg.just cell.configs.just)
-        (lib.cfg.githubsettings cell.configs.githubsettings)
-        lib.cfg.lefthook
-        lib.cfg.adrgen
+        ((lib.dev.mkNixago lib.cfg.conform)
+          {data = {inherit (inputs) cells;};})
+        ((lib.dev.mkNixago lib.cfg.treefmt)
+          cell.configs.treefmt)
+        ((lib.dev.mkNixago lib.cfg.editorconfig)
+          cell.configs.editorconfig)
+        ((lib.dev.mkNixago lib.cfg.just)
+          cell.configs.just)
+        ((lib.dev.mkNixago lib.cfg.githubsettings)
+          cell.configs.githubsettings)
+        (lib.dev.mkNixago lib.cfg.lefthook)
+        (lib.dev.mkNixago lib.cfg.adrgen)
         (lib.dev.mkNixago cell.configs.cog)
       ];
       commands =
@@ -54,7 +59,8 @@ in
 
     book = {...}: {
       nixago = [
-        (lib.cfg.mdbook cell.configs.mdbook)
+        ((lib.dev.mkNixago lib.cfg.mdbook)
+          cell.configs.mdbook)
       ];
     };
   }
