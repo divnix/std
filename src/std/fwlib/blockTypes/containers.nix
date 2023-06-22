@@ -28,7 +28,7 @@ in
       target,
     }: let
       inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
-      inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
+      inherit (nixpkgs.${currentSystem}) pkgs;
 
       provisoDrv = pkgs.substituteAll {
         src = ./containers-proviso.sh;

@@ -26,7 +26,7 @@ in
       fragmentRelPath,
       target,
     }: let
-      inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
+      inherit (nixpkgs.${currentSystem}) pkgs;
 
       # if target ? __std_data_wrapper, then we need to unpack from `.data`
       json = pkgs.writeTextFile {

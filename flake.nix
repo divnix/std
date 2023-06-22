@@ -11,8 +11,8 @@
     paisano.inputs.nixpkgs.follows = "nixpkgs";
     paisano.inputs.yants.follows = "yants";
     paisano-tui = {
-        url = "github:paisano-nix/tui/0.1.1";
-        flake = false; # we're after the source code, only
+      url = "github:paisano-nix/tui/0.1.1";
+      flake = false; # we're after the source code, only
     };
   };
   inputs.blank.url = "github:divnix/blank";
@@ -45,51 +45,62 @@
     makes.follows = "blank";
     arion.follows = "blank";
   };
-  outputs = {
-    nixpkgs,
-    haumea,
-    paisano,
-    ...
-  } @ inputs: let
-    lib = haumea.lib.load {
-      src = ./lib;
-      inputs = (removeAttrs inputs ["self"]) // {inherit grow;};
-    };
 
-    growOn = {
-      cellBlocks ? [
-        (lib.blockTypes.functions "library")
-        (lib.blockTypes.runnables "apps")
-        (lib.blockTypes.installables "packages")
-      ],
-      ...
-    } @ args: let
-      # preserve pos of `cellBlocks` if not using the default
-      args' =
-        args
-        // (
-          if args ? cellBlocks
-          then {}
-          else {inherit cellBlocks;}
-        );
-    in
-      paisano.growOn args' {
-        # standard-specific quality-of-life assets
-        __std.direnv_lib = ./direnv_lib.sh;
-      };
-    grow = args: removeAttrs (growOn args) ["__functor"];
+  outputs = inputs: let
+    # bootstrap std
+    fwlib = import ./src/std/fwlib.nix {
+      inputs = inputs // {nixpkgs = inputs.nixpkgs.legacyPackages;};
+      cell = {};
+    };
+    # load fwlib again through the framework
+    # to enable input overloading for blocktypes
+    std = pick (fwlib.grow {
+      inherit inputs;
+      cellsFrom = inputs.incl ./src ["std"];
+      cellBlocks = [(fwlib.blockTypes.functions "fwlib")];
+    }) ["std" "fwlib"];
+    inherit (inputs.paisano) pick harvest;
   in
-    {
-      inherit (inputs) yants dmerge incl; # convenience re-exports
-      inherit (lib) blockTypes dataWith flakeModule;
-      inherit grow growOn;
-      inherit (paisano) pick harvest winnow;
-      systems = nixpkgs.lib.systems.doubles;
+    std.growOn {
+      inherit inputs;
+      cellsFrom = ./src;
+      cellBlocks = with std.blockTypes; [
+        ## For downstream use
+
+        # std
+        (runnables "cli" {ci.build = true;})
+        (functions "devshellProfiles")
+        (functions "errors")
+
+        # lib
+        (functions "dev")
+        (functions "ops")
+        (nixago "cfg")
+
+        # presets
+        (data "templates")
+        (nixago "nixago")
+
+        ## For local use in the Standard repository
+
+        # local
+        (devshells "shells" {ci.build = true;})
+        (nixago "configs")
+        (containers "containers")
+        (namaka "checks")
+      ];
     }
-    # on our own account ...
-    // (import ./dogfood.nix {
-      inherit inputs growOn;
-      inherit (lib) blockTypes;
-      inherit (paisano) pick harvest;
-    });
+    {
+      # the framework's basic top-level tools
+      inherit (inputs) yants dmerge incl;
+      inherit (inputs.paisano) pick harvest winnow;
+      inherit (std) blockTypes actions dataWith flakeModule grow growOn;
+    }
+    {
+      # auxiliary outputs
+      devShells = harvest inputs.self ["local" "shells"];
+      packages = harvest inputs.self [["std" "cli"] ["std" "packages"]];
+      templates = pick inputs.self ["std" "templates"];
+      checks = pick inputs.self ["tests" "checks"];
+    };
 }
