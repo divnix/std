@@ -1,5 +1,4 @@
-{
-  nixpkgs,
+{  
   root,
   super,
 }:
@@ -24,6 +23,7 @@ in
       fragment,
       fragmentRelPath,
       target,
+      inputs,
     }: let
       developDrv = devshellDrv target;
     in [

@@ -1,5 +1,4 @@
 {
-  nixpkgs,
   root,
   super,
 }:
@@ -27,8 +26,9 @@ in
       fragment,
       fragmentRelPath,
       target,
+      inputs,
     }: let
-      pkgs = nixpkgs.${currentSystem};
+      pkgs = inputs.nixpkgs.${currentSystem};
       job = baseNameOf fragmentRelPath;
       nixExpr = ''
         x: let

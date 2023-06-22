@@ -1,6 +1,4 @@
 {
-  nixpkgs,
-  n2c,
   root,
   super,
 }:
@@ -26,9 +24,10 @@ in
       fragment,
       fragmentRelPath,
       target,
+      inputs,
     }: let
-      inherit (n2c.packages.${currentSystem}) skopeo-nix2container;
-      inherit (nixpkgs.${currentSystem}) pkgs;
+      inherit (inputs.n2c.packages.${currentSystem}) skopeo-nix2container;
+      inherit (inputs.nixpkgs.${currentSystem}) pkgs;
 
       provisoDrv = pkgs.substituteAll {
         src = ./containers-proviso.sh;

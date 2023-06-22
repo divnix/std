@@ -1,5 +1,4 @@
 {
-  nixpkgs,
   root,
   super,
 }:
@@ -29,6 +28,7 @@ in
       fragment,
       fragmentRelPath,
       target,
+      inputs,
     }: [
       (actions.build currentSystem target)
       # profile commands require a flake ref

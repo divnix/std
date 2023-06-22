@@ -1,7 +1,4 @@
-{
-  nixpkgs,
-  root,
-}:
+{root}:
 /*
 Use the Data Blocktype for json serializable data.
 
@@ -25,8 +22,9 @@ in
       fragment,
       fragmentRelPath,
       target,
+      inputs,
     }: let
-      inherit (nixpkgs.${currentSystem}) pkgs;
+      inherit (inputs.nixpkgs.${currentSystem}) pkgs;
 
       # if target ? __std_data_wrapper, then we need to unpack from `.data`
       json = pkgs.writeTextFile {

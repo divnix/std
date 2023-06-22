@@ -1,5 +1,4 @@
 {
-  nixpkgs,
   root,
   super,
 }: let
@@ -15,11 +14,12 @@ in
       fragment,
       fragmentRelPath,
       target,
+      inputs,
     }: let
-      inherit (nixpkgs.${currentSystem}) pkgs;
+      pkg = inputs.namaka.packages.${currentSystem}.default;
     in [
-      (mkCommand currentSystem "check" "run namaka tests against snapshots" [pkgs.namaka] ''
-        namaka check -c nix eval .#${fragment}
+      (mkCommand currentSystem "check" "run namaka tests against snapshots" [pkg] ''
+        namaka check -c nix eval '.#${fragment}'
       '' {})
     ];
   }
