@@ -2,7 +2,7 @@
   l = inputs.nixpkgs.lib // builtins;
 
   # other than `divnix/blank`
-  isBlank = input: inputs.${input}.sourceInfo.narHash == "sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=";
+  isBlank = input: inputs.${input}.narHash == "sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=";
 
   ansi = import ./ansi.nix;
 
@@ -34,7 +34,7 @@
   '';
 
   inputs' = let
-    names = l.attrNames (l.removeAttrs inputs ["self" "cells" "blank"]);
+    names = l.attrNames (l.removeAttrs inputs ["self" "cells" "blank" "nixpkgs"]);
     nameLengths = map l.stringLength names;
     maxNameLength =
       l.foldl'
