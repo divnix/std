@@ -54,53 +54,16 @@
     };
     # load fwlib again through the framework
     # to enable input overloading for blocktypes
-    std = pick (fwlib.grow {
+    std = inputs.paisano.pick (fwlib.grow {
       inherit inputs;
       cellsFrom = inputs.incl ./src ["std"];
       cellBlocks = [(fwlib.blockTypes.functions "fwlib")];
     }) ["std" "fwlib"];
-    inherit (inputs.paisano) pick harvest;
   in
-    std.growOn {
-      inherit inputs;
-      cellsFrom = ./src;
-      cellBlocks = with std.blockTypes; [
-        ## For downstream use
-
-        # std
-        (runnables "cli" {ci.build = true;})
-        (functions "devshellProfiles")
-        (functions "errors")
-
-        # lib
-        (functions "dev")
-        (functions "ops")
-        (nixago "cfg")
-
-        # presets
-        (data "templates")
-        (nixago "nixago")
-
-        ## For local use in the Standard repository
-
-        # local
-        (devshells "shells" {ci.build = true;})
-        (nixago "configs")
-        (containers "containers")
-        (namaka "checks")
-      ];
-    }
-    {
+    (import ./dogfood.nix std inputs) {
       # the framework's basic top-level tools
       inherit (inputs) yants dmerge incl;
       inherit (inputs.paisano) pick harvest winnow;
       inherit (std) blockTypes actions dataWith flakeModule grow growOn;
-    }
-    {
-      # auxiliary outputs
-      devShells = harvest inputs.self ["local" "shells"];
-      packages = harvest inputs.self [["std" "cli"] ["std" "packages"]];
-      templates = pick inputs.self ["std" "templates"];
-      checks = pick inputs.self ["tests" "checks"];
     };
 }
