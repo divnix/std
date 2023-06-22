@@ -47,7 +47,7 @@ jobs:
         id: discovery
 
   build_cli:
-    needs: discover
+    needs: [discover, check_tests]
     if: fromJSON(needs.discover.outputs.hits).cli.build != '{}'
     strategy:
       fail-fast: false
@@ -67,7 +67,7 @@ jobs:
           extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
 
   build_packages:
-    needs: discover
+    needs: [discover, check_tests]
     if: fromJSON(needs.discover.outputs.hits).packages.build != '{}'
     strategy:
       fail-fast: false
@@ -87,7 +87,7 @@ jobs:
           extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
 
   build_shells:
-    needs: discover
+    needs: [discover, check_tests]
     if: fromJSON(needs.discover.outputs.hits).shells.build != '{}'
     strategy:
       fail-fast: false
@@ -96,6 +96,46 @@ jobs:
     name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
     runs-on: ${{ inputs.runs-on }}
     steps:
+      - uses: divnix/std-action/run@v0.23.0
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+        with:
+          nix_signing_key: ${{ secrets.NIX_KEY }}
+          nix_cache: s3://cache.divnix.com?endpoint=fra1.digitaloceanspaces.com
+          discovery_json: ${{ toJSON(matrix.target) }}
+          extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
+
+  check_tests:
+    needs: discover
+    if: fromJSON(needs.discover.outputs.hits).checks.check != '{}'
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(needs.discover.outputs.hits).checks.check }}
+    name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - name: Install Nix Early (to update subflake references)
+        uses: nixbuild/nix-quick-install-action@v22
+        with:
+          nix_conf: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+      - uses: actions/checkout@v3
+      - name: Update subflake references
+        run: |
+          # create the store path of
+          nix store add-path --name source .
+          # update the subflake lockfile to the (now existing) store path
+          # set lastModified to 1 because unknown issues in the GH action environment
+          (cd ./src/local && nix flake lock --update-input std && (
+            jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
+          ) && git add -f flake.lock)
+          (cd ./src/tests && nix flake lock --update-input std && (
+            jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
+          ) &&git add -f flake.lock)
+          # continue normally ...
       - uses: divnix/std-action/run@v0.23.0
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}

@@ -13,7 +13,7 @@ in
       (devshells "shells" {ci.build = true;})
       (nixago "configs")
       (containers "containers")
-      (namaka "checks")
+      (namaka "checks" {ci.check = true;})
     ];
   }
   {

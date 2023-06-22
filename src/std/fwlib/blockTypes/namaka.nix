@@ -19,7 +19,7 @@ in
       pkg = inputs.namaka.packages.${currentSystem}.default;
     in [
       (mkCommand currentSystem "check" "run namaka tests against snapshots" [pkg] ''
-        namaka check -c nix eval '.#${fragment}'
+        namaka check -c nix eval '.#${fragment}.check'
       '' {})
     ];
   }
