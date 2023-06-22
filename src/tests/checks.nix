@@ -1,9 +1,12 @@
 let
   inherit (inputs) namaka self;
+  inputs' = builtins.removeAttrs inputs ["self"];
 in {
-  inherit inputs;
-  snapshots = namaka.lib.load {
-    src = self + /tests;
-    inputs = builtins.removeAttrs inputs ["self"];
+  snapshots = {
+    meta.description = "The main Standard Snapshotting test suite";
+    check = namaka.lib.load {
+      src = self + /tests;
+      inputs = inputs' // {inputs = inputs';};
+    };
   };
 }
