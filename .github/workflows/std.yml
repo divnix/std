@@ -48,7 +48,7 @@ jobs:
 
   build_cli:
     needs: discover
-    if: fromJSON(needs.discover.outputs.hits).cli.build != ''
+    if: fromJSON(needs.discover.outputs.hits).cli.build != '{}'
     strategy:
       fail-fast: false
       matrix:
@@ -68,7 +68,7 @@ jobs:
 
   build_packages:
     needs: discover
-    if: fromJSON(needs.discover.outputs.hits).packages.build != ''
+    if: fromJSON(needs.discover.outputs.hits).packages.build != '{}'
     strategy:
       fail-fast: false
       matrix:
@@ -86,13 +86,13 @@ jobs:
           discovery_json: ${{ toJSON(matrix.target) }}
           extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
 
-  build_devshells:
+  build_shells:
     needs: discover
-    if: fromJSON(needs.discover.outputs.hits).devshells.build != ''
+    if: fromJSON(needs.discover.outputs.hits).shells.build != '{}'
     strategy:
       fail-fast: false
       matrix:
-        target: ${{ fromJSON(needs.discover.outputs.hits).devshells.build }}
+        target: ${{ fromJSON(needs.discover.outputs.hits).shells.build }}
     name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
     runs-on: ${{ inputs.runs-on }}
     steps:
