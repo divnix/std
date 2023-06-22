@@ -28,7 +28,7 @@ in
       fragmentRelPath,
       target,
     }: let
-      pkgs = nixpkgs.legacyPackages.${currentSystem};
+      pkgs = nixpkgs.${currentSystem};
       job = baseNameOf fragmentRelPath;
       nixExpr = ''
         x: let

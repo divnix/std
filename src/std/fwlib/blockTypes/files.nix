@@ -21,7 +21,7 @@ in
       target,
     }: let
       file = toString target;
-      pkgs = nixpkgs.legacyPackages.${currentSystem};
+      pkgs = nixpkgs.${currentSystem};
     in [
       (mkCommand currentSystem "explore" "interactively explore with bat" [pkgs.bat] ''
         bat ${file}

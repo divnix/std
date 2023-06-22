@@ -1,5 +1,5 @@
 {nixpkgs}: currentSystem: name: description: deps: command: args: let
-  inherit (nixpkgs.legacyPackages.${currentSystem}) pkgs;
+  inherit (nixpkgs.${currentSystem}) pkgs;
   inherit (pkgs) lib stdenv haskell shellcheck runtimeShell;
   inherit (pkgs.haskell.lib.compose) justStaticExecutables;
 in

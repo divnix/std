@@ -27,7 +27,7 @@ in
       fragmentRelPath,
       target,
     }: let
-      pkgs = nixpkgs.legacyPackages.${currentSystem};
+      pkgs = nixpkgs.${currentSystem};
     in [
       (mkCommand currentSystem "populate" "populate this nixago file into the repo" [] ''
         ${target.install}/bin/nixago_shell_hook

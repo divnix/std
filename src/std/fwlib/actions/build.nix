@@ -8,7 +8,7 @@
   inherit (builtins) readFile toFile;
 in
   currentSystem: target: let
-    pkgs = nixpkgs.legacyPackages.${currentSystem};
+    pkgs = nixpkgs.${currentSystem};
 
     provisoDrv = pkgs.substituteAll {
       src = ./build-proviso.sh;
