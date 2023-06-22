@@ -33,8 +33,5 @@ in
           else {inherit cellBlocks;}
         );
     in
-      paisano.growOn args' {
-        # standard-specific quality-of-life assets
-        __std.direnv_lib = self + /direnv_lib.sh;
-      };
+      paisano.growOn args';
   }
