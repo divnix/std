@@ -1,7 +1,4 @@
-{
-  nixpkgs,
-  root,
-}:
+{root}:
 /*
 Use the Nixago Blocktype for nixago pebbles.
 
@@ -26,8 +23,9 @@ in
       fragment,
       fragmentRelPath,
       target,
+      inputs,
     }: let
-      pkgs = nixpkgs.${currentSystem};
+      pkgs = inputs.nixpkgs.${currentSystem};
     in [
       (mkCommand currentSystem "populate" "populate this nixago file into the repo" [] ''
         ${target.install}/bin/nixago_shell_hook

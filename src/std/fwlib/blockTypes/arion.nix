@@ -1,7 +1,4 @@
-{
-  nixpkgs,
-  root,
-}:
+{root}:
 /*
 Use the arion for arionCompose Jobs - https://docs.hercules-ci.com/arion/
 
@@ -24,8 +21,9 @@ in
       fragment,
       fragmentRelPath,
       target,
+      inputs,
     }: let
-      pkgs = nixpkgs.${currentSystem};
+      pkgs = inputs.nixpkgs.${currentSystem};
       cmd = "arion --prebuilt-file ${target.config.out.dockerComposeYaml}";
     in [
       (mkCommand currentSystem "up" "arion up" [pkgs.arion] ''${cmd} up "$@" '' {})

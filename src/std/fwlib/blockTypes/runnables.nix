@@ -1,5 +1,4 @@
 {
-  nixpkgs,
   root,
   super,
 }:
@@ -20,6 +19,7 @@ in
       fragment,
       fragmentRelPath,
       target,
+      inputs,
     }: [
       (actions.build currentSystem target)
       (actions.run currentSystem target)

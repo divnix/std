@@ -1,7 +1,4 @@
-{
-  nixpkgs,
-  root,
-}:
+{root}:
 /*
 Use the Files Blocktype for any text data.
 
@@ -19,9 +16,10 @@ in
       fragment,
       fragmentRelPath,
       target,
+      inputs,
     }: let
       file = toString target;
-      pkgs = nixpkgs.${currentSystem};
+      pkgs = inputs.nixpkgs.${currentSystem};
     in [
       (mkCommand currentSystem "explore" "interactively explore with bat" [pkgs.bat] ''
         bat ${file}

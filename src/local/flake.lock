@@ -371,37 +371,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1687403798,
-        "narHash": "sha256-ovpgWRUknY9v+Gt+KU6rGiFIuQJNJ3I9h+V64AbjZ4w=",
+        "lastModified": 1687474314,
+        "narHash": "sha256-nwewa0YVzNyb5dAEzIBDJMPUWN3QULhsjaMcvqfavNU=",
         "owner": "paisano-nix",
         "repo": "core",
-        "rev": "13d19011d0a327eb514d7493c8696055a6018ca1",
+        "rev": "f0f5525a4e9713b775fffc592c476df2c857fec0",
         "type": "github"
       },
       "original": {
         "owner": "paisano-nix",
         "repo": "core",
-        "type": "github"
-      }
-    },
-    "paisano-actions": {
-      "inputs": {
-        "nixpkgs": [
-          "paisano-mdbook-preprocessor",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1677306424,
-        "narHash": "sha256-H9/dI2rGEbKo4KEisqbRPHFG2ajF8Tm111NPdKGIf28=",
-        "owner": "paisano-nix",
-        "repo": "actions",
-        "rev": "65ec4e080b3480167fc1a748c89a05901eea9a9b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "paisano-nix",
-        "repo": "actions",
         "type": "github"
       }
     },
@@ -412,17 +391,16 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "paisano-actions": "paisano-actions",
         "std": [
           "std"
         ]
       },
       "locked": {
-        "lastModified": 1680654400,
-        "narHash": "sha256-Qdpio+ldhUK3zfl22Mhf8HUULdUOJXDWDdO7MIK69OU=",
+        "lastModified": 1687474833,
+        "narHash": "sha256-BDhiGpeTiAShO8JtNwjO0QpABf0KlDSrW35rRi1i9/w=",
         "owner": "paisano-nix",
         "repo": "mdbook-paisano-preprocessor",
-        "rev": "11a8fc47f574f194a7ae7b8b98001f6143ba4cf1",
+        "rev": "f74b63986c85b172e3e5bec744ef180870f8929c",
         "type": "github"
       },
       "original": {
@@ -539,12 +517,12 @@
       },
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-bibO0razpIsjHKPW/ezKW4bdM7HJEQOeGGLbqc9d8Vw=",
-        "path": "/nix/store/wm32rx1ix7f7lpczrfkhzh4g44llpi4s-source",
+        "narHash": "sha256-FqL2EqkTlxezNHCV2l52bVMDvsv+R+efQMZZSyuM/dU=",
+        "path": "/nix/store/j2vx7kdal6p2nwinq34miw5w0mpwjswg-source",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/wm32rx1ix7f7lpczrfkhzh4g44llpi4s-source",
+        "path": "/nix/store/j2vx7kdal6p2nwinq34miw5w0mpwjswg-source",
         "type": "path"
       }
     },

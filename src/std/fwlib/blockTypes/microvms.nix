@@ -18,6 +18,7 @@ in
       fragment,
       fragmentRelPath,
       target,
+      inputs,
     }: [
       (mkCommand currentSystem "run" "run the microvm" [] ''
         ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-run
