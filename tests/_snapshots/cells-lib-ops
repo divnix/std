@@ -1,0 +1,14 @@
+#pretty
+{
+  lazyDerivation = "missing-test";
+  mkDevOCI = <derivation image-hello-dev.json>;
+  mkMicrovm = <derivation microvm-qemu-nixos>;
+  mkOCI = "missing-test";
+  mkOperable = <derivation operable-hello-2.12.1>;
+  mkOperableScript = "missing-test";
+  mkSetup = "missing-test";
+  mkStandardOCI = <derivation image-hello.json>;
+  mkUser = "missing-test";
+  readYAML = "missing-test";
+  writeScript = "missing-test";
+}

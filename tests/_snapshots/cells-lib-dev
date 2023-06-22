@@ -1,0 +1,7 @@
+#pretty
+{
+  mkArion = <derivation docker-compose.yaml>;
+  mkMakes = <derivation test-script>;
+  mkNixago = <derivation conform.yaml>;
+  mkShell = <derivation Test>;
+}

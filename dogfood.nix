@@ -31,7 +31,7 @@ growOn {
     (blockTypes.devshells "shells" {ci.build = true;})
     (blockTypes.nixago "configs")
     (blockTypes.containers "containers")
-    # (blockTypes.tasks "tasks") # TODO: implement properly
+    (blockTypes.anything "checks")
   ];
 }
 # Soil ("compatibile with the entire world")
@@ -39,4 +39,5 @@ growOn {
   devShells = harvest inputs.self ["local" "shells"];
   packages = harvest inputs.self [["std" "cli"] ["std" "packages"]];
   templates = pick inputs.self ["std" "templates"];
+  checks = pick inputs.self ["tests" "checks"];
 }

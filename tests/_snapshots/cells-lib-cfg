@@ -1,0 +1,11 @@
+#pretty
+{
+  adrgen = <derivation adrgen.config.yml>;
+  conform = <derivation conform.yaml>;
+  editorconfig = <derivation editorconfig>;
+  githubsettings = <derivation settings.yml>;
+  just = <derivation Justfile>;
+  lefthook = <derivation lefthook.yml>;
+  mdbook = <derivation book.toml>;
+  treefmt = <derivation treefmt.toml>;
+}

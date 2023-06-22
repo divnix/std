@@ -3,7 +3,7 @@
   cell,
 }: let
   l = nixpkgs.lib // builtins;
-  inherit (inputs) nixpkgs;
+  inherit (inputs) nixpkgs namaka;
   inherit (inputs.std) std lib;
 in
   l.mapAttrs (_: lib.dev.mkShell) rec {
@@ -46,6 +46,10 @@ in
           {
             package = nixpkgs.gopls;
             category = "cli-dev";
+          }
+          {
+            package = namaka.packages.default;
+            category = "nix-testing";
           }
         ]
         ++ l.optionals nixpkgs.stdenv.isLinux [

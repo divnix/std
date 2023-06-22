@@ -11,15 +11,21 @@
     namaka.url = "github:nix-community/namaka/v0.2.0";
     namaka.inputs.haumea.follows = "std/haumea";
     namaka.inputs.nixpkgs.follows = "nixpkgs";
+    makes.url = "github:fluidattacks/makes";
+    makes.inputs.nixpkgs.follows = "nixpkgs";
+    arion.url = "github:hercules-ci/arion";
+    arion.inputs.nixpkgs.follows = "nixpkgs";
+    microvm.url = "github:astro/microvm.nix";
+    microvm.inputs.nixpkgs.follows = "nixpkgs";
     std = {
       url = "../../";
       inputs.devshell.follows = "devshell";
       inputs.nixago.follows = "nixago";
       inputs.n2c.follows = "n2c";
+      inputs.makes.follows = "makes";
+      inputs.arion.follows = "arion";
+      inputs.microvm.follows = "microvm";
     };
-    paisano-mdbook-preprocessor.url = "github:paisano-nix/mdbook-paisano-preprocessor";
-    paisano-mdbook-preprocessor.inputs.std.follows = "std";
-    paisano-mdbook-preprocessor.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = i: i;
 }

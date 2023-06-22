@@ -1,0 +1,5 @@
+[check]
+cmd = ["nix", "eval", ".#checks.snapshots"]
+
+[eval]
+cmd = ["nix", "eval", ".#checks.snapshots"]
