@@ -12,12 +12,36 @@ permissions:
 
 jobs:
   discover:
+    env:
+      # use local flake so we can dirty the tree
+      flake_file: "./flake.nix"
+      flake_url: "."
     outputs:
       hits: ${{ steps.discovery.outputs.hits }}
       nix_conf: ${{ steps.discovery.outputs.nix_conf }}
 
     runs-on: ${{ inputs.runs-on }}
     steps:
+      - name: Install Nix Early (to update subflake references)
+        uses: nixbuild/nix-quick-install-action@v22
+        with:
+          nix_conf: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+      - uses: actions/checkout@v3
+      - name: Update subflake references
+        run: |
+          # create the store path of
+          nix store add-path --name source .
+          # update the subflake lockfile to the (now existing) store path
+          # set lastModified to 1 because unknown issues in the GH action environment
+          (cd ./src/local && nix flake lock --update-input std && (
+            jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
+          ) && git add -f flake.lock)
+          (cd ./src/tests && nix flake lock --update-input std && (
+            jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
+          ) &&git add -f flake.lock)
+          # continue normally ...
       - name: Standard Discovery
         uses: divnix/std-action/discover@v0.23.0
         id: discovery
