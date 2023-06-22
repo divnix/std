@@ -152,11 +152,6 @@ in {
       };
     };
   };
-  just = {
-    data = {
-      tasks = import ./tasks.nix;
-    };
-  };
   mdbook = {
     output = "docs/book.toml";
     data = {

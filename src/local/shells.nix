@@ -16,8 +16,6 @@ in
           cell.configs.treefmt)
         ((lib.dev.mkNixago lib.cfg.editorconfig)
           cell.configs.editorconfig)
-        ((lib.dev.mkNixago lib.cfg.just)
-          cell.configs.just)
         ((lib.dev.mkNixago lib.cfg.githubsettings)
           cell.configs.githubsettings)
         (lib.dev.mkNixago lib.cfg.lefthook)
