@@ -1,11 +1,12 @@
 {
-  grow,
+  root,
   paisano,
   nixpkgs,
   yants,
 }: let
   l = nixpkgs.lib // builtins;
   inherit (paisano) harvest pick winnow;
+  inherit (root) grow;
   types = import (paisano + /types/default.nix) {
     inherit l yants;
     paths = null;
