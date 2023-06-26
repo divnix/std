@@ -5,6 +5,7 @@
   cells = "no .outPath";
   devshell = "/nix/store/gadmzrrq2dygvzy3yqp5x7gfbd7l2pw1-source";
   dmerge = "/nix/store/8b67fxqldqv1x3x07nhabb9ild2zl6rz-source";
+  flake-parts = "/nix/store/jiyanhix45y0a7m9nsrng44yjzrp79m9-source";
   haumea = "/nix/store/ih873qmabdsdgk1naaiv6v7jy1mxq241-source";
   incl = "/nix/store/4dqlpd9c8yil4ay4prr38vslxhpsp4zp-source";
   makes = "/nix/store/71rzg7vs53gmxqph64d9zqf4ns928c6c-source";

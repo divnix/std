@@ -18,6 +18,7 @@
     arion.inputs.nixpkgs.follows = "nixpkgs";
     microvm.url = "github:astro/microvm.nix";
     microvm.inputs.nixpkgs.follows = "nixpkgs";
+    flake-parts.url = "github:hercules-ci/flake-parts";
 
     # The only purpose of this is to construe the correct follows spec in flake.lock.
     # `std` will be fully shadowed below

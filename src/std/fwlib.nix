@@ -14,24 +14,3 @@
   };
 in
   fwlib
-  // rec {
-    grow = args: removeAttrs (growOn args) ["__functor"];
-    growOn = {
-      cellBlocks ? [
-        (fwlib.blockTypes.functions "library")
-        (fwlib.blockTypes.runnables "apps")
-        (fwlib.blockTypes.installables "packages")
-      ],
-      ...
-    } @ args: let
-      # preserve pos of `cellBlocks` if not using the default
-      args' =
-        args
-        // (
-          if args ? cellBlocks
-          then {}
-          else {inherit cellBlocks;}
-        );
-    in
-      paisano.growOn args';
-  }

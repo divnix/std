@@ -125,6 +125,24 @@
         "type": "github"
       }
     },
+    "flake-parts_2": {
+      "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib"
+      },
+      "locked": {
+        "lastModified": 1685662779,
+        "narHash": "sha256-cKDDciXGpMEjP1n6HlzKinN0H+oLmNpgeCTzYnsA2po=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "71fb97f0d875fd4de4994dfb849f2c75e17eb6c3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems_2"
@@ -355,6 +373,24 @@
         "type": "github"
       }
     },
+    "nixpkgs-lib": {
+      "locked": {
+        "dir": "lib",
+        "lastModified": 1685564631,
+        "narHash": "sha256-8ywr3AkblY4++3lIVxmrWZFzac7+f32ZEhH/A8pNscI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "4f53efe34b3a8877ac923b9350c874e3dcd5dc0a",
+        "type": "github"
+      },
+      "original": {
+        "dir": "lib",
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1681001314,
@@ -399,11 +435,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1687474314,
-        "narHash": "sha256-nwewa0YVzNyb5dAEzIBDJMPUWN3QULhsjaMcvqfavNU=",
+        "lastModified": 1687475968,
+        "narHash": "sha256-tFrPoD24Ph6VZjgmL3J4ICDWY6W/DnnHyupWeAL3Lw8=",
         "owner": "paisano-nix",
         "repo": "core",
-        "rev": "f0f5525a4e9713b775fffc592c476df2c857fec0",
+        "rev": "9954e48e1ebc74a698b9d4ac02aee85514fc0237",
         "type": "github"
       },
       "original": {
@@ -433,6 +469,7 @@
       "inputs": {
         "arion": "arion",
         "devshell": "devshell",
+        "flake-parts": "flake-parts_2",
         "makes": "makes",
         "microvm": "microvm",
         "n2c": "n2c",
@@ -475,12 +512,12 @@
       },
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-vUjUquJ6UI0Dahb60Xr0fzdYFhA0e6/0O1aAliocbNQ=",
-        "path": "/nix/store/xxjbi4pd800rwzb4mmsa18g81glk6d70-source",
+        "narHash": "sha256-Bk3himRhlxovNUHCD0vE7BgIpHM+lTN6jzMzn6qGAKM=",
+        "path": "/nix/store/p45iiq4v4nfrbdqcqgr5yc3fwagcaqs3-source",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/xxjbi4pd800rwzb4mmsa18g81glk6d70-source",
+        "path": "/nix/store/p45iiq4v4nfrbdqcqgr5yc3fwagcaqs3-source",
         "type": "path"
       }
     },

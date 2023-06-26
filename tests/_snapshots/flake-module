@@ -1,0 +1,231 @@
+#pretty
+{
+  __std = {
+    __schema = "v0";
+    actions = {
+      aarch64-darwin = {
+        local = {
+          shells = {
+            default = {
+              build = <derivation build>;
+              enter = <derivation enter>;
+            };
+          };
+        };
+      };
+      aarch64-linux = {
+        local = {
+          shells = {
+            default = {
+              build = <derivation build>;
+              enter = <derivation enter>;
+            };
+          };
+        };
+      };
+      x86_64-darwin = {
+        local = {
+          shells = {
+            default = {
+              build = <derivation build>;
+              enter = <derivation enter>;
+            };
+          };
+        };
+      };
+      x86_64-linux = {
+        local = {
+          shells = {
+            default = {
+              build = <derivation build>;
+              enter = <derivation enter>;
+            };
+          };
+        };
+      };
+    };
+    cellsFrom = "__fixture";
+    ci = {
+      aarch64-darwin = [ ];
+      aarch64-linux = [ ];
+      x86_64-darwin = [ ];
+      x86_64-linux = [ ];
+    };
+    init = {
+      aarch64-darwin = [
+        {
+          cell = "local";
+          cellBlocks = [
+            {
+              blockType = "devshells";
+              cellBlock = "shells";
+              targets = [
+                {
+                  actions = [
+                    {
+                      description = "build it";
+                      name = "build";
+                    }
+                    {
+                      description = "enter this devshell";
+                      name = "enter";
+                    }
+                  ];
+                  name = "default";
+                }
+              ];
+            }
+          ];
+        }
+      ];
+      aarch64-linux = [
+        {
+          cell = "local";
+          cellBlocks = [
+            {
+              blockType = "devshells";
+              cellBlock = "shells";
+              targets = [
+                {
+                  actions = [
+                    {
+                      description = "build it";
+                      name = "build";
+                    }
+                    {
+                      description = "enter this devshell";
+                      name = "enter";
+                    }
+                  ];
+                  name = "default";
+                }
+              ];
+            }
+          ];
+        }
+      ];
+      x86_64-darwin = [
+        {
+          cell = "local";
+          cellBlocks = [
+            {
+              blockType = "devshells";
+              cellBlock = "shells";
+              targets = [
+                {
+                  actions = [
+                    {
+                      description = "build it";
+                      name = "build";
+                    }
+                    {
+                      description = "enter this devshell";
+                      name = "enter";
+                    }
+                  ];
+                  name = "default";
+                }
+              ];
+            }
+          ];
+        }
+      ];
+      x86_64-linux = [
+        {
+          cell = "local";
+          cellBlocks = [
+            {
+              blockType = "devshells";
+              cellBlock = "shells";
+              targets = [
+                {
+                  actions = [
+                    {
+                      description = "build it";
+                      name = "build";
+                    }
+                    {
+                      description = "enter this devshell";
+                      name = "enter";
+                    }
+                  ];
+                  name = "default";
+                }
+              ];
+            }
+          ];
+        }
+      ];
+    };
+  };
+  aarch64-darwin = {
+    local = {
+      shells = {
+        default = <derivation test-shell>;
+      };
+    };
+  };
+  aarch64-linux = {
+    local = {
+      shells = {
+        default = <derivation test-shell>;
+      };
+    };
+  };
+  apps = {
+    aarch64-darwin = { };
+    aarch64-linux = { };
+    x86_64-darwin = { };
+    x86_64-linux = { };
+  };
+  checks = {
+    aarch64-darwin = { };
+    aarch64-linux = { };
+    x86_64-darwin = { };
+    x86_64-linux = { };
+  };
+  devShells = {
+    aarch64-darwin = {
+      default = <derivation test-shell>;
+    };
+    aarch64-linux = {
+      default = <derivation test-shell>;
+    };
+    x86_64-darwin = {
+      default = <derivation test-shell>;
+    };
+    x86_64-linux = {
+      default = <derivation test-shell>;
+    };
+  };
+  formatter = { };
+  legacyPackages = {
+    aarch64-darwin = { };
+    aarch64-linux = { };
+    x86_64-darwin = { };
+    x86_64-linux = { };
+  };
+  nixosConfigurations = { };
+  nixosModules = { };
+  overlays = { };
+  packages = {
+    aarch64-darwin = { };
+    aarch64-linux = { };
+    x86_64-darwin = { };
+    x86_64-linux = { };
+  };
+  x86_64-darwin = {
+    local = {
+      shells = {
+        default = <derivation test-shell>;
+      };
+    };
+  };
+  x86_64-linux = {
+    local = {
+      shells = {
+        default = <derivation test-shell>;
+      };
+    };
+  };
+}
