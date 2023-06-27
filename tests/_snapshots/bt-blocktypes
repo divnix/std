@@ -1,0 +1,259 @@
+#pretty
+{
+  anything = {
+    name = "anything";
+    type = "anything";
+  };
+  arion = {
+    actions = [
+      {
+        command = <derivation up>;
+        description = "arion up";
+        name = "up";
+      }
+      {
+        command = <derivation ps>;
+        description = "exec this arion task to ps";
+        name = "ps";
+      }
+      {
+        command = <derivation stop>;
+        description = "arion stop";
+        name = "stop";
+      }
+      {
+        command = <derivation rm>;
+        description = "arion rm";
+        name = "rm";
+      }
+      {
+        command = <derivation config>;
+        description = "check the docker-compose yaml file";
+        name = "config";
+      }
+      {
+        command = <derivation arion>;
+        description = "pass any command to arion";
+        name = "arion";
+      }
+    ];
+    name = "arion";
+    type = "arion";
+  };
+  containers = {
+    actions = [
+      {
+        command = <derivation build>;
+        description = "build it";
+        name = "build";
+        proviso = "/nix/store/wr33aaj6cq4w3apibizxfm76gczdsfhq-build-proviso.sh";
+        targetDrv = "drvPath";
+      }
+      {
+        command = <derivation print-image>;
+        description = "print out the image.repo with all tags";
+        name = "print-image";
+      }
+      {
+        command = <derivation publish>;
+        description = "copy the image to its remote registry";
+        meta = {
+          image = "repo:tag";
+        };
+        name = "publish";
+        proviso = "/nix/store/l4x9w3p106lrzh5ksk4k3zi3jdarf6zh-containers-proviso.sh";
+      }
+      {
+        command = <derivation load>;
+        description = "load image to the local docker daemon";
+        name = "load";
+      }
+    ];
+    name = "containers";
+    type = "containers";
+  };
+  data = {
+    actions = [
+      {
+        command = <derivation write>;
+        description = "write to file";
+        name = "write";
+      }
+      {
+        command = <derivation explore>;
+        description = "interactively explore";
+        name = "explore";
+      }
+    ];
+    name = "data";
+    type = "data";
+  };
+  devshells = {
+    actions = [
+      {
+        command = <derivation build>;
+        description = "build it";
+        name = "build";
+        proviso = "/nix/store/wr33aaj6cq4w3apibizxfm76gczdsfhq-build-proviso.sh";
+        targetDrv = "drvPath";
+      }
+      {
+        command = <derivation enter>;
+        description = "enter this devshell";
+        name = "enter";
+      }
+    ];
+    name = "devshells";
+    type = "devshells";
+  };
+  files = {
+    actions = [
+      {
+        command = <derivation explore>;
+        description = "interactively explore with bat";
+        name = "explore";
+      }
+    ];
+    name = "files";
+    type = "files";
+  };
+  functions = {
+    name = "functions";
+    type = "functions";
+  };
+  installables = {
+    actions = [
+      {
+        command = <derivation build>;
+        description = "build it";
+        name = "build";
+        proviso = "/nix/store/wr33aaj6cq4w3apibizxfm76gczdsfhq-build-proviso.sh";
+        targetDrv = "drvPath";
+      }
+      {
+        command = <derivation install>;
+        description = "install this target";
+        name = "install";
+      }
+      {
+        command = <derivation upgrade>;
+        description = "upgrade this target";
+        name = "upgrade";
+      }
+      {
+        command = <derivation remove>;
+        description = "remove this target";
+        name = "remove";
+      }
+      {
+        command = <derivation bundle>;
+        description = "bundle this target";
+        name = "bundle";
+      }
+      {
+        command = <derivation bundleImage>;
+        description = "bundle this target to image";
+        name = "bundleImage";
+      }
+      {
+        command = <derivation bundleAppImage>;
+        description = "bundle this target to AppImage";
+        name = "bundleAppImage";
+      }
+    ];
+    name = "installables";
+    type = "installables";
+  };
+  microvms = {
+    actions = [
+      {
+        command = <derivation run>;
+        description = "run the microvm";
+        name = "run";
+      }
+      {
+        command = <derivation console>;
+        description = "enter the microvm console";
+        name = "console";
+      }
+      {
+        command = <derivation microvm>;
+        description = "pass any command to microvm";
+        name = "microvm";
+      }
+    ];
+    name = "microvms";
+    type = "microvms";
+  };
+  namaka = {
+    actions = [
+      {
+        command = <derivation check>;
+        description = "run namaka tests against snapshots";
+        name = "check";
+      }
+    ];
+    name = "namaka";
+    type = "namaka";
+  };
+  nixago = {
+    actions = [
+      {
+        command = <derivation populate>;
+        description = "populate this nixago file into the repo";
+        name = "populate";
+      }
+      {
+        command = <derivation explore>;
+        description = "interactively explore the nixago file";
+        name = "explore";
+      }
+    ];
+    name = "nixago";
+    type = "nixago";
+  };
+  nomadJobManifests = {
+    actions = [
+      {
+        command = <derivation render>;
+        description = "build the JSON job description";
+        name = "render";
+      }
+      {
+        command = <derivation deploy>;
+        description = "Deploy the job to Nomad";
+        name = "deploy";
+      }
+      {
+        command = <derivation explore>;
+        description = "interactively explore the Job defintion";
+        name = "explore";
+      }
+    ];
+    name = "nomadJobManifests";
+    type = "nomadJobManifests";
+  };
+  pkgs = {
+    cli = false;
+    name = "pkgs";
+    type = "pkgs";
+  };
+  runnables = {
+    actions = [
+      {
+        command = <derivation build>;
+        description = "build it";
+        name = "build";
+        proviso = "/nix/store/wr33aaj6cq4w3apibizxfm76gczdsfhq-build-proviso.sh";
+        targetDrv = "drvPath";
+      }
+      {
+        command = <derivation run>;
+        description = "run it";
+        name = "run";
+      }
+    ];
+    name = "runnables";
+    type = "runnables";
+  };
+}

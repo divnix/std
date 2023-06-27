@@ -1,5 +1,5 @@
 [check]
-cmd = ["nix", "eval", ".#checks.snapshots.check"]
+cmd = ["nix", "flake", "check"]
 
 [eval]
-cmd = ["nix", "eval", ".#checks.snapshots.check"]
+cmd = ["nix", "flake", "check"]

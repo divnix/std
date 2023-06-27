@@ -18,7 +18,7 @@ in
   }
   {
     devShells = harvest inputs.self ["local" "shells"];
-    checks = pick inputs.self ["tests" "checks"];
+    checks = harvest inputs.self ["tests" "checks" "snapshots" "check"];
   }
   (std.grow {
     inherit inputs;
