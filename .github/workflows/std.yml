@@ -18,17 +18,15 @@ jobs:
       flake_url: "."
     outputs:
       hits: ${{ steps.discovery.outputs.hits }}
-      nix_conf: ${{ steps.discovery.outputs.nix_conf }}
 
     runs-on: ${{ inputs.runs-on }}
     steps:
-      - name: Install Nix Early (to update subflake references)
-        uses: nixbuild/nix-quick-install-action@v22
+      - uses: actions/checkout@v3
+      - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
         with:
           nix_conf: |
             experimental-features = nix-command flakes
             accept-flake-config = true
-      - uses: actions/checkout@v3
       - name: Update subflake references
         run: |
           # create the store path of
@@ -43,7 +41,7 @@ jobs:
           ) &&git add -f flake.lock)
           # continue normally ...
       - name: Standard Discovery
-        uses: divnix/std-action/discover@main
+        uses: divnix/std-action/discover@simplify-std-action
         id: discovery
 
   build_cli:
@@ -56,15 +54,14 @@ jobs:
     name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
     runs-on: ${{ inputs.runs-on }}
     steps:
-      - uses: divnix/std-action/run@v0.23.0
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+      - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
         with:
-          nix_signing_key: ${{ secrets.NIX_KEY }}
-          nix_cache: s3://cache.divnix.com?endpoint=fra1.digitaloceanspaces.com
+          nix_conf: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+      - uses: divnix/std-action/run@simplify-std-action
+        with:
           discovery_json: ${{ toJSON(matrix.target) }}
-          extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
 
   build_packages:
     needs: [discover, check_tests]
@@ -76,15 +73,14 @@ jobs:
     name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
     runs-on: ${{ inputs.runs-on }}
     steps:
-      - uses: divnix/std-action/run@v0.23.0
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+      - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
         with:
-          nix_signing_key: ${{ secrets.NIX_KEY }}
-          nix_cache: s3://cache.divnix.com?endpoint=fra1.digitaloceanspaces.com
+          nix_conf: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+      - uses: divnix/std-action/run@simplify-std-action
+        with:
           discovery_json: ${{ toJSON(matrix.target) }}
-          extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
 
   build_shells:
     needs: [discover, check_tests]
@@ -96,15 +92,14 @@ jobs:
     name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
     runs-on: ${{ inputs.runs-on }}
     steps:
-      - uses: divnix/std-action/run@v0.23.0
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+      - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
         with:
-          nix_signing_key: ${{ secrets.NIX_KEY }}
-          nix_cache: s3://cache.divnix.com?endpoint=fra1.digitaloceanspaces.com
+          nix_conf: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+      - uses: divnix/std-action/run@simplify-std-action
+        with:
           discovery_json: ${{ toJSON(matrix.target) }}
-          extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
 
   check_tests:
     needs: discover
@@ -116,8 +111,7 @@ jobs:
     name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
     runs-on: ${{ inputs.runs-on }}
     steps:
-      - name: Install Nix Early (to update subflake references)
-        uses: nixbuild/nix-quick-install-action@v22
+      - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
         with:
           nix_conf: |
             experimental-features = nix-command flakes
@@ -136,12 +130,6 @@ jobs:
             jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
           ) &&git add -f flake.lock)
           # continue normally ...
-      - uses: divnix/std-action/run@v0.23.0
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+      - uses: divnix/std-action/run@simplify-std-action
         with:
-          nix_signing_key: ${{ secrets.NIX_KEY }}
-          nix_cache: s3://cache.divnix.com?endpoint=fra1.digitaloceanspaces.com
           discovery_json: ${{ toJSON(matrix.target) }}
-          extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
