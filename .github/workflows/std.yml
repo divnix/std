@@ -28,8 +28,21 @@ jobs:
         run: 'printf "currentSystem=$(nix eval --raw --impure --expr builtins.currentSystem)" >> "$GITHUB_OUTPUT"'
 
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/update-subflake.yml
+      - name: Update subflake references
+        run: |
+          # create the store path of
+          nix store add-path --name source .
+          # update the subflake lockfile to the (now existing) store path
+          # set lastModified to 1 because unknown issues in the GH action environment
+          (cd ./src/local && nix flake lock --update-input std && (
+            jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
+          ) && git add -f flake.lock)
+          (cd ./src/tests && nix flake lock --update-input std && (
+            jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
+          ) &&git add -f flake.lock)
+          # continue normally ...
 
+      - uses: DeterminateSystems/magic-nix-cache-action@main
       # Execute Discovery. It will schedule builds on `worker` job below
       - uses: DevPalace/phoenix-ci/discovery@v1.1
         id: discovery
@@ -64,9 +77,21 @@ jobs:
             access-tokens = github.com=${{ github.token }}
 
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/update-subflake.yml
-      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Update subflake references
+        run: |
+          # create the store path of
+          nix store add-path --name source .
+          # update the subflake lockfile to the (now existing) store path
+          # set lastModified to 1 because unknown issues in the GH action environment
+          (cd ./src/local && nix flake lock --update-input std && (
+            jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
+          ) && git add -f flake.lock)
+          (cd ./src/tests && nix flake lock --update-input std && (
+            jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
+          ) &&git add -f flake.lock)
+          # continue normally ...
 
+      - uses: DeterminateSystems/magic-nix-cache-action@main
       # Executes builds per each found target in discovery
       - uses: DevPalace/phoenix-ci/worker@v1.1
         id: worker
