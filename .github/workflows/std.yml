@@ -45,9 +45,8 @@ jobs:
       hits: ${{ steps.discovery.outputs.hits }}
 
 
-  namaka:
+  worker:
     name: "//${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}"
-    if: ${{ matrix.target.type }} == "namaka"
     needs: [discovery]
     runs-on: ${{ inputs.runs-on }}
     strategy:
@@ -74,33 +73,3 @@ jobs:
         with:
           target: ${{ toJSON(matrix.target) }}
           flake: "." # we use checkout and update the subflake
-  rest:
-    name: "//${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}"
-    if: ${{ matrix.target.type }} != "namaka"
-    needs: [discovery, namaka]
-    runs-on: ${{ inputs.runs-on }}
-    strategy:
-      fail-fast: false
-      matrix:
-        target: ${{ fromJSON(needs.discovery.outputs.hits) }}
-    steps:
-      # Configure Nix
-      - uses: nixbuild/nix-quick-install-action@v22
-        with:
-          nix_conf: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
-            trusted-users = runner
-            access-tokens = github.com=${{ github.token }}
-
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/update-subflake.yml
-      - uses: DeterminateSystems/magic-nix-cache-action@main
-
-      # Executes builds per each found target in discovery
-      - uses: DevPalace/phoenix-ci/worker@v1.1
-        id: worker
-        with:
-          target: ${{ toJSON(matrix.target) }}
-          flake: "." # we use checkout and update the subflake
-
