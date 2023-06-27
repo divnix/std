@@ -188,6 +188,11 @@
   namaka = {
     actions = [
       {
+        command = <derivation eval>;
+        description = "use transparently with namaka cli";
+        name = "eval";
+      }
+      {
         command = <derivation check>;
         description = "run namaka tests against snapshots";
         name = "check";

@@ -1,0 +1,5 @@
+[check]
+cmd = ["std", "//tests/checks/snapshots:eval"]
+
+[eval]
+cmd = ["std", "//tests/checks/snapshots:eval"]

@@ -18,6 +18,9 @@ in
     }: let
       pkg = inputs.namaka.packages.${currentSystem}.default;
     in [
+      (mkCommand currentSystem "eval" "use transparently with namaka cli" [] ''
+        nix eval '.#${fragment}.check'
+      '' {})
       (mkCommand currentSystem "check" "run namaka tests against snapshots" [pkg] ''
         namaka check -c nix eval '.#${fragment}.check'
       '' {})
