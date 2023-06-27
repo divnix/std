@@ -10,7 +10,7 @@
   inherit (inputs) haumea paisano self;
   fwlib = haumea.lib.load {
     src = ./fwlib;
-    inputs = removeAttrs inputs ["self"];
+    inputs = (removeAttrs inputs ["self"]) // {trivial = inputs.nixpkgs;};
   };
 in
   fwlib

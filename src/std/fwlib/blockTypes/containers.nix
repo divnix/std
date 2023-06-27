@@ -1,4 +1,5 @@
 {
+  trivial,
   root,
   super,
 }:
@@ -27,9 +28,9 @@ in
       inputs,
     }: let
       inherit (inputs.n2c.packages.${currentSystem}) skopeo-nix2container;
-      inherit (inputs.nixpkgs.${currentSystem}) pkgs;
+      triv = trivial.${currentSystem};
 
-      provisoDrv = pkgs.substituteAll {
+      provisoDrv = triv.substituteAll {
         src = ./containers-proviso.sh;
         filter = ./containers-publish-filter.jq;
       };

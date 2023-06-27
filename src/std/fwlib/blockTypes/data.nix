@@ -1,4 +1,7 @@
-{root}:
+{
+  trivial,
+  root,
+}:
 /*
 Use the Data Blocktype for json serializable data.
 
@@ -25,9 +28,10 @@ in
       inputs,
     }: let
       inherit (inputs.nixpkgs.${currentSystem}) pkgs;
+      triv = trivial.${currentSystem};
 
       # if target ? __std_data_wrapper, then we need to unpack from `.data`
-      json = pkgs.writeTextFile {
+      json = triv.writeTextFile {
         name = "data.json";
         text = toJSON (
           if target ? __std_data_wrapper
