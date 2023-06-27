@@ -36,7 +36,7 @@ jobs:
         with:
           # Attribute paths to search for targets
           attrPaths: __std.ci.${{ steps.system.outputs.currentSystem }}
-          flake: "." # we use checkout and update the subflake
+          flake: "." # we use checkout and update the subflakes
 
           # Disable caching since discovery does not do much most of the time
           nixStoreCachingEnabled: false
