@@ -227,7 +227,7 @@
     name = "nixago";
     type = "nixago";
   };
-  nomadJobManifests = {
+  nomad = {
     actions = [
       {
         command = <derivation render>;
@@ -245,7 +245,7 @@
         name = "explore";
       }
     ];
-    name = "nomadJobManifests";
+    name = "nomad";
     type = "nomadJobManifests";
   };
   pkgs = {
