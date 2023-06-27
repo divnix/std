@@ -1,4 +1,4 @@
-name: Standard CI
+name: 'Standard CI'
 
 on:
   workflow_call:
@@ -11,137 +11,96 @@ permissions:
   contents: read
 
 jobs:
-  discover:
-    env:
-      # use local flake so we can dirty the tree
-      flake_file: "./flake.nix"
-      flake_url: "."
+  discovery: # make sure the action works on a clean machine without building
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      # Configure Nix
+      - uses: nixbuild/nix-quick-install-action@v22
+        with:
+          nix_conf: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+            trusted-users = runner
+            access-tokens = github.com=${{ github.token }}
+
+      - name: Detect current system
+        id: system
+        run: 'printf "currentSystem=$(nix eval --raw --impure --expr builtins.currentSystem)" >> "$GITHUB_OUTPUT"'
+
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/update-subflake.yml
+
+      # Execute Discovery. It will schedule builds on `worker` job below
+      - uses: DevPalace/phoenix-ci/discovery@v1.1
+        id: discovery
+        with:
+          # Attribute paths to search for targets
+          attrPaths: __std.ci.${{ steps.system.outputs.currentSystem }}
+          flake: "." # we use checkout and update the subflake
+
+          # Disable caching since discovery does not do much most of the time
+          nixStoreCachingEnabled: false
+          nixEvalCacheCachingEnabled: true
     outputs:
       hits: ${{ steps.discovery.outputs.hits }}
-      nix_conf: ${{ steps.discovery.outputs.nix_conf }}
 
+
+  namaka:
+    name: "//${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}"
+    if: ${{ matrix.target.type }} == "namaka"
+    needs: [discovery]
     runs-on: ${{ inputs.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(needs.discovery.outputs.hits) }}
     steps:
-      - name: Install Nix Early (to update subflake references)
-        uses: nixbuild/nix-quick-install-action@v22
+      # Configure Nix
+      - uses: nixbuild/nix-quick-install-action@v22
         with:
           nix_conf: |
             experimental-features = nix-command flakes
             accept-flake-config = true
+            trusted-users = runner
+            access-tokens = github.com=${{ github.token }}
+
       - uses: actions/checkout@v3
-      - name: Update subflake references
-        run: |
-          # create the store path of
-          nix store add-path --name source .
-          # update the subflake lockfile to the (now existing) store path
-          # set lastModified to 1 because unknown issues in the GH action environment
-          (cd ./src/local && nix flake lock --update-input std && (
-            jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
-          ) && git add -f flake.lock)
-          (cd ./src/tests && nix flake lock --update-input std && (
-            jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
-          ) &&git add -f flake.lock)
-          # continue normally ...
-      - name: Standard Discovery
-        uses: divnix/std-action/discover@v0.23.0
-        id: discovery
+      - uses: ./.github/actions/update-subflake.yml
+      - uses: DeterminateSystems/magic-nix-cache-action@main
 
-  build_cli:
-    needs: [discover, check_tests]
-    if: fromJSON(needs.discover.outputs.hits).cli.build != '{}'
-    strategy:
-      fail-fast: false
-      matrix:
-        target: ${{ fromJSON(needs.discover.outputs.hits).cli.build }}
-    name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
-    runs-on: ${{ inputs.runs-on }}
-    steps:
-      - uses: divnix/std-action/run@v0.23.0
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+      # Executes builds per each found target in discovery
+      - uses: DevPalace/phoenix-ci/worker@v1.1
+        id: worker
         with:
-          nix_signing_key: ${{ secrets.NIX_KEY }}
-          nix_cache: s3://cache.divnix.com?endpoint=fra1.digitaloceanspaces.com
-          discovery_json: ${{ toJSON(matrix.target) }}
-          extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
-
-  build_packages:
-    needs: [discover, check_tests]
-    if: fromJSON(needs.discover.outputs.hits).packages.build != '{}'
+          target: ${{ toJSON(matrix.target) }}
+          flake: "." # we use checkout and update the subflake
+  rest:
+    name: "//${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}"
+    if: ${{ matrix.target.type }} != "namaka"
+    needs: [discovery, namaka]
+    runs-on: ${{ inputs.runs-on }}
     strategy:
       fail-fast: false
       matrix:
-        target: ${{ fromJSON(needs.discover.outputs.hits).packages.build }}
-    name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
-    runs-on: ${{ inputs.runs-on }}
+        target: ${{ fromJSON(needs.discovery.outputs.hits) }}
     steps:
-      - uses: divnix/std-action/run@v0.23.0
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
-        with:
-          nix_signing_key: ${{ secrets.NIX_KEY }}
-          nix_cache: s3://cache.divnix.com?endpoint=fra1.digitaloceanspaces.com
-          discovery_json: ${{ toJSON(matrix.target) }}
-          extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
-
-  build_shells:
-    needs: [discover, check_tests]
-    if: fromJSON(needs.discover.outputs.hits).shells.build != '{}'
-    strategy:
-      fail-fast: false
-      matrix:
-        target: ${{ fromJSON(needs.discover.outputs.hits).shells.build }}
-    name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
-    runs-on: ${{ inputs.runs-on }}
-    steps:
-      - uses: divnix/std-action/run@v0.23.0
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
-        with:
-          nix_signing_key: ${{ secrets.NIX_KEY }}
-          nix_cache: s3://cache.divnix.com?endpoint=fra1.digitaloceanspaces.com
-          discovery_json: ${{ toJSON(matrix.target) }}
-          extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
-
-  check_tests:
-    needs: discover
-    if: fromJSON(needs.discover.outputs.hits).checks.check != '{}'
-    strategy:
-      fail-fast: false
-      matrix:
-        target: ${{ fromJSON(needs.discover.outputs.hits).checks.check }}
-    name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
-    runs-on: ${{ inputs.runs-on }}
-    steps:
-      - name: Install Nix Early (to update subflake references)
-        uses: nixbuild/nix-quick-install-action@v22
+      # Configure Nix
+      - uses: nixbuild/nix-quick-install-action@v22
         with:
           nix_conf: |
             experimental-features = nix-command flakes
             accept-flake-config = true
+            trusted-users = runner
+            access-tokens = github.com=${{ github.token }}
+
       - uses: actions/checkout@v3
-      - name: Update subflake references
-        run: |
-          # create the store path of
-          nix store add-path --name source .
-          # update the subflake lockfile to the (now existing) store path
-          # set lastModified to 1 because unknown issues in the GH action environment
-          (cd ./src/local && nix flake lock --update-input std && (
-            jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
-          ) && git add -f flake.lock)
-          (cd ./src/tests && nix flake lock --update-input std && (
-            jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
-          ) &&git add -f flake.lock)
-          # continue normally ...
-      - uses: divnix/std-action/run@v0.23.0
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET }}
+      - uses: ./.github/actions/update-subflake.yml
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      # Executes builds per each found target in discovery
+      - uses: DevPalace/phoenix-ci/worker@v1.1
+        id: worker
         with:
-          nix_signing_key: ${{ secrets.NIX_KEY }}
-          nix_cache: s3://cache.divnix.com?endpoint=fra1.digitaloceanspaces.com
-          discovery_json: ${{ toJSON(matrix.target) }}
-          extra_nix_config: ${{ needs.discover.outputs.nix_conf }}
+          target: ${{ toJSON(matrix.target) }}
+          flake: "." # we use checkout and update the subflake
+
