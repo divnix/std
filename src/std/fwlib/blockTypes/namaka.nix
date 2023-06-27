@@ -21,5 +21,11 @@ in
       (mkCommand currentSystem "check" "run namaka tests against snapshots" [pkg] ''
         namaka check -c nix eval '.#${fragment}.check'
       '' {})
+      (mkCommand currentSystem "review" "review pending namaka checks" [pkg] ''
+        namaka review -c nix eval '.#${fragment}.check'
+      '' {})
+      (mkCommand currentSystem "clean" "clean up pending namaka checks" [pkg] ''
+        namaka clean -c nix eval '.#${fragment}.check'
+      '' {})
     ];
   }

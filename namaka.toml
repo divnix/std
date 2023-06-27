@@ -1,5 +1,0 @@
-[check]
-cmd = ["nix", "flake", "check"]
-
-[eval]
-cmd = ["nix", "flake", "check"]
