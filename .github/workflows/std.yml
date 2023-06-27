@@ -43,7 +43,7 @@ jobs:
           ) &&git add -f flake.lock)
           # continue normally ...
       - name: Standard Discovery
-        uses: divnix/std-action/discover@v0.23.0
+        uses: divnix/std-action/discover@main
         id: discovery
 
   build_cli:
