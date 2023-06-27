@@ -7,6 +7,8 @@
   inputs.fenix.url = "github:nix-community/fenix";
   inputs.crane.url = "github:ipetkov/crane";
   inputs.crane.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.crane.inputs.flake-compat.follows = "";
+  inputs.crane.inputs.rust-overlay.follows = "";
 
   inputs.nixpkgs.follows = "fenix/nixpkgs";
 
