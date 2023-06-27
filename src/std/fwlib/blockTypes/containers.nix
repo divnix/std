@@ -29,15 +29,7 @@ in
     }: let
       inherit (inputs.n2c.packages.${currentSystem}) skopeo-nix2container;
       triv = trivial.${currentSystem};
-
-      provisoDrv = triv.substituteAll {
-        src = ./containers-proviso.sh;
-        filter = ./containers-publish-filter.jq;
-      };
-      proviso =
-        # toFile ensures it get's build
-        toFile provisoDrv.name
-        (readFile (toString provisoDrv));
+      proviso = ./containers-proviso.sh;
 
       tags' =
         builtins.toFile "${target.name}-tags.json" (builtins.concatStringsSep "\n" target.image.tags);

@@ -10,15 +10,7 @@ in
   currentSystem: target: let
     pkgs = nixpkgs.${currentSystem};
 
-    provisoDrv = pkgs.substituteAll {
-      src = ./build-proviso.sh;
-      filter = ./build-filter.jq;
-      extractor = ./build-uncached-extractor.sed;
-    };
-    proviso =
-      # toFile ensures it get's build
-      toFile provisoDrv.name
-      (readFile (toString provisoDrv));
+    proviso = ./build-proviso.sh;
 
     args = {
       targetDrv = target.drvPath;
