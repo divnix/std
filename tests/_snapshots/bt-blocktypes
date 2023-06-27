@@ -164,6 +164,27 @@
     name = "installables";
     type = "installables";
   };
+  kubectl = {
+    actions = [
+      {
+        command = <derivation render>;
+        description = "Build the JSON manifests";
+        name = "render";
+      }
+      {
+        command = <derivation apply>;
+        description = "Apply the manifests to K8s";
+        name = "apply";
+      }
+      {
+        command = <derivation explore>;
+        description = "Interactively explore the manifests";
+        name = "explore";
+      }
+    ];
+    name = "kubectl";
+    type = "kubectl";
+  };
   microvms = {
     actions = [
       {
