@@ -50,7 +50,7 @@ jobs:
       fail-fast: false
       matrix:
         target: ${{ fromJSON(needs.discover.outputs.hits).cli.build }}
-    name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
+    name: ${{ matrix.target.jobName }}
     runs-on: ${{ inputs.runs-on }}
     steps:
       - uses: blaggacao/nix-quick-install-action@detect-nix-flakes-config
@@ -64,7 +64,7 @@ jobs:
       fail-fast: false
       matrix:
         target: ${{ fromJSON(needs.discover.outputs.hits).shells.build }}
-    name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
+    name: ${{ matrix.target.jobName }}
     runs-on: ${{ inputs.runs-on }}
     steps:
       - uses: blaggacao/nix-quick-install-action@detect-nix-flakes-config
@@ -78,7 +78,7 @@ jobs:
       fail-fast: false
       matrix:
         target: ${{ fromJSON(needs.discover.outputs.hits).checks.check }}
-    name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
+    name: ${{ matrix.target.jobName }}
     runs-on: ${{ inputs.runs-on }}
     steps:
       - uses: blaggacao/nix-quick-install-action@detect-nix-flakes-config
