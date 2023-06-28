@@ -45,8 +45,8 @@ jobs:
         uses: divnix/std-action/discover@main
         id: discovery
 
-  build_cli:
-    needs: [discover, check_tests]
+  cli:
+    needs: [discover, tests]
     if: fromJSON(needs.discover.outputs.hits).cli.build != '{}'
     strategy:
       fail-fast: false
@@ -65,28 +65,8 @@ jobs:
         with:
           discovery_json: ${{ toJSON(matrix.target) }}
 
-  build_packages:
-    needs: [discover, check_tests]
-    if: fromJSON(needs.discover.outputs.hits).packages.build != '{}'
-    strategy:
-      fail-fast: false
-      matrix:
-        target: ${{ fromJSON(needs.discover.outputs.hits).packages.build }}
-    name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
-    runs-on: ${{ inputs.runs-on }}
-    steps:
-      - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
-        with:
-          nix_conf: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
-      - uses: DeterminateSystems/magic-nix-cache-action@main
-      - uses: divnix/std-action/run@main
-        with:
-          discovery_json: ${{ toJSON(matrix.target) }}
-
-  build_shells:
-    needs: [discover, check_tests]
+  shells:
+    needs: [discover, tests]
     if: fromJSON(needs.discover.outputs.hits).shells.build != '{}'
     strategy:
       fail-fast: false
@@ -105,7 +85,7 @@ jobs:
         with:
           discovery_json: ${{ toJSON(matrix.target) }}
 
-  check_tests:
+  tests:
     needs: discover
     if: fromJSON(needs.discover.outputs.hits).checks.check != '{}'
     strategy:
