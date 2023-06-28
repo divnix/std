@@ -4,7 +4,7 @@ _: action: func: ''
     read -rp "Proceed with ${action}? (y/N)" answer
     case "$answer" in
     [Yy])
-      ${fun}
+      ${func}
       ;;
     *)
       echo "Not proceeding with ${action}."
