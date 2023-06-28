@@ -4,7 +4,7 @@ declare image
 eval "$(jq -r '@sh "image=\(.meta.image)"' <<< "$action" )"
 
 if command skopeo inspect --insecure-policy "docker://$image" &>/dev/null; then
-  echo 1
+  echo 0
 fi
 
-echo 0
+echo 1
