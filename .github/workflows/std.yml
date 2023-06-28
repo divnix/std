@@ -24,9 +24,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
         with:
-          nix_conf: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
+          nix_conf: experimental-features = nix-command flakes
       - name: Update subflake references
         run: |
           # create the store path of
@@ -57,9 +55,7 @@ jobs:
     steps:
       - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
         with:
-          nix_conf: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
+          nix_conf: experimental-features = nix-command flakes
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@main
 
@@ -75,9 +71,7 @@ jobs:
     steps:
       - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
         with:
-          nix_conf: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
+          nix_conf: experimental-features = nix-command flakes
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@main
 
@@ -93,9 +87,7 @@ jobs:
     steps:
       - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
         with:
-          nix_conf: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
+          nix_conf: experimental-features = nix-command flakes
       - uses: actions/checkout@v3
       - name: Update subflake references
         run: |
