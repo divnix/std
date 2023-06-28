@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ inputs.runs-on }}
     steps:
       - uses: actions/checkout@v3
-      - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
+      - uses: blaggacao/nix-quick-install-action@detect-nix-flakes-config
         with:
           nix_conf: experimental-features = nix-command flakes
       - name: Update subflake references
@@ -53,9 +53,7 @@ jobs:
     name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
     runs-on: ${{ inputs.runs-on }}
     steps:
-      - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
-        with:
-          nix_conf: experimental-features = nix-command flakes
+      - uses: blaggacao/nix-quick-install-action@detect-nix-flakes-config
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@main
 
@@ -69,9 +67,7 @@ jobs:
     name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
     runs-on: ${{ inputs.runs-on }}
     steps:
-      - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
-        with:
-          nix_conf: experimental-features = nix-command flakes
+      - uses: blaggacao/nix-quick-install-action@detect-nix-flakes-config
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@main
 
@@ -85,9 +81,7 @@ jobs:
     name: //${{ matrix.target.cell }}/${{ matrix.target.block }}/${{ matrix.target.name }}:${{ matrix.target.action }}
     runs-on: ${{ inputs.runs-on }}
     steps:
-      - uses: blaggacao/nix-quick-install-action@detect-nix-flake-config
-        with:
-          nix_conf: experimental-features = nix-command flakes
+      - uses: blaggacao/nix-quick-install-action@detect-nix-flakes-config
       - uses: actions/checkout@v3
       - name: Update subflake references
         run: |
