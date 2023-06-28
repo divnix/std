@@ -62,8 +62,6 @@ jobs:
             accept-flake-config = true
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@main
-        with:
-          discovery_json: ${{ toJSON(matrix.target) }}
 
   shells:
     needs: [discover, tests]
@@ -82,8 +80,6 @@ jobs:
             accept-flake-config = true
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@main
-        with:
-          discovery_json: ${{ toJSON(matrix.target) }}
 
   tests:
     needs: discover
@@ -116,5 +112,3 @@ jobs:
           # continue normally ...
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@main
-        with:
-          discovery_json: ${{ toJSON(matrix.target) }}
