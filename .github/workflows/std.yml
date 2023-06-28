@@ -40,6 +40,7 @@ jobs:
             jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
           ) &&git add -f flake.lock)
           # continue normally ...
+      - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Standard Discovery
         uses: divnix/std-action/discover@simplify-std-action
         id: discovery
@@ -59,6 +60,7 @@ jobs:
           nix_conf: |
             experimental-features = nix-command flakes
             accept-flake-config = true
+      - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@simplify-std-action
         with:
           discovery_json: ${{ toJSON(matrix.target) }}
@@ -78,6 +80,7 @@ jobs:
           nix_conf: |
             experimental-features = nix-command flakes
             accept-flake-config = true
+      - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@simplify-std-action
         with:
           discovery_json: ${{ toJSON(matrix.target) }}
@@ -97,6 +100,7 @@ jobs:
           nix_conf: |
             experimental-features = nix-command flakes
             accept-flake-config = true
+      - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@simplify-std-action
         with:
           discovery_json: ${{ toJSON(matrix.target) }}
@@ -130,6 +134,7 @@ jobs:
             jq '.nodes.std.locked.lastModified = 1' flake.lock > flake.lock.new && rm flake.lock && mv flake.lock.new flake.lock
           ) &&git add -f flake.lock)
           # continue normally ...
+      - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@simplify-std-action
         with:
           discovery_json: ${{ toJSON(matrix.target) }}
