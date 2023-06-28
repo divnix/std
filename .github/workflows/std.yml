@@ -42,7 +42,7 @@ jobs:
           # continue normally ...
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Standard Discovery
-        uses: divnix/std-action/discover@simplify-std-action
+        uses: divnix/std-action/discover@main
         id: discovery
 
   build_cli:
@@ -61,7 +61,7 @@ jobs:
             experimental-features = nix-command flakes
             accept-flake-config = true
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - uses: divnix/std-action/run@simplify-std-action
+      - uses: divnix/std-action/run@main
         with:
           discovery_json: ${{ toJSON(matrix.target) }}
 
@@ -81,7 +81,7 @@ jobs:
             experimental-features = nix-command flakes
             accept-flake-config = true
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - uses: divnix/std-action/run@simplify-std-action
+      - uses: divnix/std-action/run@main
         with:
           discovery_json: ${{ toJSON(matrix.target) }}
 
@@ -101,7 +101,7 @@ jobs:
             experimental-features = nix-command flakes
             accept-flake-config = true
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - uses: divnix/std-action/run@simplify-std-action
+      - uses: divnix/std-action/run@main
         with:
           discovery_json: ${{ toJSON(matrix.target) }}
 
@@ -135,6 +135,6 @@ jobs:
           ) &&git add -f flake.lock)
           # continue normally ...
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - uses: divnix/std-action/run@simplify-std-action
+      - uses: divnix/std-action/run@main
         with:
           discovery_json: ${{ toJSON(matrix.target) }}
