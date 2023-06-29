@@ -99,20 +99,20 @@ in
         diff() {
           if ! [[ -v CI ]]; then
             kubectl diff --server-side=true --field-manager="std-action-in-ci" \
-              --filename $manifest_path --recursive;
+              --filename "$manifest_path" --recursive;
           else
             kubectl diff --server-side=true --field-manager="std-action-$(whoami)" \
-              --filename $manifest_path --recursive;
+              --filename "$manifest_path" --recursive;
           fi
         }
 
         run() {
           if ! [[ -v CI ]]; then
             kubectl apply --server-side=true --field-manager="std-action-in-ci" \
-              --filename $manifest_path --recursive;
+              --filename "$manifest_path" --recursive;
           else
             kubectl apply --server-side=true --field-manager="std-action-$(whoami)" \
-              --filename $manifest_path --recursive;
+              --filename "$manifest_path" --recursive;
           fi
         }
 
