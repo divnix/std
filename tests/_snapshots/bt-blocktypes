@@ -46,7 +46,7 @@
         command = <derivation build>;
         description = "build it";
         name = "build";
-        proviso = /nix/store/gxak6rzyi0qrk609bnrxjqmn7ain9h8f-incl/std/fwlib/actions/build-proviso.sh;
+        proviso = "std/fwlib/actions/build-proviso.sh";
         targetDrv = "drvPath";
       }
       {
@@ -61,7 +61,7 @@
           image = "repo:tag";
         };
         name = "publish";
-        proviso = /nix/store/gxak6rzyi0qrk609bnrxjqmn7ain9h8f-incl/std/fwlib/blockTypes/containers-proviso.sh;
+        proviso = "std/fwlib/blockTypes/containers-proviso.sh";
       }
       {
         command = <derivation load>;
@@ -94,7 +94,7 @@
         command = <derivation build>;
         description = "build it";
         name = "build";
-        proviso = /nix/store/gxak6rzyi0qrk609bnrxjqmn7ain9h8f-incl/std/fwlib/actions/build-proviso.sh;
+        proviso = "std/fwlib/actions/build-proviso.sh";
         targetDrv = "drvPath";
       }
       {
@@ -127,7 +127,7 @@
         command = <derivation build>;
         description = "build it";
         name = "build";
-        proviso = /nix/store/gxak6rzyi0qrk609bnrxjqmn7ain9h8f-incl/std/fwlib/actions/build-proviso.sh;
+        proviso = "std/fwlib/actions/build-proviso.sh";
         targetDrv = "drvPath";
       }
       {
@@ -280,7 +280,7 @@
         command = <derivation build>;
         description = "build it";
         name = "build";
-        proviso = /nix/store/gxak6rzyi0qrk609bnrxjqmn7ain9h8f-incl/std/fwlib/actions/build-proviso.sh;
+        proviso = "std/fwlib/actions/build-proviso.sh";
         targetDrv = "drvPath";
       }
       {
