@@ -45,26 +45,12 @@ in
         builtins.toFile "${job_name}.json" (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}));
       render = ''
         declare job_path="$PRJ_DATA_HOME/${job_path}"
-        _render() {
+        render() {
           echo "Rendering to $job_path..."
           rm -rf "$job_path"
           ln -sf "${jobWithGitRevision target}" "$job_path"
           if status=$(nomad validate "$job_path"); then
             echo "$status for $job_path"
-          fi
-        }
-        render() {
-          local mode="$1"
-          if [[ "$mode" == "always" ]]
-          then
-            _render
-          elif [[ "$mode" == "current-revision" ]] \
-            && [[ "$(jq -r '.job[].meta.rev' "$job_path")" != "$(git rev-parse --short HEAD)" ]]
-          then
-            _render
-          elif [[ "$mode" == "if-not-exists" ]] && [[ ! -h "$job_path" ]]
-          then
-            _render
           fi
         }
       '';
@@ -76,12 +62,11 @@ in
       */
       (mkCommand currentSystem "render" "build the JSON job description" [pkgs.nomad] ''
         ${render}
-        render always
+        render
       '' {})
       (mkCommand currentSystem "deploy" "Deploy the job to Nomad" [pkgs.nomad pkgs.jq] ''
         ${render}
-        render if-not-exists
-        render current-revision
+        render
         if ! plan_results=$(nomad plan -force-color "$job_path"); then
           echo "$plan_results"
           run() { echo "$plan_results" | grep 'nomad job run -check-index'; }
@@ -92,7 +77,7 @@ in
       '' {})
       (mkCommand currentSystem "explore" "interactively explore the Job defintion" [pkgs.nomad pkgs.fx] ''
         ${render}
-        render always
+        render
         fx "$job_path"
       '' {})
     ];

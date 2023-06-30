@@ -57,28 +57,14 @@ in
 
       render = ''
         declare manifest_path="$PRJ_DATA_HOME/${manifest_path}"
-        _render() {
+        render() {
           echo "Buiding manifests..."
           echo
           rm -rf "$manifest_path"
+          mkdir -p "$manifest_path"
           ln -sf "${manifestsWithGitRevision target}" "$manifest_path"
           echo
           echo "Manifests built in: $manifest_path"
-        }
-        render() {
-          local mode="$1"
-          mkdir -p "$manifest_path"
-          if [[ "$mode" == "always" ]]
-          then
-            _render
-          elif [[ "$mode" == "current-revision" ]] \
-            && [[ "$(jq -r '.metadata.labels.revision' "$(find "$manifest_path" | head -n1)")" != "$(git rev-parse --short HEAD)" ]]
-          then
-            _render
-          elif [[ "$mode" == "if-not-exists" ]] && [[ ! -d "$manifest_path" ]]
-          then
-            _render
-          fi
         }
       '';
     in [
@@ -89,12 +75,11 @@ in
       */
       (mkCommand currentSystem "render" "Build the JSON manifests" [] ''
         ${render}
-        render always
+        render
       '' {})
       (mkCommand currentSystem "apply" "Apply the manifests to K8s" [pkgs.kubectl pkgs.jq] ''
         ${render}
-        render if-not-exists
-        render current-revision
+        render
 
         diff() {
           if ! [[ -v CI ]]; then
