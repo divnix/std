@@ -34,7 +34,7 @@ in
         };
         nixago = {
           install = "install";
-          config = "path/to/config";
+          configFile = "path/to/configFile";
         };
         microvms = {
           config.microvm.runner.foo = "42";

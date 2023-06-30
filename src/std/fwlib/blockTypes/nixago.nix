@@ -31,7 +31,7 @@ in
         ${target.install}/bin/nixago_shell_hook
       '' {})
       (mkCommand currentSystem "explore" "interactively explore the nixago file" [pkgs.bat] ''
-        bat "${target.config}"
+        bat "${target.configFile}"
       '' {})
     ];
   }
