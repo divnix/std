@@ -371,11 +371,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1687538786,
-        "narHash": "sha256-/v5uoRyVSQurJ6W4Zad7vWpdUN+9AO4wm+lv5hgNGwA=",
+        "lastModified": 1688099125,
+        "narHash": "sha256-j6LMz00orEKZrQb14wRRw7kMLm+aj7zBJt05AY4UcRI=",
         "owner": "paisano-nix",
         "repo": "core",
-        "rev": "9683ecfbc05f8c86396f0284d7125fe1567cd8d0",
+        "rev": "10270dc46532c947de473ee88c8f5a3346a396fb",
         "type": "github"
       },
       "original": {
@@ -521,12 +521,12 @@
       },
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-ZxLBIK/3D54h0Aov61E2+fYg9fjUp81nb/z9E745ldc=",
-        "path": "/nix/store/zqkj9clhk36xzak72sh30r6a1j6g5qrs-source",
+        "narHash": "sha256-rssmfAbv2g0nuNyjkTT235llATe4bgv9C6Lw+2V/LTE=",
+        "path": "/nix/store/cw280r29c0fyp97sl4vn6138lad30mgl-source",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/zqkj9clhk36xzak72sh30r6a1j6g5qrs-source",
+        "path": "/nix/store/cw280r29c0fyp97sl4vn6138lad30mgl-source",
         "type": "path"
       }
     },

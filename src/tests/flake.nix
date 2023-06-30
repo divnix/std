@@ -1,7 +1,7 @@
 {
   inputs = {
     # injected inputs to override std's defaults
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     nixago.url = "github:nix-community/nixago";
@@ -9,6 +9,11 @@
     nixago.inputs.nixago-exts.follows = "";
     n2c.url = "github:nlewo/nix2container";
     n2c.inputs.nixpkgs.follows = "nixpkgs";
+    terranix.url = "github:terranix/terranix";
+    terranix.inputs.nixpkgs.follows = "nixpkgs";
+    terranix.inputs.terranix-examples.follows = "";
+    terranix.inputs.bats-support.follows = "";
+    terranix.inputs.bats-assert.follows = "";
     namaka.url = "github:nix-community/namaka/v0.2.0";
     namaka.inputs.haumea.follows = "std/haumea";
     namaka.inputs.nixpkgs.follows = "nixpkgs";
