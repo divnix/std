@@ -25,7 +25,7 @@ lib: {
     steps =
       []
       # account is part of ecr url, thus part of `hits` output and needs to pass so we can't mask it
-      ++ lib.optionals (platform == "aws") [lib.recursiveUpdate aws.credentials {mask-aws-account-id = false;}]
+      ++ lib.optionals (platform == "aws") [(lib.recursiveUpdate aws.credentials {mask-aws-account-id = false;})]
       ++ lib.optionals (platform == "aws") [aws.ecr]
       ++ lib.optionals (!withPersistentDiscovery) [installNixAction]
       ++ lib.optionals withNixbuild [useNixbuildAction]
