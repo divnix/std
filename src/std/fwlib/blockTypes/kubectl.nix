@@ -62,7 +62,7 @@ in
           echo
           rm -rf "$manifest_path"
           mkdir -p "$manifest_path"
-          ln -sf "${manifestsWithGitRevision target}" "$manifest_path"
+          ln -s "${manifestsWithGitRevision target}"/* "$manifest_path"
           echo
           echo "Manifests built in: $manifest_path"
         }
@@ -77,35 +77,26 @@ in
         ${render}
         render
       '' {})
-      (mkCommand currentSystem "apply" "Apply the manifests to K8s" [pkgs.kubectl pkgs.jq] ''
+      (mkCommand currentSystem "diff" "Diff the manifests against the cluster" [pkgs.kubectl] ''
         ${render}
         render
 
         diff() {
-          if ! [[ -v CI ]]; then
-            kubectl diff --server-side=true --field-manager="std-action-in-ci" \
-              --filename "$manifest_path" --recursive;
-          else
-            kubectl diff --server-side=true --field-manager="std-action-$(whoami)" \
-              --filename "$manifest_path" --recursive;
-          fi
+          kubectl diff --server-side=true --field-manager="std-action-$(whoami)" \
+            --filename "$manifest_path" --recursive;
         }
+
+        diff
+      '' {})
+      (mkCommand currentSystem "apply" "Apply the manifests to K8s" [pkgs.kubectl] ''
+        ${render}
+        render
 
         run() {
-          if ! [[ -v CI ]]; then
-            kubectl apply --server-side=true --field-manager="std-action-in-ci" \
-              --filename "$manifest_path" --recursive;
-          else
-            kubectl apply --server-side=true --field-manager="std-action-$(whoami)" \
-              --filename "$manifest_path" --recursive;
-          fi
+          kubectl apply --server-side=true --field-manager="std-action-$(whoami)" \
+            --filename "$manifest_path" --recursive;
         }
-
-        if diff; then
-          ${askUserToProceedSnippet "apply" "run"}
-        else
-          echo "Deployment hasn't changed since last deployment, nothing to deploy"
-        fi
+        ${askUserToProceedSnippet "apply" "run"}
       '' {})
       (mkCommand currentSystem "explore" "Interactively explore the manifests" [pkgs.fx] ''
         fx ${

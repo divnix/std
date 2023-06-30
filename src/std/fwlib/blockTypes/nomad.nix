@@ -48,7 +48,7 @@ in
         render() {
           echo "Rendering to $job_path..."
           rm -rf "$job_path"
-          ln -sf "${jobWithGitRevision target}" "$job_path"
+          ln -s "${jobWithGitRevision target}" "$job_path"
           if status=$(nomad validate "$job_path"); then
             echo "$status for $job_path"
           fi
