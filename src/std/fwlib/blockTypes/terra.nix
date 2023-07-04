@@ -69,8 +69,8 @@ in
         dir="$PRJ_ROOT/${repoFolder}/.tf"
         mkdir -p "$PRJ_ROOT/${repoFolder}/.tf"
         cat << MESSAGE > "$PRJ_ROOT/${repoFolder}/.tf/readme.md"
-          This is a tf staging area.
-          It is motivated by the terraform CLI requiring to be executed in a staging area.
+        This is a tf staging area.
+        It is motivated by the terraform CLI requiring to be executed in a staging area.
         MESSAGE
 
         if [[ -e "$dir/config.tf.json" ]]; then rm -f "$dir/config.tf.json"; fi
