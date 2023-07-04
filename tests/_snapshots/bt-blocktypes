@@ -172,6 +172,11 @@
         name = "render";
       }
       {
+        command = <derivation diff>;
+        description = "Diff the manifests against the cluster";
+        name = "diff";
+      }
+      {
         command = <derivation apply>;
         description = "Apply the manifests to K8s";
         name = "apply";
