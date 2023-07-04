@@ -64,7 +64,8 @@ in
         # export TF_INPUT=0
         export TF_DATA_DIR="$PRJ_DATA_HOME/${fragmentRelPath}"
         export TF_PLUGIN_CACHE_DIR="$PRJ_CACHE_HOME/tf-plugin-cache"
-        mkdir -p $TF_DATA_DIR
+        mkdir -p "$TF_DATA_DIR"
+        mkdir -p "$TF_PLUGIN_CACHE_DIR"
         dir="$PRJ_ROOT/${repoFolder}/.tf"
         mkdir -p "$PRJ_ROOT/${repoFolder}/.tf"
         cat << MESSAGE > "$PRJ_ROOT/${repoFolder}/.tf/readme.md"
