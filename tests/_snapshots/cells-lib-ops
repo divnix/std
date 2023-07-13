@@ -4,7 +4,7 @@
   mkDevOCI = <derivation image-hello-dev.json>;
   mkMicrovm = <derivation microvm-qemu-nixos>;
   mkOCI = "missing-test";
-  mkOperable = <derivation operable-hello-2.12.1>;
+  mkOperable = <derivation operable-hello>;
   mkOperableScript = "missing-test";
   mkSetup = "missing-test";
   mkStandardOCI = <derivation image-hello.json>;

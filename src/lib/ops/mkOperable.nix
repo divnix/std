@@ -76,7 +76,7 @@ in
         cell.ops.writeScript
         ({
             inherit runtimeInputs runtimeEnv;
-            name = "operable-${package.name}";
+            name = "operable-${l.getName package}";
             text = ''
               ${runtimeScript}
             '';
