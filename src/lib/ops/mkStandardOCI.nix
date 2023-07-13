@@ -106,14 +106,15 @@ in
     '';
   in
     with dmerge;
-      l.throwIf (args ? tag && meta ? tags)
-      "mkStandardOCI: use of `tag` and `meta.tags` arguments are not supported together. Remove the former."
       cell.ops.mkOCI (
         merge
-        {
-          inherit name tag uid gid labels options perms config meta setup runtimeInputs;
-          entrypoint = operable';
-        }
+        ({
+            inherit name uid gid labels options perms config meta setup runtimeInputs;
+            entrypoint = operable';
+          }
+          # keep this optional so that mkOCI can likewise
+          # match undefined on args ? tag
+          // l.optionalAttrs (args ? tag) {inherit tag;})
         {
           # mkStandardOCI differentiators over mkOCI
           # - live & readiness probes
