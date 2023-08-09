@@ -91,6 +91,7 @@ in
         # Enable nix flakes
         mkdir -p $out/etc
         echo "sandbox = false" > $out/etc/nix.conf
+        echo "accept-flake-config = true" > $out/etc/nix.conf
         echo "experimental-features = nix-command flakes" >> $out/etc/nix.conf
 
         # Increase warn timeout and whitelist all paths
