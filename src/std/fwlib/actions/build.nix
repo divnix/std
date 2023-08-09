@@ -19,6 +19,6 @@ in
   in
     mkCommand currentSystem "build" "build it" [] ''
       # ${target}
-      nix build ${contextFreeDrv target}
+      nix build ${contextFreeDrv target}^*
     ''
     args
