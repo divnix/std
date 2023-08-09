@@ -61,10 +61,11 @@
       cellBlocks = [(fwlib.blockTypes.functions "fwlib")];
     }) ["std" "fwlib"];
   in
-    (import ./dogfood.nix std inputs) {
-      # the framework's basic top-level tools
-      inherit (inputs) yants dmerge incl;
-      inherit (inputs.paisano) pick harvest winnow;
-      inherit (std) blockTypes actions dataWith flakeModule grow growOn;
-    };
+    assert inputs.nixpkgs.lib.assertMsg ((builtins.compareVersions builtins.nixVersion "2.13") >= 0) "The truth is: you'll need a newer nix version to use Standard (minimum: v2.13).";
+      (import ./dogfood.nix std inputs) {
+        # the framework's basic top-level tools
+        inherit (inputs) yants dmerge incl;
+        inherit (inputs.paisano) pick harvest winnow;
+        inherit (std) blockTypes actions dataWith flakeModule grow growOn;
+      };
 }
