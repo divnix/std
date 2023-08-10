@@ -31,6 +31,7 @@ in
   automatically prefixed with "org.opencontainers.image".
   config: Additional options to pass to nix2container.buildImage's config.
   options: Additional options to pass to nix2container.buildImage.
+  preLoadStorePaths: A list of store paths to preload/copy into the container.
 
   Returns:
   An OCI container image (created with nix2container).
@@ -45,6 +46,7 @@ in
     tag ? null,
     pkgs ? [],
     setup ? [],
+    preLoadStorePaths ? [],
     perms ? [],
     labels ? {},
     config ? {},
@@ -205,6 +207,7 @@ in
 
       layers = [
         (n2c.buildLayer {
+          deps = preLoadStorePaths;
           copyToRoot = [
             (nixpkgs.buildEnv
               {
