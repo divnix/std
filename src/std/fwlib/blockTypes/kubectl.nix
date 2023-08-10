@@ -2,6 +2,7 @@
   trivial,
   root,
   super,
+  dmerge,
 }:
 /*
 Use the `kubectl` Blocktype for rendering deployment manifests
@@ -40,30 +41,71 @@ in
         Otherwise we cannot keep good track of deployment history.''
       inputs.self.rev;
 
-      augment = target:
-        lib.mapAttrs (_: v: (
-          if v ? metadata && v.metadata ? labels
-          then lib.recursiveUpdate v {metadata.labels.revision = checkedRev;}
-          else v
-        )) (builtins.removeAttrs target ["meta"]);
+      usesKustomize = target ? kustomization || target ? Kustomization;
 
-      # add git revision under metadata.labels.revision, if present
-      manifestsWithGitRevision = target: let
-        render = manifest: v: builtins.toFile "${manifest}.json" (builtins.unsafeDiscardStringContext (builtins.toJSON v));
+      augment = let
+        amendIfExists = path: rhs: manifest:
+          if true == lib.hasAttrByPath path manifest
+          then amendAlways rhs manifest
+          else manifest;
+
+        amendAlways = rhs: manifest: dmerge manifest rhs;
       in
-        triv.linkFarm "k8s-manifests" (lib.mapAttrs'
-          (n: v: lib.nameValuePair "${n}.json" (render n v))
-          (augment target));
+        target:
+          lib.mapAttrs (
+            key:
+              lib.flip lib.pipe [
+                # metadata
+                (
+                  amendIfExists ["metadata"]
+                  {
+                    metadata.labels."app.kubernetes.io/version" = checkedRev;
+                    metadata.labels."app.kubernetes.io/managed-by" = "std-kubectl";
+                  }
+                )
+                (
+                  if usesKustomize && (key == "kustomization" || key == "Kustomization")
+                  # ensure a kustomization picks up the preprocessed resources
+                  then
+                    (manifest:
+                      manifest
+                      // {
+                        resources =
+                          map
+                          (n: "${n}.json")
+                          (builtins.attrNames (builtins.removeAttrs target ["meta" "Kustomization" "kustomization"]));
+                      })
+                  else lib.id
+                )
+              ]
+          ) (builtins.removeAttrs target ["meta"]);
 
-      render = ''
+      generateManifests = target: let
+        writeManifest = name: manifest:
+          builtins.toFile name (builtins.unsafeDiscardStringContext (builtins.toJSON manifest));
+
+        renderManifests = lib.mapAttrsToList (name: manifest: ''
+          cp ${writeManifest name manifest} ${
+            if name == "kustomization" || name == "Kustomization"
+            then "Kustomization"
+            else "${name}.json"
+          }
+        '');
+      in
+        triv.runCommandLocal "generate-k8s-manifests" {} ''
+          mkdir -p $out
+          cd $out
+          ${lib.concatStrings (renderManifests (augment target))}
+        '';
+
+      build = ''
         declare manifest_path="$PRJ_DATA_HOME/${manifest_path}"
-        render() {
+        build() {
           echo "Buiding manifests..."
           echo
           rm -rf "$manifest_path"
-          mkdir -p "$manifest_path"
-          ln -s "${manifestsWithGitRevision target}"/* "$manifest_path"
-          echo
+          mkdir -p "$(dirname "$manifest_path")"
+          ln -s "${generateManifests target}" "$manifest_path"
           echo "Manifests built in: $manifest_path"
         }
       '';
@@ -74,36 +116,56 @@ in
       planned with the kubectl cli or the `deploy` action.
       */
       (mkCommand currentSystem "render" "Build the JSON manifests" [] ''
-        ${render}
-        render
+        ${build}
+        build
       '' {})
-      (mkCommand currentSystem "diff" "Diff the manifests against the cluster" [pkgs.kubectl] ''
-        ${render}
-        render
+      (mkCommand currentSystem "diff" "Diff the manifests against the cluster" [pkgs.kubectl pkgs.icdiff] ''
+        ${build}
+        build
+
+        KUBECTL_EXTERNAL_DIFF="icdiff -N -u"
+        export KUBECTL_EXTERNAL_DIFF
 
         diff() {
-          kubectl diff --server-side=true --field-manager="std-action-$(whoami)" \
-            --filename "$manifest_path" --recursive;
+          kubectl diff --server-side=true --field-manager="std-action-$(whoami)" ${
+          if usesKustomize
+          then "--kustomize"
+          else "--filename --recursive"
+        } "$manifest_path";
         }
 
         diff
       '' {})
-      (mkCommand currentSystem "apply" "Apply the manifests to K8s" [pkgs.kubectl] ''
-        ${render}
-        render
+      (mkCommand currentSystem "apply" "Apply the manifests to K8s" [pkgs.kubectl pkgs.icdiff] ''
+        ${build}
+        build
+
+        KUBECTL_EXTERNAL_DIFF="icdiff -N -u"
+        export KUBECTL_EXTERNAL_DIFF
 
         diff() {
-          kubectl diff --server-side=true --field-manager="std-action-$(whoami)" \
-            --filename "$manifest_path" --recursive;
+          kubectl diff --server-side=true --field-manager="std-action-$(whoami)" ${
+          if usesKustomize
+          then "--kustomize"
+          else "--filename --recursive"
+        } "$manifest_path";
+
+          return $?;
         }
 
         run() {
-          kubectl apply --server-side=true --field-manager="std-action-$(whoami)" \
-            --filename "$manifest_path" --recursive;
+          kubectl apply --server-side=true --field-manager="std-action-$(whoami)" ${
+          if usesKustomize
+          then "--kustomize"
+          else "--filename --recursive"
+        } "$manifest_path";
         }
 
         diff
-        ${askUserToProceedSnippet "apply" "run"}
+        ret=$?
+        if [[ $ret == 0 ]] || [[ $ret == 1 ]]; then
+          ${askUserToProceedSnippet "apply" "run"}
+        fi
       '' {})
       (mkCommand currentSystem "explore" "Interactively explore the manifests" [pkgs.fx] ''
         fx ${
