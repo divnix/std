@@ -81,7 +81,7 @@ in
                 paths =
                   setup
                   ++ [
-                    # prevent the $out`/bin` to be a symlink
+                    # trick `buildEnv` and prevent the $out`/bin` to be a symlink
                     (nixpkgs.runCommand "setupDirs" {}
                       ''
                         mkdir -p $out/bin
