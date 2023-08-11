@@ -78,7 +78,16 @@ in
             [
               (nixpkgs.buildEnv {
                 name = "root";
-                paths = [setupLinks] ++ setup;
+                paths =
+                  setup
+                  ++ [
+                    # prevent the $out`/bin` to be a symlink
+                    (nixpkgs.runCommand "setupDirs" {}
+                      ''
+                        mkdir -p $out/bin
+                      '')
+                    setupLinks
+                  ];
               })
             ]
             ++ options.copyToRoot or [];
