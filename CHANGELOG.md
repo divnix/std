@@ -2,6 +2,83 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.24.0-1](https://github.com/divnix/std/compare/v0.23.2..v0.24.0-1) - 2023-08-15
+#### Bug Fixes
+- **(blockTypes)** don't try to be too smart with kubctl & nomad rendering - ([f0a9a55](https://github.com/divnix/std/commit/f0a9a558b23e9ab4d95907f3d0e8dc6883397cc9)) - David Arnold
+- **(blockTypes/kubectl)** fix and adapt for use with kustomize - ([7ace4d2](https://github.com/divnix/std/commit/7ace4d2f29cfcde11ca0bbc549ca73c893b8bd98)) - David Arnold
+- **(blockTypes/kubectl)** polish off the kubectl block type - ([fb34532](https://github.com/divnix/std/commit/fb34532b5a72f99f9b1f397adb5e18f0fb255d80)) - David Arnold
+- **(blockTypes/terra)** shellcheck oversight - ([8106154](https://github.com/divnix/std/commit/8106154c54a7a60ec26717021d92d5b958e73ada)) - David Arnold
+- **(direnv/lib)** fix to upstream prj-spec direnv implementation - ([53c435a](https://github.com/divnix/std/commit/53c435a0930be2bc43b5160beb286cc02435c9af)) - David Arnold
+- **(fwlib/blockTypes/nixago)** renamed attribute of internal api - ([9ebb1f6](https://github.com/divnix/std/commit/9ebb1f688ddf722096a98398df68e378256d340b)) - David Arnold
+- **(lib/ops)** ensure the getName contract is uphold for operables - ([17dc4eb](https://github.com/divnix/std/commit/17dc4eb9587517397dad00617b020769fece3cfe)) - David Arnold
+- **(lib/ops)** tag defaulting while forwarding mkStandardOCI to mkOCI - ([301a649](https://github.com/divnix/std/commit/301a649b81276a0a11832b81a09956d0838da7ed)) - David Arnold
+- **(templates/rust)** allow rust devshell startup to run 'direnv allow' multiple time - ([78675b5](https://github.com/divnix/std/commit/78675b58a6f95b7b7db3d8935afb09a83287a3ae)) - htran
+- solve the path issue of mkDevOCI - ([ec2d87c](https://github.com/divnix/std/commit/ec2d87ca982a714c4d6c99ae04bcbdf33d5103ce)) - guangtao
+- indentation would flip flop with typicall md formatters - ([3e62364](https://github.com/divnix/std/commit/3e623646d47ec277947c9626d595f43042b94ab9)) - David Arnold
+- heal kubectl deploy action shellcheck - ([95b3280](https://github.com/divnix/std/commit/95b3280bec63b49db5d5fc62cd0536d096536b4f)) - David Arnold
+- oversight in container proviso - ([de460f2](https://github.com/divnix/std/commit/de460f2515baccfff7bbb030049f078f051cd6ad)) - David Arnold
+- typo that caused block types to fail - ([c95ae2e](https://github.com/divnix/std/commit/c95ae2e11c937484490158722f5a05547e5c4940)) - David Arnold
+- container proviso inversed logic - ([f54da22](https://github.com/divnix/std/commit/f54da22d93407f3a2531a7e42d447f11d97e09b4)) - David Arnold
+- flakeModule loading after refactoring - ([493e572](https://github.com/divnix/std/commit/493e57257601e76eb256c6ada37f770bf3c5dd72)) - David Arnold
+- order matter for the registry, let ci pick up the local stuff - ([1b20a74](https://github.com/divnix/std/commit/1b20a742c5e5735b3c645d9359c0a450c5f25629)) - David Arnold
+- requireInput nar hash for none-flake - ([d2614e5](https://github.com/divnix/std/commit/d2614e52e66cafc5b5979748223904facfbd1d64)) - David Arnold
+- reduce std input bloat - ([e21ba36](https://github.com/divnix/std/commit/e21ba36cde8c0886320e96faf1f4409d9a47b728)) - David Arnold
+- changed input signature on numitde/devshell on templates, too - ([54df16b](https://github.com/divnix/std/commit/54df16bd5a67de7a9ee6b2efb111b4f6e6c764df)) - David Arnold
+- changed input signature on numitde/devshell - ([cef9c4b](https://github.com/divnix/std/commit/cef9c4b942f977e6aea766666495e9533eb3ca69)) - David Arnold
+- proviso with substituter - ([0e06a70](https://github.com/divnix/std/commit/0e06a7069424f56835d4140da1ce2a09fe9666d4)) - David Arnold
+- devshell harvest - ([0f49324](https://github.com/divnix/std/commit/0f4932419825d99a1523248ddafde0b176febfc6)) - David Arnold
+- proviso - ([9339bb5](https://github.com/divnix/std/commit/9339bb5a0316a460dd873fe02baf7f6a41822134)) - David Arnold
+#### Continuous Integration
+- pin nix quick install actio to v25 - ([3c8b627](https://github.com/divnix/std/commit/3c8b627a3dd41e72a2a445717967f8e16213c46e)) - David Arnold
+- use nix-quick-install-action master - ([afef95d](https://github.com/divnix/std/commit/afef95d9a7575a89535a9b78f576830a879ee02b)) - David Arnold
+- no need to set fail-fast to false - ([1dcaf91](https://github.com/divnix/std/commit/1dcaf91bea501539478329e55db7e98c3fb35f43)) - David Arnold
+- remove more lines - ([0a720e1](https://github.com/divnix/std/commit/0a720e111e2b27617f1cecb4bf441f42fd2e692a)) - David Arnold
+- factorize subflake/superflake update - ([1da0e7a](https://github.com/divnix/std/commit/1da0e7a26a9849ea6ef47a11ffd3ca694328cbdd)) - David Arnold
+- add concurrency setting to cancel previous on push to same ref - ([523b916](https://github.com/divnix/std/commit/523b916d3b485c4ba5116e70ec93be000e914979)) - David Arnold
+- simplify jobname handling - ([1b29e7b](https://github.com/divnix/std/commit/1b29e7bf959d1f87eb172fe13f78157437ba8e92)) - David Arnold
+- use upstream flake-related automatic setup - ([356b368](https://github.com/divnix/std/commit/356b36834d649ec224100ae559fdf43e95914b86)) - David Arnold
+- use upstream flake-related configuration - ([7944dba](https://github.com/divnix/std/commit/7944dba93a9d0feb20ae5faeed599dafcce7b18e)) - David Arnold
+- use new action default inputs (less verbose) - ([c4c4d01](https://github.com/divnix/std/commit/c4c4d017a147275d52de13e0c59048fd3fb85c3d)) - David Arnold
+- polish a bit - ([762fa9c](https://github.com/divnix/std/commit/762fa9c1d9baa0954cda209483dd9c331df8529d)) - David Arnold
+- fix shell builds - ([861d930](https://github.com/divnix/std/commit/861d9307dfd0108fd14cf4f04b21562fff7dd251)) - David Arnold
+- hakishly have subflake use superflake as input - ([d2129fd](https://github.com/divnix/std/commit/d2129fd38fe5f4035a8763e6dbe29405b32b2388)) - David Arnold
+#### Features
+- **(blocktypes)** add terra - ([04990e2](https://github.com/divnix/std/commit/04990e2b6b61f03c6e319716fed5b5aa04cf643a)) - David Arnold
+- **(presets/templates/rust)** void unused transitive inputs - ([53a3211](https://github.com/divnix/std/commit/53a321136cadb53316c129d7a5bdcd12d46b1bd7)) - figsoda
+- **(std/errors)** add bail-on-dirty warning - ([b5f0b4d](https://github.com/divnix/std/commit/b5f0b4da186ba0fb0841dd4d076fc31089f41990)) - David Arnold
+- **(std/fwlib/blockTypes/kubctl)** add new block type w/o proviso - ([e0cde04](https://github.com/divnix/std/commit/e0cde0457aa3a2050022f3f519ddfecb01ef0445)) - David Arnold
+- add magic cache - ([7ad8602](https://github.com/divnix/std/commit/7ad8602092f8bafe61fcd68b4f81ed5d4bf6a97b)) - David Arnold
+- simplify std-action - ([1dbe033](https://github.com/divnix/std/commit/1dbe0331e723b24d7e7cfdb876bc05c8ea66d5c1)) - David Arnold
+- simplify proviso - ([e4b9ae7](https://github.com/divnix/std/commit/e4b9ae73bda29a90f3332bcccf2fc687306f1e6e)) - David Arnold
+- action adopt cell's inputs - ([b7a2649](https://github.com/divnix/std/commit/b7a26498fb18678b51719f54b301fb3b5b46e1ad)) - David Arnold
+- move input overloading to subflake & shrink std input footprint - ([b542631](https://github.com/divnix/std/commit/b5426310bdf4bf06f249796dc1650c67f5587eaa)) - David Arnold
+- check for PRJ spec on all actions - ([4c571a9](https://github.com/divnix/std/commit/4c571a922d79d2849e82bc77202986e1ee920329)) - David Arnold
+- add ops.readYAML function - ([91061c6](https://github.com/divnix/std/commit/91061c619639e5d374efe94583937d03db5e65dd)) - David Arnold
+#### Miscellaneous Chores
+- add top level link to examples - ([f6caa61](https://github.com/divnix/std/commit/f6caa61681288b9a60c69a992c6e1e640d36b8e6)) - David Arnold
+- bump paisano direnv lib - ([c886d1e](https://github.com/divnix/std/commit/c886d1e5d8f5d35c3d77fd0ba9911c4bc17e875e)) - David Arnold
+- main branch of std-action after merge - ([e3bd1aa](https://github.com/divnix/std/commit/e3bd1aa87130a380764750ddecf3f78113de8c50)) - David Arnold
+- remove deprecated direnv_lib.sh - ([041d143](https://github.com/divnix/std/commit/041d1433cafcce76ad699ab7fe788504710ff414)) - David Arnold
+- remove just file at most valuable top level estate - ([635bace](https://github.com/divnix/std/commit/635bace27665978635b3947f896fd25124bec74b)) - David Arnold
+- bring back dogfood for display - ([c1c2f32](https://github.com/divnix/std/commit/c1c2f324722e81773e84f62bbc2cd323a0b632aa)) - David Arnold
+- clarify and curate sub flakes spec - ([b4300e0](https://github.com/divnix/std/commit/b4300e0a92fb81a854e5486ab189aaf94f107a6b)) - David Arnold
+- slim rename - ([a5bac1b](https://github.com/divnix/std/commit/a5bac1b83dd91842090622175225848a9e6ffcc6)) - David Arnold
+- make actions rely on the global PRJ check and update to spec - ([80e5792](https://github.com/divnix/std/commit/80e5792eae98353a97ab1e85f3fba2784e4a3690)) - David Arnold
+- update numtide's devshell - ([8671b68](https://github.com/divnix/std/commit/8671b6892e45d795d7409940750832d68c929dcf)) - David Arnold
+- big reshuffling / refactor to update best practices - ([148a699](https://github.com/divnix/std/commit/148a69962d7e74e407ef2049417d49350bb66c73)) - David Arnold
+- remove deprecated code - ([1657312](https://github.com/divnix/std/commit/1657312f0fe50bd262b8f9bc01a8184ba16a411e)) - David Arnold
+#### Refactoring
+- **(blocktypes)** use haumea to load the standard lib parts - ([8917c56](https://github.com/divnix/std/commit/8917c56c86519bee536f6fb4c26f7e448a3faeec)) - David Arnold
+- **(proviso)** make clear that no access to nix' lexical scope - ([022acb2](https://github.com/divnix/std/commit/022acb251e8729efed4812a7e915c0c922eae7be)) - David Arnold
+- **(std/fwlib)** add trivial nixpkgs to block types - ([23bfacc](https://github.com/divnix/std/commit/23bfacc2d1cdc5c7004b33376395ff2bbc9e02ec)) - David Arnold
+- **(std/fwlib/blockTypes/nomad)** rename and factorize - ([bcaec08](https://github.com/divnix/std/commit/bcaec088de1c64f6eb3328fca58122b00fd15ad1)) - David Arnold
+- add preLoadStorePaths to the buildLayer of mkDevOCI - ([ac0909b](https://github.com/divnix/std/commit/ac0909bced2374c639081c7b8b90f661a0c83a16)) - guangtao
+- add accept-flake-config to mkDevOCI - ([49aaf59](https://github.com/divnix/std/commit/49aaf59d9d45afa15cdb776935a2fee920978e16)) - guangtao
+- make standalone lib a cell block & bootstrap - ([4e9e5f0](https://github.com/divnix/std/commit/4e9e5f026ae413bc2c8b41ed9ddd677ecb9e934c)) - David Arnold
+- make mkCommand signature more ergonomic in block type development - ([5ffdd93](https://github.com/divnix/std/commit/5ffdd932af9577eb97f9cae0983e7493868ba542)) - David Arnold
+
+- - -
+
 ## [v0.23.2](https://github.com/divnix/std/compare/v0.23.1..v0.23.2) - 2023-06-16
 #### Features
 - start using lazyDerivation for faster TUI response times - ([0a513df](https://github.com/divnix/std/commit/0a513df838207666dd442a6e0a5676260788bd0d)) - David Arnold
