@@ -123,11 +123,11 @@ in
         ${build}
         build
 
-        KUBECTL_EXTERNAL_DIFF="icdiff -N -u"
+        KUBECTL_EXTERNAL_DIFF="icdiff -N -r"
         export KUBECTL_EXTERNAL_DIFF
 
         diff() {
-          kubectl diff --server-side=true --field-manager="std-action-$(whoami)" ${
+          kubectl diff ${
           if usesKustomize
           then "--kustomize"
           else "--filename --recursive"
@@ -140,7 +140,7 @@ in
         ${build}
         build
 
-        KUBECTL_EXTERNAL_DIFF="icdiff -N -u"
+        KUBECTL_EXTERNAL_DIFF="icdiff -N -r"
         export KUBECTL_EXTERNAL_DIFF
 
         diff() {
