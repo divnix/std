@@ -21,11 +21,11 @@ Available actions:
 */
 let
   inherit (root) mkCommand;
-  inherit (super) addSelectorFunctor;
+  inherit (super) addSelectorFunctor postDiffToGitHubSnippet;
 in
   name: repo: {
     inherit name;
-    __functor = self: selectors: self // selectors;
+    __functor = addSelectorFunctor;
     type = "terra";
     actions = {
       currentSystem,
@@ -77,15 +77,30 @@ in
         cp ${terraformConfiguration} "$dir/config.tf.json"
       '';
 
-      wrap = cmd: ''
-        ${setup}
-        terraform-backend-git git \
-           --dir "$dir" \
-           --repository ${git.repo} \
-           --ref ${git.ref} \
-           --state ${git.state} \
-           terraform ${cmd} "$@";
-      '';
+      wrap = cmd:
+        setup
+        + (
+          (pkgs.lib.optionalString cmd == "plan") (
+            postDiffToGitHubSnippet cmd ''
+              terraform-backend-git git \
+                 --dir "$dir" \
+                 --repository ${git.repo} \
+                 --ref ${git.ref} \
+                 --state ${git.state} \
+                 terraform plan \
+                   -lock=false \
+                   -no-color
+            ''
+          )
+        )
+        + ''
+          terraform-backend-git git \
+             --dir "$dir" \
+             --repository ${git.repo} \
+             --ref ${git.ref} \
+             --state ${git.state} \
+             terraform ${cmd} "$@";
+        '';
     in [
       (mkCommand currentSystem "init" "tf init" [pkgs.terraform pkgs.terraform-backend-git] (wrap "init") {})
       (mkCommand currentSystem "plan" "tf plan" [pkgs.terraform pkgs.terraform-backend-git] (wrap "plan") {})
