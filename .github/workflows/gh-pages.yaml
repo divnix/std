@@ -15,6 +15,8 @@ jobs:
 
       - uses: nixbuild/nix-quick-install-action@v25
 
+      - run: (cd ./src/local && nix flake lock --update-input std)
+      - run: (cd ./src/tests && nix flake lock --update-input std)
       - run: nix store add-path --name source .
       - run: nix develop .#book -c mdbook build ./docs
 
