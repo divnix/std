@@ -32,6 +32,7 @@
 
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
         <script>
             var path_to_root = "";
@@ -69,10 +70,12 @@
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             var html = document.querySelector('html');
-            var sidebar = 'hidden';
+            var sidebar = null;
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
             html.classList.remove('sidebar-visible');
             html.classList.add("sidebar-" + sidebar);
@@ -254,49 +257,50 @@ It adds a curated collection of <a href="https://github.com/divnix/std/blob/main
 It further dogfoods itself and implements utilities in its own <a href="https://github.com/divnix/std/tree/main/cells"><strong>Cells</strong></a>.</p>
 <h6 id="dogfooding"><a class="header" href="#dogfooding">Dogfooding</a></h6>
 <p><sub>Only renders in the <a href="https://std.divnix.com">Documentation</a>.</sub></p>
-<pre><code class="language-nix">{
-  growOn,
-  inputs,
-  blockTypes,
-  pick,
-  harvest,
-}:
-growOn {
-  inherit inputs;
-  cellsFrom = ./src;
-  cellBlocks = [
-    ## For downstream use
+<pre><code class="language-nix">std: inputs: let
+  inherit (inputs) incl;
+  inherit (inputs.paisano) pick harvest;
+in
+  # __std.init.&lt;system&gt; = [ ... ] is discarded
+  # and thus doesn't show up in the CLI/TUI
+  std.growOn {
+    inherit inputs;
+    cellsFrom = incl ./src [&quot;local&quot; &quot;tests&quot;];
+    cellBlocks = with std.blockTypes; [
+      ## For local use in the Standard repository
+      # local
+      (devshells &quot;shells&quot; {ci.build = true;})
+      (nixago &quot;configs&quot;)
+      (containers &quot;containers&quot;)
+      (namaka &quot;checks&quot; {ci.check = true;})
+    ];
+  }
+  {
+    devShells = harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
+    checks = harvest inputs.self [&quot;tests&quot; &quot;checks&quot; &quot;snapshots&quot; &quot;check&quot;];
+  }
+  (std.grow {
+    inherit inputs;
+    cellsFrom = incl ./src [&quot;std&quot; &quot;lib&quot;];
+    cellBlocks = with std.blockTypes; [
+      ## For downstream use
 
-    # std
-    (blockTypes.runnables &quot;cli&quot; {ci.build = true;})
-    (blockTypes.functions &quot;devshellProfiles&quot;)
-    (blockTypes.functions &quot;errors&quot;)
-    (blockTypes.installables &quot;packages&quot; {ci.build = true;})
+      # std
+      (runnables &quot;cli&quot; {ci.build = true;})
+      (functions &quot;devshellProfiles&quot;)
+      (functions &quot;errors&quot;)
+      (data &quot;templates&quot;)
 
-    # lib
-    (blockTypes.functions &quot;dev&quot;)
-    (blockTypes.functions &quot;ops&quot;)
-    (blockTypes.nixago &quot;cfg&quot;)
-
-    # presets
-    (blockTypes.data &quot;templates&quot;)
-    (blockTypes.nixago &quot;nixago&quot;)
-
-    ## For local use in the Standard repository
-
-    # local
-    (blockTypes.devshells &quot;shells&quot; {ci.build = true;})
-    (blockTypes.nixago &quot;configs&quot;)
-    (blockTypes.containers &quot;containers&quot;)
-    # (blockTypes.tasks &quot;tasks&quot;) # TODO: implement properly
-  ];
-}
-# Soil (&quot;compatibile with the entire world&quot;)
-{
-  devShells = harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
-  packages = harvest inputs.self [[&quot;std&quot; &quot;cli&quot;] [&quot;std&quot; &quot;packages&quot;]];
-  templates = pick inputs.self [&quot;std&quot; &quot;templates&quot;];
-}
+      # lib
+      (functions &quot;dev&quot;)
+      (functions &quot;ops&quot;)
+      (nixago &quot;cfg&quot;)
+    ];
+  })
+  {
+    packages = harvest inputs.self [[&quot;std&quot; &quot;cli&quot;] [&quot;std&quot; &quot;packages&quot;]];
+    templates = pick inputs.self [&quot;std&quot; &quot;templates&quot;];
+  }
 </code></pre>
 <p><em>That's it. <code>std.grow</code> is a &quot;smart&quot; importer of your <code>nix</code> code and is designed to keep boilerplate at bay. In the so called &quot;Soil&quot; compatibility layer, you can do whatever your heart desires. For example put <code>flake-utils</code> or <code>flake-parts</code> patterns here. Or, as in the above example, just make your stuff play nicely with the Nix CLI.</em></p>
 <blockquote>
@@ -378,5 +382,6 @@ growOn {
         <script src="theme/pagetoc.js"></script>
 
 
+    </div>
     </body>
 </html>

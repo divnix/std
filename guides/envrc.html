@@ -32,6 +32,7 @@
 
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
         <script>
             var path_to_root = "../";
@@ -69,10 +70,12 @@
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             var html = document.querySelector('html');
-            var sidebar = 'hidden';
+            var sidebar = null;
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
             html.classList.remove('sidebar-visible');
             html.classList.add("sidebar-" + sidebar);
@@ -147,8 +150,15 @@
 from there on.</p>
 <pre><code class="language-bash">#!/bin/sh
 
+# first time
+if [[ ! -d $(nix store add-path --name source --dry-run .) ]]; then
+  nix store add-path --name source .
+  (cd ./src/local &amp;&amp; nix flake lock --update-input std)
+  (cd ./src/tests &amp;&amp; nix flake lock --update-input std)
+fi
+
 # shellcheck disable=SC1090
-. &quot;$(fetchurl &quot;https://raw.githubusercontent.com/paisano-nix/direnv/main/lib&quot; &quot;sha256-R3K8Flvbovj4IOvdlWNtQKLMMSQV464WjG9eU29ixHk=&quot;)&quot;
+. &quot;$(fetchurl &quot;https://raw.githubusercontent.com/paisano-nix/direnv/main/lib&quot; &quot;sha256-IgQhKK7UHL1AfCUntJO2KCaIDJQotRnK2qC4Daxk+wI=&quot;)&quot;
 
 use envreload //local/shells/default //local/configs
 </code></pre>
@@ -166,7 +176,74 @@ direnv: Watching: cells/local/shells.nix
 direnv: Watching: cells/local/shells (recursively)
 </code></pre>
 <p>For reference, the above example loads the <code>default</code> devshell from:</p>
-<pre><code class="language-nix">{{#include ../../cells/local/shells.nix}}
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  l = nixpkgs.lib // builtins;
+  inherit (inputs) nixpkgs namaka;
+  inherit (inputs.std) std lib;
+in
+  l.mapAttrs (_: lib.dev.mkShell) rec {
+    default = {...}: {
+      name = &quot;Standard&quot;;
+      nixago = [
+        ((lib.dev.mkNixago lib.cfg.conform)
+          {data = {inherit (inputs) cells;};})
+        ((lib.dev.mkNixago lib.cfg.treefmt)
+          cell.configs.treefmt)
+        ((lib.dev.mkNixago lib.cfg.editorconfig)
+          cell.configs.editorconfig)
+        ((lib.dev.mkNixago lib.cfg.githubsettings)
+          cell.configs.githubsettings)
+        (lib.dev.mkNixago lib.cfg.lefthook)
+        (lib.dev.mkNixago lib.cfg.adrgen)
+        (lib.dev.mkNixago cell.configs.cog)
+      ];
+      commands =
+        [
+          {
+            package = nixpkgs.reuse;
+            category = &quot;legal&quot;;
+          }
+          {
+            package = nixpkgs.delve;
+            category = &quot;cli-dev&quot;;
+            name = &quot;dlv&quot;;
+          }
+          {
+            package = nixpkgs.go;
+            category = &quot;cli-dev&quot;;
+          }
+          {
+            package = nixpkgs.gotools;
+            category = &quot;cli-dev&quot;;
+          }
+          {
+            package = nixpkgs.gopls;
+            category = &quot;cli-dev&quot;;
+          }
+          {
+            package = namaka.packages.default;
+            category = &quot;nix-testing&quot;;
+          }
+        ]
+        ++ l.optionals nixpkgs.stdenv.isLinux [
+          {
+            package = nixpkgs.golangci-lint;
+            category = &quot;cli-dev&quot;;
+          }
+        ];
+      imports = [std.devshellProfiles.default book];
+    };
+
+    book = {...}: {
+      nixago = [
+        ((lib.dev.mkNixago lib.cfg.mdbook)
+          cell.configs.mdbook)
+      ];
+    };
+  }
 </code></pre>
 
                     </main>
@@ -218,5 +295,6 @@ direnv: Watching: cells/local/shells (recursively)
         <script src="../theme/pagetoc.js"></script>
 
 
+    </div>
     </body>
 </html>

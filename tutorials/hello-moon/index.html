@@ -32,6 +32,7 @@
 
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
         <script>
             var path_to_root = "../../";
@@ -69,10 +70,12 @@
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             var html = document.querySelector('html');
-            var sidebar = 'hidden';
+            var sidebar = null;
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
             html.classList.remove('sidebar-visible');
             html.classList.add("sidebar-" + sidebar);
@@ -245,7 +248,66 @@ In here, we wire up two tools from the Nix ecosystem: <a href="https://github.co
 <p>But, because we are sticking with the local Cell context, we don't want to confuse the future code reader.
 Instead, we gently hint at the locality by just referring them via the <code>cell</code> context.</p>
 </blockquote>
-<pre><code class="language-nix">{{#include ./nix/local/devshells.nix}}
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  /*
+  I usually just find it very handy to alias all things library onto `l`...
+  The distinction between `builtins` and `nixpkgs.lib` has little practical
+  relevance, in most scenarios.
+  */
+  l = nixpkgs.lib // builtins;
+
+  /*
+  It is good practice to in-scope:
+  - inputs by *name*
+  - other Cells by their *Cell names*
+  - the local Cell Blocks by their *Block names*.
+
+  However, for `std`, we make an exeption and in-scope, despite being an
+  input, its primary Cell with the same name as well as the dev lib.
+  */
+  inherit (inputs) nixpkgs;
+  inherit (inputs.std) std lib;
+  inherit (cell) nixago;
+in
+  # we use Standard's mkShell wrapper for its Nixago integration
+  l.mapAttrs (_: lib.dev.mkShell) {
+    default = {...}: {
+      name = &quot;My Devshell&quot;;
+      # This `nixago` option is a courtesy of the `std` horizontal
+      # integration between Devshell and Nixago
+      nixago = [
+        # off-the-shelve from `std`
+        (lib.cfg.conform {data = {inherit (inputs) cells;};})
+        lib.cfg.lefthook
+        lib.cfg.adrgen
+        # modified from the local Cell
+        nixago.treefmt
+        nixago.editorconfig
+        nixago.mdbook
+      ];
+      # Devshell handily represents `commands` as part of
+      # its Message Of The Day (MOTD) or the built-in `menu` command.
+      commands = [
+        {
+          package = nixpkgs.reuse;
+          category = &quot;legal&quot;;
+          /*
+          For display, reuse already has both a `pname` &amp; `meta.description`.
+          Hence, we don't need to inline these - they are autodetected:
+
+          name = &quot;reuse&quot;;
+          description = &quot;Reuse is a tool to manage a project's LICENCES&quot;;
+          */
+        }
+      ];
+      # Always import the `std` default devshellProfile to also install
+      # the `std` CLI/TUI into your Devshell.
+      imports = [std.devshellProfiles.default];
+    };
+  }
 </code></pre>
 <p>The <code>nixago = [];</code> option in this definition is a special integration provided by the <a href="../../reference/lib/dev/mkShell.html">Standard's <code>devshell</code>-wrapper (<code>std.lib.mkShell</code>)</a>.</p>
 <p><em>This is how <code>std</code> delivers on its promise of being a (horizontal) integration tool that wraps (vertical) component tools into a polished user story and experience.</em></p>
@@ -254,7 +316,67 @@ For a more elegant method of entering a development shell read on the <a href="#
 <h4 id="nixlocalnixagonix"><a class="header" href="#nixlocalnixagonix"><code>./nix/local/nixago.nix</code></a></h4>
 <p>As we have seen above, the <code>nixago</code> option in the <code>cell.devshells</code> Cell Block references Targets from both <code>lib.cfg</code>.
 While you can explore <code>lib.cfg</code> <a href="https://github.com/divnix/std/blob/main/cells/lib/cfg.nix">here</a>, let's now have a closer look at <code>cell.nixago</code>:</p>
-<pre><code class="language-nix">{{#include ./nix/local/nixago.nix}}
+<pre><code class="language-nix">{
+  inputs,
+  cell,
+}: let
+  inherit (inputs) nixpkgs;
+  inherit (inputs.std) lib;
+  /*
+  While these are strictly specializations of the available
+  Nixago Pebbles at `lib.cfg.*`, it would be entirely
+  possible to define a completely new pebble inline
+  */
+in {
+  /*
+  treefmt: https://github.com/numtide/treefmt
+  */
+  treefmt = lib.cfg.treefmt {
+    # we use the data attribute to modify the
+    # target data structure via a simple data overlay
+    # (`divnix/data-merge` / `std.dmerge`) mechanism.
+    data.formatter.go = {
+      command = &quot;gofmt&quot;;
+      options = [&quot;-w&quot;];
+      includes = [&quot;*.go&quot;];
+    };
+    # for the `std.lib.dev.mkShell` integration with nixago,
+    # we also hint which packages should be made available
+    # in the environment for this &quot;Nixago Pebble&quot;
+    packages = [nixpkgs.go];
+  };
+
+  /*
+  editorconfig: https://editorconfig.org/
+  */
+  editorconfig = lib.cfg.editorconfig {
+    data = {
+      # the actual target data structure depends on the
+      # Nixago Pebble, and ultimately, on the tool to configure
+      &quot;*.xcf&quot; = {
+        charset = &quot;unset&quot;;
+        end_of_line = &quot;unset&quot;;
+        insert_final_newline = &quot;unset&quot;;
+        trim_trailing_whitespace = &quot;unset&quot;;
+        indent_style = &quot;unset&quot;;
+        indent_size = &quot;unset&quot;;
+      };
+      &quot;{*.go,go.mod}&quot; = {
+        indent_style = &quot;tab&quot;;
+        indent_size = 4;
+      };
+    };
+  };
+
+  /*
+  mdbook: https://rust-lang.github.io/mdBook
+  */
+  mdbook = lib.cfg.mdbook {
+    data = {
+      book.title = &quot;The Standard Book&quot;;
+    };
+  };
+}
 </code></pre>
 <p>In this Cell Block, we have been modifying some built-in convenience <code>lib.cfg.*</code> pebbles.
 The way <code>data</code> is merged upon the existing pebble is via a simple left-hand-side/right-hand-site <code>data-merge</code> (<code>std.dmerge</code>).</p>
@@ -372,5 +494,6 @@ If you want to reload the devshell (e.g. to reconcile Nixago Pebbles), you can j
         <script src="../../theme/pagetoc.js"></script>
 
 
+    </div>
     </body>
 </html>

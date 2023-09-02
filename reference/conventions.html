@@ -32,6 +32,7 @@
 
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
         <script>
             var path_to_root = "../";
@@ -69,10 +70,12 @@
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             var html = document.querySelector('html');
-            var sidebar = 'hidden';
+            var sidebar = null;
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
             html.classList.remove('sidebar-visible');
             html.classList.add("sidebar-" + sidebar);
@@ -153,6 +156,7 @@ ${cellsFrom}/${cell}/${block}/default.nix
 <h2 id="readme-file-locations"><a class="header" href="#readme-file-locations">Readme File Locations</a></h2>
 <p>Readme files are picked up by the TUI in the following places:</p>
 <pre><code>${cellsFrom}/${cell}/Readme.md
+${cellsFrom}/${cell}/${block}.md
 ${cellsFrom}/${cell}/${block}/Readme.md
 ${cellsFrom}/${cell}/${block}/${target}.md
 </code></pre>
@@ -251,5 +255,6 @@ anyways.</p>
         <script src="../theme/pagetoc.js"></script>
 
 
+    </div>
     </body>
 </html>
