@@ -27,5 +27,5 @@ direnv: Watching: cells/local/shells (recursively)
 For reference, the above example loads the `default` devshell from:
 
 ```nix
-{{#include ../../cells/local/shells.nix}}
+{{#include ../../src/local/shells.nix}}
 ```

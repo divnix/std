@@ -13,43 +13,43 @@ Actions according to the needs of your project.
 ## Arion
 
 ```nix
-{{#include ../../lib/blockTypes/arion.nix}}
+{{#include ../../src/std/fwlib/blockTypes/arion.nix}}
 ```
 
 ## Runnables (todo: vs installables)
 
 ```nix
-{{#include ../../lib/blockTypes/runnables.nix}}
+{{#include ../../src/std/fwlib/blockTypes/runnables.nix}}
 ```
 
 ## Installables (todo: vs runnables)
 
 ```nix
-{{#include ../../lib/blockTypes/installables.nix}}
+{{#include ../../src/std/fwlib/blockTypes/installables.nix}}
 ```
 
 ## Pkgs
 
 ```nix
-{{#include ../../lib/blockTypes/pkgs.nix}}
+{{#include ../../src/std/fwlib/blockTypes/pkgs.nix}}
 ```
 
 ## Devshells
 
 ```nix
-{{#include ../../lib/blockTypes/devshells.nix}}
+{{#include ../../src/std/fwlib/blockTypes/devshells.nix}}
 ```
 
 ## Nixago
 
 ```nix
-{{#include ../../lib/blockTypes/nixago.nix}}
+{{#include ../../src/std/fwlib/blockTypes/nixago.nix}}
 ```
 
 ## Containers
 
 ```nix
-{{#include ../../lib/blockTypes/containers.nix}}
+{{#include ../../src/std/fwlib/blockTypes/containers.nix}}
 ```
 
 ## Terra
@@ -60,19 +60,19 @@ Block type for managing [Terranix] configuration for [Terraform].
 [Terraform]: https://www.terraform.io/
 
 ```nix
-{{#include ../../src/blocktypes/terra.nix}}
+{{#include ../../src/std/fwlib/blockTypes/terra.nix}}
 ```
 
 ## Data
 
 ```nix
-{{#include ../../lib/blockTypes/data.nix}}
+{{#include ../../src/std/fwlib/blockTypes/data.nix}}
 ```
 
 ## Functions
 
 ```nix
-{{#include ../../lib/blockTypes/functions.nix}}
+{{#include ../../src/std/fwlib/blockTypes/functions.nix}}
 ```
 
 ## Anything
@@ -80,5 +80,5 @@ Block type for managing [Terranix] configuration for [Terraform].
 _Note: while the implementation is the same as `functions`, the semantics are different. Implementations may diverge in the future._
 
 ```nix
-{{#include ../../lib/blockTypes/anything.nix}}
+{{#include ../../src/std/fwlib/blockTypes/anything.nix}}
 ```

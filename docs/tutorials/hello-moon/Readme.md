@@ -69,7 +69,7 @@ Let's start with the `cell.devshells` Cell Block and work our way backwards to t
 > Instead, we gently hint at the locality by just referring them via the `cell` context.
 
 ```nix
-{{#include ./nix/local/devshells.nix}}
+{{#include ./nix/_automation/devshells.nix}}
 ```
 
 The `nixago = [];` option in this definition is a special integration provided by the [Standard's `devshell`-wrapper (`std.lib.mkShell`)][devshell-wrapper].
@@ -85,7 +85,7 @@ As we have seen above, the `nixago` option in the `cell.devshells` Cell Block re
 While you can explore `lib.cfg` [here][lib-cfg], let's now have a closer look at `cell.nixago`:
 
 ```nix
-{{#include ./nix/local/nixago.nix}}
+{{#include ./nix/_automation/nixago.nix}}
 ```
 
 In this Cell Block, we have been modifying some built-in convenience `lib.cfg.*` pebbles.
