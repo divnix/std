@@ -15,9 +15,9 @@ jobs:
 
       - uses: nixbuild/nix-quick-install-action@v25
 
-      - run: (cd ./src/local && nix flake lock --update-input std)
-      - run: (cd ./src/tests && nix flake lock --update-input std)
-      - run: nix store add-path --name source .
+      - name: Update subflake references
+        run: ./.github/workflows/update-subflake.sh
+
       - run: nix develop .#book -c mdbook build ./docs
 
       - name: Deploy
