@@ -23,7 +23,7 @@ in
         else "";
     in [
       (mkCommand currentSystem "eval" "use transparently with namaka cli" [] ''
-        nix eval '.#${fragment}.check'
+        nix eval '.#${fragment}'
       '' {})
       (mkCommand currentSystem "check" "run namaka tests against snapshots" [pkg] ''
         namaka ${subdir} check -c nix eval '.#${fragment}'
