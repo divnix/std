@@ -20,16 +20,16 @@ in
       subdir = target.snap-dir or "";
     in [
       (mkCommand currentSystem "eval" "use transparently with namaka cli" [] ''
-        nix eval '.#${fragment}.check'
+        nix eval '.#${fragment}'
       '' {})
       (mkCommand currentSystem "check" "run namaka tests against snapshots" [pkg] ''
-        namaka ${subdir} check -c nix eval '.#${fragment}.check'
+        namaka ${subdir} check -c nix eval '.#${fragment}'
       '' {})
       (mkCommand currentSystem "review" "review pending namaka checks" [pkg] ''
-        namaka ${subdir} review -c nix eval '.#${fragment}.check'
+        namaka ${subdir} review -c nix eval '.#${fragment}'
       '' {})
       (mkCommand currentSystem "clean" "clean up pending namaka checks" [pkg] ''
-        namaka ${subdir} clean -c nix eval '.#${fragment}.check'
+        namaka ${subdir} clean -c nix eval '.#${fragment}'
       '' {})
     ];
   }
