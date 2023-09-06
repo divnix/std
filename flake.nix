@@ -11,7 +11,7 @@
     paisano.inputs.nixpkgs.follows = "nixpkgs";
     paisano.inputs.yants.follows = "yants";
     paisano-tui = {
-      url = "github:paisano-nix/tui/0.1.1";
+      url = "github:paisano-nix/tui/0.2.0";
       flake = false; # we're after the source code, only
     };
   };
