@@ -2,8 +2,6 @@ std: inputs: let
   inherit (inputs) incl;
   inherit (inputs.paisano) pick harvest;
 in
-  # __std.init.<system> = [ ... ] is discarded
-  # and thus doesn't show up in the CLI/TUI
   std.growOn {
     inherit inputs;
     cellsFrom = incl ./src ["local" "tests"];
