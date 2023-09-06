@@ -261,8 +261,6 @@ It further dogfoods itself and implements utilities in its own <a href="https://
   inherit (inputs) incl;
   inherit (inputs.paisano) pick harvest;
 in
-  # __std.init.&lt;system&gt; = [ ... ] is discarded
-  # and thus doesn't show up in the CLI/TUI
   std.growOn {
     inherit inputs;
     cellsFrom = incl ./src [&quot;local&quot; &quot;tests&quot;];
