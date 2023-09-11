@@ -6,6 +6,7 @@
   description = "The Nix Flakes framework for perfectionists with deadlines";
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+  inputs.lib.url = "github:nix-community/nixpkgs.lib";
   inputs = {
     paisano.url = "github:paisano-nix/core";
     paisano.inputs.nixpkgs.follows = "nixpkgs";
@@ -24,14 +25,14 @@
     url = "github:divnix/dmerge/0.2.1";
     inputs.haumea.follows = "haumea";
     inputs.yants.follows = "yants";
-    inputs.nixlib.follows = "haumea/nixpkgs";
+    inputs.nixlib.follows = "lib";
   };
   inputs.haumea = {
     url = "github:nix-community/haumea/v0.2.2";
   };
   inputs.incl = {
     url = "github:divnix/incl";
-    inputs.nixlib.follows = "haumea/nixpkgs";
+    inputs.nixlib.follows = "lib";
   };
   /*
   Auxiliar inputs used in builtin libraries or for the dev environment.
