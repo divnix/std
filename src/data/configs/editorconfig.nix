@@ -1,32 +1,36 @@
 {
-  root = true;
+  hook.mode = "copy"; # already useful before entering the devshell
 
-  "*" = {
-    end_of_line = "lf";
-    insert_final_newline = true;
-    trim_trailing_whitespace = true;
-    charset = "utf-8";
-    indent_style = "space";
-    indent_size = 2;
-  };
+  data = {
+    root = true;
 
-  "*.{diff,patch}" = {
-    end_of_line = "unset";
-    insert_final_newline = "unset";
-    trim_trailing_whitespace = "unset";
-    indent_size = "unset";
-  };
+    "*" = {
+      end_of_line = "lf";
+      insert_final_newline = true;
+      trim_trailing_whitespace = true;
+      charset = "utf-8";
+      indent_style = "space";
+      indent_size = 2;
+    };
 
-  "*.md" = {
-    max_line_length = "off";
-    trim_trailing_whitespace = false;
-  };
-  "{LICENSES/**,LICENSE}" = {
-    end_of_line = "unset";
-    insert_final_newline = "unset";
-    trim_trailing_whitespace = "unset";
-    charset = "unset";
-    indent_style = "unset";
-    indent_size = "unset";
+    "*.{diff,patch}" = {
+      end_of_line = "unset";
+      insert_final_newline = "unset";
+      trim_trailing_whitespace = "unset";
+      indent_size = "unset";
+    };
+
+    "*.md" = {
+      max_line_length = "off";
+      trim_trailing_whitespace = false;
+    };
+    "{LICENSES/**,LICENSE}" = {
+      end_of_line = "unset";
+      insert_final_newline = "unset";
+      trim_trailing_whitespace = "unset";
+      charset = "unset";
+      indent_style = "unset";
+      indent_size = "unset";
+    };
   };
 }
