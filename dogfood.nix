@@ -20,7 +20,7 @@ in
   }
   (std.grow {
     inherit inputs;
-    cellsFrom = incl ./src ["std" "lib"];
+    cellsFrom = incl ./src ["std" "lib" "data"];
     cellBlocks = with std.blockTypes; [
       ## For downstream use
 
@@ -33,7 +33,8 @@ in
       # lib
       (functions "dev")
       (functions "ops")
-      (nixago "cfg")
+      (anything "cfg")
+      (nixago "configs")
     ];
   })
   {

@@ -83,8 +83,7 @@
         ],
         "nixlib": [
           "std",
-          "haumea",
-          "nixpkgs"
+          "lib"
         ],
         "yants": [
           "std",
@@ -209,8 +208,7 @@
       "inputs": {
         "nixlib": [
           "std",
-          "haumea",
-          "nixpkgs"
+          "lib"
         ]
       },
       "locked": {
@@ -224,6 +222,21 @@
       "original": {
         "owner": "divnix",
         "repo": "incl",
+        "type": "github"
+      }
+    },
+    "lib": {
+      "locked": {
+        "lastModified": 1694306727,
+        "narHash": "sha256-26fkTOJOI65NOTNKFvtcJF9mzzf/kK9swHzfYt1Dl6Q=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "c30b6a84c0b84ec7aecbe74466033facc9ed103f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
         "type": "github"
       }
     },
@@ -494,6 +507,7 @@
         "dmerge": "dmerge",
         "haumea": "haumea",
         "incl": "incl",
+        "lib": "lib",
         "makes": [
           "std",
           "blank"
@@ -521,12 +535,12 @@
       },
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-tpDF+OONTimxQgHv3CEBGxXmhw/K8IxsQfaaQw2+k8o=",
-        "path": "/nix/store/k5844rfql5x6ya52912csr0dl6bhf6q5-source",
+        "narHash": "sha256-Od+xml4wB5sbfxj2pqOsX4ubH9VruSWzci8DnUh83Zc=",
+        "path": "/nix/store/hkm632gfhndfipasjx573n5k9yj8j925-source",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/k5844rfql5x6ya52912csr0dl6bhf6q5-source",
+        "path": "/nix/store/hkm632gfhndfipasjx573n5k9yj8j925-source",
         "type": "path"
       }
     },
