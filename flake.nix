@@ -66,7 +66,7 @@
       # the framework's basic top-level tools
       inherit (inputs) yants dmerge incl;
       inherit (inputs.paisano) pick harvest winnow;
-      inherit (fwlib') blockTypes actions dataWith flakeModule grow growOn;
+      inherit (fwlib') blockTypes actions dataWith flakeModule grow growOn findTargets;
     };
   in
     assert inputs.nixpkgs.lib.assertMsg ((builtins.compareVersions builtins.nixVersion "2.13") >= 0) "The truth is: you'll need a newer nix version to use Standard (minimum: v2.13).";
