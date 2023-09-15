@@ -1,7 +1,4 @@
-{
-  inputs,
-  cell,
-}: let
+let
   inherit (inputs) nixpkgs;
   l = nixpkgs.lib // builtins;
 in {

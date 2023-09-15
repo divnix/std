@@ -3,11 +3,11 @@
   cell,
   block,
 }: let
-  inherit (nixpkgs.lib) mapAttrs' nameValuePair removeSuffix toFunction;
+  inherit (nixpkgs.lib) mapAttrs' nameValuePair removeSuffix filterAttrs hasSuffix;
   inherit (builtins) readDir removeAttrs mapAttrs;
 
-  load = file: toFunction (scopedImport {inherit inputs cell;} file) {inherit inputs cell;};
-  targets = removeAttrs (readDir block) ["default.nix"];
+  load = file: scopedImport {inherit inputs cell;} file;
+  targets = filterAttrs (n: _: hasSuffix ".nix" n) (removeAttrs (readDir block) ["default.nix"]);
 in
   mapAttrs' (
     name: _:

@@ -1,7 +1,4 @@
 {
-  inputs,
-  cell,
-}: {
   data = {};
   output = ".github/settings.yml";
   format = "yaml";
