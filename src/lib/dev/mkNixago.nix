@@ -2,7 +2,8 @@
   inputs,
   cell,
 }: let
-  inherit (inputs) dmerge nixago;
+  inherit (inputs.cells.std.errors) requireInput;
+  inherit (requireInput "nixago" "github:nix-community/nixago" "std.lib.dev.mkNixago") dmerge nixago;
 
   l = inputs.nixpkgs.lib // builtins;
 in

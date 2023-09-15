@@ -1,8 +1,11 @@
 {
   inputs,
-  l,
+  cell,
 }: let
-  inherit (inputs) arion nixpkgs;
+  inherit (inputs.cells.std.errors) requireInput;
+  inherit (requireInput "makes" "github:fluidattacks/makes" "std.lib.dev.mkMakes") arion nixpkgs;
+
+  inherit (nixpkgs) lib;
 
   disabledNotice = ''
     divnix/std disabled arion's nixos instrumentation.
@@ -29,9 +32,9 @@
       (arion + /src/nix/service/nixos-init.nix)
     ];
     imports = [
-      (l.mkRemovedOptionModule ["nixos" "configuration"] disabledNotice)
-      (l.mkRemovedOptionModule ["nixos" "build"] disabledNotice)
-      (l.mkRemovedOptionModule ["nixos" "evaluatedConfig"] disabledNotice)
+      (lib.mkRemovedOptionModule ["nixos" "configuration"] disabledNotice)
+      (lib.mkRemovedOptionModule ["nixos" "build"] disabledNotice)
+      (lib.mkRemovedOptionModule ["nixos" "evaluatedConfig"] disabledNotice)
     ];
   };
 in

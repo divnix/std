@@ -1,11 +1,13 @@
 {
-  l,
   inputs,
+  cell,
 }: let
-  inherit (inputs) nixpkgs makes;
+  inherit (inputs.cells.std.errors) requireInput;
+  inherit (requireInput "makes" "github:fluidattacks/makes" "std.lib.dev.mkMakes") nixpkgs makes;
+  inherit (nixpkgs) lib;
 
-  makes' = l.fix (
-    l.extends
+  makes' = lib.fix (
+    lib.extends
     (
       _: _: {
         inherit inputs;
@@ -20,4 +22,4 @@
     .__unfix__
   );
 in
-  l.customisation.callPackageWith makes'
+  lib.customisation.callPackageWith makes'
