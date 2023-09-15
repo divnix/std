@@ -2,7 +2,9 @@
   inputs,
   cell,
 }: let
-  inherit (inputs) devshell nixago;
+  inherit (inputs.cells.std.errors) requireInput;
+
+  inherit (requireInput "devshell" "github:numtide/devshell" "std.lib.dev.mkShell") devshell nixago;
 
   l = inputs.nixpkgs.lib // builtins;
 in
