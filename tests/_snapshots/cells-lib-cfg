@@ -1,6 +1,7 @@
 #pretty
 {
   adrgen = <derivation adrgen.config.yml>;
+  cog = <derivation cog.toml>;
   conform = <derivation conform.yaml>;
   editorconfig = <derivation editorconfig>;
   githubsettings = <derivation settings.yml>;
