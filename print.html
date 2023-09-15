@@ -13,6 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
+        <link rel="icon" href="favicon.svg">
         <link rel="shortcut icon" href="favicon.png">
         <link rel="stylesheet" href="css/variables.css">
         <link rel="stylesheet" href="css/general.css">
@@ -29,7 +30,7 @@
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="theme/pagetoc.css">
+        <link rel="stylesheet" href="docs/theme/pagetoc.css">
 
     </head>
     <body>
@@ -280,7 +281,7 @@ in
   }
   (std.grow {
     inherit inputs;
-    cellsFrom = incl ./src [&quot;std&quot; &quot;lib&quot;];
+    cellsFrom = incl ./src [&quot;std&quot; &quot;lib&quot; &quot;data&quot;];
     cellBlocks = with std.blockTypes; [
       ## For downstream use
 
@@ -293,7 +294,8 @@ in
       # lib
       (functions &quot;dev&quot;)
       (functions &quot;ops&quot;)
-      (nixago &quot;cfg&quot;)
+      (anything &quot;cfg&quot;)
+      (nixago &quot;configs&quot;)
     ];
   })
   {
@@ -1117,25 +1119,23 @@ direnv: Watching: cells/local/shells (recursively)
   inputs,
   cell,
 }: let
-  l = nixpkgs.lib // builtins;
   inherit (inputs) nixpkgs namaka;
-  inherit (inputs.std) std lib;
+  inherit (inputs.nixpkgs.lib) mapAttrs optionals;
+  inherit (inputs.std) std;
+  inherit (inputs.std.lib.dev) mkShell;
+  inherit (cell) configs;
 in
-  l.mapAttrs (_: lib.dev.mkShell) rec {
+  mapAttrs (_: mkShell) rec {
     default = {...}: {
       name = &quot;Standard&quot;;
       nixago = [
-        ((lib.dev.mkNixago lib.cfg.conform)
-          {data = {inherit (inputs) cells;};})
-        ((lib.dev.mkNixago lib.cfg.treefmt)
-          cell.configs.treefmt)
-        ((lib.dev.mkNixago lib.cfg.editorconfig)
-          cell.configs.editorconfig)
-        ((lib.dev.mkNixago lib.cfg.githubsettings)
-          cell.configs.githubsettings)
-        (lib.dev.mkNixago lib.cfg.lefthook)
-        (lib.dev.mkNixago lib.cfg.adrgen)
-        (lib.dev.mkNixago cell.configs.cog)
+        configs.conform
+        configs.treefmt
+        configs.editorconfig
+        configs.githubsettings
+        configs.lefthook
+        configs.adrgen
+        configs.cog
       ];
       commands =
         [
@@ -1165,7 +1165,7 @@ in
             category = &quot;nix-testing&quot;;
           }
         ]
-        ++ l.optionals nixpkgs.stdenv.isLinux [
+        ++ optionals nixpkgs.stdenv.isLinux [
           {
             package = nixpkgs.golangci-lint;
             category = &quot;cli-dev&quot;;
@@ -1175,10 +1175,7 @@ in
     };
 
     book = {...}: {
-      nixago = [
-        ((lib.dev.mkNixago lib.cfg.mdbook)
-          cell.configs.mdbook)
-      ];
+      nixago = [configs.mdbook];
     };
   }
 </code></pre>
@@ -3454,7 +3451,7 @@ git add . &amp;&amp; git commit -m &quot;init&quot;
         <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="theme/pagetoc.js"></script>
+        <script src="docs/theme/pagetoc.js"></script>
 
         <script>
         window.addEventListener('load', function() {
