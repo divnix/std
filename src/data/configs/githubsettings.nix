@@ -115,10 +115,12 @@ let
 
   l = builtins;
 in {
-  labels =
-    []
-    ++ (l.attrValues labels.statuses)
-    ++ (l.attrValues labels.types)
-    ++ (l.attrValues labels.priorities)
-    ++ (l.attrValues labels.effort);
+  data = {
+    labels =
+      []
+      ++ (l.attrValues labels.statuses)
+      ++ (l.attrValues labels.types)
+      ++ (l.attrValues labels.priorities)
+      ++ (l.attrValues labels.effort);
+  };
 }
