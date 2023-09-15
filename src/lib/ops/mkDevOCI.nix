@@ -1,10 +1,9 @@
-{
-  inputs,
-  cell,
-}: let
-  inherit (inputs) nixpkgs std;
+let
+  inherit (inputs.cells.std.errors) requireInput;
+  inherit (requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkDevOCI") nixpkgs std n2c;
+  inherit (n2c.packages) nix2container;
+
   l = nixpkgs.lib // builtins;
-  n2c = inputs.n2c.packages.nix2container;
 
   envToList = {...} @ args:
     if args.value != null
@@ -206,7 +205,7 @@ in
         ++ (l.optionals vscode [setupVSCode]);
 
       layers = [
-        (n2c.buildLayer {
+        (nix2container.buildLayer {
           deps = preLoadStorePaths;
           copyToRoot = [
             (nixpkgs.buildEnv

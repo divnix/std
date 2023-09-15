@@ -2,9 +2,11 @@
   inputs,
   cell,
 }: let
-  inherit (inputs) nixpkgs dmerge;
+  inherit (inputs.cells.std.errors) requireInput;
+  inherit (requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkStandardOCI") nixpkgs dmerge n2c;
+  inherit (n2c.packages) nix2container;
+
   l = nixpkgs.lib // builtins;
-  n2c = inputs.n2c.packages.nix2container;
 in
   /*
   Creates an OCI container image using the given operable.
@@ -123,11 +125,11 @@ in
           # - env setup w.r.t. certs for ssl-library ecosysystems
           layers = [
             # Put liveness and readiness probes in a separate layer
-            (n2c.buildLayer {
+            (nix2container.buildLayer {
               maxLayers = 10;
               deps =
-                (l.optionals hasLivenessProbe [(n2c.buildLayer {deps = [livenessProbe];})])
-                ++ (l.optionals hasReadinessProbe [(n2c.buildLayer {deps = [readinessProbe];})]);
+                (l.optionals hasLivenessProbe [(nix2container.buildLayer {deps = [livenessProbe];})])
+                ++ (l.optionals hasReadinessProbe [(nix2container.buildLayer {deps = [readinessProbe];})]);
             })
           ];
           setup = prepend [setupLinks users nss];
