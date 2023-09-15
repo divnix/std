@@ -18,7 +18,7 @@ jobs:
       - name: Update subflake references
         run: ./.github/workflows/update-subflake.sh
 
-      - run: nix develop .#book -c mdbook build ./docs
+      - run: nix develop .#book -c mdbook build ./.
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
