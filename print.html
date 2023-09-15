@@ -259,8 +259,8 @@ It adds a curated collection of <a href="https://github.com/divnix/std/blob/main
 It further dogfoods itself and implements utilities in its own <a href="https://github.com/divnix/std/tree/main/cells"><strong>Cells</strong></a>.</p>
 <h6 id="dogfooding"><a class="header" href="#dogfooding">Dogfooding</a></h6>
 <p><sub>Only renders in the <a href="https://std.divnix.com">Documentation</a>.</sub></p>
-<pre><code class="language-nix">std: inputs: let
-  inherit (inputs) incl;
+<pre><code class="language-nix">inputs: let
+  inherit (inputs) incl std;
   inherit (inputs.paisano) pick harvest;
 in
   std.growOn {
@@ -2564,8 +2564,7 @@ No description
 <h6 id="mkoci"><a class="header" href="#mkoci"><code>mkOCI</code></a></h6>
 <p>… is a function to generate an OCI Image via <a href="https://github.com/nlewo/nix2container"><code>nix2container</code></a>.</p>
 <p>The function signature is as follows:</p>
-<pre><code class="language-nix">  /*
-  Creates an OCI container image
+<pre><code class="language-nix">  Creates an OCI container image
 
   Args:
   name: The name of the image.
@@ -2582,6 +2581,7 @@ No description
 
   Returns:
   An OCI container image (created with nix2container).
+  */
 </code></pre>
 </div>
 </div>
@@ -2597,10 +2597,7 @@ No description
 <p>… is a function interface into the <a href="reference//patterns/four-packaging-layers.html#operable-layer">second layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
 <p>It’s purpose is to provide an easy way to enrich a “package” into an “operable”.</p>
 <p>The function signature is as follows:</p>
-<pre><code class="language-nix">  /*
-  Makes a package operable by configuring the necessary runtime environment.
-
-  Args:
+<pre><code class="language-nix">  Args:
   package: The package to wrap.
   runtimeScript: A bash script to run at runtime.
   runtimeEnv: An attribute set of environment variables to set at runtime.
@@ -2612,6 +2609,9 @@ No description
 
   Returns:
   An operable for the given package.
+  */
+  {
+    package,
 </code></pre>
 </div>
 </div>
@@ -2627,8 +2627,7 @@ No description
 <p>… is a function interface into the <a href="reference//patterns/four-packaging-layers.html#oci-image-layer">third layer of packaging</a> of the Standard SDLC Packaging pattern.</p>
 <p>It produces a Standard OCI Image from an <a href="reference/./mkOperable.html">“operable”</a>.</p>
 <p>The function signature is as follows:</p>
-<pre><code class="language-nix">  /*
-  Creates an OCI container image using the given operable.
+<pre><code class="language-nix">  Creates an OCI container image using the given operable.
 
   Args:
   name: The name of the image.
@@ -2646,6 +2645,7 @@ No description
 
   Returns:
   An OCI container image (created with nix2container).
+  */
 </code></pre>
 <h6 id="the-standard-image"><a class="header" href="#the-standard-image">The Standard Image</a></h6>
 <p>Standard images are minimal and hardened. They only contain required dependencies.</p>
@@ -2738,10 +2738,7 @@ No description
 <p><a href="https://github.com/asiermarques/adrgen"><code>adrgen</code></a> is a great tool to manage Architecture Decision Records.</p>
 <hr />
 <h6 id="definition"><a class="header" href="#definition">Definition:</a></h6>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
+<pre><code class="language-nix">let
   inherit (inputs) nixpkgs;
 in {
   data = {};
@@ -2778,10 +2775,7 @@ in {
 </code></pre>
 <hr />
 <h6 id="definition-1"><a class="header" href="#definition-1">Definition:</a></h6>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
+<pre><code class="language-nix">let
   l = nixpkgs.lib // builtins;
   inherit (inputs) nixpkgs;
 in {
@@ -2827,10 +2821,7 @@ No description
 <p>Most editors understand the <a href="https://github.com/editorconfig/"><code>.editorconfig</code></a> file and autoconfigure themselves accordingly.</p>
 <hr />
 <h6 id="definition-2"><a class="header" href="#definition-2">Definition:</a></h6>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
+<pre><code class="language-nix">let
   l = nixpkgs.lib // builtins;
   inherit (inputs) nixpkgs;
 in {
@@ -2865,9 +2856,6 @@ Please see the App’s Homepage for the configuration schema.</p>
 <hr />
 <h6 id="definition-3"><a class="header" href="#definition-3">Definition:</a></h6>
 <pre><code class="language-nix">{
-  inputs,
-  cell,
-}: {
   data = {};
   output = &quot;.github/settings.yml&quot;;
   format = &quot;yaml&quot;;
@@ -2934,10 +2922,7 @@ in
 </code></pre>
 <hr />
 <h6 id="definition-4"><a class="header" href="#definition-4">Definition:</a></h6>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
+<pre><code class="language-nix">let
   inherit (inputs) nixpkgs;
   l = nixpkgs.lib // builtins;
 in {
@@ -2990,10 +2975,7 @@ No description
 <p><a href="https://github.com/evilmartians/lefthook">Lefthook</a> is a fast (parallel execution) and elegant git hook manager.</p>
 <hr />
 <h6 id="definition-5"><a class="header" href="#definition-5">Definition:</a></h6>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
+<pre><code class="language-nix">let
   inherit (inputs) nixpkgs;
   l = nixpkgs.lib // builtins;
 in {
@@ -3036,10 +3018,7 @@ No description
 Solution Architect extra happy: <a href="https://github.com/joelcourtney/mdbook-kroki-preprocessor"><code>mdbook-kroki-preprocessor</code></a></p>
 <hr />
 <h6 id="definition-6"><a class="header" href="#definition-6">Definition:</a></h6>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
+<pre><code class="language-nix">let
   inherit (inputs) nixpkgs;
 in {
   data = {};
@@ -3083,10 +3062,7 @@ No description
 <p>A <a href="https://github.com/numtide/treefmt">code-tree formatter</a> to fromat the entire code tree extremly fast (in parallel and with a smart cache).</p>
 <hr />
 <h6 id="definition-7"><a class="header" href="#definition-7">Definition:</a></h6>
-<pre><code class="language-nix">{
-  inputs,
-  cell,
-}: let
+<pre><code class="language-nix">let
   inherit (inputs) nixpkgs;
 in {
   data = {};
@@ -3271,8 +3247,7 @@ No description
   body = ''
     In order to use ${target}, add to {bold}flake.nix{un-bold}:
 
-      inputs.std.inputs.${input}.url =
-        &quot;${url}&quot;;
+      inputs.std.inputs.${input}.url = &quot;${url}&quot;;
   '';
 
   inputs' = let
@@ -3305,9 +3280,9 @@ in
       🏗️  │ {bold}Input Overloading for ${target}{un-bold}
     ─────┼─────────────────────────────────────────────────────────────────────────
       📝 │ {italic}${indent body}{un-italic}
+    ─────┼─────────────────────────────────────────────────────────────────────────
+      🙋 │ ${indent inputs'}
     ─────┴─────────────────────────────────────────────────────────────────────────
-      🙋   ${indent inputs'}
-    ───────────────────────────────────────────────────────────────────────────────
   ''); inputs
 </code></pre>
 </div>

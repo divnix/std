@@ -258,8 +258,8 @@ It adds a curated collection of <a href="https://github.com/divnix/std/blob/main
 It further dogfoods itself and implements utilities in its own <a href="https://github.com/divnix/std/tree/main/cells"><strong>Cells</strong></a>.</p>
 <h6 id="dogfooding"><a class="header" href="#dogfooding">Dogfooding</a></h6>
 <p><sub>Only renders in the <a href="https://std.divnix.com">Documentation</a>.</sub></p>
-<pre><code class="language-nix">std: inputs: let
-  inherit (inputs) incl;
+<pre><code class="language-nix">inputs: let
+  inherit (inputs) incl std;
   inherit (inputs.paisano) pick harvest;
 in
   std.growOn {
