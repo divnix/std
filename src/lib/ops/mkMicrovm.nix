@@ -1,5 +1,7 @@
-{inputs}: let
-  inherit (inputs) nixpkgs microvm;
+let
+  inherit (inputs.cells.std.errors) requireInput;
+  inherit (requireInput "microvm" "github:astro/microvm.nix" "std.lib.ops.mkMicrovm") nixpkgs microvm;
+
   nixosSystem = args:
     import "${nixpkgs.path}/nixos/lib/eval-config.nix" (args
       // {

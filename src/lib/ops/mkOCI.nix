@@ -2,9 +2,11 @@
   inputs,
   cell,
 }: let
-  inherit (inputs) nixpkgs std;
+  inherit (inputs.cells.std.errors) requireInput;
+  inherit (requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkOCI") nixpkgs std n2c;
+  inherit (n2c.packages) nix2container;
+
   l = nixpkgs.lib // builtins;
-  n2c = inputs.n2c.packages.nix2container;
 in
   /*
   Creates an OCI container image
@@ -51,7 +53,7 @@ in
     image =
       l.throwIf (args ? tag && meta ? tags)
       "mkOCI/mkStandardOCI/mkDevOCI: use of `tag` and `meta.tags` arguments are not supported together. Remove the former."
-      n2c.buildImage (
+      nix2container.buildImage (
         l.recursiveUpdate options {
           inherit name tag;
 
@@ -59,12 +61,12 @@ in
           layers =
             [
               # Primary layer is the entrypoint layer
-              (n2c.buildLayer {
+              (nix2container.buildLayer {
                 deps = [entrypoint];
                 maxLayers = 50;
                 layers = [
                   # Runtime inputs layer
-                  (n2c.buildLayer {
+                  (nix2container.buildLayer {
                     deps = runtimeInputs;
                     maxLayers = 10;
                   })
