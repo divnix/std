@@ -10,4 +10,5 @@
   mdbook = import ./cfg/mdbook.nix {inherit inputs cell;};
   treefmt = import ./cfg/treefmt.nix {inherit inputs cell;};
   githubsettings = import ./cfg/githubsettings.nix {inherit inputs cell;};
+  cog = import ./cfg/cog.nix {inherit inputs cell;};
 }
