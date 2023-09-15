@@ -59,7 +59,9 @@
     },
     "haumea": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": [
+          "lib"
+        ]
       },
       "locked": {
         "lastModified": 1685133229,
@@ -112,21 +114,6 @@
       }
     },
     "nixpkgs": {
-      "locked": {
-        "lastModified": 1681001314,
-        "narHash": "sha256-5sDnCLdrKZqxLPK4KA8+f4A3YKO/u6ElpMILvX0g72c=",
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "rev": "367c0e1086a4eb4502b24d872cea2c7acdd557f4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "type": "github"
-      }
-    },
-    "nixpkgs_2": {
       "locked": {
         "lastModified": 1675940568,
         "narHash": "sha256-epG6pOT9V0kS+FUqd7R6/CWkgnZx2DMT5Veqo+y6G3c=",
@@ -224,7 +211,7 @@
         "nixago": [
           "blank"
         ],
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs",
         "paisano": "paisano",
         "paisano-tui": "paisano-tui",
         "terranix": [
@@ -236,8 +223,7 @@
     "yants": {
       "inputs": {
         "nixpkgs": [
-          "haumea",
-          "nixpkgs"
+          "lib"
         ]
       },
       "locked": {

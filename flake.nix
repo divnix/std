@@ -19,7 +19,7 @@
   inputs.blank.url = "github:divnix/blank";
   inputs.yants = {
     url = "github:divnix/yants";
-    inputs.nixpkgs.follows = "haumea/nixpkgs";
+    inputs.nixpkgs.follows = "lib";
   };
   inputs.dmerge = {
     url = "github:divnix/dmerge/0.2.1";
@@ -29,6 +29,7 @@
   };
   inputs.haumea = {
     url = "github:nix-community/haumea/v0.2.2";
+    inputs.nixpkgs.follows = "lib";
   };
   inputs.incl = {
     url = "github:divnix/incl";
