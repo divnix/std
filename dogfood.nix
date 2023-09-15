@@ -1,5 +1,5 @@
-std: inputs: let
-  inherit (inputs) incl;
+inputs: let
+  inherit (inputs) incl std;
   inherit (inputs.paisano) pick harvest;
 in
   std.growOn {

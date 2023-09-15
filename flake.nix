@@ -56,17 +56,19 @@
     };
     # load fwlib again through the framework
     # to enable input overloading for blocktypes
-    std = inputs.paisano.pick (fwlib.grow {
+    fwlib' = inputs.paisano.pick (fwlib.grow {
       inherit inputs;
       cellsFrom = inputs.incl ./src ["std"];
       cellBlocks = [(fwlib.blockTypes.functions "fwlib")];
     }) ["std" "fwlib"];
+
+    std = {
+      # the framework's basic top-level tools
+      inherit (inputs) yants dmerge incl;
+      inherit (inputs.paisano) pick harvest winnow;
+      inherit (fwlib') blockTypes actions dataWith flakeModule grow growOn;
+    };
   in
     assert inputs.nixpkgs.lib.assertMsg ((builtins.compareVersions builtins.nixVersion "2.13") >= 0) "The truth is: you'll need a newer nix version to use Standard (minimum: v2.13).";
-      (import ./dogfood.nix std inputs) {
-        # the framework's basic top-level tools
-        inherit (inputs) yants dmerge incl;
-        inherit (inputs.paisano) pick harvest winnow;
-        inherit (std) blockTypes actions dataWith flakeModule grow growOn;
-      };
+      (import ./dogfood.nix (inputs // {inherit std;})) std;
 }
