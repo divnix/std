@@ -1,9 +1,6 @@
 {
   inputs = {
     # injected (private) inputs
-    paisano-mdbook-preprocessor.url = "github:paisano-nix/mdbook-paisano-preprocessor";
-    paisano-mdbook-preprocessor.inputs.std.follows = "std";
-    paisano-mdbook-preprocessor.inputs.nixpkgs.follows = "nixpkgs";
     namaka.url = "github:nix-community/namaka/v0.2.0";
     namaka.inputs.haumea.follows = "std/haumea";
     namaka.inputs.nixpkgs.follows = "nixpkgs";
