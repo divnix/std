@@ -71,5 +71,9 @@
     };
   in
     assert inputs.nixpkgs.lib.assertMsg ((builtins.compareVersions builtins.nixVersion "2.13") >= 0) "The truth is: you'll need a newer nix version to use Standard (minimum: v2.13).";
-      (import ./dogfood.nix (inputs // {inherit std;})) std;
+      (import ./dogfood.nix (inputs
+        // {
+          std = std // {inherit (inputs.self) narHash;};
+        }))
+      std;
 }

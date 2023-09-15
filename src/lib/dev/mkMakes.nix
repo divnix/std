@@ -1,11 +1,10 @@
 let
   inherit (inputs.cells.std.errors) requireInput;
   inherit (requireInput "makes" "github:fluidattacks/makes" "std.lib.dev.mkMakes") nixpkgs makes;
-  inherit (nixpkgs) lib;
-
-  makes' = lib.fix (
-    lib.extends
-    (
+  inherit (inputs.nixpkgs.lib) customisation fix extends;
+in
+  customisation.callPackageWith (fix (
+    extends (
       _: _: {
         inherit inputs;
         inherit (nixpkgs) system;
@@ -17,6 +16,4 @@ let
       import (makes + /src/args/agnostic.nix) {inherit (nixpkgs) system;}
     )
     .__unfix__
-  );
-in
-  lib.customisation.callPackageWith makes'
+  ))
