@@ -1,7 +1,4 @@
-{
-  inputs,
-  cell,
-}: let
+let
   inherit (inputs.cells.std.errors) requireInput;
   inherit (requireInput "makes" "github:fluidattacks/makes" "std.lib.dev.mkMakes") nixpkgs makes;
   inherit (nixpkgs) lib;

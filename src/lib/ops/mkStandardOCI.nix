@@ -1,7 +1,4 @@
-{
-  inputs,
-  cell,
-}: let
+let
   inherit (inputs.cells.std.errors) requireInput;
   inherit (requireInput "n2c" "github:nlewo/nix2container" "std.lib.ops.mkStandardOCI") nixpkgs dmerge n2c;
   inherit (n2c.packages) nix2container;

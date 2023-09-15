@@ -1,7 +1,4 @@
-{
-  inputs,
-  cell,
-}: let
+let
   l = inputs.nixpkgs.lib // builtins;
 in
   /*

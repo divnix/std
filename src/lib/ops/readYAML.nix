@@ -1,7 +1,4 @@
-{
-  inputs,
-  cell,
-}: let
+let
   inherit (builtins) fromJSON;
   inherit (inputs.nixpkgs) runCommand yq-go;
   inherit (inputs.nixpkgs.lib) readFile;

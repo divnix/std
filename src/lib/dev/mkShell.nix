@@ -1,7 +1,4 @@
-{
-  inputs,
-  cell,
-}: let
+let
   inherit (inputs.cells.std.errors) requireInput;
 
   inherit (requireInput "devshell" "github:numtide/devshell" "std.lib.dev.mkShell") devshell nixago;

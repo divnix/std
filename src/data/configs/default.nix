@@ -1,7 +1,4 @@
-{
-  inputs,
-  cell,
-}: let
+let
   inherit (inputs) cells;
   inherit (inputs.std) findTargets;
 
