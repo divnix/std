@@ -127,8 +127,8 @@ in
           kubectl diff ${
           if usesKustomize
           then "--kustomize"
-          else "--filename --recursive"
-        } "$manifest_path";
+          else "--recursive --filename"
+        } "$manifest_path/";
         }
 
         # GitHub case
@@ -171,8 +171,8 @@ in
           kubectl diff --server-side=true --field-manager="std-action-$(whoami)" ${
           if usesKustomize
           then "--kustomize"
-          else "--filename --recursive"
-        } "$manifest_path";
+          else "--recursive --filename"
+        } "$manifest_path/";
 
           return $?;
         }
@@ -181,8 +181,8 @@ in
           kubectl apply --server-side=true --field-manager="std-action-$(whoami)" ${
           if usesKustomize
           then "--kustomize"
-          else "--filename --recursive"
-        } "$manifest_path";
+          else "--recursive --filename"
+        } "$manifest_path/";
         }
 
         diff
