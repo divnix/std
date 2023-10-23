@@ -223,7 +223,10 @@
     },
     "haumea": {
       "inputs": {
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": [
+          "std",
+          "lib"
+        ]
       },
       "locked": {
         "lastModified": 1685133229,
@@ -419,21 +422,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1681001314,
-        "narHash": "sha256-5sDnCLdrKZqxLPK4KA8+f4A3YKO/u6ElpMILvX0g72c=",
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "rev": "367c0e1086a4eb4502b24d872cea2c7acdd557f4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "type": "github"
-      }
-    },
     "nosys": {
       "locked": {
         "lastModified": 1668010795,
@@ -546,12 +534,12 @@
       },
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-TVSN8JbeTuJxUEv6zzNHoSZ21/+HQ3uIRaRYtqcXqFs=",
-        "path": "/nix/store/i2xjj4w1rcyy5j59wgy18s1209gzsjvh-source",
+        "narHash": "sha256-XqH/66cLRYyiTlk2ob04WCeps5TFC0vyB4J+4foZBYw=",
+        "path": "/nix/store/056lk4aanlj3h831x4kj2hb1v9rgc98f-source",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/i2xjj4w1rcyy5j59wgy18s1209gzsjvh-source",
+        "path": "/nix/store/056lk4aanlj3h831x4kj2hb1v9rgc98f-source",
         "type": "path"
       }
     },
@@ -613,8 +601,7 @@
       "inputs": {
         "nixpkgs": [
           "std",
-          "haumea",
-          "nixpkgs"
+          "lib"
         ]
       },
       "locked": {
