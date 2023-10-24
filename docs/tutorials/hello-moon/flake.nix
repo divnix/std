@@ -33,7 +33,7 @@
 
         /*
         This debug facility helps you to explore what attributes are available
-        for a given input untill you get more familiar with `std`.
+        for a given input until you get more familiar with `std`.
         */
         debug = ["inputs" "std"];
       }
