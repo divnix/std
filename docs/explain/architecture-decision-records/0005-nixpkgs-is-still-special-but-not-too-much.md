@@ -15,7 +15,7 @@ accepted
 In general, Standard wouldn't treat any intput as special.
 However, no project that requires source distributions of one of the 80k+ packages available in `nixpkgs` can practically do without it.
 
-Now, `nixpkgs` has this wired and counter-intuitive mouthful of `legacyPackages`, which was originally intended to ring an alarm bell and, for the non-nix-historians, still does.
+Now, `nixpkgs` has this weird and counter-intuitive mouthful of `legacyPackages`, which was originally intended to ring an alarm bell and, for the non-nix-historians, still does.
 
 Also, not very many other package collections adopt this idiom which makes it pretty much a singularity of the Nix package collection (`nixpkgs`).
 
