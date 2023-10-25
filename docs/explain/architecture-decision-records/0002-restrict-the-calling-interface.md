@@ -16,7 +16,7 @@ The Nix Ecosystem has optimized for contributor efficiency at the expense of loc
 Over time, the `callPackage` idiom was developed that destructures arbitrary attributes of an 80k _upstream_ attributeset provided by `nixpkgs`.
 A complicating side condition is added, where overlays modify that original upstream packages set in arbitrary ways.
 This is not a problem for people, who know nixpkgs by heart and it is not a problem for the author either.
-It is a problem for the future code reader, Nix expert or less so, who needs to grasp the essence of "what's going on" under a productivity side condidion.
+It is a problem for the future code reader, Nix expert or less so, who needs to grasp the essence of "what's going on" under a productivity side condition.
 
 Local reasoning is a tried and tested strategy to help mitigate those issues.
 
