@@ -45,7 +45,7 @@ These levels correspond to the abstract organizational concepts of:
 
 With this design and despite complete freedom of concrete semantics, a prototypical mental model can be reused across different projects.
 
-That same prototypical mental model also speeds up schaffolding of new content and code.
+That same prototypical mental model also speeds up scaffolding of new content and code.
 
 At the expense of nested folders, it may still be further expanded, if additional organization is required.
 All the while that the primary meta-information about a project is properly communicated through these first three levels via the file system api, itself (think `ls` / `rg` / `fd`).
