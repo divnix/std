@@ -25,7 +25,7 @@ However, this design choice makes the lema "select early and forget" across mult
 This handling is exacerbated by the distinction between "systemized" and "non-systemized" (e.g. `lib`) output attributes.
 
 In the overall set of optimization goals of this framework, this distinction is of extraordinarily poor value, more so, that function
-calls are memoized during a single evaluation, which renders the system selector comuptationally irrelevant where not used.
+calls are memoized during a single evaluation, which renders the system selector computationally irrelevant where not used.
 
 ## Decision
 
@@ -34,7 +34,7 @@ calls are memoized during a single evaluation, which renders the system selector
 <!-- write an answer to this question below -->
 
 - Move the `system` selector from the second level to the first level.
-- Apply the `system` selector regardless and without excheption.
+- Apply the `system` selector regardless and without exception.
 
 ## Consequences
 
@@ -48,5 +48,5 @@ The Nix CLI completion won't respond gracefully to these changes.
 However, the Nix CLI is explicitly _not_ a primary target of this framework.
 The reason for this is that the use cases for the Nix CLI are somewhat skewed towards the packager use case, but in any case are (currently) not purpose built for the DevOps use case.
 
-A simple patch to the Nix binary, can mitigate this for people who's muscle memory prefers the Nix CLI regardless.
+A simple patch to the Nix binary, can mitigate this for people whose muscle memory prefers the Nix CLI regardless.
 If you've already got that level of muscle memory, its meandering scope is probably anyways not an issue for you anymore.
