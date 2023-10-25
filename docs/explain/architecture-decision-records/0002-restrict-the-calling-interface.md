@@ -33,7 +33,7 @@ Encourage local reasoning by always fully qualifing identifiers within the scope
 In order to do so, the entry level nix files of this framework have exactly one possible interface: `{inputs, cell}`.
 
 `inputs` represent the global inputs, whereas `cell` keeps reference to the local context.
-_A Cell is the first ordering priciple for "consitent collection of functionality"._
+_A Cell is the first ordering priciple for "consistent collection of functionality"._
 
 ## Consequences
 
@@ -45,10 +45,10 @@ This restricts up to the prescribed 3 layers of organization the notion of "how 
 
 That inter-files-interface is the _only_ global context to really grasp, and it is structurally aligned across all Standard projects.
 
-By virtue of this meta model of a global context and interfile-communications, for a somewhat familiarized code reader the barriers to local reasoning are greatly reduced.
+By virtue of this meta model of a global context and inter-file-communications, for a somewhat familiarized code reader the barriers to local reasoning are greatly reduced.
 
 The two context references are well known (flake inputs & cell-local blocks) and easily discoverable.
 
-For authors, this schema takes away any delay that might arise out of the consideration of how to best structure that inter-file communcation schema.
+For authors, this schema takes away any delay that might arise out of the consideration of how to best structure that inter-file-communication schema.
 
-Out of experience, a significant and low value (and ad-hoc) design process can by leap-frogged via this guidance.
+Out of experience, a significant and low value (and ad-hoc) design process can be leap-frogged via this guidance.
