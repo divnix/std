@@ -18,7 +18,7 @@ The pervasive use of `system` in the current Nix (and foremost Flakes) Ecosystem
 
 However, in the context of DevOps, while not being irrelevant, it accounts for a fair share of distraction potential.
 
-This ultimately diminuishes code-readibility and reasoning; and consequentially adoption. Especially in those code paths, where `system` is a secondary concern.
+This ultimately diminishes code-readibility and reasoning; and consequentially adoption. Especially in those code paths, where `system` is a secondary concern.
 
 ## Decision
 
