@@ -145,7 +145,7 @@ $ nix shell github:divnix/std
 $ std //local/devshells/default:enter
 ```
 
-Since we have declared the devshell Cell Block as a `blockTypes.devshells`, `std` auments it's Targets with the Block Type Actions.
+Since we have declared the devshell Cell Block as a `blockTypes.devshells`, `std` augments it's Targets with the Block Type Actions.
 
 See [`blockTypes.devshells`][blocktypes-devshells] for more details on the available Actions and their implementation.
 
