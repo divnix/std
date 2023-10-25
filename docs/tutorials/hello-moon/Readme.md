@@ -89,7 +89,7 @@ While you can explore `lib.cfg` [here][lib-cfg], let's now have a closer look at
 ```
 
 In this Cell Block, we have been modifying some built-in convenience `lib.cfg.*` pebbles.
-The way `data` is merged upon the existing pebble is via a simple left-hand-side/right-hand-site `data-merge` (`std.dmerge`).
+The way `data` is merged upon the existing pebble is via a simple left-hand-side/right-hand-side `data-merge` (`std.dmerge`).
 
 > **Background on array merge strategies:**
 >
