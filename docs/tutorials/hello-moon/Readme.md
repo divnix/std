@@ -106,8 +106,8 @@ The way `data` is merged upon the existing pebble is via a simple left-hand-side
 ## Command Line Synthesis
 
 With this configuration in place, you have a couple of options on the command line.
-Note, that you can accessor any `std` cli invocation also via the `std` TUI by just typing `std`.
-Just in case you forgot exactly how to accessor one of these repository capabilities.
+Note, that you can access any `std` cli invocation also via the `std` TUI by just typing `std`.
+Just in case you forgot exactly how to access one of these repository capabilities.
 
 > **Debug Facility:**
 >
