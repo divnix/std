@@ -44,7 +44,7 @@ What "current" means, is an early selector ("select early and forget"), usually 
 
 <!-- write an answer to this question below -->
 
-The explicit handling of `system` in foreing context, where `system` is not a primary concern is largely eliminated.
+The explicit handling of `system` in foreign contexts, where `system` is not a primary concern is largely eliminated.
 
 This makes using this framework a little easier for everybody, including packaging experts.
 
