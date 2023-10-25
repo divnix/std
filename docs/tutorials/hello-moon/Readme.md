@@ -94,7 +94,7 @@ The way `data` is merged upon the existing pebble is via a simple left-hand-side
 > **Background on array merge strategies:**
 >
 > If you know how a plain data-merge (does not magically) deal with array merge semantics, you noticed:
-> We didn't have to annotate our right-hand-side arrays in this example because we where not actually amending or modifying any left-hand-site array type data structure.
+> We didn't have to annotate our right-hand-side arrays in this example because we where not actually amending or modifying any left-hand-side array type data structure.
 >
 > Would we have done so, we would have had to annotate:
 >
