@@ -380,11 +380,11 @@ in {
 }
 </code></pre>
 <p>In this Cell Block, we have been modifying some built-in convenience <code>lib.cfg.*</code> pebbles.
-The way <code>data</code> is merged upon the existing pebble is via a simple left-hand-side/right-hand-site <code>data-merge</code> (<code>std.dmerge</code>).</p>
+The way <code>data</code> is merged upon the existing pebble is via a simple left-hand-side/right-hand-side <code>data-merge</code> (<code>std.dmerge</code>).</p>
 <blockquote>
 <p><strong>Background on array merge strategies:</strong></p>
 <p>If you know how a plain data-merge (does not magically) deal with array merge semantics, you noticed:
-We didn't have to annotate our right-hand-side arrays in this example because we where not actually amending or modifying any left-hand-site array type data structure.</p>
+We didn't have to annotate our right-hand-side arrays in this example because we where not actually amending or modifying any left-hand-side array type data structure.</p>
 <p>Would we have done so, we would have had to annotate:</p>
 <ul>
 <li>either with <code>std.dmerge.append [/* ... */]</code>;</li>
@@ -394,8 +394,8 @@ We didn't have to annotate our right-hand-side arrays in this example because we
 </blockquote>
 <h2 id="command-line-synthesis"><a class="header" href="#command-line-synthesis">Command Line Synthesis</a></h2>
 <p>With this configuration in place, you have a couple of options on the command line.
-Note, that you can accessor any <code>std</code> cli invocation also via the <code>std</code> TUI by just typing <code>std</code>.
-Just in case you forgot exactly how to accessor one of these repository capabilities.</p>
+Note, that you can access any <code>std</code> cli invocation also via the <code>std</code> TUI by just typing <code>std</code>.
+Just in case you forgot exactly how to access one of these repository capabilities.</p>
 <blockquote>
 <p><strong>Debug Facility:</strong></p>
 <p>Since the debug facility is enabled, you will see some trace output while running these commands.
@@ -421,7 +421,7 @@ That's not what you want.</p>
 $ nix shell github:divnix/std
 $ std //local/devshells/default:enter
 </code></pre>
-<p>Since we have declared the devshell Cell Block as a <code>blockTypes.devshells</code>, <code>std</code> auments it's Targets with the Block Type Actions.</p>
+<p>Since we have declared the devshell Cell Block as a <code>blockTypes.devshells</code>, <code>std</code> augments it's Targets with the Block Type Actions.</p>
 <p>See <a href="../../reference/blocktypes/devshells-blocktype.html"><code>blockTypes.devshells</code></a> for more details on the available Actions and their implementation.</p>
 <p>Thanks to the <code>cell.devshells</code>' <code>nixago</code> option, entering the devshell will also automatically reconcile the repository files under Nixago's management.</p>
 <p><strong>Explore a Nixago Pebble via <code>std</code></strong></p>
