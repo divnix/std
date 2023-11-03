@@ -223,6 +223,7 @@ in
 <pre><code class="language-nix">{
   root,
   super,
+  nixpkgs,
 }:
 /*
 Use the Installables Blocktype for targets that you want to
@@ -240,6 +241,7 @@ Available actions:
 let
   inherit (root) mkCommand actions;
   inherit (super) addSelectorFunctor;
+  l = nixpkgs.lib // builtins;
 in
   name: {
     __functor = addSelectorFunctor;
@@ -251,33 +253,41 @@ in
       fragmentRelPath,
       target,
       inputs,
-    }: [
+    }: let
+      escapedFragment = l.escapeShellArg fragment;
+    in [
       (actions.build currentSystem target)
       # profile commands require a flake ref
       (mkCommand currentSystem &quot;install&quot; &quot;install this target&quot; [] ''
         # ${target}
-        nix profile install $PRJ_ROOT#${fragment}
+        set -x
+        nix profile install &quot;$PRJ_ROOT#&quot;${escapedFragment}
       '' {})
       (mkCommand currentSystem &quot;upgrade&quot; &quot;upgrade this target&quot; [] ''
         # ${target}
-        nix profile upgrade $PRJ_ROOT#${fragment}
+        set -x
+        nix profile upgrade &quot;$PRJ_ROOT#&quot;${escapedFragment}
       '' {})
       (mkCommand currentSystem &quot;remove&quot; &quot;remove this target&quot; [] ''
         # ${target}
-        nix profile remove $PRJ_ROOT#${fragment}
+        set -x
+        nix profile remove &quot;$PRJ_ROOT#&quot;${escapedFragment}
       '' {})
       # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
       (mkCommand currentSystem &quot;bundle&quot; &quot;bundle this target&quot; [] ''
         # ${target}
-        nix bundle --bundler github:Ninlives/relocatable.nix --refresh $PRJ_ROOT#${fragment}
+        set -x
+        nix bundle --bundler github:Ninlives/relocatable.nix --refresh &quot;$PRJ_ROOT#&quot;${escapedFragment}
       '' {})
       (mkCommand currentSystem &quot;bundleImage&quot; &quot;bundle this target to image&quot; [] ''
         # ${target}
-        nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh $PRJ_ROOT#${fragment}
+        set -x
+        nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh &quot;$PRJ_ROOT#&quot;${escapedFragment}
       '' {})
       (mkCommand currentSystem &quot;bundleAppImage&quot; &quot;bundle this target to AppImage&quot; [] ''
         # ${target}
-        nix bundle --bundler github:ralismark/nix-appimage --refresh $PRJ_ROOT#${fragment}
+        set -x
+        nix bundle --bundler github:ralismark/nix-appimage --refresh &quot;$PRJ_ROOT#&quot;${escapedFragment}
       '' {})
     ];
   }
