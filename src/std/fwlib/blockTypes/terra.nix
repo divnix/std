@@ -93,5 +93,6 @@ in
       (mkCommand currentSystem "state" "tf state" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "state") {})
       (mkCommand currentSystem "refresh" "tf refresh" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "refresh") {})
       (mkCommand currentSystem "destroy" "tf destroy" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "destroy") {})
+      (mkCommand currentSystem "terraform" "pass any command to terraform" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "") {})
     ];
   }
