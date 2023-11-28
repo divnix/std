@@ -74,7 +74,7 @@ in
         MESSAGE
 
         if [[ -e "$dir/config.tf.json" ]]; then rm -f "$dir/config.tf.json"; fi
-        cp ${terraformConfiguration} "$dir/config.tf.json"
+        jq '.' ${terraformConfiguration} > "$dir/config.tf.json"
       '';
 
       wrap = cmd: ''
@@ -87,11 +87,11 @@ in
            terraform ${cmd} "$@";
       '';
     in [
-      (mkCommand currentSystem "init" "tf init" [pkgs.terraform pkgs.terraform-backend-git] (wrap "init") {})
-      (mkCommand currentSystem "plan" "tf plan" [pkgs.terraform pkgs.terraform-backend-git] (wrap "plan") {})
-      (mkCommand currentSystem "apply" "tf apply" [pkgs.terraform pkgs.terraform-backend-git] (wrap "apply") {})
-      (mkCommand currentSystem "state" "tf state" [pkgs.terraform pkgs.terraform-backend-git] (wrap "state") {})
-      (mkCommand currentSystem "refresh" "tf refresh" [pkgs.terraform pkgs.terraform-backend-git] (wrap "refresh") {})
-      (mkCommand currentSystem "destroy" "tf destroy" [pkgs.terraform pkgs.terraform-backend-git] (wrap "destroy") {})
+      (mkCommand currentSystem "init" "tf init" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "init") {})
+      (mkCommand currentSystem "plan" "tf plan" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "plan") {})
+      (mkCommand currentSystem "apply" "tf apply" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "apply") {})
+      (mkCommand currentSystem "state" "tf state" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "state") {})
+      (mkCommand currentSystem "refresh" "tf refresh" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "refresh") {})
+      (mkCommand currentSystem "destroy" "tf destroy" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "destroy") {})
     ];
   }
