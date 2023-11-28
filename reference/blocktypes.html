@@ -567,7 +567,7 @@ in
         MESSAGE
 
         if [[ -e &quot;$dir/config.tf.json&quot; ]]; then rm -f &quot;$dir/config.tf.json&quot;; fi
-        cp ${terraformConfiguration} &quot;$dir/config.tf.json&quot;
+        jq '.' ${terraformConfiguration} &gt; &quot;$dir/config.tf.json&quot;
       '';
 
       wrap = cmd: ''
@@ -580,12 +580,12 @@ in
            terraform ${cmd} &quot;$@&quot;;
       '';
     in [
-      (mkCommand currentSystem &quot;init&quot; &quot;tf init&quot; [pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;init&quot;) {})
-      (mkCommand currentSystem &quot;plan&quot; &quot;tf plan&quot; [pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;plan&quot;) {})
-      (mkCommand currentSystem &quot;apply&quot; &quot;tf apply&quot; [pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;apply&quot;) {})
-      (mkCommand currentSystem &quot;state&quot; &quot;tf state&quot; [pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;state&quot;) {})
-      (mkCommand currentSystem &quot;refresh&quot; &quot;tf refresh&quot; [pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;refresh&quot;) {})
-      (mkCommand currentSystem &quot;destroy&quot; &quot;tf destroy&quot; [pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;destroy&quot;) {})
+      (mkCommand currentSystem &quot;init&quot; &quot;tf init&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;init&quot;) {})
+      (mkCommand currentSystem &quot;plan&quot; &quot;tf plan&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;plan&quot;) {})
+      (mkCommand currentSystem &quot;apply&quot; &quot;tf apply&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;apply&quot;) {})
+      (mkCommand currentSystem &quot;state&quot; &quot;tf state&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;state&quot;) {})
+      (mkCommand currentSystem &quot;refresh&quot; &quot;tf refresh&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;refresh&quot;) {})
+      (mkCommand currentSystem &quot;destroy&quot; &quot;tf destroy&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;destroy&quot;) {})
     ];
   }
 </code></pre>
