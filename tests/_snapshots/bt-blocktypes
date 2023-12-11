@@ -329,6 +329,11 @@
         description = "tf destroy";
         name = "destroy";
       }
+      {
+        command = <derivation terraform>;
+        description = "pass any command to terraform";
+        name = "terraform";
+      }
     ];
     name = "terra";
     type = "terra";
