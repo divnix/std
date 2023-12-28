@@ -57,6 +57,12 @@ in
               lib.flip lib.pipe [
                 # metadata
                 (
+                  manifest:
+                    if manifest ? metadata.labels && manifest.metadata.labels == null
+                    then lib.recursiveUpdate manifest {metadata.labels = {};}
+                    else manifest
+                )
+                (
                   amendIfExists ["metadata"]
                   {
                     metadata.labels."app.kubernetes.io/version" = checkedRev;
