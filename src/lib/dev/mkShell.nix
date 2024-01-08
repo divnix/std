@@ -4,6 +4,11 @@ let
   inherit (requireInput "devshell" "github:numtide/devshell" "std.lib.dev.mkShell") devshell nixago;
 
   l = inputs.nixpkgs.lib // builtins;
+
+  pkgs = import inputs.nixpkgs {
+    inherit (inputs.nixpkgs) system;
+    overlays = [inputs.devshell.overlays.default];
+  };
 in
   configuration: let
     nixagoModule = {
@@ -55,6 +60,6 @@ in
           };
       };
   in
-    devshell.legacyPackages.mkShell {
+    pkgs.devshell.mkShell {
       imports = [configuration nixagoModule];
     }
