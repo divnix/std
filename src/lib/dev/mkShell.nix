@@ -7,7 +7,7 @@ let
 
   pkgs = import inputs.nixpkgs {
     inherit (inputs.nixpkgs) system;
-    overlays = [inputs.devshell.overlays.default];
+    overlays = [devshell.overlays.default];
   };
 in
   configuration: let
