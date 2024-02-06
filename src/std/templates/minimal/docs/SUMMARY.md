@@ -1,14 +1,12 @@
 # Prelude
 
-- [Introduction]()
-- [Motivation]()
-- [Target Audience]()
+- [Overview](README.md)
 
 # Section 1
 
-- [First Chapter]()
-- [Second Chapter]()
+- [First Chapter](chapter-1.md)
+- [Second Chapter](chapter-2.md)
 
-# Section 2
+# Reference
 
-- [Third Chapter]()
+- [Cell: repo](cells/repo.md)
