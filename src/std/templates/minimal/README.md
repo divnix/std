@@ -2,12 +2,18 @@
 
 <!-- Remove when done
 
-## Adatpt this template
+## Adapt this template
 
 See where to change things:
 
 ```console
 grep -r --include=\*.nix 'CONFIGURE-ME' .
+```
+
+## Generate `flake.lock` file
+
+```console
+nix flake lock
 ```
 -->
 
