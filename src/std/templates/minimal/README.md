@@ -26,7 +26,7 @@ direnv allow
 ### Change Contribution Environment
 
 ```console
-$EDITOR ./nix/repo/config.nix
+$EDITOR ./nix/repo/configs.nix
 direnv reload
 ```
 

@@ -5,11 +5,8 @@ src = "docs"
 title = "CONFIGURE-ME"
 
 [build]
-build-dir = "docs/build"
+build-dir = "docs/book"
 
-[output]
-[output.html]
-
-[output.linkcheck]
-
-[preprocessor]
+[preprocessor.paisano-preprocessor]
+before = ["links"]
+registry = ".#__std.init"
