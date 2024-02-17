@@ -16,7 +16,7 @@
   nixago = "/nix/store/cys15p6lyyhj85bk4bckn82waih2l945-source";
   nixpkgs = "/nix/store/mz6lqpbsp4h36kgahvwfrgdjzz042hpn-source";
   paisano = "/nix/store/jv5rs7mrlhkphzfkjpk6jlddi2g1nm46-source";
-  paisano-tui = "/nix/store/rk00mfikafn18rl3d17xvcc1kzn311mw-source";
+  paisano-tui = "/nix/store/d1pcq2qjaa4rba6nvr6ixhvwxcvg2748-source";
   terranix = "/nix/store/agasgh0qgqi0fxk3zzgrjvqpx6k8036c-source";
   yants = "/nix/store/np6pvhkza8grv26qypzpibwrrg7kqxkc-source";
 }
