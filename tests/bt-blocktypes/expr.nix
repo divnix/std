@@ -36,6 +36,10 @@ in
           install = "install";
           configFile = "path/to/configFile";
         };
+        nixostests = {
+          driver = "driver";
+          driverInteractive = "driverInteractive";
+        };
         microvms = {
           config.microvm.runner.foo = "42";
           config.microvm.hypervisor = "foo";
