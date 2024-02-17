@@ -2,6 +2,55 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.30.0](https://github.com/divnix/std/compare/v0.24.0-1..v0.30.0) - 2024-02-17
+#### Bug Fixes
+- **(kubectl)** diff action and differ command - ([460d53a](https://github.com/divnix/std/commit/460d53a02f290656926b85d912885496050aa62a)) - David Arnold
+- **(namaka)** snapshots can change or be generated within std - ([3dca8ed](https://github.com/divnix/std/commit/3dca8edd82ff100878ff0797f67abda629ca8686)) - pegasust
+- update the tui for faster builds and to honor lates prj-spec - ([f8e50fa](https://github.com/divnix/std/commit/f8e50faea94509a140ffaf1f9290d4f2798467da)) - David Arnold
+- for cog patch release flow - ([bb58aa6](https://github.com/divnix/std/commit/bb58aa6465e6ed1811c26f752e04ad895bc28011)) - David Arnold
+- Improve readability of terraform errors - ([9811737](https://github.com/divnix/std/commit/981173777b30972d47ee7b1a22d8bea62e72526f)) - dantefromhell
+- quoting of PRJ_PATH/fragment for installables - ([403fd2a](https://github.com/divnix/std/commit/403fd2a949c60fc358be4f7d7ecfb435960b8464)) - Peter Kolloch
+- required input lazy on lib - ([a78e6e8](https://github.com/divnix/std/commit/a78e6e88749aa794df4a44aeb2a6508976efdd72)) - David Arnold
+- cocogitto cli name in devshell menu - ([a392e57](https://github.com/divnix/std/commit/a392e57b5105bff9990d4dbab9562f2de19fb50d)) - David Arnold
+- haumea-style fined to only support scopedImport to avoid ambiguity - ([1d324dc](https://github.com/divnix/std/commit/1d324dca051d263d5e9127304b8a8b72f814b9ae)) - David Arnold
+- broken `lib` follows - ([62db3df](https://github.com/divnix/std/commit/62db3df916295dfafda87ba23b14baed1a73e360)) - li
+- ease copy paste on require input warning - ([f6e09ec](https://github.com/divnix/std/commit/f6e09ec263882498891690adb070db6fb7926c21)) - David Arnold
+- prepare for potential future changes in drv output selection fragment - ([609ea5e](https://github.com/divnix/std/commit/609ea5e46c3d386c188f23a0aede3da6ad574e06)) - David Arnold
+#### Continuous Integration
+- update nix install action on gh workflow - ([b71778b](https://github.com/divnix/std/commit/b71778b73869829e0f9ca184bc387ec036680759)) - David Arnold
+- Create flakehub-publish-tagged.yml - ([20d6292](https://github.com/divnix/std/commit/20d62929c4369aa1e32d7845f9ebea975c53b314)) - David Arnold
+#### Documentation
+- Fix typo - ([845fd29](https://github.com/divnix/std/commit/845fd2960e312be6e60f49b9f5799ac4f180a111)) - dantefromhell
+#### Features
+- **(blocktypes/namaka)** allow overriding of subdir - ([66ae24b](https://github.com/divnix/std/commit/66ae24b6086d56d535dc45df895a4773a3ccf0a6)) - pegasust
+- **(kubectl)** publish diff if on github ci as PR comment - ([16edd0f](https://github.com/divnix/std/commit/16edd0fc1e98c28180d845ef1011610f7b800976)) - David Arnold
+- add nixostests block type - ([d54ba55](https://github.com/divnix/std/commit/d54ba550ba0b68de0f3656ce0b41fb353d3f9298)) - David Arnold
+- add haumea-style target finder - ([2494dda](https://github.com/divnix/std/commit/2494dda05eb8e3237f747749144e4aa55bbbfe72)) - David Arnold
+- upd paistano tui with some a fix on targets w/ dots in the name - ([1ba107b](https://github.com/divnix/std/commit/1ba107b3a169862fb18fc0fa375866eceb850a60)) - David Arnold
+- update paisano core w/ growOn registry list merge improvement - ([0f6abce](https://github.com/divnix/std/commit/0f6abce9bea414424ddb871cfb0037f1a93d68f8)) - David Arnold
+#### Miscellaneous Chores
+- **(gh-pages)** acquire flake.lock pls - ([b4e0dd9](https://github.com/divnix/std/commit/b4e0dd99ba49f7d26a6f0f17c3c225bfed66e85d)) - pegasust
+- ensure a single lib input - ([0ce59ac](https://github.com/divnix/std/commit/0ce59ac671f041183da72e7cd5db9c6eb878e326)) - David Arnold
+- remove dead code - ([927807f](https://github.com/divnix/std/commit/927807fc745e158b05b8c7daa733b9412a6322f2)) - David Arnold
+- ref CI, change link integrity - ([46878a2](https://github.com/divnix/std/commit/46878a216b4765529d548a09f1746fc27fe47eaf)) - pegasust
+- fix gh pages - ([5e7724e](https://github.com/divnix/std/commit/5e7724eb07c8a334e1185e244bf37f4353a867cb)) - pegasust
+#### Refactoring
+- use findTargets for lib.ops - ([5c6d67b](https://github.com/divnix/std/commit/5c6d67b34c1092f73a5711717e7bac3643478696)) - David Arnold
+- use findTargets for lib.dev - ([37eed5c](https://github.com/divnix/std/commit/37eed5c593a8835758e0e09ca042129d81038d53)) - David Arnold
+- use findTargets for lib.cfg - ([e9a5684](https://github.com/divnix/std/commit/e9a56845dd7704f972c4e9a2bc2dc18141e0731f)) - David Arnold
+- use findTargets for data.configs - ([2033271](https://github.com/divnix/std/commit/20332712304177602ef232786f21c6c010ebcc40)) - David Arnold
+- mix std into the dogfood - ([9a2f54e](https://github.com/divnix/std/commit/9a2f54e0e337049f18776db46b1ae9aaa582023b)) - David Arnold
+- normalize configs - ([ba79869](https://github.com/divnix/std/commit/ba798696543776c7264c31a675da1d0636e49029)) - David Arnold
+- use local config data sets - ([6e058d7](https://github.com/divnix/std/commit/6e058d73d478c4bdefba7548ce9ed01f2d6e0f07)) - David Arnold
+- bring back config data sets - ([12b5eb8](https://github.com/divnix/std/commit/12b5eb8912abeec2de3dd10575a8c4432bb5bef8)) - David Arnold
+#### Tests
+- update snapshot with new tui source - ([4f1a213](https://github.com/divnix/std/commit/4f1a213b6fda8557edae1b56b85a574a1d7b1daf)) - David Arnold
+- add snapshot for new nixostests block type - ([edbcecd](https://github.com/divnix/std/commit/edbcecdc9b18c4824d02bd655fd865557024fb6d)) - David Arnold
+- update snapshot - ([d53faa8](https://github.com/divnix/std/commit/d53faa8a13af66086499ce9a632e2cf560180162)) - Juanjo Presa
+- review and accept new lib.cfg snapshot - ([4a52824](https://github.com/divnix/std/commit/4a528247a3253fa9d57cc7c7387c012307ca6315)) - David Arnold
+
+- - -
+
 ## [v0.24.0-1](https://github.com/divnix/std/compare/v0.23.2..v0.24.0-1) - 2023-08-15
 #### Bug Fixes
 - **(blockTypes)** don't try to be too smart with kubctl & nomad rendering - ([f0a9a55](https://github.com/divnix/std/commit/f0a9a558b23e9ab4d95907f3d0e8dc6883397cc9)) - David Arnold
