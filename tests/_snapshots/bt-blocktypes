@@ -253,6 +253,42 @@
     name = "nixago";
     type = "nixago";
   };
+  nixostests = {
+    actions = [
+      {
+        command = <derivation run>;
+        description = "run tests in headless vm";
+        name = "run";
+      }
+      {
+        command = <derivation audit-script>;
+        description = "audit the test script";
+        name = "audit-script";
+      }
+      {
+        command = <derivation run-vm>;
+        description = "run tests interactively in vm";
+        name = "run-vm";
+      }
+      {
+        command = <derivation run-vm+>;
+        description = "run tests with state from last run";
+        name = "run-vm+";
+      }
+      {
+        command = <derivation iptables+>;
+        description = "setup nat redirect 80->8080 & 443->4433";
+        name = "iptables+";
+      }
+      {
+        command = <derivation iptables->;
+        description = "remove nat redirect 80->8080 & 443->4433";
+        name = "iptables-";
+      }
+    ];
+    name = "nixostests";
+    type = "nixostests";
+  };
   nomad = {
     actions = [
       {
