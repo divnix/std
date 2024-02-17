@@ -4,7 +4,6 @@
     branch_whitelist = ["main" "release/**"];
     ignore_merge_commits = true;
     pre_bump_hooks = [
-      "echo {{version}} > ./VERSION"
       ''
         branch="$(echo "release/{{version}}" | sed 's/\.[^.]*$//')"
         if [ `git rev-parse --verify $branch 2>/dev/null` ]
@@ -15,6 +14,7 @@
           git switch -c "$branch" || exit 1
         fi
       ''
+      "echo {{version}} > ./VERSION"
     ];
     post_bump_hooks = [
       ''
