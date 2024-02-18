@@ -310,6 +310,17 @@
     name = "nomad";
     type = "nomadJobManifests";
   };
+  nvfetcher = {
+    actions = [
+      {
+        command = <derivation fetch>;
+        description = "update source";
+        name = "fetch";
+      }
+    ];
+    name = "nvfetcher";
+    type = "nvfetcher";
+  };
   pkgs = {
     cli = false;
     name = "pkgs";
