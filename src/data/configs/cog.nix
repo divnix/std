@@ -4,7 +4,7 @@
     branch_whitelist = ["main" "release/**"];
     ignore_merge_commits = true;
     pre_bump_hooks = [
-      "git pull" # ensure we're up to date with remote
+      "git stash --include-untracked && git pull && git stash pop"
       ''
         branch="$(echo "release/{{version}}" | sed 's/\.[^.]*$//')"
         if [ `git rev-parse --verify $branch 2>/dev/null` ]
