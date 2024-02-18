@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.31.0](https://github.com/divnix/std/compare/v0.30.1..v0.31.0) - 2024-02-18
+#### Bug Fixes
+- cog release data edge case - ([9e2a44f](https://github.com/divnix/std/commit/9e2a44fba0cc6b2a4b003fec30d6af67ed298a5b)) - David Arnold
+#### Features
+- add nvfetcher blocktype - ([d3873fc](https://github.com/divnix/std/commit/d3873fc31dea4c5993e42b9924bb527cb29102f4)) - David Arnold
+#### Tests
+- update snapshot with nvfetcher blocktype - ([641a116](https://github.com/divnix/std/commit/641a11668991326a4626db2dc5b7e11b34875648)) - David Arnold
+
+- - -
+
 ## [v0.30.1](https://github.com/divnix/std/compare/v0.30.0..v0.30.1) - 2024-02-18
 #### Bug Fixes
 - cog config data to always do a pull prior to release - ([998b364](https://github.com/divnix/std/commit/998b364e4afa2c1abe43793f9cbd6af3c806d811)) - David Arnold
