@@ -3,8 +3,10 @@
   std,
   nixpkgs,
 }: let
-  inherit (builtins) mapAttrs concatStringsSep seq removeAttrs;
-  inherit (nixpkgs.lib) splitString drop pipe;
+  inherit (builtins) mapAttrs concatStringsSep seq removeAttrs derivation;
+  inherit (nixpkgs.lib) splitString drop pipe optionalAttrs;
+  inherit (nixpkgs.stdenv) isLinux;
+  inherit (std) dmerge;
   trimProvisoPath = a:
     if a ? proviso
     then a // {proviso = concatStringsSep "/" (drop 4 (splitString "/" a.proviso));}
@@ -69,6 +71,29 @@
       }
       .${n}
       or (f n)) ["__functor"];
+  # fake snapshot compliance across systems
+  FakeActionsForOtherSystems = let
+    fakeDrv = name:
+      derivation {
+        inherit name;
+        system = "fake";
+        builder = "/bin/sh";
+      };
+  in
+    optionalAttrs (!isLinux) {
+      nixostests = dmerge.append [
+        {
+          command = fakeDrv "iptables+";
+          description = "setup nat redirect 80->8080 & 443->4433";
+          name = "iptables+";
+        }
+        {
+          command = fakeDrv "iptables-";
+          description = "remove nat redirect 80->8080 & 443->4433";
+          name = "iptables-";
+        }
+      ];
+    };
 in
   mapAttrs (
     n: f: let
@@ -78,14 +103,21 @@ in
       then
         bt
         // {
-          actions =
-            pipe (bt.actions {
+          actions = let
+            actions' = bt.actions {
               inherit inputs;
               currentSystem = inputs.nixpkgs.system;
               fragment = "f.r.a.g.m.e.n.t";
               fragmentRelPath = "x86/f/r/a/g/m/e/n/t";
               target = TargetsExtraData.${n} or {};
-            }) [
+            };
+            r =
+              (
+                dmerge {${n} = actions';} FakeActionsForOtherSystems
+              )
+              .${n};
+          in
+            pipe r [
               (map trimProvisoPath)
               (map evalCommand)
             ];
