@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.30.1](https://github.com/divnix/std/compare/v0.30.0..v0.30.1) - 2024-02-18
+#### Bug Fixes
+- cog config data to always do a pull prior to release - ([998b364](https://github.com/divnix/std/commit/998b364e4afa2c1abe43793f9cbd6af3c806d811)) - David Arnold
+- nixostest blocktype where iptables is a linux-only tool - ([5b69855](https://github.com/divnix/std/commit/5b69855c5071e87d4eb016a2d46cf4af3481f9c1)) - David Arnold
+#### Refactoring
+- clarify snapshot expressions code for blocktypes - ([e0ee7e8](https://github.com/divnix/std/commit/e0ee7e8410717f8e3c33cef63c7877a28324f4c3)) - David Arnold
+#### Tests
+- fake compliance with a linux snapshot on non-linux - ([2d4d940](https://github.com/divnix/std/commit/2d4d94001802c8099174f95d0b72ed69c3779ce6)) - David Arnold
+
+- - -
+
 ## [v0.30.0](https://github.com/divnix/std/compare/v0.24.0-1..v0.30.0) - 2024-02-17
 #### Bug Fixes
 - **(kubectl)** diff action and differ command - ([460d53a](https://github.com/divnix/std/commit/460d53a02f290656926b85d912885496050aa62a)) - David Arnold
