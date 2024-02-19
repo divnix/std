@@ -115,7 +115,7 @@ What is Standard made of? And how do its components contribute value?
 
 On the left side of the graphic, we show how Standard, like an onion, is build in layers:
 
-Center to Standard is [`divnix/paisano`](https://github.com/divnix/paisano).
+Center to Standard is [`divnix/paisano`](https://github.com/paisano-tui/core).
 This flake (i.e. "Nix library") implements two main abstractions: Block Types and Cells.
 
 _**Block Types**_ are not unlike Rust's traits or Golang's interfaces.
@@ -162,7 +162,7 @@ And so can CI.
 
 In fact, this is an innovation in the SDLC space:
 We can devise an implementation of a CI which, by querying Paisano's Registry, autonomously discovers all work that needs to be done.
-In order to demonstrate the value of this proposition, we made a reference implementation for GitHub Actions over at [`divnix/std-action`](https://github.com/divnix/paisano).
+In order to demonstrate the value of this proposition, we made a reference implementation for GitHub Actions over at [`divnix/std-action`](https://github.com/divnix/std-action).
 To our knowledge, this is the first and only "zero config" CI implementation based on the principles of artifact typing and code organization.
 By using these principles rather than a rigid opinionated structure, it also remains highly flexible and adapts well to the user's preferences & needs.
 
