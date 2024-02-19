@@ -432,7 +432,7 @@ Examples could be bash scripts, configuration data, platform utility code and mo
 <h3 id="standards-components-and-their-value-contribution"><a class="header" href="#standards-components-and-their-value-contribution">Standard's Components and their Value Contribution</a></h3>
 <p>What is Standard made of? And how do its components contribute value?</p>
 <p>On the left side of the graphic, we show how Standard, like an onion, is build in layers:</p>
-<p>Center to Standard is <a href="https://github.com/divnix/paisano"><code>divnix/paisano</code></a>.
+<p>Center to Standard is <a href="https://github.com/paisano-tui/core"><code>divnix/paisano</code></a>.
 This flake (i.e. &quot;Nix library&quot;) implements two main abstractions: Block Types and Cells.</p>
 <p><em><strong>Block Types</strong></em> are not unlike Rust's traits or Golang's interfaces.
 They are abstract definitions of artifact classes.
@@ -466,7 +466,7 @@ A CLI or TUI, as is bundled with Standard, or even a web user interface can cons
 <p>And so can CI.</p>
 <p>In fact, this is an innovation in the SDLC space:
 We can devise an implementation of a CI which, by querying Paisano's Registry, autonomously discovers all work that needs to be done.
-In order to demonstrate the value of this proposition, we made a reference implementation for GitHub Actions over at <a href="https://github.com/divnix/paisano"><code>divnix/std-action</code></a>.
+In order to demonstrate the value of this proposition, we made a reference implementation for GitHub Actions over at <a href="https://github.com/divnix/std-action"><code>divnix/std-action</code></a>.
 To our knowledge, this is the first and only &quot;zero config&quot; CI implementation based on the principles of artifact typing and code organization.
 By using these principles rather than a rigid opinionated structure, it also remains highly flexible and adapts well to the user's preferences &amp; needs.</p>
 <p>In summary, all these organization and typing principles enable:</p>
