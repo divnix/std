@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.31.1](https://github.com/divnix/std/compare/v0.31.0..v0.31.1) - 2024-02-19
+#### Build system
+- bump tui to v0.4.2 - go mod tidy - ([bab8c08](https://github.com/divnix/std/commit/bab8c085b92b427ca03e644bc4ef98783f62b910)) - David Arnold
+
+- - -
+
 ## [v0.31.0](https://github.com/divnix/std/compare/v0.30.1..v0.31.0) - 2024-02-18
 #### Bug Fixes
 - cog release data edge case - ([9e2a44f](https://github.com/divnix/std/commit/9e2a44fba0cc6b2a4b003fec30d6af67ed298a5b)) - David Arnold
