@@ -172,16 +172,16 @@
     "paisano-tui": {
       "flake": false,
       "locked": {
-        "lastModified": 1708207889,
-        "narHash": "sha256-nAEplUKdhmLalh/CwBDI1geO4YGkeJUFWt+jnITGjHg=",
+        "lastModified": 1708336955,
+        "narHash": "sha256-+pQNeuDe45DMxSNhSrgvivq2u+AuJmhSQ/xEYoezaqM=",
         "owner": "paisano-nix",
         "repo": "tui",
-        "rev": "387e1d6fd72c0a33f6afeba4e32577039e21b044",
+        "rev": "723a8500840392544889df7a14d0ec1dcecb7f33",
         "type": "github"
       },
       "original": {
         "owner": "paisano-nix",
-        "ref": "v0.4.1",
+        "ref": "v0.4.2",
         "repo": "tui",
         "type": "github"
       }
