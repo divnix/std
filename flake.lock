@@ -115,11 +115,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1675940568,
-        "narHash": "sha256-epG6pOT9V0kS+FUqd7R6/CWkgnZx2DMT5Veqo+y6G3c=",
+        "lastModified": 1708307464,
+        "narHash": "sha256-OloBg9ZCoPrPqy8/ZoaoRB4kza3lKhnI0LuZq5xldhg=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "6ccc4a59c3f1b56d039d93da52696633e641bc71",
+        "rev": "a332040396d7e3c47883e9c115c1da485712805e",
         "type": "github"
       },
       "original": {
@@ -172,17 +172,17 @@
     "paisano-tui": {
       "flake": false,
       "locked": {
-        "lastModified": 1708336955,
-        "narHash": "sha256-+pQNeuDe45DMxSNhSrgvivq2u+AuJmhSQ/xEYoezaqM=",
-        "owner": "paisano-nix",
-        "repo": "tui",
-        "rev": "723a8500840392544889df7a14d0ec1dcecb7f33",
+        "lastModified": 1708352293,
+        "narHash": "sha256-wPkY3RQF+2kk4N+Drsop21FnXiDQm0Dc3bQQvhOCD7U=",
+        "owner": "nazarewk",
+        "repo": "paisano-nix-tui",
+        "rev": "35117a873b02bf8c60126ee37cfb7b8537839557",
         "type": "github"
       },
       "original": {
-        "owner": "paisano-nix",
-        "ref": "v0.4.2",
-        "repo": "tui",
+        "owner": "nazarewk",
+        "ref": "fix-go-mod",
+        "repo": "paisano-nix-tui",
         "type": "github"
       }
     },

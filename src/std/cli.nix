@@ -4,7 +4,8 @@ let
 
   inherit (inputs) nixpkgs;
   inherit (nixpkgs.lib) licenses;
-in {
+in
+{
   default = cell.cli.std;
 
   std = nixpkgs.buildGoModule rec {
@@ -20,7 +21,7 @@ in {
 
     vendorHash = "sha256-S1oPselqHRIPcqDSsvdIkCwu1siQGRDHOkxWtYwa+g4=";
 
-    nativeBuildInputs = [nixpkgs.installShellFiles];
+    nativeBuildInputs = [ nixpkgs.installShellFiles ];
 
     postInstall = ''
       mv $out/bin/paisano $out/bin/${pname}

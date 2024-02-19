@@ -12,7 +12,8 @@
     paisano.inputs.nixpkgs.follows = "nixpkgs";
     paisano.inputs.yants.follows = "yants";
     paisano-tui = {
-      url = "github:paisano-nix/tui/v0.4.2";
+      #url = "github:paisano-nix/tui/v0.4.2";
+      url = "github:nazarewk/paisano-nix-tui/fix-go-mod";
       flake = false; # we're after the source code, only
     };
   };
