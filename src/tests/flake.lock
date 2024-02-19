@@ -5,6 +5,7 @@
         "flake-parts": "flake-parts",
         "haskell-flake": "haskell-flake",
         "nixpkgs": [
+          "std",
           "nixpkgs"
         ]
       },
@@ -55,6 +56,7 @@
     "devshell": {
       "inputs": {
         "nixpkgs": [
+          "std",
           "nixpkgs"
         ],
         "systems": "systems"
@@ -282,6 +284,7 @@
     "makes": {
       "inputs": {
         "nixpkgs": [
+          "std",
           "nixpkgs"
         ]
       },
@@ -303,6 +306,7 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": [
+          "std",
           "nixpkgs"
         ]
       },
@@ -324,6 +328,7 @@
       "inputs": {
         "flake-utils": "flake-utils_2",
         "nixpkgs": [
+          "std",
           "nixpkgs"
         ]
       },
@@ -348,6 +353,7 @@
           "haumea"
         ],
         "nixpkgs": [
+          "std",
           "nixpkgs"
         ]
       },
@@ -371,6 +377,7 @@
         "flake-utils": "flake-utils_3",
         "nixago-exts": [],
         "nixpkgs": [
+          "std",
           "nixpkgs"
         ]
       },
@@ -390,16 +397,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1687829761,
-        "narHash": "sha256-QRe1Y8SS3M4GeC58F/6ajz6V0ZLUVWX3ZAMgov2N3/g=",
+        "lastModified": 1708343346,
+        "narHash": "sha256-qlzHvterVRzS8fS0ophQpkh0rqw0abijHEOAKm0HmV0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "9790f3242da2152d5aa1976e3e4b8b414f4dd206",
+        "rev": "9312b935a538684049cb668885e60f15547d4c5f",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-23.05",
+        "ref": "release-23.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -467,16 +474,16 @@
     "paisano-tui": {
       "flake": false,
       "locked": {
-        "lastModified": 1694014205,
-        "narHash": "sha256-u0+T6vMznzfjDMUd01ZXQsrQPMEhMjrQwUPTFsPBR1k=",
+        "lastModified": 1708353388,
+        "narHash": "sha256-RzNQ5P4fdYYAXb5Bmazh5KLjlbeCtyMX7WNiOFsqN68=",
         "owner": "paisano-nix",
         "repo": "tui",
-        "rev": "587ab9fd07bd969d59df73bfe527b5f8a4e752d1",
+        "rev": "db1f97e3d5213e66e5c1251d23d1401d7068b5f5",
         "type": "github"
       },
       "original": {
         "owner": "paisano-nix",
-        "ref": "0.2.0",
+        "ref": "v0.4.3",
         "repo": "tui",
         "type": "github"
       }
@@ -491,7 +498,6 @@
         "n2c": "n2c",
         "namaka": "namaka",
         "nixago": "nixago",
-        "nixpkgs": "nixpkgs",
         "std": "std",
         "terranix": "terranix"
       }
@@ -521,9 +527,7 @@
         "nixago": [
           "nixago"
         ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
+        "nixpkgs": "nixpkgs",
         "paisano": "paisano",
         "paisano-tui": "paisano-tui",
         "terranix": [
@@ -534,12 +538,12 @@
       },
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-c+krYSi/VpFJZao8RSLCZmC++/r6leLsr4JlCHsT6hY=",
-        "path": "/nix/store/jy7sjazvkrr0l3v7n7905g987rfk4bw2-source",
+        "narHash": "sha256-nSZdhIb+95DduiVOTN7xgptmYMZxAKtedNRHV7NOZAI=",
+        "path": "/nix/store/9hgy6g5i6rg3n0hsg847r0jxliam480b-source",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/jy7sjazvkrr0l3v7n7905g987rfk4bw2-source",
+        "path": "/nix/store/9hgy6g5i6rg3n0hsg847r0jxliam480b-source",
         "type": "path"
       }
     },
@@ -579,6 +583,7 @@
         "bats-support": [],
         "flake-utils": "flake-utils_4",
         "nixpkgs": [
+          "std",
           "nixpkgs"
         ],
         "terranix-examples": []

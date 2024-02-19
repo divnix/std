@@ -33,6 +33,7 @@
     "devshell": {
       "inputs": {
         "nixpkgs": [
+          "std",
           "nixpkgs"
         ],
         "systems": "systems"
@@ -173,6 +174,7 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": [
+          "std",
           "nixpkgs"
         ]
       },
@@ -197,6 +199,7 @@
           "haumea"
         ],
         "nixpkgs": [
+          "std",
           "nixpkgs"
         ]
       },
@@ -220,6 +223,7 @@
         "flake-utils": "flake-utils_2",
         "nixago-exts": [],
         "nixpkgs": [
+          "std",
           "nixpkgs"
         ]
       },
@@ -239,16 +243,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1687274257,
-        "narHash": "sha256-TutzPriQcZ8FghDhEolnHcYU2oHIG5XWF+/SUBNnAOE=",
+        "lastModified": 1708343346,
+        "narHash": "sha256-qlzHvterVRzS8fS0ophQpkh0rqw0abijHEOAKm0HmV0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "2c9ecd1f0400076a4d6b2193ad468ff0a7e7fdc5",
+        "rev": "9312b935a538684049cb668885e60f15547d4c5f",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixpkgs-unstable",
+        "ref": "release-23.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -298,16 +302,16 @@
     "paisano-tui": {
       "flake": false,
       "locked": {
-        "lastModified": 1694014205,
-        "narHash": "sha256-u0+T6vMznzfjDMUd01ZXQsrQPMEhMjrQwUPTFsPBR1k=",
+        "lastModified": 1708353388,
+        "narHash": "sha256-RzNQ5P4fdYYAXb5Bmazh5KLjlbeCtyMX7WNiOFsqN68=",
         "owner": "paisano-nix",
         "repo": "tui",
-        "rev": "587ab9fd07bd969d59df73bfe527b5f8a4e752d1",
+        "rev": "db1f97e3d5213e66e5c1251d23d1401d7068b5f5",
         "type": "github"
       },
       "original": {
         "owner": "paisano-nix",
-        "ref": "0.2.0",
+        "ref": "v0.4.3",
         "repo": "tui",
         "type": "github"
       }
@@ -318,7 +322,6 @@
         "n2c": "n2c",
         "namaka": "namaka",
         "nixago": "nixago",
-        "nixpkgs": "nixpkgs",
         "std": "std"
       }
     },
@@ -350,9 +353,7 @@
         "nixago": [
           "nixago"
         ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
+        "nixpkgs": "nixpkgs",
         "paisano": "paisano",
         "paisano-tui": "paisano-tui",
         "terranix": [
@@ -363,12 +364,12 @@
       },
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-UIgHO0Th/bdamo5H3eamvjczpbnyglRbk4/xZ54g3+c=",
-        "path": "/nix/store/nmp7kyh862rsc7ghasyk660gkh536w1m-source",
+        "narHash": "sha256-zWg6A0Qk8yx7rxYeXrG0H8ETFQ6n/moii3EvH/OQR24=",
+        "path": "/nix/store/c7nj1magdflds2hxhji429g8ihqpyb3c-source",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/nmp7kyh862rsc7ghasyk660gkh536w1m-source",
+        "path": "/nix/store/c7nj1magdflds2hxhji429g8ihqpyb3c-source",
         "type": "path"
       }
     },

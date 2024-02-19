@@ -5,14 +5,14 @@
 {
   description = "The Nix Flakes framework for perfectionists with deadlines";
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/release-23.11";
   inputs.lib.url = "github:nix-community/nixpkgs.lib";
   inputs = {
     paisano.url = "github:paisano-nix/core";
     paisano.inputs.nixpkgs.follows = "nixpkgs";
     paisano.inputs.yants.follows = "yants";
     paisano-tui = {
-      url = "github:paisano-nix/tui/v0.4.2";
+      url = "github:paisano-nix/tui/v0.4.3";
       flake = false; # we're after the source code, only
     };
   };
