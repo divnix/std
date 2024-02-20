@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.32.1](https://github.com/divnix/std/compare/v0.32.0..v0.32.1) - 2024-02-20
+#### Bug Fixes
+- lefthook: run directly instead of (default) complex script - ([f01ee2e](https://github.com/divnix/std/commit/f01ee2e9324db51ce27c7f3618637665e0076998)) - Krzysztof Nazarewski
+#### Tests
+- update snapshots - ([9202c28](https://github.com/divnix/std/commit/9202c28f35706c7357c5749ba5eb92e636cdc270)) - David Arnold
+
+- - -
+
 ## [v0.32.0](https://github.com/divnix/std/compare/v0.31.1..v0.32.0) - 2024-02-19
 #### Build system
 - update nixpkgs to 23.11 - ([3404827](https://github.com/divnix/std/commit/3404827b07fcec4573a0da2c3fb9c3662ecf0c63)) - David Arnold
