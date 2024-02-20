@@ -5,6 +5,7 @@ in
   std.growOn {
     inherit inputs;
     cellsFrom = incl ./src ["local" "tests"];
+    nixpkgsConfig = {allowUnfree = true;};
     cellBlocks = with std.blockTypes; [
       ## For local use in the Standard repository
       # local

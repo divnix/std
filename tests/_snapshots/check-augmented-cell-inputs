@@ -14,9 +14,9 @@
   n2c = "/nix/store/rgd4s5ylv38p94wi6vays6wc1a0l5iyf-source";
   namaka = "/nix/store/xgzvi3baaaz9lpymfv6f1fgxfmy0ygvv-source";
   nixago = "/nix/store/cys15p6lyyhj85bk4bckn82waih2l945-source";
-  nixpkgs = "/nix/store/mz6lqpbsp4h36kgahvwfrgdjzz042hpn-source";
+  nixpkgs = "/nix/store/63dmz0d1a6fsqcnrk3bn7vwsyjx3w34l-source";
   paisano = "/nix/store/jv5rs7mrlhkphzfkjpk6jlddi2g1nm46-source";
-  paisano-tui = "/nix/store/d1pcq2qjaa4rba6nvr6ixhvwxcvg2748-source";
+  paisano-tui = "/nix/store/hffdasf025iq1lj8fnvh66yjig5arpwi-source";
   terranix = "/nix/store/agasgh0qgqi0fxk3zzgrjvqpx6k8036c-source";
   yants = "/nix/store/np6pvhkza8grv26qypzpibwrrg7kqxkc-source";
 }
