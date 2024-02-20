@@ -35,7 +35,7 @@ in
       (functions "dev")
       (functions "ops")
       (anything "cfg")
-      (nixago "configs")
+      (data "configs")
     ];
   })
   {
