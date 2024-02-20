@@ -751,29 +751,38 @@ No description
 <h6 id="definition-5"><a class="header" href="#definition-5">Definition:</a></h6>
 <pre><code class="language-nix">let
   inherit (inputs) nixpkgs;
-  l = nixpkgs.lib // builtins;
-in {
-  data = {};
-  format = &quot;yaml&quot;;
-  output = &quot;lefthook.yml&quot;;
-  packages = [nixpkgs.lefthook];
-  hook.extra = d: let
-    # Add an extra hook for adding required stages whenever the file changes
-    skip_attrs = [
+  lib = nixpkgs.lib // builtins;
+
+  mkScript = stage:
+    nixpkgs.writeScript &quot;lefthook-${stage}&quot; ''
+      #!${nixpkgs.runtimeShell}
+      [ &quot;$LEFTHOOK&quot; == &quot;0&quot; ] || ${lib.getExe nixpkgs.lefthook} run &quot;${stage}&quot; &quot;$@&quot;
+    '';
+
+  toStagesConfig = config:
+    lib.removeAttrs config [
       &quot;colors&quot;
       &quot;extends&quot;
       &quot;skip_output&quot;
       &quot;source_dir&quot;
       &quot;source_dir_local&quot;
     ];
-    stages = l.attrNames (l.removeAttrs d skip_attrs);
-    stagesStr = l.concatStringsSep &quot; &quot; stages;
-  in ''
-    # Install configured hooks
-    for stage in ${stagesStr}; do
-      ${l.getExe nixpkgs.lefthook} add -f &quot;$stage&quot;
-    done
-  '';
+in {
+  data = {};
+  format = &quot;yaml&quot;;
+  output = &quot;lefthook.yml&quot;;
+  packages = [nixpkgs.lefthook];
+  # Add an extra hook for adding required stages whenever the file changes
+  hook.extra = config:
+    lib.pipe config [
+      toStagesConfig
+      lib.attrNames
+      (lib.map (stage: ''ln -sf &quot;${mkScript stage}&quot; &quot;.git/hooks/${stage}&quot;''))
+      (stages:
+        lib.optional (stages != []) &quot;mkdir -p .git/hooks&quot;
+        ++ stages)
+      (lib.concatStringsSep &quot;\n&quot;)
+    ];
 }
 </code></pre>
 </div>
