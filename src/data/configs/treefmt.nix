@@ -1,6 +1,6 @@
 let
   inherit (inputs) nixpkgs;
-  inherit (inputs.nixpkgs) nodePackages;
+  inherit (inputs.nixpkgs) lib;
 in {
   packages = [
     nixpkgs.alejandra
@@ -12,12 +12,12 @@ in {
   data = {
     formatter = {
       nix = {
-        command = "alejandra";
+        command = lib.getExe nixpkgs.alejandra;
         includes = ["*.nix"];
       };
       prettier = {
-        command = "prettier";
-        options = ["--plugin" "${nodePackages.prettier-plugin-toml}/lib/node_modules/prettier-plugin-toml/lib/api.js" "--write"];
+        command = lib.getExe nixpkgs.nodePackages.prettier;
+        options = ["--plugin" "${nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules/prettier-plugin-toml/lib/api.js" "--write"];
         includes = [
           "*.css"
           "*.html"
@@ -33,7 +33,7 @@ in {
         ];
       };
       shell = {
-        command = "shfmt";
+        command = lib.getExe nixpkgs.shfmt;
         options = ["-i" "2" "-s" "-w"];
         includes = ["*.sh"];
       };
