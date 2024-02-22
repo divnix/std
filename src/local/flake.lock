@@ -286,15 +286,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1693982790,
-        "narHash": "sha256-WTZYlqGUjzzz/PSzcvjEZz2kkwYSXObjeQVrFBaqa2Y=",
+        "lastModified": 1708640854,
+        "narHash": "sha256-EpcAmvIS4ErqhXtVEfd2GPpU/E/s8CCRSfYzk6FZ/fY=",
         "owner": "paisano-nix",
         "repo": "core",
-        "rev": "3e897a19418361ece34841105122ed4f9379ca96",
+        "rev": "adcf742bc9463c08764ca9e6955bd5e7dcf3a3fe",
         "type": "github"
       },
       "original": {
         "owner": "paisano-nix",
+        "ref": "0.2.0",
         "repo": "core",
         "type": "github"
       }
@@ -302,16 +303,16 @@
     "paisano-tui": {
       "flake": false,
       "locked": {
-        "lastModified": 1708353388,
-        "narHash": "sha256-RzNQ5P4fdYYAXb5Bmazh5KLjlbeCtyMX7WNiOFsqN68=",
+        "lastModified": 1708637035,
+        "narHash": "sha256-R19YURSK+MY/Rw6FZnojQS9zuDh+OoTAyngQAjjoubc=",
         "owner": "paisano-nix",
         "repo": "tui",
-        "rev": "db1f97e3d5213e66e5c1251d23d1401d7068b5f5",
+        "rev": "231761b260587a64817e4ffae3afc15defaa15db",
         "type": "github"
       },
       "original": {
         "owner": "paisano-nix",
-        "ref": "v0.4.3",
+        "ref": "v0.5.0",
         "repo": "tui",
         "type": "github"
       }
@@ -364,12 +365,12 @@
       },
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-HZ8yRhPUeEr0GrFM/giZ7VjXZTCJrlpxx9Sg6RjPApw=",
-        "path": "/nix/store/fhqwdq6a9v2fwdh1141l0jaybqm83pjx-source",
+        "narHash": "sha256-xVvvc7GVV1K0E4jcNyq2YIlgbdiEeZQa5/Lw2qr/EAI=",
+        "path": "/nix/store/zbfzfy7l2av5b3ddnrcf1grn04863ffd-source",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/fhqwdq6a9v2fwdh1141l0jaybqm83pjx-source",
+        "path": "/nix/store/zbfzfy7l2av5b3ddnrcf1grn04863ffd-source",
         "type": "path"
       }
     },
