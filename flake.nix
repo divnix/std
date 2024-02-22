@@ -8,11 +8,11 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/release-23.11";
   inputs.lib.url = "github:nix-community/nixpkgs.lib";
   inputs = {
-    paisano.url = "github:paisano-nix/core";
+    paisano.url = "github:paisano-nix/core/0.2.0";
     paisano.inputs.nixpkgs.follows = "nixpkgs";
     paisano.inputs.yants.follows = "yants";
     paisano-tui = {
-      url = "github:paisano-nix/tui/v0.4.3";
+      url = "github:paisano-nix/tui/v0.5.0";
       flake = false; # we're after the source code, only
     };
   };

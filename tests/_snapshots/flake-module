@@ -65,10 +65,12 @@
                     {
                       description = "build it";
                       name = "build";
+                      requiresArgs = false;
                     }
                     {
                       description = "enter this devshell";
                       name = "enter";
+                      requiresArgs = false;
                     }
                   ];
                   name = "default";
@@ -91,10 +93,12 @@
                     {
                       description = "build it";
                       name = "build";
+                      requiresArgs = false;
                     }
                     {
                       description = "enter this devshell";
                       name = "enter";
+                      requiresArgs = false;
                     }
                   ];
                   name = "default";
@@ -117,10 +121,12 @@
                     {
                       description = "build it";
                       name = "build";
+                      requiresArgs = false;
                     }
                     {
                       description = "enter this devshell";
                       name = "enter";
+                      requiresArgs = false;
                     }
                   ];
                   name = "default";
@@ -143,10 +149,12 @@
                     {
                       description = "build it";
                       name = "build";
+                      requiresArgs = false;
                     }
                     {
                       description = "enter this devshell";
                       name = "enter";
+                      requiresArgs = false;
                     }
                   ];
                   name = "default";
