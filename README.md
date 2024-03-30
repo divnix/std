@@ -179,7 +179,7 @@ This [GitHub search query](https://github.com/search?q=%22divnix%2Fstd%22+path%3
 Please enter the contribution environment:
 
 ```console
-direnv allow || nix develop -c "$SHELL
+direnv allow || nix develop -c "$SHELL"
 ```
 
 ## Licenses
