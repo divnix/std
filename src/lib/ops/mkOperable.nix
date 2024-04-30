@@ -66,21 +66,20 @@ in
         exec ${runtimeShellBin}
       '';
     };
+    drv = cell.ops.writeScript ({
+        inherit runtimeInputs runtimeEnv;
+        name = "operable-${l.getName package}";
+        text = ''
+          ${runtimeScript}
+        '';
+      }
+      // l.optionalAttrs (runtimeShell != null) {
+        inherit runtimeShell;
+      });
   in
     cell.ops.lazyDerivation {
-      inherit meta;
-      derivation =
-        cell.ops.writeScript
-        ({
-            inherit runtimeInputs runtimeEnv;
-            name = "operable-${l.getName package}";
-            text = ''
-              ${runtimeScript}
-            '';
-          }
-          // l.optionalAttrs (runtimeShell != null) {
-            inherit runtimeShell;
-          });
+      meta = meta // {inherit (drv.meta) mainProgramm;};
+      derivation = drv;
       passthru =
         # These attributes are useful for informing later stages
         {

@@ -1,5 +1,5 @@
 let
-  inherit (inputs) nixpkgs std;
+  inherit (inputs) nixpkgs;
   l = nixpkgs.lib // builtins;
 in
   {
