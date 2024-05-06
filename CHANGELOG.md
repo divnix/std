@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.33.1](https://github.com/divnix/std/compare/v0.33.0..v0.33.1) - 2024-05-06
+#### Bug Fixes
+- arion input overloading alert - ([807a743](https://github.com/divnix/std/commit/807a743fa014e2aa8cc0c0d21a65ea688a8b61ab)) - David
+- operable main programm meta - ([23a1aba](https://github.com/divnix/std/commit/23a1aba8256b42b00ada359d561139c8f2cc5445)) - David
+#### Miscellaneous Chores
+- fix typo on contribution instructions - ([37cbf2f](https://github.com/divnix/std/commit/37cbf2f9cadfdbf0a96d22881d8aa383d5bfdd67)) - 0fie
+
+- - -
+
 ## [v0.33.0](https://github.com/divnix/std/compare/v0.32.1..v0.33.0) - 2024-02-22
 #### Bug Fixes
 - blocktype of stock data - ([151ecce](https://github.com/divnix/std/commit/151ecce8eecc8d0fd15d9fcd75d59a45ebdcd7ee)) - David Arnold
