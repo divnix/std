@@ -1,6 +1,6 @@
 let
   inherit (inputs.cells.std.errors) requireInput;
-  inherit (requireInput "makes" "github:fluidattacks/makes" "std.lib.dev.mkMakes") arion nixpkgs;
+  inherit (requireInput "arion" "github:hercules-ci/arion" "std.lib.dev.mkArion") arion nixpkgs;
 
   inherit (nixpkgs) lib;
 
