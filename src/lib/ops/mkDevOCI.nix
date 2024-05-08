@@ -31,6 +31,7 @@ in
   config: Additional options to pass to nix2container.buildImage's config.
   options: Additional options to pass to nix2container.buildImage.
   preLoadStorePaths: A list of store paths to preload/copy into the container.
+  maxLayers: Number of layers to use during nix2container.buildLayer.
 
   Returns:
   An OCI container image (created with nix2container).
@@ -50,6 +51,7 @@ in
     labels ? {},
     config ? {},
     options ? {},
+    maxLayers ? 100,
   }: let
     # vscode defaults to "vscode" as the user
     user' =
@@ -227,7 +229,7 @@ in
             # Required for fetching additional packages
             nixpkgs.cacert
           ];
-          maxLayers = 100;
+          inherit maxLayers;
         })
       ];
 
