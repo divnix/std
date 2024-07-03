@@ -88,10 +88,9 @@ in
       '';
 
     users = cell.ops.mkUser {
+      inherit uid gid;
       user = "nobody";
       group = "nogroup";
-      uid = "65534";
-      gid = "65534";
       withRoot = true;
       withHome = true;
     };
