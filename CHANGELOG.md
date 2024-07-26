@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.33.3](https://github.com/divnix/std/compare/v0.33.2..v0.33.3) - 2024-07-26
+
+- - -
+
 ## [v0.33.2](https://github.com/divnix/std/compare/v0.33.1..v0.33.2) - 2024-07-26
 
 - - -
