@@ -15,7 +15,6 @@ in
   */
   name: perms: contents: let
     setup = nixpkgs.runCommand "oci-setup-${name}" {} contents;
-    perms' = l.map (p: p // {path = setup;}) perms;
   in
     setup
-    // l.optionalAttrs (perms != []) {passthru.perms = perms';}
+    // l.optionalAttrs (perms != []) {passthru = {inherit perms;};}

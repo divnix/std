@@ -73,19 +73,12 @@ in
       else operable;
 
     inherit (nixpkgs.dockerTools) caCertificates;
-    setupLinks =
-      cell.ops.mkSetup "links" [
-        {
-          regex = "/bin";
-          mode = "0555";
-        }
-      ] ''
-        mkdir -p $out/bin
-        ${runtimeEntryLink}
-        ${debugEntryLink}
-        ${livenessLink}
-        ${readinessLink}
-      '';
+    extraSetupLinks = ''
+      ${runtimeEntryLink}
+      ${debugEntryLink}
+      ${livenessLink}
+      ${readinessLink}
+    '';
 
     users = cell.ops.mkUser {
       inherit uid gid;
@@ -128,8 +121,9 @@ in
                 ++ (l.optionals hasReadinessProbe [(nix2container.buildLayer {deps = [readinessProbe];})]);
             })
           ];
-          setup = prepend [setupLinks users nss];
-          options.copyToRoot = append [tmp caCertificates];
+          setup = prepend [users nss caCertificates];
+          inherit extraSetupLinks;
+          options.copyToRoot = append [tmp];
           perms = prepend [
             {
               path = tmp;
