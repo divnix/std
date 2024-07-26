@@ -78,7 +78,7 @@ in
       });
   in
     cell.ops.lazyDerivation {
-      meta = meta // {inherit (drv.meta) mainProgramm;};
+      meta = meta // {inherit (drv.meta) mainProgram;};
       derivation = drv;
       passthru =
         # These attributes are useful for informing later stages
