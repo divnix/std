@@ -32,6 +32,7 @@ in
       then l.head meta.tags
       else null,
     setup ? [],
+    extraSetupLinks ? "",
     layers ? [],
     runtimeInputs ? [],
     uid ? "65534",
@@ -45,7 +46,19 @@ in
     setupLinks = cell.ops.mkSetup "links" [] ''
       mkdir -p $out/bin
       ln -s ${l.getExe entrypoint} $out/bin/entrypoint
+      ${extraSetupLinks}
     '';
+
+    root = nixpkgs.buildEnv {
+      name = "root";
+      paths =
+        setup
+        ++ [
+          # trick `buildEnv` and prevent the $out`/bin` to be a symlink
+          (nixpkgs.runCommand "setupDirs" {} "mkdir -p $out/bin")
+          setupLinks
+        ];
+    };
 
     image =
       l.throwIf (args ? tag && meta ? tags)
@@ -73,23 +86,7 @@ in
             ++ layers;
 
           maxLayers = 25;
-          copyToRoot =
-            [
-              (nixpkgs.buildEnv {
-                name = "root";
-                paths =
-                  setup
-                  ++ [
-                    # trick `buildEnv` and prevent the $out`/bin` to be a symlink
-                    (nixpkgs.runCommand "setupDirs" {}
-                      ''
-                        mkdir -p $out/bin
-                      '')
-                    setupLinks
-                  ];
-              })
-            ]
-            ++ options.copyToRoot or [];
+          copyToRoot = [root] ++ options.copyToRoot or [];
 
           config = l.recursiveUpdate config {
             User = uid;
@@ -99,7 +96,14 @@ in
           };
 
           # Setup tasks can include permissions via the passthru.perms attribute
-          perms = l.flatten ((l.map (s: l.optionalAttrs (s ? passthru && s.passthru ? perms) s.passthru.perms)) setup) ++ perms;
+          perms =
+            l.flatten ((l.map (
+                s:
+                  l.optionals (s ? passthru && s.passthru ? perms)
+                  (l.map (p: p // {path = root;}) s.passthru.perms)
+              ))
+              setup)
+            ++ perms;
         }
       );
   in let
