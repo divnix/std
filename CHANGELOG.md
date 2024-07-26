@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.33.2](https://github.com/divnix/std/compare/v0.33.1..v0.33.2) - 2024-07-26
+
+- - -
+
 ## [v0.33.1](https://github.com/divnix/std/compare/v0.33.0..v0.33.1) - 2024-05-06
 #### Bug Fixes
 - arion input overloading alert - ([807a743](https://github.com/divnix/std/commit/807a743fa014e2aa8cc0c0d21a65ea688a8b61ab)) - David
