@@ -80,7 +80,7 @@ in
       wrap = cmd:
         setup
         + (
-          (pkgs.lib.optionalString cmd == "plan") (
+          (pkgs.lib.optionalString (cmd == "plan")) (
             postDiffToGitHubSnippet cmd ''
               terraform-backend-git git \
                  --dir "$dir" \
