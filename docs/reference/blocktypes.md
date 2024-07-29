@@ -82,3 +82,68 @@ _Note: while the implementation is the same as `functions`, the semantics are di
 ```nix
 {{#include ../../src/std/fwlib/blockTypes/anything.nix}}
 ```
+
+## Kubectl
+
+Block type for rendering deployment manifests for the [Kubernetes] Cluster scheduler.
+Each named attribtute-set under the block contains a set of deployment manifests.
+
+[Kubernetes]: https://kubernetes.io
+
+```nix
+{{#include ../../src/std/fwlib/blockTypes/kubectl.nix}}
+```
+
+## Files (todo: vs data)
+
+```nix
+{{#include ../../src/std/fwlib/blockTypes/files.nix}}
+```
+
+## Microvms
+
+Block type for managing [microvm.nix] configuration for declaring lightweight NixOS virtual machines.
+
+[microvm.nix]: https://astro.github.io/microvm.nix
+
+```nix
+{{#include ../../src/std/fwlib/blockTypes/microvms.nix}}
+```
+
+## Namaka
+
+Block type for declaring [Namaka] snapshot tests.
+
+[Namaka]: https://github.com/nix-community/namaka
+
+```nix
+{{#include ../../src/std/fwlib/blockTypes/namaka.nix}}
+```
+
+## Nixostests
+
+Block type for declaring VM-based tests for NixOS.
+
+```nix
+{{#include ../../src/std/fwlib/blockTypes/nixostests.nix}}
+```
+
+## Nomad
+
+Block type for rendering job descriptions for the [Nomad] Cluster scheduler.
+
+[Nomad]: https://www.nomadproject.io/
+
+```nix
+{{#include ../../src/std/fwlib/blockTypes/nomad.nix}}
+```
+
+## Nvfetcher
+
+Block type for managing [nvfetcher] configuration for updating package definition sources.
+
+[nvfetcher]: https://github.com/berberman/nvfetcher
+
+```nix
+{{#include ../../src/std/fwlib/blockTypes/nvfetcher.nix}}
+```
