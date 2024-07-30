@@ -1,7 +1,9 @@
-_: cmd: script: ''
+_: path: cmd: script: ''
   # GitHub case
 
   if [[ -v CI ]] && [[ -v BRANCH ]] && [[ -v OWNER_AND_REPO ]] && command gh > /dev/null ; then
+
+  gh pr view "$BRANCH" >/dev/null || exit 0
 
   set +e # diff exits 1 if diff existed
 
@@ -10,7 +12,7 @@ _: cmd: script: ''
 
   This PR would generate the following \`${cmd}\` diff:
 
-  <details><summary>Preview</summary>
+  <details><summary>${path}</summary>
 
   \`\`\`diff
   $(${script})
@@ -21,11 +23,8 @@ _: cmd: script: ''
 
   set -e # we're past the invocation of diff
 
-  if ! gh pr --repo "$OWNER_AND_REPO" comment "$BRANCH" --edit-last -b "$DIFFSTREAM"; then
-    echo "Make a first post ..."
-    gh pr --repo "$OWNER_AND_REPO" comment "$BRANCH" -b "$DIFFSTREAM"
-  fi
-
+  gh pr --repo "$OWNER_AND_REPO" comment "$BRANCH" -b "$DIFFSTREAM"
+  
   exit 0
 
   fi

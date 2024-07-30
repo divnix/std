@@ -79,28 +79,26 @@ in
 
       wrap = cmd:
         setup
-        + (
-          (pkgs.lib.optionalString (cmd == "plan")) (
-            postDiffToGitHubSnippet cmd ''
-              terraform-backend-git git \
-                 --dir "$dir" \
-                 --repository ${git.repo} \
-                 --ref ${git.ref} \
-                 --state ${git.state} \
-                 terraform plan \
-                   -lock=false \
-                   -no-color
-            ''
-          )
-        )
         + ''
           terraform-backend-git git \
              --dir "$dir" \
              --repository ${git.repo} \
              --ref ${git.ref} \
              --state ${git.state} \
-             terraform ${cmd} "$@";
-        '';
+             terraform ${cmd} ${pkgs.lib.optionalString (cmd == "plan") "-out=\"$dir/plan\""} "$@";
+        ''
+        + (
+          (pkgs.lib.optionalString (cmd == "plan")) (
+            postDiffToGitHubSnippet fragmentRelPath cmd ''
+              terraform-backend-git git \
+                --dir "$dir" \
+                --repository ${git.repo} \
+                --ref ${git.ref} \
+                --state ${git.state} \
+                terraform show -no-color "$dir/plan"
+            ''
+          )
+        );
     in [
       (mkCommand currentSystem "init" "tf init" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "init") {})
       (mkCommand currentSystem "plan" "tf plan" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "plan") {})
