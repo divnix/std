@@ -3,7 +3,7 @@
   super,
 }:
 /*
-Use the nvfetcher Blocktype in order to instrucement sources
+Use the nvfetcher Blocktype in order to generate package sources
 with nvfetcher. See its docs for more details.
 
 Available actions:
