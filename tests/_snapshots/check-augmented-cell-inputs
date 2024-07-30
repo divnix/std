@@ -7,14 +7,14 @@
   dmerge = "/nix/store/8b67fxqldqv1x3x07nhabb9ild2zl6rz-source";
   flake-parts = "/nix/store/jiyanhix45y0a7m9nsrng44yjzrp79m9-source";
   haumea = "/nix/store/ih873qmabdsdgk1naaiv6v7jy1mxq241-source";
-  incl = "/nix/store/4dqlpd9c8yil4ay4prr38vslxhpsp4zp-source";
-  lib = "/nix/store/2rv5rbn68fjpc2lhs7wyxyisa4vyxn6a-source";
+  incl = "/nix/store/9yriyvqkcvhqwizwdbsblk3pp0dkgim2-source";
+  lib = "/nix/store/0vvdgp2wdj9q0kqgakgax3bwhkd152rx-source";
   makes = "/nix/store/71rzg7vs53gmxqph64d9zqf4ns928c6c-source";
   microvm = "/nix/store/v5za7dzczgcvfvqgcm80qari3msyhw6b-source";
   n2c = "/nix/store/rgd4s5ylv38p94wi6vays6wc1a0l5iyf-source";
   namaka = "/nix/store/xgzvi3baaaz9lpymfv6f1fgxfmy0ygvv-source";
   nixago = "/nix/store/cys15p6lyyhj85bk4bckn82waih2l945-source";
-  nixpkgs = "/nix/store/63dmz0d1a6fsqcnrk3bn7vwsyjx3w34l-source";
+  nixpkgs = "/nix/store/g8zzlf6drg73c987ii390yicq4c0j778-source";
   paisano = "/nix/store/4v8nn2z2vl74yz1557n1dha3l7rzzbgs-source";
   paisano-tui = "/nix/store/rdrvzcs8j77fccnkky6p2sagc0d49hyy-source";
   terranix = "/nix/store/agasgh0qgqi0fxk3zzgrjvqpx6k8036c-source";
