@@ -698,6 +698,541 @@ name: {
   type = "anything";
 }
 </code></pre>
+<h2 id="kubectl"><a class="header" href="#kubectl">Kubectl</a></h2>
+<p>Block type for rendering deployment manifests for the <a href="https://kubernetes.io">Kubernetes</a> Cluster scheduler.
+Each named attribtute-set under the block contains a set of deployment manifests.</p>
+<pre><code class="language-nix">{
+  trivial,
+  root,
+  super,
+  dmerge,
+}:
+/*
+Use the `kubectl` Blocktype for rendering deployment manifests
+for the Kubernetes Cluster scheduler. Each named attribtute-set under the
+block contains a set of deployment manifests.
+
+Available actions:
+  - render
+  - deploy
+  - explore
+*/
+let
+  inherit (root) mkCommand;
+  inherit (super) addSelectorFunctor askUserToProceedSnippet;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = "kubectl";
+
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+      inputs,
+    }: let
+      inherit (inputs.nixpkgs) lib;
+      pkgs = inputs.nixpkgs.${currentSystem};
+      triv = trivial.${currentSystem};
+
+      manifest_path = fragmentRelPath;
+
+      checkedRev = inputs.std.std.errors.bailOnDirty ''
+        Will not render manifests from a dirty tree.
+        Otherwise we cannot keep good track of deployment history.''
+      inputs.self.rev;
+
+      usesKustomize = target ? kustomization || target ? Kustomization;
+
+      augment = let
+        amendIfExists = path: rhs: manifest:
+          if true == lib.hasAttrByPath path manifest
+          then amendAlways rhs manifest
+          else manifest;
+
+        amendAlways = rhs: manifest: dmerge manifest rhs;
+      in
+        target:
+          lib.mapAttrs (
+            key:
+              lib.flip lib.pipe [
+                # metadata
+                (
+                  manifest:
+                    if manifest ? metadata.labels &amp;&amp; manifest.metadata.labels == null
+                    then lib.recursiveUpdate manifest {metadata.labels = {};}
+                    else manifest
+                )
+                (
+                  amendIfExists ["metadata"]
+                  {
+                    metadata.labels."app.kubernetes.io/version" = checkedRev;
+                    metadata.labels."app.kubernetes.io/managed-by" = "std-kubectl";
+                  }
+                )
+                (
+                  if usesKustomize &amp;&amp; (key == "kustomization" || key == "Kustomization")
+                  # ensure a kustomization picks up the preprocessed resources
+                  then
+                    (manifest:
+                      manifest
+                      // {
+                        resources =
+                          map
+                          (n: "${n}.json")
+                          (builtins.attrNames (builtins.removeAttrs target ["meta" "Kustomization" "kustomization"]));
+                      })
+                  else lib.id
+                )
+              ]
+          ) (builtins.removeAttrs target ["meta"]);
+
+      generateManifests = target: let
+        writeManifest = name: manifest:
+          builtins.toFile name (builtins.unsafeDiscardStringContext (builtins.toJSON manifest));
+
+        renderManifests = lib.mapAttrsToList (name: manifest: ''
+          cp ${writeManifest name manifest} ${
+            if name == "kustomization" || name == "Kustomization"
+            then "Kustomization"
+            else "${name}.json"
+          }
+        '');
+      in
+        triv.runCommandLocal "generate-k8s-manifests" {} ''
+          mkdir -p $out
+          cd $out
+          ${lib.concatStrings (renderManifests (augment target))}
+        '';
+
+      build = ''
+        declare manifest_path="$PRJ_DATA_HOME/${manifest_path}"
+        build() {
+          echo "Buiding manifests..."
+          echo
+          rm -rf "$manifest_path"
+          mkdir -p "$(dirname "$manifest_path")"
+          ln -s "${generateManifests target}" "$manifest_path"
+          echo "Manifests built in: $manifest_path"
+        }
+      '';
+    in [
+      /*
+      The `render` action will take this Nix manifest descrition, convert it to JSON,
+      inject the git revision validate the manifest, after which it can be run or
+      planned with the kubectl cli or the `deploy` action.
+      */
+      (mkCommand currentSystem "render" "Build the JSON manifests" [] ''
+        ${build}
+        build
+      '' {})
+      (mkCommand currentSystem "diff" "Diff the manifests against the cluster" [pkgs.kubectl pkgs.icdiff] ''
+        ${build}
+        build
+
+        diff() {
+          kubectl diff ${
+          if usesKustomize
+          then "--kustomize"
+          else "--recursive --filename"
+        } "$manifest_path/";
+        }
+
+        # GitHub case
+        if [[ -v CI ]] &amp;&amp; [[ -v BRANCH ]] &amp;&amp; [[ -v OWNER_AND_REPO ]] &amp;&amp; command gh &gt; /dev/null ; then
+
+          set +e # diff exits 1 if diff existed
+          read -r -d "" DIFFSTREAM &lt;&lt;DIFF
+        ## Standard DiffPost
+
+        This PR would generate the following \`kubectl\` diff:
+
+        &lt;details&gt;&lt;summary&gt;Preview&lt;/summary&gt;
+
+        \`\`\`diff
+        $(diff)
+        \`\`\`
+
+        &lt;/details&gt;
+        DIFF
+          set -e # we're past the invocation of diff
+
+          if ! gh pr --repo "$OWNER_AND_REPO" comment "$BRANCH" --edit-last -b "$DIFFSTREAM"; then
+            echo "Make a first post ..."
+            gh pr --repo "$OWNER_AND_REPO" comment "$BRANCH" -b "$DIFFSTREAM"
+          fi
+        else
+          KUBECTL_EXTERNAL_DIFF="icdiff -N -r"
+          export KUBECTL_EXTERNAL_DIFF
+          diff
+        fi
+      '' {})
+      (mkCommand currentSystem "apply" "Apply the manifests to K8s" [pkgs.kubectl pkgs.icdiff] ''
+        ${build}
+        build
+
+        KUBECTL_EXTERNAL_DIFF="icdiff -N -r"
+        export KUBECTL_EXTERNAL_DIFF
+
+        diff() {
+          kubectl diff --server-side=true --field-manager="std-action-$(whoami)" ${
+          if usesKustomize
+          then "--kustomize"
+          else "--recursive --filename"
+        } "$manifest_path/";
+
+          return $?;
+        }
+
+        run() {
+          kubectl apply --server-side=true --field-manager="std-action-$(whoami)" ${
+          if usesKustomize
+          then "--kustomize"
+          else "--recursive --filename"
+        } "$manifest_path/";
+        }
+
+        diff
+        ret=$?
+        if [[ $ret == 0 ]] || [[ $ret == 1 ]]; then
+          ${askUserToProceedSnippet "apply" "run"}
+        fi
+      '' {})
+      (mkCommand currentSystem "explore" "Interactively explore the manifests" [pkgs.fx] ''
+        fx ${
+          builtins.toFile "explore-k8s-manifests.json"
+          (builtins.unsafeDiscardStringContext (builtins.toJSON (augment target)))
+        }
+      '' {})
+    ];
+  }
+</code></pre>
+<h2 id="files-todo-vs-data"><a class="header" href="#files-todo-vs-data">Files (todo: vs data)</a></h2>
+<pre><code class="language-nix">{root}:
+/*
+Use the Files Blocktype for any text data.
+
+Available actions:
+  - explore
+*/
+let
+  inherit (root) mkCommand;
+in
+  name: {
+    inherit name;
+    type = "files";
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+      inputs,
+    }: let
+      file = toString target;
+      pkgs = inputs.nixpkgs.${currentSystem};
+    in [
+      (mkCommand currentSystem "explore" "interactively explore with bat" [pkgs.bat] ''
+        bat ${file}
+      '' {})
+    ];
+  }
+</code></pre>
+<h2 id="microvms"><a class="header" href="#microvms">Microvms</a></h2>
+<p>Block type for managing <a href="https://astro.github.io/microvm.nix">microvm.nix</a> configuration for declaring lightweight NixOS virtual machines.</p>
+<pre><code class="language-nix">{root}:
+/*
+Use the Microvms Blocktype for Microvm.nix - https://github.com/astro/microvm.nix
+
+Available actions:
+  - run
+  - console
+  - microvm
+*/
+let
+  inherit (root) mkCommand;
+in
+  name: {
+    inherit name;
+    type = "microvms";
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+      inputs,
+    }: [
+      (mkCommand currentSystem "run" "run the microvm" [] ''
+        ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-run
+      '' {})
+      (mkCommand currentSystem "console" "enter the microvm console" [] ''
+        ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-console
+      '' {})
+      (mkCommand currentSystem "microvm" "pass any command to microvm" [] ''
+        ${target.config.microvm.runner.${target.config.microvm.hypervisor}}/bin/microvm-"$@"
+      '' {})
+    ];
+  }
+</code></pre>
+<h2 id="namaka"><a class="header" href="#namaka">Namaka</a></h2>
+<p>Block type for declaring <a href="https://github.com/nix-community/namaka">Namaka</a> snapshot tests.</p>
+<pre><code class="language-nix">{
+  root,
+  super,
+}: let
+  inherit (root) mkCommand;
+  inherit (super) addSelectorFunctor;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = "namaka";
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+      inputs,
+    }: let
+      pkg = inputs.namaka.packages.${currentSystem}.default;
+      subdir = target.snap-dir or "";
+    in [
+      (mkCommand currentSystem "eval" "use transparently with namaka cli" [] ''
+        nix eval '.#${fragment}'
+      '' {})
+      (mkCommand currentSystem "check" "run namaka tests against snapshots" [pkg] ''
+        namaka ${subdir} check -c nix eval '.#${fragment}'
+      '' {})
+      (mkCommand currentSystem "review" "review pending namaka checks" [pkg] ''
+        namaka ${subdir} review -c nix eval '.#${fragment}'
+      '' {})
+      (mkCommand currentSystem "clean" "clean up pending namaka checks" [pkg] ''
+        namaka ${subdir} clean -c nix eval '.#${fragment}'
+      '' {})
+    ];
+  }
+</code></pre>
+<h2 id="nixostests"><a class="header" href="#nixostests">Nixostests</a></h2>
+<p>Block type for declaring VM-based tests for NixOS.</p>
+<pre><code class="language-nix">{
+  root,
+  super,
+}:
+/*
+Use the NixosTests Blocktype in order to instrucement nixos
+vm-based test inside your reporisory.
+
+Available actions:
+  - run
+  - run-vm
+  - audit-script
+  - run-vm-+
+*/
+let
+  inherit (root) mkCommand actions;
+  inherit (super) addSelectorFunctor;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = "nixostests";
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+      inputs,
+    }: let
+      pkgs = inputs.nixpkgs.${currentSystem};
+      inherit (pkgs) lib;
+      inherit (pkgs.stdenv) isLinux;
+    in
+      [
+        (mkCommand currentSystem "run" "run tests in headless vm" [] ''
+          # ${target.driver}
+          ${target.driver}/bin/nixos-test-driver
+        '' {})
+        (mkCommand currentSystem "audit-script" "audit the test script" [pkgs.bat] ''
+          # ${target.driver}
+          bat --language py ${target.driver}/test-script
+        '' {})
+        (mkCommand currentSystem "run-vm" "run tests interactively in vm" [] ''
+          # ${target.driverInteractive}
+          ${target.driverInteractive}/bin/nixos-test-driver
+        '' {})
+        (mkCommand currentSystem "run-vm+" "run tests with state from last run" [] ''
+          # ${target.driverInteractive}
+          ${target.driverInteractive}/bin/nixos-test-driver --keep-vm-state
+        '' {})
+      ]
+      ++ lib.optionals isLinux [
+        (mkCommand currentSystem "iptables+" "setup nat redirect 80-&gt;8080 &amp; 443-&gt;4433" [pkgs.iptables] ''
+          sudo iptables \
+            --table nat \
+            --insert OUTPUT \
+            --proto tcp \
+            --destination 127.0.0.1 \
+            --dport 443 \
+            --jump REDIRECT \
+            --to-ports 4433
+          sudo iptables \
+            --table nat \
+            --insert OUTPUT \
+            --proto tcp \
+            --destination 127.0.0.1 \
+            --dport 80 \
+            --jump REDIRECT \
+            --to-ports 8080
+        '' {})
+        (mkCommand currentSystem "iptables-" "remove nat redirect 80-&gt;8080 &amp; 443-&gt;4433" [pkgs.iptables] ''
+          sudo iptables \
+            --table nat \
+            --delete OUTPUT -d 127.0.0.1/32 -p tcp -m tcp --dport 443 -j REDIRECT --to-ports 4433
+          sudo iptables \
+            --table nat \
+            --delete OUTPUT -d 127.0.0.1/32 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8080
+        '' {})
+      ];
+  }
+</code></pre>
+<h2 id="nomad"><a class="header" href="#nomad">Nomad</a></h2>
+<p>Block type for rendering job descriptions for the <a href="https://www.nomadproject.io/">Nomad</a> Cluster scheduler.</p>
+<pre><code class="language-nix">{
+  nixpkgs,
+  root,
+  super,
+}:
+/*
+Use the `nomad` Block Type for rendering job descriptions
+for the Nomad Cluster scheduler. Each named attribtute-set under the
+block contains a valid Nomad job description, written in Nix.
+
+Available actions:
+  - render
+  - deploy
+  - explore
+*/
+let
+  inherit (root) mkCommand;
+  inherit (super) addSelectorFunctor askUserToProceedSnippet;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = "nomadJobManifests";
+
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+      inputs,
+    }: let
+      inherit (nixpkgs) lib;
+      pkgs = inputs.nixpkgs.${currentSystem};
+
+      job_name = baseNameOf fragmentRelPath;
+      job_path = "${dirOf fragmentRelPath}/${job_name}.json";
+
+      jobWithGitRevision = target: let
+        checkedRev = inputs.std.std.errors.bailOnDirty ''
+          Will not render jobs from a dirty tree.
+          Otherwise we cannot keep good track of deployment history.''
+        inputs.self.rev;
+        job = builtins.mapAttrs (_: v: lib.recursiveUpdate v {meta.rev = checkedRev;}) target.job;
+      in
+        builtins.toFile "${job_name}.json" (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}));
+      render = ''
+        declare job_path="$PRJ_DATA_HOME/${job_path}"
+        render() {
+          echo "Rendering to $job_path..."
+          rm -rf "$job_path"
+          ln -s "${jobWithGitRevision target}" "$job_path"
+          if status=$(nomad validate "$job_path"); then
+            echo "$status for $job_path"
+          fi
+        }
+      '';
+    in [
+      /*
+      The `render` action will take this Nix job descrition, convert it to JSON,
+      inject the git revision validate the manifest, after which it can be run or
+      planned with the Nomad cli or the `deploy` action.
+      */
+      (mkCommand currentSystem "render" "build the JSON job description" [pkgs.nomad] ''
+        ${render}
+        render
+      '' {})
+      (mkCommand currentSystem "deploy" "Deploy the job to Nomad" [pkgs.nomad pkgs.jq] ''
+        ${render}
+        render
+        if ! plan_results=$(nomad plan -force-color "$job_path"); then
+          echo "$plan_results"
+          run() { echo "$plan_results" | grep 'nomad job run -check-index'; }
+          ${askUserToProceedSnippet "deploy" "run"}
+        else
+          echo "Job hasn't changed since last deployment, nothing to deploy"
+        fi
+      '' {})
+      (mkCommand currentSystem "explore" "interactively explore the Job defintion" [pkgs.nomad pkgs.fx] ''
+        ${render}
+        render
+        fx "$job_path"
+      '' {})
+    ];
+  }
+</code></pre>
+<h2 id="nvfetcher"><a class="header" href="#nvfetcher">Nvfetcher</a></h2>
+<p>Block type for managing <a href="https://github.com/berberman/nvfetcher">nvfetcher</a> configuration for updating package definition sources.</p>
+<pre><code class="language-nix">{
+  root,
+  super,
+}:
+/*
+Use the nvfetcher Blocktype in order to generate package sources
+with nvfetcher. See its docs for more details.
+
+Available actions:
+  - fetch
+*/
+let
+  inherit (root) mkCommand actions;
+  inherit (super) addSelectorFunctor;
+in
+  name: {
+    __functor = addSelectorFunctor;
+    inherit name;
+    type = "nvfetcher";
+    actions = {
+      currentSystem,
+      fragment,
+      fragmentRelPath,
+      target,
+      inputs,
+    }: let
+      pkgs = inputs.nixpkgs.${currentSystem};
+      inherit (pkgs) lib;
+      inherit (pkgs.stdenv) isLinux;
+    in [
+      (mkCommand currentSystem "fetch" "update source" [pkgs.nvfetcher] ''
+         targetname="$(basename ${fragmentRelPath})"
+         blockpath="$(dirname ${fragmentRelPath})"
+         cellpath="$(dirname "$blockpath")"
+         tmpfile="$(mktemp)"
+         updates="$PRJ_ROOT/${fragmentRelPath}.md"
+         nvfetcher \
+           --config "$PRJ_ROOT/$cellpath/nvfetcher.toml" \
+           --build-dir "$PRJ_ROOT/$blockpath" \
+           --changelog "$tmpfile" \
+           --filter "^$targetname$"
+
+        sed -i -e "s|^|- \`$(date --iso-8601=m)\` |" "$tmpfile"
+        cat "$tmpfile" &gt;&gt; "$updates"
+      '' {})
+    ];
+  }
+</code></pre>
 
                     </main>
 
