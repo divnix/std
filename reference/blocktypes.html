@@ -199,7 +199,7 @@ let
 in
   name: {
     inherit name;
-    type = &quot;arion&quot;;
+    type = "arion";
     actions = {
       currentSystem,
       fragment,
@@ -208,14 +208,14 @@ in
       inputs,
     }: let
       pkgs = inputs.nixpkgs.${currentSystem};
-      cmd = &quot;arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
+      cmd = "arion --prebuilt-file ${target.config.out.dockerComposeYaml}";
     in [
-      (mkCommand currentSystem &quot;up&quot; &quot;arion up&quot; [pkgs.arion] ''${cmd} up &quot;$@&quot; '' {})
-      (mkCommand currentSystem &quot;ps&quot; &quot;exec this arion task to ps&quot; [pkgs.arion] ''${cmd} ps &quot;$@&quot; '' {})
-      (mkCommand currentSystem &quot;stop&quot; &quot;arion stop&quot; [pkgs.arion] ''${cmd} stop &quot;$@&quot; '' {})
-      (mkCommand currentSystem &quot;rm&quot; &quot;arion rm&quot; [pkgs.arion] ''${cmd} rm &quot;$@&quot; '' {})
-      (mkCommand currentSystem &quot;config&quot; &quot;check the docker-compose yaml file&quot; [pkgs.arion] ''${cmd} config &quot;$@&quot; '' {})
-      (mkCommand currentSystem &quot;arion&quot; &quot;pass any command to arion&quot; [pkgs.arion] ''${cmd} &quot;$@&quot; '' {})
+      (mkCommand currentSystem "up" "arion up" [pkgs.arion] ''${cmd} up "$@" '' {})
+      (mkCommand currentSystem "ps" "exec this arion task to ps" [pkgs.arion] ''${cmd} ps "$@" '' {})
+      (mkCommand currentSystem "stop" "arion stop" [pkgs.arion] ''${cmd} stop "$@" '' {})
+      (mkCommand currentSystem "rm" "arion rm" [pkgs.arion] ''${cmd} rm "$@" '' {})
+      (mkCommand currentSystem "config" "check the docker-compose yaml file" [pkgs.arion] ''${cmd} config "$@" '' {})
+      (mkCommand currentSystem "arion" "pass any command to arion" [pkgs.arion] ''${cmd} "$@" '' {})
     ];
   }
 </code></pre>
@@ -235,7 +235,7 @@ in
   name: {
     __functor = addSelectorFunctor;
     inherit name;
-    type = &quot;runnables&quot;;
+    type = "runnables";
     actions = {
       currentSystem,
       fragment,
@@ -275,7 +275,7 @@ in
   name: {
     __functor = addSelectorFunctor;
     inherit name;
-    type = &quot;installables&quot;;
+    type = "installables";
     actions = {
       currentSystem,
       fragment,
@@ -287,36 +287,36 @@ in
     in [
       (actions.build currentSystem target)
       # profile commands require a flake ref
-      (mkCommand currentSystem &quot;install&quot; &quot;install this target&quot; [] ''
+      (mkCommand currentSystem "install" "install this target" [] ''
         # ${target}
         set -x
-        nix profile install &quot;$PRJ_ROOT#&quot;${escapedFragment}
+        nix profile install "$PRJ_ROOT#"${escapedFragment}
       '' {})
-      (mkCommand currentSystem &quot;upgrade&quot; &quot;upgrade this target&quot; [] ''
+      (mkCommand currentSystem "upgrade" "upgrade this target" [] ''
         # ${target}
         set -x
-        nix profile upgrade &quot;$PRJ_ROOT#&quot;${escapedFragment}
+        nix profile upgrade "$PRJ_ROOT#"${escapedFragment}
       '' {})
-      (mkCommand currentSystem &quot;remove&quot; &quot;remove this target&quot; [] ''
+      (mkCommand currentSystem "remove" "remove this target" [] ''
         # ${target}
         set -x
-        nix profile remove &quot;$PRJ_ROOT#&quot;${escapedFragment}
+        nix profile remove "$PRJ_ROOT#"${escapedFragment}
       '' {})
       # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
-      (mkCommand currentSystem &quot;bundle&quot; &quot;bundle this target&quot; [] ''
+      (mkCommand currentSystem "bundle" "bundle this target" [] ''
         # ${target}
         set -x
-        nix bundle --bundler github:Ninlives/relocatable.nix --refresh &quot;$PRJ_ROOT#&quot;${escapedFragment}
+        nix bundle --bundler github:Ninlives/relocatable.nix --refresh "$PRJ_ROOT#"${escapedFragment}
       '' {})
-      (mkCommand currentSystem &quot;bundleImage&quot; &quot;bundle this target to image&quot; [] ''
+      (mkCommand currentSystem "bundleImage" "bundle this target to image" [] ''
         # ${target}
         set -x
-        nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh &quot;$PRJ_ROOT#&quot;${escapedFragment}
+        nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh "$PRJ_ROOT#"${escapedFragment}
       '' {})
-      (mkCommand currentSystem &quot;bundleAppImage&quot; &quot;bundle this target to AppImage&quot; [] ''
+      (mkCommand currentSystem "bundleAppImage" "bundle this target to AppImage" [] ''
         # ${target}
         set -x
-        nix bundle --bundler github:ralismark/nix-appimage --refresh &quot;$PRJ_ROOT#&quot;${escapedFragment}
+        nix bundle --bundler github:ralismark/nix-appimage --refresh "$PRJ_ROOT#"${escapedFragment}
       '' {})
     ];
   }
@@ -332,7 +332,7 @@ slow them down.
 */
 name: {
   inherit name;
-  type = &quot;pkgs&quot;;
+  type = "pkgs";
   cli = false; # its special power
 }
 </code></pre>
@@ -356,7 +356,7 @@ in
   name: {
     __functor = addSelectorFunctor;
     inherit name;
-    type = &quot;devshells&quot;;
+    type = "devshells";
     actions = {
       currentSystem,
       fragment,
@@ -367,24 +367,24 @@ in
       developDrv = devshellDrv target;
     in [
       (actions.build currentSystem target)
-      (mkCommand currentSystem &quot;enter&quot; &quot;enter this devshell&quot; [] ''
-        profile_path=&quot;$PRJ_DATA_HOME/${fragmentRelPath}&quot;
-        mkdir -p &quot;$profile_path&quot;
+      (mkCommand currentSystem "enter" "enter this devshell" [] ''
+        profile_path="$PRJ_DATA_HOME/${fragmentRelPath}"
+        mkdir -p "$profile_path"
         # ${developDrv}
         nix_args=(
-          &quot;${unsafeDiscardStringContext developDrv.drvPath}&quot;
-          &quot;--no-update-lock-file&quot;
-          &quot;--no-write-lock-file&quot;
-          &quot;--no-warn-dirty&quot;
-          &quot;--accept-flake-config&quot;
-          &quot;--no-link&quot;
-          &quot;--build-poll-interval&quot; &quot;0&quot;
-          &quot;--builders-use-substitutes&quot;
+          "${unsafeDiscardStringContext developDrv.drvPath}"
+          "--no-update-lock-file"
+          "--no-write-lock-file"
+          "--no-warn-dirty"
+          "--accept-flake-config"
+          "--no-link"
+          "--build-poll-interval" "0"
+          "--builders-use-substitutes"
         )
-        nix build &quot;''${nix_args[@]}&quot; --profile &quot;$profile_path/shell-profile&quot;
-        _SHELL=&quot;$SHELL&quot;
-        eval &quot;$(nix print-dev-env ${developDrv})&quot;
-        SHELL=&quot;$_SHELL&quot;
+        nix build "''${nix_args[@]}" --profile "$profile_path/shell-profile"
+        _SHELL="$SHELL"
+        eval "$(nix print-dev-env ${developDrv})"
+        SHELL="$_SHELL"
         if ! [[ -v STD_DIRENV ]]; then
           if declare -F __devshell-motd &amp;&gt;/dev/null; then
             __devshell-motd
@@ -415,7 +415,7 @@ let
 in
   name: {
     inherit name;
-    type = &quot;nixago&quot;;
+    type = "nixago";
     actions = {
       currentSystem,
       fragment,
@@ -425,11 +425,11 @@ in
     }: let
       pkgs = inputs.nixpkgs.${currentSystem};
     in [
-      (mkCommand currentSystem &quot;populate&quot; &quot;populate this nixago file into the repo&quot; [] ''
+      (mkCommand currentSystem "populate" "populate this nixago file into the repo" [] ''
         ${target.install}/bin/nixago_shell_hook
       '' {})
-      (mkCommand currentSystem &quot;explore&quot; &quot;interactively explore the nixago file&quot; [pkgs.bat] ''
-        bat &quot;${target.configFile}&quot;
+      (mkCommand currentSystem "explore" "interactively explore the nixago file" [pkgs.bat] ''
+        bat "${target.configFile}"
       '' {})
     ];
   }
@@ -456,7 +456,7 @@ in
   name: {
     __functor = addSelectorFunctor;
     inherit name;
-    type = &quot;containers&quot;;
+    type = "containers";
     actions = {
       currentSystem,
       fragment,
@@ -469,7 +469,7 @@ in
       proviso = ./containers-proviso.sh;
 
       tags' =
-        builtins.toFile &quot;${target.name}-tags.json&quot; (builtins.concatStringsSep &quot;\n&quot; target.image.tags);
+        builtins.toFile "${target.name}-tags.json" (builtins.concatStringsSep "\n" target.image.tags);
       copyFn = ''
         copy() {
           local uri prev_tag
@@ -478,41 +478,41 @@ in
 
           for tag in $(&lt;${tags'}); do
             if ! [[ -v prev_tag ]]; then
-              skopeo --insecure-policy copy nix:${target} &quot;$uri:$tag&quot; &quot;$@&quot;
+              skopeo --insecure-policy copy nix:${target} "$uri:$tag" "$@"
             else
               # speedup: copy from the previous tag to avoid superflous network bandwidth
-              skopeo --insecure-policy copy &quot;$uri:$prev_tag&quot; &quot;$uri:$tag&quot; &quot;$@&quot;
+              skopeo --insecure-policy copy "$uri:$prev_tag" "$uri:$tag" "$@"
             fi
-            echo &quot;Done: $uri:$tag&quot;
+            echo "Done: $uri:$tag"
 
-            prev_tag=&quot;$tag&quot;
+            prev_tag="$tag"
           done
         }
       '';
     in [
       (actions.build currentSystem target)
-      (mkCommand currentSystem &quot;print-image&quot; &quot;print out the image.repo with all tags&quot; [] ''
+      (mkCommand currentSystem "print-image" "print out the image.repo with all tags" [] ''
         echo
         for tag in $(&lt;${tags'}); do
-          echo &quot;${target.image.repo}:$tag&quot;
+          echo "${target.image.repo}:$tag"
         done
       '' {})
-      (mkCommand currentSystem &quot;publish&quot; &quot;copy the image to its remote registry&quot; [skopeo-nix2container] ''
+      (mkCommand currentSystem "publish" "copy the image to its remote registry" [skopeo-nix2container] ''
           ${copyFn}
           copy docker://${target.image.repo}
         '' {
           meta.image = target.image.name;
           inherit proviso;
         })
-      (mkCommand currentSystem &quot;load&quot; &quot;load image to the local docker daemon&quot; [skopeo-nix2container] ''
+      (mkCommand currentSystem "load" "load image to the local docker daemon" [skopeo-nix2container] ''
         ${copyFn}
         if command -v podman &amp;&gt; /dev/null; then
-           echo &quot;Podman detected: copy to local podman&quot;
-           copy containers-storage:${target.image.repo} &quot;$@&quot;
+           echo "Podman detected: copy to local podman"
+           copy containers-storage:${target.image.repo} "$@"
         fi
         if command -v docker &amp;&gt; /dev/null; then
-           echo &quot;Docker detected: copy to local docker&quot;
-           copy docker-daemon:${target.image.repo} &quot;$@&quot;
+           echo "Docker detected: copy to local docker"
+           copy docker-daemon:${target.image.repo} "$@"
         fi
       '' {})
     ];
@@ -530,7 +530,7 @@ Use the Terra Blocktype for terraform configurations managed by terranix.
 Important! You need to specify the state repo on the blocktype, e.g.:
 
 [
-  (terra &quot;infra&quot; &quot;git@github.com:myorg/myrepo.git&quot;)
+  (terra "infra" "git@github.com:myorg/myrepo.git")
 ]
 
 Available actions:
@@ -548,7 +548,7 @@ in
   name: repo: {
     inherit name;
     __functor = self: selectors: self // selectors;
-    type = &quot;terra&quot;;
+    type = "terra";
     actions = {
       currentSystem,
       fragment,
@@ -560,17 +560,17 @@ in
       pkgs = inputs.nixpkgs.${currentSystem};
 
       repoFolder = with pkgs.lib;
-        concatStringsSep &quot;/&quot; ([&quot;./nix&quot;] ++ (init (splitString &quot;/&quot; fragmentRelPath)));
+        concatStringsSep "/" (["./nix"] ++ (init (splitString "/" fragmentRelPath)));
 
       git = {
         inherit repo;
-        # repo = &quot;git@github.com:myorg/myrepo.git&quot;;
-        ref = &quot;main&quot;;
-        state = fragmentRelPath + &quot;/state.json&quot;;
+        # repo = "git@github.com:myorg/myrepo.git";
+        ref = "main";
+        state = fragmentRelPath + "/state.json";
       };
 
       terraEval = import (terranix + /core/default.nix);
-      terraformConfiguration = builtins.toFile &quot;config.tf.json&quot; (builtins.toJSON
+      terraformConfiguration = builtins.toFile "config.tf.json" (builtins.toJSON
         (terraEval {
           inherit pkgs; # only effectively required for `pkgs.lib`
           terranix_config = {
@@ -584,38 +584,38 @@ in
       setup = ''
         export TF_IN_AUTOMATION=1
         # export TF_INPUT=0
-        export TF_DATA_DIR=&quot;$PRJ_DATA_HOME/${fragmentRelPath}&quot;
-        export TF_PLUGIN_CACHE_DIR=&quot;$PRJ_CACHE_HOME/tf-plugin-cache&quot;
-        mkdir -p &quot;$TF_DATA_DIR&quot;
-        mkdir -p &quot;$TF_PLUGIN_CACHE_DIR&quot;
-        dir=&quot;$PRJ_ROOT/${repoFolder}/.tf&quot;
-        mkdir -p &quot;$PRJ_ROOT/${repoFolder}/.tf&quot;
-        cat &lt;&lt; MESSAGE &gt; &quot;$PRJ_ROOT/${repoFolder}/.tf/readme.md&quot;
+        export TF_DATA_DIR="$PRJ_DATA_HOME/${fragmentRelPath}"
+        export TF_PLUGIN_CACHE_DIR="$PRJ_CACHE_HOME/tf-plugin-cache"
+        mkdir -p "$TF_DATA_DIR"
+        mkdir -p "$TF_PLUGIN_CACHE_DIR"
+        dir="$PRJ_ROOT/${repoFolder}/.tf"
+        mkdir -p "$PRJ_ROOT/${repoFolder}/.tf"
+        cat &lt;&lt; MESSAGE &gt; "$PRJ_ROOT/${repoFolder}/.tf/readme.md"
         This is a tf staging area.
         It is motivated by the terraform CLI requiring to be executed in a staging area.
         MESSAGE
 
-        if [[ -e &quot;$dir/config.tf.json&quot; ]]; then rm -f &quot;$dir/config.tf.json&quot;; fi
-        jq '.' ${terraformConfiguration} &gt; &quot;$dir/config.tf.json&quot;
+        if [[ -e "$dir/config.tf.json" ]]; then rm -f "$dir/config.tf.json"; fi
+        jq '.' ${terraformConfiguration} &gt; "$dir/config.tf.json"
       '';
 
       wrap = cmd: ''
         ${setup}
         terraform-backend-git git \
-           --dir &quot;$dir&quot; \
+           --dir "$dir" \
            --repository ${git.repo} \
            --ref ${git.ref} \
            --state ${git.state} \
-           terraform ${cmd} &quot;$@&quot;;
+           terraform ${cmd} "$@";
       '';
     in [
-      (mkCommand currentSystem &quot;init&quot; &quot;tf init&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;init&quot;) {})
-      (mkCommand currentSystem &quot;plan&quot; &quot;tf plan&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;plan&quot;) {})
-      (mkCommand currentSystem &quot;apply&quot; &quot;tf apply&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;apply&quot;) {})
-      (mkCommand currentSystem &quot;state&quot; &quot;tf state&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;state&quot;) {})
-      (mkCommand currentSystem &quot;refresh&quot; &quot;tf refresh&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;refresh&quot;) {})
-      (mkCommand currentSystem &quot;destroy&quot; &quot;tf destroy&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;destroy&quot;) {})
-      (mkCommand currentSystem &quot;terraform&quot; &quot;pass any command to terraform&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;&quot;) {})
+      (mkCommand currentSystem "init" "tf init" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "init") {})
+      (mkCommand currentSystem "plan" "tf plan" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "plan") {})
+      (mkCommand currentSystem "apply" "tf apply" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "apply") {})
+      (mkCommand currentSystem "state" "tf state" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "state") {})
+      (mkCommand currentSystem "refresh" "tf refresh" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "refresh") {})
+      (mkCommand currentSystem "destroy" "tf destroy" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "destroy") {})
+      (mkCommand currentSystem "terraform" "pass any command to terraform" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "") {})
     ];
   }
 </code></pre>
@@ -641,7 +641,7 @@ let
 in
   name: {
     inherit name;
-    type = &quot;data&quot;;
+    type = "data";
     actions = {
       currentSystem,
       fragment,
@@ -654,7 +654,7 @@ in
 
       # if target ? __std_data_wrapper, then we need to unpack from `.data`
       json = triv.writeTextFile {
-        name = &quot;data.json&quot;;
+        name = "data.json";
         text = toJSON (
           if target ? __std_data_wrapper
           then target.data
@@ -662,9 +662,9 @@ in
         );
       };
     in [
-      (mkCommand currentSystem &quot;write&quot; &quot;write to file&quot; [] &quot;echo ${json}&quot; {})
-      (mkCommand currentSystem &quot;explore&quot; &quot;interactively explore&quot; [pkgs.fx] (
-        concatStringsSep &quot;\t&quot; [&quot;fx&quot; json]
+      (mkCommand currentSystem "write" "write to file" [] "echo ${json}" {})
+      (mkCommand currentSystem "explore" "interactively explore" [pkgs.fx] (
+        concatStringsSep "\t" ["fx" json]
       ) {})
     ];
   }
@@ -682,7 +682,7 @@ Consequently, there are no actions available for functions.
 */
 name: {
   inherit name;
-  type = &quot;functions&quot;;
+  type = "functions";
 }
 </code></pre>
 <h2 id="anything"><a class="header" href="#anything">Anything</a></h2>
@@ -695,7 +695,7 @@ It doesn't have actions.
 */
 name: {
   inherit name;
-  type = &quot;anything&quot;;
+  type = "anything";
 }
 </code></pre>
 

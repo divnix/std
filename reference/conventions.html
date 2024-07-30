@@ -210,7 +210,7 @@ This is the main mechanism by which code organization and separation of concern 
 <h2 id="the-desytemized-inputs"><a class="header" href="#the-desytemized-inputs">The <code>deSytemize</code>d inputs</a></h2>
 <p>All inputs are scoped for the <em>current</em> system, that is derived from the <code>systems</code> input list to <code>std.grow</code>.
 That means contrary to the usual nix-UX, in most cases, you don't need to worry about <code>system</code>.</p>
-<p>The current system will be &quot;lifted up&quot; one level, while still providing full access to all <code>systems</code> for
+<p>The current system will be "lifted up" one level, while still providing full access to all <code>systems</code> for
 cross-compilation scenarios.</p>
 <pre><code class="language-nix"># inputs.a.packages.${system}
 {
@@ -230,7 +230,7 @@ of the time.</p>
 them seems counter-intuitive. But due to the fact that function calls are memoized, there
 is never a penalty in actually scoping them. So for the sake of uniformity, we scope them
 anyways.</p>
-<p>The outputs therefore abide by the following &quot;schema&quot;:</p>
+<p>The outputs therefore abide by the following "schema":</p>
 <pre><code class="language-nix">{
   ${system}.${cell}.${block}.${target} = {};
 }

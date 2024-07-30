@@ -189,8 +189,8 @@ the inputs of your project.</p>
 </blockquote>
 <h4 id="tmpplay-with-stdhello-worldflakenix"><a class="header" href="#tmpplay-with-stdhello-worldflakenix"><code>/tmp/play-with-std/hello-world/flake.nix</code></a></h4>
 <pre><code class="language-nix">{
-  inputs.std.url = &quot;github:divnix/std&quot;;
-  inputs.nixpkgs.url = &quot;nixpkgs&quot;;
+  inputs.std.url = "github:divnix/std";
+  inputs.nixpkgs.url = "nixpkgs";
 
   outputs = {std, ...} @ inputs:
     std.grow {
@@ -205,17 +205,17 @@ the inputs of your project.</p>
   cell,
 }: {
   default = inputs.nixpkgs.stdenv.mkDerivation rec {
-    pname = &quot;hello&quot;;
-    version = &quot;2.10&quot;;
+    pname = "hello";
+    version = "2.10";
     src = inputs.nixpkgs.fetchurl {
-      url = &quot;mirror://gnu/hello/${pname}-${version}.tar.gz&quot;;
-      sha256 = &quot;0ssi1wpaf7plaswqqjwigppsg5fyh99vdlb9kzl7c9lng89ndq1i&quot;;
+      url = "mirror://gnu/hello/${pname}-${version}.tar.gz";
+      sha256 = "0ssi1wpaf7plaswqqjwigppsg5fyh99vdlb9kzl7c9lng89ndq1i";
     };
   };
 }
 </code></pre>
 <pre><code class="language-bash">$ cd /tmp/play-with-std/hello-world/
-$ git init &amp;&amp; git add . &amp;&amp; git commit -m&quot;nix flakes only can see files under version control&quot;
+$ git init &amp;&amp; git add . &amp;&amp; git commit -m"nix flakes only can see files under version control"
 # fetch `std`
 $ nix shell github:divnix/std
 $ std //hello/apps/default:run
@@ -229,9 +229,9 @@ in just a few seconds ✨</p>
 <h3 id="default-cellblocksgrow-nix-default-cellblocks"><a class="header" href="#default-cellblocksgrow-nix-default-cellblocks">[Default <code>cellBlocks</code>][grow-nix-default-cellblocks]</a></h3>
 <pre><code class="language-nix">{
   cellBlocks ? [
-    (blockTypes.functions &quot;library&quot;)
-    (blockTypes.runnables &quot;apps&quot;)
-    (blockTypes.installables &quot;packages&quot;)
+    (blockTypes.functions "library")
+    (blockTypes.runnables "apps")
+    (blockTypes.installables "packages")
   ],
   ...
 } @ args:
@@ -239,10 +239,10 @@ in just a few seconds ✨</p>
 <h3 id="default-systemsgrow-nix-default-systems"><a class="header" href="#default-systemsgrow-nix-default-systems">[Default <code>systems</code>][grow-nix-default-systems]</a></h3>
 <pre><code class="language-nix">{
   systems ? [
-    &quot;x86_64-linux&quot;
-    &quot;aarch64-linux&quot;
-    &quot;x86_64-darwin&quot;
-    &quot;aarch64-darwin&quot;
+    "x86_64-linux"
+    "aarch64-linux"
+    "x86_64-darwin"
+    "aarch64-darwin"
   ],
   ...
 } @ cfg:

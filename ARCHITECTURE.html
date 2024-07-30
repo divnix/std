@@ -181,11 +181,11 @@ This document, though, lays out the design, architecture and direction of Standa
 <p>If the topics discussed herein are dear to you, please take it as an invitation to get involved.</p>
 <p>This design document shall be stable and amendments go through a proper process of consideration.</p>
 <h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
-<p>Standard is a collection of functionality and best practices (<em>&quot;framework&quot;</em>) to bootstrap and sustain the automatable sections of the Software Development Lifecycle (SDLC) <em>efficiently</em> with the power of Nix and Flakes.
+<p>Standard is a collection of functionality and best practices (<em>"framework"</em>) to bootstrap and sustain the automatable sections of the Software Development Lifecycle (SDLC) <em>efficiently</em> with the power of Nix and Flakes.
 In particular, Standard is a <em>Horizontal* Integration Framework</em> which integrates <em>vertical*</em> tooling.</p>
 <blockquote>
 <p><sub>We occasionally adapt concepts from non-technical contexts. This is one instance.</sub></p>
-<p><em>Vertical Tooling</em> does one thing and does it well in a narrow scope (i.e &quot;vertical&quot;).</p>
+<p><em>Vertical Tooling</em> does one thing and does it well in a narrow scope (i.e "vertical").</p>
 <p><em>Horizontal Tooling</em> stitches vertical tooling together to a polished whole.</p>
 </blockquote>
 <p>What is being integrated are the end-to-end automatable sections of the SDLC.
@@ -224,7 +224,7 @@ In order to bring the powers of store based reproducible packaging to colleagues
 <ul>
 <li><em>Use nix only where it is best suited</em> — a Nix maximalist approach may be an innate condition to some of us, but to build bridges we deeply recognize and value other perspectives and don't dismiss them as ignorance.</li>
 <li><em>Disrupt where disruption is necessary</em> — the Nix ecosystem has a fairly rigid set of principles and norms that we don't think always apply in every use case.</li>
-<li><em>Look left, right, above and beyond</em> — our end-to-end perspective commands us to actively seek and reach out to other projects and ecosystems to compose our value chain; there's no place for the &quot;not invented here&quot;-syndrome.</li>
+<li><em>Look left, right, above and beyond</em> — our end-to-end perspective commands us to actively seek and reach out to other projects and ecosystems to compose our value chain; there's no place for the "not invented here"-syndrome.</li>
 </ul>
 <h2 id="scope"><a class="header" href="#scope">Scope</a></h2>
 <p>These are big goals and ideals.
@@ -268,7 +268,7 @@ Examples could be bash scripts, configuration data, platform utility code and mo
 <p>What is Standard made of? And how do its components contribute value?</p>
 <p>On the left side of the graphic, we show how Standard, like an onion, is build in layers:</p>
 <p>Center to Standard is <a href="https://github.com/paisano-tui/core"><code>divnix/paisano</code></a>.
-This flake (i.e. &quot;Nix library&quot;) implements two main abstractions: Block Types and Cells.</p>
+This flake (i.e. "Nix library") implements two main abstractions: Block Types and Cells.</p>
 <p><em><strong>Block Types</strong></em> are not unlike Rust's traits or Golang's interfaces.
 They are abstract definitions of artifact classes.
 Those abstract classes implement <em>shared functionality</em>.</p>
@@ -296,13 +296,13 @@ In that regard, Paisano is an automated importer, that spares the user the need 
 When configuring Standard, she names her Blocks using Standard's Block Types so that Paisano's importer can pick them up, too.
 By doing that, she also declares the repository's artifact type system to humans and machines.</p>
 <p>Machines can make great use of that to interact with the artifact type system in multiple ways.
-Paisano exports structured json-serializable data about a repository's <em>typed</em> artifacts in its so-called &quot;Paisano Registry&quot;.
+Paisano exports structured json-serializable data about a repository's <em>typed</em> artifacts in its so-called "Paisano Registry".
 A CLI or TUI, as is bundled with Standard, or even a web user interface can consume, represent and act upon that data.</p>
 <p>And so can CI.</p>
 <p>In fact, this is an innovation in the SDLC space:
 We can devise an implementation of a CI which, by querying Paisano's Registry, autonomously discovers all work that needs to be done.
 In order to demonstrate the value of this proposition, we made a reference implementation for GitHub Actions over at <a href="https://github.com/divnix/std-action"><code>divnix/std-action</code></a>.
-To our knowledge, this is the first and only &quot;zero config&quot; CI implementation based on the principles of artifact typing and code organization.
+To our knowledge, this is the first and only "zero config" CI implementation based on the principles of artifact typing and code organization.
 By using these principles rather than a rigid opinionated structure, it also remains highly flexible and adapts well to the user's preferences &amp; needs.</p>
 <p>In summary, all these organization and typing principles enable:</p>
 <ul>
@@ -325,7 +325,7 @@ By using these principles rather than a rigid opinionated structure, it also rem
 <p>As mentioned above, Standard exploits the Block Type abstraction to provide artifact types for the SDLC.
 Within the semantics of each Block Type, we implement shared functionality.
 This is designed to offer the user an optimized, audited implementation.
-Alleviates the burden of devising &quot;yet another&quot; local implementation of otherwise well-understood generic functionality, such as, the building of a package or the pushing of a container image.</p>
+Alleviates the burden of devising "yet another" local implementation of otherwise well-understood generic functionality, such as, the building of a package or the pushing of a container image.</p>
 <h3 id="standards-cells-function-library"><a class="header" href="#standards-cells-function-library">Standard's Cells (Function Library)</a></h3>
 <p>Alongside the <strong>Packaging Pipeline</strong>, Standard provides a curated assortment of library functions and integrations that users can adopt.
 While optional, an audited and community maintained function library and its corresponding documentation fulfills the promise of productivity, shared mental models and ease of adoption.</p>

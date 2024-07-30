@@ -205,9 +205,9 @@ Depending on the domain schema, it can be a <em>lossy</em> convergence, though, 
       /* snip */
     }
     {
-      devShells = std.harvest self [&quot;automation&quot; &quot;shells&quot;];
-      packages = std.harvest self [[&quot;std&quot; &quot;cli&quot;] [&quot;std&quot; &quot;packages&quot;]];
-      templates = std.pick self [&quot;presets&quot; &quot;templates&quot;];
+      devShells = std.harvest self ["automation" "shells"];
+      packages = std.harvest self [["std" "cli"] ["std" "packages"]];
+      templates = std.pick self ["presets" "templates"];
     };
 }
 </code></pre>

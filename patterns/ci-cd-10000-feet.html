@@ -204,10 +204,10 @@ But don't worry, we'll also walk you through the diagram.</p>
     building --&gt; deployment
     deployment --&gt; probing
 
-    click linting href &quot;#linting-phase&quot; &quot;Jump to the linting phase section&quot;
-    click building href &quot;#building-phase&quot; &quot;Jump to the building phase section&quot;
-    click deployment href &quot;#deployment-phase&quot; &quot;Jump to the deployment phase section&quot;
-    click probing href &quot;#probing-attestation-phase&quot; &quot;Jump to the probing &amp; attestation phase section&quot;
+    click linting href "#linting-phase" "Jump to the linting phase section"
+    click building href "#building-phase" "Jump to the building phase section"
+    click deployment href "#deployment-phase" "Jump to the deployment phase section"
+    click probing href "#probing-attestation-phase" "Jump to the probing &amp; attestation phase section"
 </code></pre>
 <p>To automate these, we make use of the [Standard Registry][glossary-registry] that holds all data needed to build the pipeline.
 Its is data JSON-serializable so that any CI tool or helper library can auto-generate the pipeline from it.</p>
@@ -241,7 +241,7 @@ However, orchestrated workflows, as opposed to the pull-based choreographed ones
 <h3 id="probing--attestation-phase"><a class="header" href="#probing--attestation-phase">Probing &amp; Attestation Phase</a></h3>
 <p>The probing and attestation phase is highly situation specific.
 It cannot be adequately represented through Standard and requires an entirely different control loop.</p>
-<p>During this phase a mix of short- &amp; long-lived testing suites are run against a particular target environment, usually called &quot;testing&quot; or &quot;staging&quot;.</p>
+<p>During this phase a mix of short- &amp; long-lived testing suites are run against a particular target environment, usually called "testing" or "staging".</p>
 <p>Some of these suites can be automated in proper test scheduling frameworks, others are inherently manual.</p>
 <p>Test suites may include the likes of:</p>
 <ul>

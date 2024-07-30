@@ -188,7 +188,7 @@ if [[ ! -d $(nix store add-path --name source --dry-run .) ]]; then
 fi
 
 # shellcheck disable=SC1090
-. &quot;$(fetchurl &quot;https://raw.githubusercontent.com/paisano-nix/direnv/main/lib&quot; &quot;sha256-IgQhKK7UHL1AfCUntJO2KCaIDJQotRnK2qC4Daxk+wI=&quot;)&quot;
+. "$(fetchurl "https://raw.githubusercontent.com/paisano-nix/direnv/main/lib" "sha256-IgQhKK7UHL1AfCUntJO2KCaIDJQotRnK2qC4Daxk+wI=")"
 
 use envreload //local/shells/default //local/configs
 </code></pre>
@@ -218,7 +218,7 @@ direnv: Watching: cells/local/shells (recursively)
 in
   mapAttrs (_: mkShell) rec {
     default = {...}: {
-      name = &quot;Standard&quot;;
+      name = "Standard";
       nixago = [
         configs.conform
         configs.treefmt
@@ -232,34 +232,34 @@ in
         [
           {
             package = nixpkgs.reuse;
-            category = &quot;legal&quot;;
+            category = "legal";
           }
           {
             package = nixpkgs.delve;
-            category = &quot;cli-dev&quot;;
-            name = &quot;dlv&quot;;
+            category = "cli-dev";
+            name = "dlv";
           }
           {
             package = nixpkgs.go;
-            category = &quot;cli-dev&quot;;
+            category = "cli-dev";
           }
           {
             package = nixpkgs.gotools;
-            category = &quot;cli-dev&quot;;
+            category = "cli-dev";
           }
           {
             package = nixpkgs.gopls;
-            category = &quot;cli-dev&quot;;
+            category = "cli-dev";
           }
           {
             package = namaka.packages.default;
-            category = &quot;nix-testing&quot;;
+            category = "nix-testing";
           }
         ]
         ++ optionals nixpkgs.stdenv.isLinux [
           {
             package = nixpkgs.golangci-lint;
-            category = &quot;cli-dev&quot;;
+            category = "cli-dev";
           }
         ];
       imports = [std.devshellProfiles.default book];

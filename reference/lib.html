@@ -280,7 +280,7 @@ No description
     /* ... */
     nixago = [
       (cell.nixago.foo {
-        data.qux = &quot;xyz&quot;;
+        data.qux = "xyz";
         packages = [ pkgs.additional-package ];
       })
       cell.nixago.bar
@@ -321,7 +321,7 @@ No description
   inherit (inputs.std.lib) ops;
 in {
   # microvm &lt;module&gt;
-  myhost = ops.mkMicrovm ({ pkgs, lib, ... }: { networking.hostName = &quot;microvms-host&quot;;});
+  myhost = ops.mkMicrovm ({ pkgs, lib, ... }: { networking.hostName = "microvms-host";});
 }
 </code></pre>
 <hr />
@@ -349,7 +349,7 @@ No description
   gid: The group ID to run the container as.
   perms: A list of permissions to set for the container.
   labels: An attribute set of labels to set for the container. The keys are
-  automatically prefixed with &quot;org.opencontainers.image&quot;.
+  automatically prefixed with "org.opencontainers.image".
   config: Additional options to pass to nix2container.buildImage's config.
   options: Additional options to pass to nix2container.buildImage.
 
@@ -412,7 +412,7 @@ No description
   gid: The group ID to run the container as.
   perms: A list of permissions to set for the container.
   labels: An attribute set of labels to set for the container. The keys are
-  automatically prefixed with &quot;org.opencontainers.image&quot;.
+  automatically prefixed with "org.opencontainers.image".
   debug: Whether to include debug tools in the container (coreutils).
   config: Additional options to pass to nix2container.buildImage's config.
   options: Additional options to pass to nix2container.
@@ -449,12 +449,12 @@ No description
 <h6 id="nix-based-extension"><a class="header" href="#nix-based-extension">Nix-based extension</a></h6>
 <pre><code class="language-nix">rec {
   upstream = n2c.pullImage {
-    imageName = &quot;docker.io/my-upstream-image&quot;;
-    imageDigest = &quot;sha256:fffff.....&quot;;
-    sha256 = &quot;sha256-ffffff...&quot;;
+    imageName = "docker.io/my-upstream-image";
+    imageDigest = "sha256:fffff.....";
+    sha256 = "sha256-ffffff...";
   };
   modified = n2c.buildImage {
-    name = &quot;docker.io/my-modified-image&quot;;
+    name = "docker.io/my-modified-image";
     fromImage = upstream;
     contents = [nixpkgs.bashInteractive];
   };
@@ -516,8 +516,8 @@ No description
   inherit (inputs) nixpkgs;
 in {
   data = {};
-  output = &quot;adrgen.config.yml&quot;;
-  format = &quot;yaml&quot;;
+  output = "adrgen.config.yml";
+  format = "yaml";
   commands = [{package = nixpkgs.adrgen;}];
 }
 </code></pre>
@@ -554,14 +554,14 @@ in {
   inherit (inputs) nixpkgs;
 in {
   data = {};
-  format = &quot;yaml&quot;;
-  output = &quot;.conform.yaml&quot;;
+  format = "yaml";
+  output = ".conform.yaml";
   packages = [nixpkgs.conform];
   apply = d: {
     policies =
       []
       ++ (l.optional (d ? commit) {
-        type = &quot;commit&quot;;
+        type = "commit";
         spec =
           d.commit
           // l.optionalAttrs (d ? cells) {
@@ -575,7 +575,7 @@ in {
           };
       })
       ++ (l.optional (d ? license) {
-        type = &quot;license&quot;;
+        type = "license";
         spec = d.license;
       });
   };
@@ -600,13 +600,13 @@ No description
   inherit (inputs) nixpkgs;
 in {
   data = {};
-  output = &quot;.editorconfig&quot;;
+  output = ".editorconfig";
   engine = request: let
     inherit (request) data output;
     name = l.baseNameOf output;
     value = {
       globalSection = {root = data.root or true;};
-      sections = l.removeAttrs data [&quot;root&quot;];
+      sections = l.removeAttrs data ["root"];
     };
   in
     nixpkgs.writeText name (l.generators.toINIWithGlobalSection {} value);
@@ -631,9 +631,9 @@ Please see the App’s Homepage for the configuration schema.</p>
 <h6 id="definition-3"><a class="header" href="#definition-3">Definition:</a></h6>
 <pre><code class="language-nix">{
   data = {};
-  output = &quot;.github/settings.yml&quot;;
-  format = &quot;yaml&quot;;
-  hook.mode = &quot;copy&quot;; # let the Github Settings action pick it up outside of devshell
+  output = ".github/settings.yml";
+  format = "yaml";
+  hook.mode = "copy"; # let the Github Settings action pick it up outside of devshell
 }
 </code></pre>
 </div>
@@ -669,7 +669,7 @@ in
         data = {
           tasks = {
             fmt = {
-              description = &quot;Formats all changed source files&quot;;
+              description = "Formats all changed source files";
               content = ''
                 treefmt $(git diff --name-only --cached)
               '';
@@ -685,10 +685,10 @@ in
 <pre><code class="language-nix">{
 # ...
   hello = {
-    description = &quot;Prints hello world&quot;;
+    description = "Prints hello world";
     interpreter = nixpkgs.python3;
     content = ''
-      print(&quot;Hello, world!&quot;)
+      print("Hello, world!")
     '';
   };
 }
@@ -704,7 +704,7 @@ in {
   apply = d: let
     # Transforms interpreter attribute if present
     # nixpkgs.pkgname -&gt; nixpkgs.pkgname + '/bin/&lt;name&gt;'
-    getExe = x: &quot;${l.getBin x}/bin/${x.meta.mainProgram or (l.getName x)}&quot;;
+    getExe = x: "${l.getBin x}/bin/${x.meta.mainProgram or (l.getName x)}";
     final =
       d
       // {
@@ -715,19 +715,19 @@ in {
           d.tasks;
       };
   in {
-    data = final; # CUE expects structure to be wrapped with &quot;data&quot;
+    data = final; # CUE expects structure to be wrapped with "data"
   };
-  format = &quot;text&quot;;
-  output = &quot;Justfile&quot;;
+  format = "text";
+  output = "Justfile";
   packages = [nixpkgs.just];
   hook = {
-    mode = &quot;copy&quot;;
+    mode = "copy";
   };
   engine = inputs.nixago.engines.cue {
     files = [./just.cue];
     flags = {
-      expression = &quot;rendered&quot;;
-      out = &quot;text&quot;;
+      expression = "rendered";
+      out = "text";
     };
     postHook = ''
       ${l.getExe nixpkgs.just} --unstable --fmt -f $out
@@ -754,34 +754,34 @@ No description
   lib = nixpkgs.lib // builtins;
 
   mkScript = stage:
-    nixpkgs.writeScript &quot;lefthook-${stage}&quot; ''
+    nixpkgs.writeScript "lefthook-${stage}" ''
       #!${nixpkgs.runtimeShell}
-      [ &quot;$LEFTHOOK&quot; == &quot;0&quot; ] || ${lib.getExe nixpkgs.lefthook} run &quot;${stage}&quot; &quot;$@&quot;
+      [ "$LEFTHOOK" == "0" ] || ${lib.getExe nixpkgs.lefthook} run "${stage}" "$@"
     '';
 
   toStagesConfig = config:
     lib.removeAttrs config [
-      &quot;colors&quot;
-      &quot;extends&quot;
-      &quot;skip_output&quot;
-      &quot;source_dir&quot;
-      &quot;source_dir_local&quot;
+      "colors"
+      "extends"
+      "skip_output"
+      "source_dir"
+      "source_dir_local"
     ];
 in {
   data = {};
-  format = &quot;yaml&quot;;
-  output = &quot;lefthook.yml&quot;;
+  format = "yaml";
+  output = "lefthook.yml";
   packages = [nixpkgs.lefthook];
   # Add an extra hook for adding required stages whenever the file changes
   hook.extra = config:
     lib.pipe config [
       toStagesConfig
       lib.attrNames
-      (lib.map (stage: ''ln -sf &quot;${mkScript stage}&quot; &quot;.git/hooks/${stage}&quot;''))
+      (lib.map (stage: ''ln -sf "${mkScript stage}" ".git/hooks/${stage}"''))
       (stages:
-        lib.optional (stages != []) &quot;mkdir -p .git/hooks&quot;
+        lib.optional (stages != []) "mkdir -p .git/hooks"
         ++ stages)
-      (lib.concatStringsSep &quot;\n&quot;)
+      (lib.concatStringsSep "\n")
     ];
 }
 </code></pre>
@@ -805,26 +805,26 @@ Solution Architect extra happy: <a href="https://github.com/joelcourtney/mdbook-
   inherit (inputs) nixpkgs;
 in {
   data = {};
-  output = &quot;book.toml&quot;;
-  format = &quot;toml&quot;;
+  output = "book.toml";
+  format = "toml";
   hook.extra = d: let
-    sentinel = &quot;nixago-auto-created: mdbook-build-folder&quot;;
-    file = &quot;.gitignore&quot;;
+    sentinel = "nixago-auto-created: mdbook-build-folder";
+    file = ".gitignore";
     str = ''
       # ${sentinel}
-      ${d.build.build-dir or &quot;book&quot;}/**
+      ${d.build.build-dir or "book"}/**
     '';
   in ''
     # Configure gitignore
     create() {
-      echo -n &quot;${str}&quot; &gt; &quot;${file}&quot;
+      echo -n "${str}" &gt; "${file}"
     }
     append() {
-      echo -en &quot;\n${str}&quot; &gt;&gt; &quot;${file}&quot;
+      echo -en "\n${str}" &gt;&gt; "${file}"
     }
-    if ! test -f &quot;${file}&quot;; then
+    if ! test -f "${file}"; then
       create
-    elif ! grep -qF &quot;${sentinel}&quot; &quot;${file}&quot;; then
+    elif ! grep -qF "${sentinel}" "${file}"; then
       append
     fi
   '';
@@ -849,8 +849,8 @@ No description
   inherit (inputs) nixpkgs;
 in {
   data = {};
-  output = &quot;treefmt.toml&quot;;
-  format = &quot;toml&quot;;
+  output = "treefmt.toml";
+  format = "toml";
   commands = [{package = nixpkgs.treefmt;}];
 }
 </code></pre>

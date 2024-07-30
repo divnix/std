@@ -243,25 +243,25 @@ But hey! It means: we can progress together!</p>
 <h2 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h2>
 <pre><code class="language-nix"># flake.nix
 {
-  description = &quot;Description for the project&quot;;
+  description = "Description for the project";
 
   inputs = {
-    std.url = &quot;github:divnix/std&quot;;
-    nixpkgs.follows = &quot;std/nixpkgs&quot;;
+    std.url = "github:divnix/std";
+    nixpkgs.follows = "std/nixpkgs";
   };
 
   outputs = { std, self, ...} @ inputs: std.growOn {
     inherit inputs;
-    # 1. Each folder inside `cellsFrom` becomes a &quot;Cell&quot;
+    # 1. Each folder inside `cellsFrom` becomes a "Cell"
     #    Run for example: 'mkdir nix/mycell'
-    # 2. Each &lt;block&gt;.nix or &lt;block&gt;/default.nix within it becomes a &quot;Cell Block&quot;
+    # 2. Each &lt;block&gt;.nix or &lt;block&gt;/default.nix within it becomes a "Cell Block"
     #    Run for example: '$EDITOR nix/mycell/packages.nix' - see example content below
     cellsFrom = ./nix;
-    # 3. Only blocks with these names [here: &quot;packages&quot; &amp; &quot;shells&quot;] are picked up by Standard
+    # 3. Only blocks with these names [here: "packages" &amp; "shells"] are picked up by Standard
     #    It's a bit like the output type system of your flake project (hint: CLI &amp; TUI!!)
     cellBlocks = with std.blockTypes; [
-      (installables &quot;packages&quot; {ci.build = true;})
-      (devshells &quot;shells&quot; {ci.build = true;})
+      (installables "packages" {ci.build = true;})
+      (devshells "shells" {ci.build = true;})
     ];
   }
   # 4. Run 'nix run github:divnix/std'
@@ -270,8 +270,8 @@ But hey! It means: we can progress together!</p>
   #  - but can use anything that produces flake outputs (e.g. flake-parts or flake-utils)
   # 5. Run: nix run .
   {
-    devShells = std.harvest self [&quot;mycell&quot; &quot;shells&quot;];
-    packages = std.harvest self [&quot;mycell&quot; &quot;packages&quot;];
+    devShells = std.harvest self ["mycell" "shells"];
+    packages = std.harvest self ["mycell" "packages"];
   };
 }
 
@@ -293,46 +293,46 @@ It further dogfoods itself and implements utilities in its own <a href="https://
 in
   std.growOn {
     inherit inputs;
-    cellsFrom = incl ./src [&quot;local&quot; &quot;tests&quot;];
+    cellsFrom = incl ./src ["local" "tests"];
     nixpkgsConfig = {allowUnfree = true;};
     cellBlocks = with std.blockTypes; [
       ## For local use in the Standard repository
       # local
-      (devshells &quot;shells&quot; {ci.build = true;})
-      (nixago &quot;configs&quot;)
-      (containers &quot;containers&quot;)
-      (namaka &quot;checks&quot; {ci.check = true;})
+      (devshells "shells" {ci.build = true;})
+      (nixago "configs")
+      (containers "containers")
+      (namaka "checks" {ci.check = true;})
     ];
   }
   {
-    devShells = harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
-    checks = harvest inputs.self [&quot;tests&quot; &quot;checks&quot; &quot;snapshots&quot; &quot;check&quot;];
+    devShells = harvest inputs.self ["local" "shells"];
+    checks = harvest inputs.self ["tests" "checks" "snapshots" "check"];
   }
   (std.grow {
     inherit inputs;
-    cellsFrom = incl ./src [&quot;std&quot; &quot;lib&quot; &quot;data&quot;];
+    cellsFrom = incl ./src ["std" "lib" "data"];
     cellBlocks = with std.blockTypes; [
       ## For downstream use
 
       # std
-      (runnables &quot;cli&quot; {ci.build = true;})
-      (functions &quot;devshellProfiles&quot;)
-      (functions &quot;errors&quot;)
-      (data &quot;templates&quot;)
+      (runnables "cli" {ci.build = true;})
+      (functions "devshellProfiles")
+      (functions "errors")
+      (data "templates")
 
       # lib
-      (functions &quot;dev&quot;)
-      (functions &quot;ops&quot;)
-      (anything &quot;cfg&quot;)
-      (data &quot;configs&quot;)
+      (functions "dev")
+      (functions "ops")
+      (anything "cfg")
+      (data "configs")
     ];
   })
   {
-    packages = harvest inputs.self [[&quot;std&quot; &quot;cli&quot;] [&quot;std&quot; &quot;packages&quot;]];
-    templates = pick inputs.self [&quot;std&quot; &quot;templates&quot;];
+    packages = harvest inputs.self [["std" "cli"] ["std" "packages"]];
+    templates = pick inputs.self ["std" "templates"];
   }
 </code></pre>
-<p><em>That's it. <code>std.grow</code> is a &quot;smart&quot; importer of your <code>nix</code> code and is designed to keep boilerplate at bay. In the so called &quot;Soil&quot; compatibility layer, you can do whatever your heart desires. For example put <code>flake-utils</code> or <code>flake-parts</code> patterns here. Or, as in the above example, just make your stuff play nicely with the Nix CLI.</em></p>
+<p><em>That's it. <code>std.grow</code> is a "smart" importer of your <code>nix</code> code and is designed to keep boilerplate at bay. In the so called "Soil" compatibility layer, you can do whatever your heart desires. For example put <code>flake-utils</code> or <code>flake-parts</code> patterns here. Or, as in the above example, just make your stuff play nicely with the Nix CLI.</em></p>
 <blockquote>
 <p><strong>TIP:</strong></p>
 <ol>
@@ -362,7 +362,7 @@ in
 </ul>
 <h2 id="contributions"><a class="header" href="#contributions">Contributions</a></h2>
 <p>Please enter the contribution environment:</p>
-<pre><code class="language-console">direnv allow || nix develop -c &quot;$SHELL&quot;
+<pre><code class="language-console">direnv allow || nix develop -c "$SHELL"
 </code></pre>
 <h2 id="licenses"><a class="header" href="#licenses">Licenses</a></h2>
 <p><em>What licenses are used? → <a href="https://github.com/divnix/std/blob/main/.reuse/dep5"><code>./.reuse/dep5</code></a>.</em></p>

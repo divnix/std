@@ -181,19 +181,19 @@ It also makes use of more advanced functions of <code>std</code>.
 Namely:</p>
 <ul>
 <li><code>std.growOn</code> instead of <code>std.grow</code></li>
-<li><code>std.harvest</code> to provide compatibility layers of &quot;soil&quot;</li>
+<li><code>std.harvest</code> to provide compatibility layers of "soil"</li>
 <li>non-default Cell Block definitions</li>
 <li>the input debug facility</li>
 </ul>
-<p>The terms <em>&quot;Block Type&quot;</em>, <em>&quot;Cell&quot;</em>, <em>&quot;Cell Block&quot;</em>, <em>&quot;Target&quot;</em> and <em>&quot;Action&quot;</em> have special meaning within the context of <code>std</code>.
+<p>The terms <em>"Block Type"</em>, <em>"Cell"</em>, <em>"Cell Block"</em>, <em>"Target"</em> and <em>"Action"</em> have special meaning within the context of <code>std</code>.
 With these clear definitions, we navigate and communicate the code structure much more easily.
 In order to familiarize yourself with them, please have a quick glance at the <a href="../../glossary.html">glossary</a>.</p>
 <h2 id="file-layout"><a class="header" href="#file-layout">File Layout</a></h2>
 <p>Let's start again with a flake:</p>
 <h4 id="flakenix"><a class="header" href="#flakenix"><code>./flake.nix</code></a></h4>
 <pre><code class="language-nix">{
-  inputs.std.url = &quot;github:divnix/std&quot;;
-  inputs.nixpkgs.url = &quot;nixpkgs&quot;;
+  inputs.std.url = "github:divnix/std";
+  inputs.nixpkgs.url = "nixpkgs";
 
   outputs = {std, ...} @ inputs:
   /*
@@ -202,7 +202,7 @@ In order to familiarize yourself with them, please have a quick glance at the <a
   */
     with std;
     /*
-    grows a flake &quot;from cells&quot; on &quot;soil&quot;; see below...
+    grows a flake "from cells" on "soil"; see below...
     */
       growOn {
         /*
@@ -212,23 +212,23 @@ In order to familiarize yourself with them, please have a quick glance at the <a
         inherit inputs;
 
         /*
-        from where to &quot;grow&quot; cells?
+        from where to "grow" cells?
         */
         cellsFrom = ./nix;
 
         /*
-        custom Cell Blocks (i.e. &quot;typed outputs&quot;)
+        custom Cell Blocks (i.e. "typed outputs")
         */
         cellBlocks = [
-          (blockTypes.devshells &quot;shells&quot;)
-          (blockTypes.nixago &quot;nixago&quot;)
+          (blockTypes.devshells "shells")
+          (blockTypes.nixago "nixago")
         ];
 
         /*
         This debug facility helps you to explore what attributes are available
         for a given input until you get more familiar with `std`.
         */
-        debug = [&quot;inputs&quot; &quot;std&quot;];
+        debug = ["inputs" "std"];
       }
       /*
 
@@ -239,7 +239,7 @@ In order to familiarize yourself with them, please have a quick glance at the <a
       # Soil ...
       # 1) layer for compat with the nix CLI
       {
-        devShells = harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
+        devShells = harvest inputs.self ["local" "shells"];
       }
       # 2) there can be various layers; `growOn` is a variadic function
       {};
@@ -247,7 +247,7 @@ In order to familiarize yourself with them, please have a quick glance at the <a
 </code></pre>
 <p>This time we specified <code>cellsFrom = ./nix;</code>.
 This is gentle so that our colleagues know immediately which files to either look or never look at depending on where they stand.</p>
-<p>We also used <code>std.growOn</code> instead of <code>std.grow</code> so that we can add compatibility layers of &quot;soil&quot;.</p>
+<p>We also used <code>std.growOn</code> instead of <code>std.grow</code> so that we can add compatibility layers of "soil".</p>
 <p>Furthermore, we only defined two Cell Blocks: <code>nixago</code> &amp; <code>devshells</code>. More on them follows...</p>
 <h4 id="nixlocal"><a class="header" href="#nixlocal"><code>./nix/local/*</code></a></h4>
 <p>Next, we define a <code>local</code> cell.
@@ -266,7 +266,7 @@ In here, we wire up two tools from the Nix ecosystem: <a href="https://github.co
 <blockquote>
 <p><strong>Some semantic background:</strong></p>
 <p>Both, Nixago &amp; Devshell are <em>Component Tools</em>.</p>
-<p><em>(Vertical) Component Tools</em> are distinct from <em>(Horizontal) Integration Tools</em> — such as <code>std</code> — in that they provide a specific capability in a minimal linux style: <em>&quot;Do one thing and do it well.&quot;</em></p>
+<p><em>(Vertical) Component Tools</em> are distinct from <em>(Horizontal) Integration Tools</em> — such as <code>std</code> — in that they provide a specific capability in a minimal linux style: <em>"Do one thing and do it well."</em></p>
 <p>Integration Tools however combine them into a polished user story and experience.</p>
 <p>The Nix ecosystem is very rich in <em>component tools</em>, however only few <em>integration tools</em> exist at the time of writing.</p>
 </blockquote>
@@ -305,7 +305,7 @@ in
   # we use Standard's mkShell wrapper for its Nixago integration
   l.mapAttrs (_: lib.dev.mkShell) {
     default = {...}: {
-      name = &quot;My Devshell&quot;;
+      name = "My Devshell";
       # This `nixago` option is a courtesy of the `std` horizontal
       # integration between Devshell and Nixago
       nixago = [
@@ -323,13 +323,13 @@ in
       commands = [
         {
           package = nixpkgs.reuse;
-          category = &quot;legal&quot;;
+          category = "legal";
           /*
           For display, reuse already has both a `pname` &amp; `meta.description`.
           Hence, we don't need to inline these - they are autodetected:
 
-          name = &quot;reuse&quot;;
-          description = &quot;Reuse is a tool to manage a project's LICENCES&quot;;
+          name = "reuse";
+          description = "Reuse is a tool to manage a project's LICENCES";
           */
         }
       ];
@@ -341,7 +341,7 @@ in
 </code></pre>
 <p>The <code>nixago = [];</code> option in this definition is a special integration provided by the <a href="../../reference/lib/dev/mkShell.html">Standard's <code>devshell</code>-wrapper (<code>std.lib.mkShell</code>)</a>.</p>
 <p><em>This is how <code>std</code> delivers on its promise of being a (horizontal) integration tool that wraps (vertical) component tools into a polished user story and experience.</em></p>
-<p>Because we made use of <code>std.harvest</code> in the flake, you now can actually test out the devshell via the Nix CLI compat layer by just running <code>nix develop -c &quot;$SHELL&quot;</code> in the directory of the flake.
+<p>Because we made use of <code>std.harvest</code> in the flake, you now can actually test out the devshell via the Nix CLI compat layer by just running <code>nix develop -c "$SHELL"</code> in the directory of the flake.
 For a more elegant method of entering a development shell read on the <a href="#direnv">direnv</a> section below.</p>
 <h4 id="nixlocalnixagonix"><a class="header" href="#nixlocalnixagonix"><code>./nix/local/nixago.nix</code></a></h4>
 <p>As we have seen above, the <code>nixago</code> option in the <code>cell.devshells</code> Cell Block references Targets from both <code>lib.cfg</code>.
@@ -366,13 +366,13 @@ in {
     # target data structure via a simple data overlay
     # (`divnix/data-merge` / `std.dmerge`) mechanism.
     data.formatter.go = {
-      command = &quot;gofmt&quot;;
-      options = [&quot;-w&quot;];
-      includes = [&quot;*.go&quot;];
+      command = "gofmt";
+      options = ["-w"];
+      includes = ["*.go"];
     };
     # for the `std.lib.dev.mkShell` integration with nixago,
     # we also hint which packages should be made available
-    # in the environment for this &quot;Nixago Pebble&quot;
+    # in the environment for this "Nixago Pebble"
     packages = [nixpkgs.go];
   };
 
@@ -383,16 +383,16 @@ in {
     data = {
       # the actual target data structure depends on the
       # Nixago Pebble, and ultimately, on the tool to configure
-      &quot;*.xcf&quot; = {
-        charset = &quot;unset&quot;;
-        end_of_line = &quot;unset&quot;;
-        insert_final_newline = &quot;unset&quot;;
-        trim_trailing_whitespace = &quot;unset&quot;;
-        indent_style = &quot;unset&quot;;
-        indent_size = &quot;unset&quot;;
+      "*.xcf" = {
+        charset = "unset";
+        end_of_line = "unset";
+        insert_final_newline = "unset";
+        trim_trailing_whitespace = "unset";
+        indent_style = "unset";
+        indent_size = "unset";
       };
-      &quot;{*.go,go.mod}&quot; = {
-        indent_style = &quot;tab&quot;;
+      "{*.go,go.mod}" = {
+        indent_style = "tab";
         indent_size = 4;
       };
     };
@@ -403,7 +403,7 @@ in {
   */
   mdbook = lib.cfg.mdbook {
     data = {
-      book.title = &quot;The Standard Book&quot;;
+      book.title = "The Standard Book";
     };
   };
 }
@@ -440,9 +440,9 @@ trace: {
 </code></pre>
 </blockquote>
 <p><strong>Invoke devshell via <code>nix</code></strong></p>
-<pre><code class="language-bash">nix develop -c &quot;$SHELL&quot;
+<pre><code class="language-bash">nix develop -c "$SHELL"
 </code></pre>
-<p>By quirks of the Nix CLI, if you don't specify <code>-c &quot;$SHELL&quot;</code>, you'll be thrown into an unfamiliar bare <code>bash</code> interactive shell.
+<p>By quirks of the Nix CLI, if you don't specify <code>-c "$SHELL"</code>, you'll be thrown into an unfamiliar bare <code>bash</code> interactive shell.
 That's not what you want.</p>
 <p><strong>Invoke the devshell via <code>std</code></strong></p>
 <p>In this case, invoking <code>$SHELL</code> correctly is taken care for you by the Block Type's <code>enter</code> Action.</p>
@@ -472,7 +472,7 @@ It's super simple &amp; super useful ™ and you should do it <em>right now</em>
 The MOTD will be shown, too.</p>
 <p>The first time, you need to teach the <code>direnv</code> daemon to trust the <code>.envrc</code> file via <code>direnv allow</code>.
 If you want to reload the devshell (e.g. to reconcile Nixago Pebbles), you can just run <code>direnv reload</code>.</p>
-<p>Because I use these commands so often, I've set: <code>alias d=&quot;direnv&quot;</code> in my shell's RC file.</p>
+<p>Because I use these commands so often, I've set: <code>alias d="direnv"</code> in my shell's RC file.</p>
 <hr />
 
                     </main>

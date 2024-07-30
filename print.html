@@ -244,25 +244,25 @@ But hey! It means: we can progress together!</p>
 <h2 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h2>
 <pre><code class="language-nix"># flake.nix
 {
-  description = &quot;Description for the project&quot;;
+  description = "Description for the project";
 
   inputs = {
-    std.url = &quot;github:divnix/std&quot;;
-    nixpkgs.follows = &quot;std/nixpkgs&quot;;
+    std.url = "github:divnix/std";
+    nixpkgs.follows = "std/nixpkgs";
   };
 
   outputs = { std, self, ...} @ inputs: std.growOn {
     inherit inputs;
-    # 1. Each folder inside `cellsFrom` becomes a &quot;Cell&quot;
+    # 1. Each folder inside `cellsFrom` becomes a "Cell"
     #    Run for example: 'mkdir nix/mycell'
-    # 2. Each &lt;block&gt;.nix or &lt;block&gt;/default.nix within it becomes a &quot;Cell Block&quot;
+    # 2. Each &lt;block&gt;.nix or &lt;block&gt;/default.nix within it becomes a "Cell Block"
     #    Run for example: '$EDITOR nix/mycell/packages.nix' - see example content below
     cellsFrom = ./nix;
-    # 3. Only blocks with these names [here: &quot;packages&quot; &amp; &quot;shells&quot;] are picked up by Standard
+    # 3. Only blocks with these names [here: "packages" &amp; "shells"] are picked up by Standard
     #    It's a bit like the output type system of your flake project (hint: CLI &amp; TUI!!)
     cellBlocks = with std.blockTypes; [
-      (installables &quot;packages&quot; {ci.build = true;})
-      (devshells &quot;shells&quot; {ci.build = true;})
+      (installables "packages" {ci.build = true;})
+      (devshells "shells" {ci.build = true;})
     ];
   }
   # 4. Run 'nix run github:divnix/std'
@@ -271,8 +271,8 @@ But hey! It means: we can progress together!</p>
   #  - but can use anything that produces flake outputs (e.g. flake-parts or flake-utils)
   # 5. Run: nix run .
   {
-    devShells = std.harvest self [&quot;mycell&quot; &quot;shells&quot;];
-    packages = std.harvest self [&quot;mycell&quot; &quot;packages&quot;];
+    devShells = std.harvest self ["mycell" "shells"];
+    packages = std.harvest self ["mycell" "packages"];
   };
 }
 
@@ -294,46 +294,46 @@ It further dogfoods itself and implements utilities in its own <a href="https://
 in
   std.growOn {
     inherit inputs;
-    cellsFrom = incl ./src [&quot;local&quot; &quot;tests&quot;];
+    cellsFrom = incl ./src ["local" "tests"];
     nixpkgsConfig = {allowUnfree = true;};
     cellBlocks = with std.blockTypes; [
       ## For local use in the Standard repository
       # local
-      (devshells &quot;shells&quot; {ci.build = true;})
-      (nixago &quot;configs&quot;)
-      (containers &quot;containers&quot;)
-      (namaka &quot;checks&quot; {ci.check = true;})
+      (devshells "shells" {ci.build = true;})
+      (nixago "configs")
+      (containers "containers")
+      (namaka "checks" {ci.check = true;})
     ];
   }
   {
-    devShells = harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
-    checks = harvest inputs.self [&quot;tests&quot; &quot;checks&quot; &quot;snapshots&quot; &quot;check&quot;];
+    devShells = harvest inputs.self ["local" "shells"];
+    checks = harvest inputs.self ["tests" "checks" "snapshots" "check"];
   }
   (std.grow {
     inherit inputs;
-    cellsFrom = incl ./src [&quot;std&quot; &quot;lib&quot; &quot;data&quot;];
+    cellsFrom = incl ./src ["std" "lib" "data"];
     cellBlocks = with std.blockTypes; [
       ## For downstream use
 
       # std
-      (runnables &quot;cli&quot; {ci.build = true;})
-      (functions &quot;devshellProfiles&quot;)
-      (functions &quot;errors&quot;)
-      (data &quot;templates&quot;)
+      (runnables "cli" {ci.build = true;})
+      (functions "devshellProfiles")
+      (functions "errors")
+      (data "templates")
 
       # lib
-      (functions &quot;dev&quot;)
-      (functions &quot;ops&quot;)
-      (anything &quot;cfg&quot;)
-      (data &quot;configs&quot;)
+      (functions "dev")
+      (functions "ops")
+      (anything "cfg")
+      (data "configs")
     ];
   })
   {
-    packages = harvest inputs.self [[&quot;std&quot; &quot;cli&quot;] [&quot;std&quot; &quot;packages&quot;]];
-    templates = pick inputs.self [&quot;std&quot; &quot;templates&quot;];
+    packages = harvest inputs.self [["std" "cli"] ["std" "packages"]];
+    templates = pick inputs.self ["std" "templates"];
   }
 </code></pre>
-<p><em>That's it. <code>std.grow</code> is a &quot;smart&quot; importer of your <code>nix</code> code and is designed to keep boilerplate at bay. In the so called &quot;Soil&quot; compatibility layer, you can do whatever your heart desires. For example put <code>flake-utils</code> or <code>flake-parts</code> patterns here. Or, as in the above example, just make your stuff play nicely with the Nix CLI.</em></p>
+<p><em>That's it. <code>std.grow</code> is a "smart" importer of your <code>nix</code> code and is designed to keep boilerplate at bay. In the so called "Soil" compatibility layer, you can do whatever your heart desires. For example put <code>flake-utils</code> or <code>flake-parts</code> patterns here. Or, as in the above example, just make your stuff play nicely with the Nix CLI.</em></p>
 <blockquote>
 <p><strong>TIP:</strong></p>
 <ol>
@@ -363,7 +363,7 @@ in
 </ul>
 <h2 id="contributions"><a class="header" href="#contributions">Contributions</a></h2>
 <p>Please enter the contribution environment:</p>
-<pre><code class="language-console">direnv allow || nix develop -c &quot;$SHELL&quot;
+<pre><code class="language-console">direnv allow || nix develop -c "$SHELL"
 </code></pre>
 <h2 id="licenses"><a class="header" href="#licenses">Licenses</a></h2>
 <p><em>What licenses are used? → <a href="https://github.com/divnix/std/blob/main/.reuse/dep5"><code>./.reuse/dep5</code></a>.</em></p>
@@ -376,11 +376,11 @@ This document, though, lays out the design, architecture and direction of Standa
 <p>If the topics discussed herein are dear to you, please take it as an invitation to get involved.</p>
 <p>This design document shall be stable and amendments go through a proper process of consideration.</p>
 <h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
-<p>Standard is a collection of functionality and best practices (<em>&quot;framework&quot;</em>) to bootstrap and sustain the automatable sections of the Software Development Lifecycle (SDLC) <em>efficiently</em> with the power of Nix and Flakes.
+<p>Standard is a collection of functionality and best practices (<em>"framework"</em>) to bootstrap and sustain the automatable sections of the Software Development Lifecycle (SDLC) <em>efficiently</em> with the power of Nix and Flakes.
 In particular, Standard is a <em>Horizontal* Integration Framework</em> which integrates <em>vertical*</em> tooling.</p>
 <blockquote>
 <p><sub>We occasionally adapt concepts from non-technical contexts. This is one instance.</sub></p>
-<p><em>Vertical Tooling</em> does one thing and does it well in a narrow scope (i.e &quot;vertical&quot;).</p>
+<p><em>Vertical Tooling</em> does one thing and does it well in a narrow scope (i.e "vertical").</p>
 <p><em>Horizontal Tooling</em> stitches vertical tooling together to a polished whole.</p>
 </blockquote>
 <p>What is being integrated are the end-to-end automatable sections of the SDLC.
@@ -419,7 +419,7 @@ In order to bring the powers of store based reproducible packaging to colleagues
 <ul>
 <li><em>Use nix only where it is best suited</em> — a Nix maximalist approach may be an innate condition to some of us, but to build bridges we deeply recognize and value other perspectives and don't dismiss them as ignorance.</li>
 <li><em>Disrupt where disruption is necessary</em> — the Nix ecosystem has a fairly rigid set of principles and norms that we don't think always apply in every use case.</li>
-<li><em>Look left, right, above and beyond</em> — our end-to-end perspective commands us to actively seek and reach out to other projects and ecosystems to compose our value chain; there's no place for the &quot;not invented here&quot;-syndrome.</li>
+<li><em>Look left, right, above and beyond</em> — our end-to-end perspective commands us to actively seek and reach out to other projects and ecosystems to compose our value chain; there's no place for the "not invented here"-syndrome.</li>
 </ul>
 <h2 id="scope"><a class="header" href="#scope">Scope</a></h2>
 <p>These are big goals and ideals.
@@ -463,7 +463,7 @@ Examples could be bash scripts, configuration data, platform utility code and mo
 <p>What is Standard made of? And how do its components contribute value?</p>
 <p>On the left side of the graphic, we show how Standard, like an onion, is build in layers:</p>
 <p>Center to Standard is <a href="https://github.com/paisano-tui/core"><code>divnix/paisano</code></a>.
-This flake (i.e. &quot;Nix library&quot;) implements two main abstractions: Block Types and Cells.</p>
+This flake (i.e. "Nix library") implements two main abstractions: Block Types and Cells.</p>
 <p><em><strong>Block Types</strong></em> are not unlike Rust's traits or Golang's interfaces.
 They are abstract definitions of artifact classes.
 Those abstract classes implement <em>shared functionality</em>.</p>
@@ -491,13 +491,13 @@ In that regard, Paisano is an automated importer, that spares the user the need 
 When configuring Standard, she names her Blocks using Standard's Block Types so that Paisano's importer can pick them up, too.
 By doing that, she also declares the repository's artifact type system to humans and machines.</p>
 <p>Machines can make great use of that to interact with the artifact type system in multiple ways.
-Paisano exports structured json-serializable data about a repository's <em>typed</em> artifacts in its so-called &quot;Paisano Registry&quot;.
+Paisano exports structured json-serializable data about a repository's <em>typed</em> artifacts in its so-called "Paisano Registry".
 A CLI or TUI, as is bundled with Standard, or even a web user interface can consume, represent and act upon that data.</p>
 <p>And so can CI.</p>
 <p>In fact, this is an innovation in the SDLC space:
 We can devise an implementation of a CI which, by querying Paisano's Registry, autonomously discovers all work that needs to be done.
 In order to demonstrate the value of this proposition, we made a reference implementation for GitHub Actions over at <a href="https://github.com/divnix/std-action"><code>divnix/std-action</code></a>.
-To our knowledge, this is the first and only &quot;zero config&quot; CI implementation based on the principles of artifact typing and code organization.
+To our knowledge, this is the first and only "zero config" CI implementation based on the principles of artifact typing and code organization.
 By using these principles rather than a rigid opinionated structure, it also remains highly flexible and adapts well to the user's preferences &amp; needs.</p>
 <p>In summary, all these organization and typing principles enable:</p>
 <ul>
@@ -520,7 +520,7 @@ By using these principles rather than a rigid opinionated structure, it also rem
 <p>As mentioned above, Standard exploits the Block Type abstraction to provide artifact types for the SDLC.
 Within the semantics of each Block Type, we implement shared functionality.
 This is designed to offer the user an optimized, audited implementation.
-Alleviates the burden of devising &quot;yet another&quot; local implementation of otherwise well-understood generic functionality, such as, the building of a package or the pushing of a container image.</p>
+Alleviates the burden of devising "yet another" local implementation of otherwise well-understood generic functionality, such as, the building of a package or the pushing of a container image.</p>
 <h3 id="standards-cells-function-library"><a class="header" href="#standards-cells-function-library">Standard's Cells (Function Library)</a></h3>
 <p>Alongside the <strong>Packaging Pipeline</strong>, Standard provides a curated assortment of library functions and integrations that users can adopt.
 While optional, an audited and community maintained function library and its corresponding documentation fulfills the promise of productivity, shared mental models and ease of adoption.</p>
@@ -542,9 +542,9 @@ A helpful analogy would be that this person not only uses and configures our con
 <p>It is essential to have an understanding of what they value, so let's try to get an overview.
 We'll make use of a high level value matrix with simple sentiment scores:</p>
 <ul>
-<li>😍 → <i>&quot;absolutely love it!!!&quot;</i></li>
-<li>😄 → <i>&quot;feels pretty good.&quot;</i></li>
-<li>😐 → <i>&quot;whatever?!?&quot;</i></li>
+<li>😍 → <i>"absolutely love it!!!"</i></li>
+<li>😄 → <i>"feels pretty good."</i></li>
+<li>😐 → <i>"whatever?!?"</i></li>
 </ul>
 <div class="table-wrapper"><table><thead><tr><th></th><th style="text-align: center">Software Sponsor [Principal]</th><th style="text-align: center">Provider of SDLC Automation [Agent]</th><th style="text-align: center">Consumer of SDLC Automation [Agent]</th></tr></thead><tbody>
 <tr><td>Productivity</td><td style="text-align: center">😍</td><td style="text-align: center">😍</td><td style="text-align: center">😄</td></tr>
@@ -621,9 +621,9 @@ Depending on the domain schema, it can be a <em>lossy</em> convergence, though, 
       /* snip */
     }
     {
-      devShells = std.harvest self [&quot;automation&quot; &quot;shells&quot;];
-      packages = std.harvest self [[&quot;std&quot; &quot;cli&quot;] [&quot;std&quot; &quot;packages&quot;]];
-      templates = std.pick self [&quot;presets&quot; &quot;templates&quot;];
+      devShells = std.harvest self ["automation" "shells"];
+      packages = std.harvest self [["std" "cli"] ["std" "packages"]];
+      templates = std.pick self ["presets" "templates"];
     };
 }
 </code></pre>
@@ -705,8 +705,8 @@ the inputs of your project.</p>
 </blockquote>
 <h4 id="tmpplay-with-stdhello-worldflakenix"><a class="header" href="#tmpplay-with-stdhello-worldflakenix"><code>/tmp/play-with-std/hello-world/flake.nix</code></a></h4>
 <pre><code class="language-nix">{
-  inputs.std.url = &quot;github:divnix/std&quot;;
-  inputs.nixpkgs.url = &quot;nixpkgs&quot;;
+  inputs.std.url = "github:divnix/std";
+  inputs.nixpkgs.url = "nixpkgs";
 
   outputs = {std, ...} @ inputs:
     std.grow {
@@ -721,17 +721,17 @@ the inputs of your project.</p>
   cell,
 }: {
   default = inputs.nixpkgs.stdenv.mkDerivation rec {
-    pname = &quot;hello&quot;;
-    version = &quot;2.10&quot;;
+    pname = "hello";
+    version = "2.10";
     src = inputs.nixpkgs.fetchurl {
-      url = &quot;mirror://gnu/hello/${pname}-${version}.tar.gz&quot;;
-      sha256 = &quot;0ssi1wpaf7plaswqqjwigppsg5fyh99vdlb9kzl7c9lng89ndq1i&quot;;
+      url = "mirror://gnu/hello/${pname}-${version}.tar.gz";
+      sha256 = "0ssi1wpaf7plaswqqjwigppsg5fyh99vdlb9kzl7c9lng89ndq1i";
     };
   };
 }
 </code></pre>
 <pre><code class="language-bash">$ cd /tmp/play-with-std/hello-world/
-$ git init &amp;&amp; git add . &amp;&amp; git commit -m&quot;nix flakes only can see files under version control&quot;
+$ git init &amp;&amp; git add . &amp;&amp; git commit -m"nix flakes only can see files under version control"
 # fetch `std`
 $ nix shell github:divnix/std
 $ std //hello/apps/default:run
@@ -745,9 +745,9 @@ in just a few seconds ✨</p>
 <h3 id="default-cellblocksgrow-nix-default-cellblocks"><a class="header" href="#default-cellblocksgrow-nix-default-cellblocks">[Default <code>cellBlocks</code>][grow-nix-default-cellblocks]</a></h3>
 <pre><code class="language-nix">{
   cellBlocks ? [
-    (blockTypes.functions &quot;library&quot;)
-    (blockTypes.runnables &quot;apps&quot;)
-    (blockTypes.installables &quot;packages&quot;)
+    (blockTypes.functions "library")
+    (blockTypes.runnables "apps")
+    (blockTypes.installables "packages")
   ],
   ...
 } @ args:
@@ -755,10 +755,10 @@ in just a few seconds ✨</p>
 <h3 id="default-systemsgrow-nix-default-systems"><a class="header" href="#default-systemsgrow-nix-default-systems">[Default <code>systems</code>][grow-nix-default-systems]</a></h3>
 <pre><code class="language-nix">{
   systems ? [
-    &quot;x86_64-linux&quot;
-    &quot;aarch64-linux&quot;
-    &quot;x86_64-darwin&quot;
-    &quot;aarch64-darwin&quot;
+    "x86_64-linux"
+    "aarch64-linux"
+    "x86_64-darwin"
+    "aarch64-darwin"
   ],
   ...
 } @ cfg:
@@ -771,19 +771,19 @@ It also makes use of more advanced functions of <code>std</code>.
 Namely:</p>
 <ul>
 <li><code>std.growOn</code> instead of <code>std.grow</code></li>
-<li><code>std.harvest</code> to provide compatibility layers of &quot;soil&quot;</li>
+<li><code>std.harvest</code> to provide compatibility layers of "soil"</li>
 <li>non-default Cell Block definitions</li>
 <li>the input debug facility</li>
 </ul>
-<p>The terms <em>&quot;Block Type&quot;</em>, <em>&quot;Cell&quot;</em>, <em>&quot;Cell Block&quot;</em>, <em>&quot;Target&quot;</em> and <em>&quot;Action&quot;</em> have special meaning within the context of <code>std</code>.
+<p>The terms <em>"Block Type"</em>, <em>"Cell"</em>, <em>"Cell Block"</em>, <em>"Target"</em> and <em>"Action"</em> have special meaning within the context of <code>std</code>.
 With these clear definitions, we navigate and communicate the code structure much more easily.
 In order to familiarize yourself with them, please have a quick glance at the <a href="tutorials/hello-moon/../../glossary.html">glossary</a>.</p>
 <h2 id="file-layout"><a class="header" href="#file-layout">File Layout</a></h2>
 <p>Let's start again with a flake:</p>
 <h4 id="flakenix"><a class="header" href="#flakenix"><code>./flake.nix</code></a></h4>
 <pre><code class="language-nix">{
-  inputs.std.url = &quot;github:divnix/std&quot;;
-  inputs.nixpkgs.url = &quot;nixpkgs&quot;;
+  inputs.std.url = "github:divnix/std";
+  inputs.nixpkgs.url = "nixpkgs";
 
   outputs = {std, ...} @ inputs:
   /*
@@ -792,7 +792,7 @@ In order to familiarize yourself with them, please have a quick glance at the <a
   */
     with std;
     /*
-    grows a flake &quot;from cells&quot; on &quot;soil&quot;; see below...
+    grows a flake "from cells" on "soil"; see below...
     */
       growOn {
         /*
@@ -802,23 +802,23 @@ In order to familiarize yourself with them, please have a quick glance at the <a
         inherit inputs;
 
         /*
-        from where to &quot;grow&quot; cells?
+        from where to "grow" cells?
         */
         cellsFrom = ./nix;
 
         /*
-        custom Cell Blocks (i.e. &quot;typed outputs&quot;)
+        custom Cell Blocks (i.e. "typed outputs")
         */
         cellBlocks = [
-          (blockTypes.devshells &quot;shells&quot;)
-          (blockTypes.nixago &quot;nixago&quot;)
+          (blockTypes.devshells "shells")
+          (blockTypes.nixago "nixago")
         ];
 
         /*
         This debug facility helps you to explore what attributes are available
         for a given input until you get more familiar with `std`.
         */
-        debug = [&quot;inputs&quot; &quot;std&quot;];
+        debug = ["inputs" "std"];
       }
       /*
 
@@ -829,7 +829,7 @@ In order to familiarize yourself with them, please have a quick glance at the <a
       # Soil ...
       # 1) layer for compat with the nix CLI
       {
-        devShells = harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
+        devShells = harvest inputs.self ["local" "shells"];
       }
       # 2) there can be various layers; `growOn` is a variadic function
       {};
@@ -837,7 +837,7 @@ In order to familiarize yourself with them, please have a quick glance at the <a
 </code></pre>
 <p>This time we specified <code>cellsFrom = ./nix;</code>.
 This is gentle so that our colleagues know immediately which files to either look or never look at depending on where they stand.</p>
-<p>We also used <code>std.growOn</code> instead of <code>std.grow</code> so that we can add compatibility layers of &quot;soil&quot;.</p>
+<p>We also used <code>std.growOn</code> instead of <code>std.grow</code> so that we can add compatibility layers of "soil".</p>
 <p>Furthermore, we only defined two Cell Blocks: <code>nixago</code> &amp; <code>devshells</code>. More on them follows...</p>
 <h4 id="nixlocal"><a class="header" href="#nixlocal"><code>./nix/local/*</code></a></h4>
 <p>Next, we define a <code>local</code> cell.
@@ -856,7 +856,7 @@ In here, we wire up two tools from the Nix ecosystem: <a href="https://github.co
 <blockquote>
 <p><strong>Some semantic background:</strong></p>
 <p>Both, Nixago &amp; Devshell are <em>Component Tools</em>.</p>
-<p><em>(Vertical) Component Tools</em> are distinct from <em>(Horizontal) Integration Tools</em> — such as <code>std</code> — in that they provide a specific capability in a minimal linux style: <em>&quot;Do one thing and do it well.&quot;</em></p>
+<p><em>(Vertical) Component Tools</em> are distinct from <em>(Horizontal) Integration Tools</em> — such as <code>std</code> — in that they provide a specific capability in a minimal linux style: <em>"Do one thing and do it well."</em></p>
 <p>Integration Tools however combine them into a polished user story and experience.</p>
 <p>The Nix ecosystem is very rich in <em>component tools</em>, however only few <em>integration tools</em> exist at the time of writing.</p>
 </blockquote>
@@ -895,7 +895,7 @@ in
   # we use Standard's mkShell wrapper for its Nixago integration
   l.mapAttrs (_: lib.dev.mkShell) {
     default = {...}: {
-      name = &quot;My Devshell&quot;;
+      name = "My Devshell";
       # This `nixago` option is a courtesy of the `std` horizontal
       # integration between Devshell and Nixago
       nixago = [
@@ -913,13 +913,13 @@ in
       commands = [
         {
           package = nixpkgs.reuse;
-          category = &quot;legal&quot;;
+          category = "legal";
           /*
           For display, reuse already has both a `pname` &amp; `meta.description`.
           Hence, we don't need to inline these - they are autodetected:
 
-          name = &quot;reuse&quot;;
-          description = &quot;Reuse is a tool to manage a project's LICENCES&quot;;
+          name = "reuse";
+          description = "Reuse is a tool to manage a project's LICENCES";
           */
         }
       ];
@@ -931,7 +931,7 @@ in
 </code></pre>
 <p>The <code>nixago = [];</code> option in this definition is a special integration provided by the <a href="tutorials/hello-moon/../../reference/lib/dev/mkShell.html">Standard's <code>devshell</code>-wrapper (<code>std.lib.mkShell</code>)</a>.</p>
 <p><em>This is how <code>std</code> delivers on its promise of being a (horizontal) integration tool that wraps (vertical) component tools into a polished user story and experience.</em></p>
-<p>Because we made use of <code>std.harvest</code> in the flake, you now can actually test out the devshell via the Nix CLI compat layer by just running <code>nix develop -c &quot;$SHELL&quot;</code> in the directory of the flake.
+<p>Because we made use of <code>std.harvest</code> in the flake, you now can actually test out the devshell via the Nix CLI compat layer by just running <code>nix develop -c "$SHELL"</code> in the directory of the flake.
 For a more elegant method of entering a development shell read on the <a href="tutorials/hello-moon/index.html#direnv">direnv</a> section below.</p>
 <h4 id="nixlocalnixagonix"><a class="header" href="#nixlocalnixagonix"><code>./nix/local/nixago.nix</code></a></h4>
 <p>As we have seen above, the <code>nixago</code> option in the <code>cell.devshells</code> Cell Block references Targets from both <code>lib.cfg</code>.
@@ -956,13 +956,13 @@ in {
     # target data structure via a simple data overlay
     # (`divnix/data-merge` / `std.dmerge`) mechanism.
     data.formatter.go = {
-      command = &quot;gofmt&quot;;
-      options = [&quot;-w&quot;];
-      includes = [&quot;*.go&quot;];
+      command = "gofmt";
+      options = ["-w"];
+      includes = ["*.go"];
     };
     # for the `std.lib.dev.mkShell` integration with nixago,
     # we also hint which packages should be made available
-    # in the environment for this &quot;Nixago Pebble&quot;
+    # in the environment for this "Nixago Pebble"
     packages = [nixpkgs.go];
   };
 
@@ -973,16 +973,16 @@ in {
     data = {
       # the actual target data structure depends on the
       # Nixago Pebble, and ultimately, on the tool to configure
-      &quot;*.xcf&quot; = {
-        charset = &quot;unset&quot;;
-        end_of_line = &quot;unset&quot;;
-        insert_final_newline = &quot;unset&quot;;
-        trim_trailing_whitespace = &quot;unset&quot;;
-        indent_style = &quot;unset&quot;;
-        indent_size = &quot;unset&quot;;
+      "*.xcf" = {
+        charset = "unset";
+        end_of_line = "unset";
+        insert_final_newline = "unset";
+        trim_trailing_whitespace = "unset";
+        indent_style = "unset";
+        indent_size = "unset";
       };
-      &quot;{*.go,go.mod}&quot; = {
-        indent_style = &quot;tab&quot;;
+      "{*.go,go.mod}" = {
+        indent_style = "tab";
         indent_size = 4;
       };
     };
@@ -993,7 +993,7 @@ in {
   */
   mdbook = lib.cfg.mdbook {
     data = {
-      book.title = &quot;The Standard Book&quot;;
+      book.title = "The Standard Book";
     };
   };
 }
@@ -1030,9 +1030,9 @@ trace: {
 </code></pre>
 </blockquote>
 <p><strong>Invoke devshell via <code>nix</code></strong></p>
-<pre><code class="language-bash">nix develop -c &quot;$SHELL&quot;
+<pre><code class="language-bash">nix develop -c "$SHELL"
 </code></pre>
-<p>By quirks of the Nix CLI, if you don't specify <code>-c &quot;$SHELL&quot;</code>, you'll be thrown into an unfamiliar bare <code>bash</code> interactive shell.
+<p>By quirks of the Nix CLI, if you don't specify <code>-c "$SHELL"</code>, you'll be thrown into an unfamiliar bare <code>bash</code> interactive shell.
 That's not what you want.</p>
 <p><strong>Invoke the devshell via <code>std</code></strong></p>
 <p>In this case, invoking <code>$SHELL</code> correctly is taken care for you by the Block Type's <code>enter</code> Action.</p>
@@ -1062,22 +1062,22 @@ It's super simple &amp; super useful ™ and you should do it <em>right now</em>
 The MOTD will be shown, too.</p>
 <p>The first time, you need to teach the <code>direnv</code> daemon to trust the <code>.envrc</code> file via <code>direnv allow</code>.
 If you want to reload the devshell (e.g. to reconcile Nixago Pebbles), you can just run <code>direnv reload</code>.</p>
-<p>Because I use these commands so often, I've set: <code>alias d=&quot;direnv&quot;</code> in my shell's RC file.</p>
+<p>Because I use these commands so often, I've set: <code>alias d="direnv"</code> in my shell's RC file.</p>
 <hr />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="growing-cells"><a class="header" href="#growing-cells">Growing Cells</a></h1>
 <p>Growing cells can be done via two variants:</p>
 <ul>
-<li><code>std.grow { cellsFrom = &quot;...&quot;; /* ... */ }</code></li>
-<li><code>std.growOn { cellsFrom = &quot;...&quot;; /* ... */ } # soil</code></li>
+<li><code>std.grow { cellsFrom = "..."; /* ... */ }</code></li>
+<li><code>std.growOn { cellsFrom = "..."; /* ... */ } # soil</code></li>
 </ul>
 <h2 id="stdgrowon---soil"><a class="header" href="#stdgrowon---soil"><code>std.growOn {} # soil</code></a></h2>
 <p>This eases talking and reasoning about a <code>std</code>ized repository, that also needs
 some sort of adapters to work together better with external frameworks.</p>
 <p>Typically, you'd arrange those adapters in numbered layers of soil, just
 so that it's easier to conceptually reference them when talking / chatting.</p>
-<p>It's a variadic function and takes an unlimited number of &quot;soil layers&quot;.</p>
+<p>It's a variadic function and takes an unlimited number of "soil layers".</p>
 <pre><code class="language-nix">{
-  inputs.std.url = &quot;github:divnix/std&quot;;
+  inputs.std.url = "github:divnix/std";
 
   outputs = {std, ...} @ inputs:
     std.growOn {
@@ -1104,7 +1104,7 @@ to avoid unnecessary rebuilds and increase your cache hits.</p>
   inherit (inputs) std;
 in {
   backend = nixpkgs.mkYarnPackage {
-    name = &quot;backend&quot;;
+    name = "backend";
     src = std.incl (inputs.self + /src/backend) [
       (inputs.self + /src/backend/app.js)
       (inputs.self + /src/backend/config/config.js)
@@ -1127,7 +1127,7 @@ if [[ ! -d $(nix store add-path --name source --dry-run .) ]]; then
 fi
 
 # shellcheck disable=SC1090
-. &quot;$(fetchurl &quot;https://raw.githubusercontent.com/paisano-nix/direnv/main/lib&quot; &quot;sha256-IgQhKK7UHL1AfCUntJO2KCaIDJQotRnK2qC4Daxk+wI=&quot;)&quot;
+. "$(fetchurl "https://raw.githubusercontent.com/paisano-nix/direnv/main/lib" "sha256-IgQhKK7UHL1AfCUntJO2KCaIDJQotRnK2qC4Daxk+wI=")"
 
 use envreload //local/shells/default //local/configs
 </code></pre>
@@ -1157,7 +1157,7 @@ direnv: Watching: cells/local/shells (recursively)
 in
   mapAttrs (_: mkShell) rec {
     default = {...}: {
-      name = &quot;Standard&quot;;
+      name = "Standard";
       nixago = [
         configs.conform
         configs.treefmt
@@ -1171,34 +1171,34 @@ in
         [
           {
             package = nixpkgs.reuse;
-            category = &quot;legal&quot;;
+            category = "legal";
           }
           {
             package = nixpkgs.delve;
-            category = &quot;cli-dev&quot;;
-            name = &quot;dlv&quot;;
+            category = "cli-dev";
+            name = "dlv";
           }
           {
             package = nixpkgs.go;
-            category = &quot;cli-dev&quot;;
+            category = "cli-dev";
           }
           {
             package = nixpkgs.gotools;
-            category = &quot;cli-dev&quot;;
+            category = "cli-dev";
           }
           {
             package = nixpkgs.gopls;
-            category = &quot;cli-dev&quot;;
+            category = "cli-dev";
           }
           {
             package = namaka.packages.default;
-            category = &quot;nix-testing&quot;;
+            category = "nix-testing";
           }
         ]
         ++ optionals nixpkgs.stdenv.isLinux [
           {
             package = nixpkgs.golangci-lint;
-            category = &quot;cli-dev&quot;;
+            category = "cli-dev";
           }
         ];
       imports = [std.devshellProfiles.default book];
@@ -1212,10 +1212,10 @@ in
 <div style="break-before: page; page-break-before: always;"></div><h1 id="why-nix"><a class="header" href="#why-nix">Why <code>nix</code>?</a></h1>
 <p>A lot of people write a lot of confusing stuff about nix.</p>
 <p>So here, we'll try to break it down, instead.</p>
-<h2 id="nix-is-json-on-steroids"><a class="header" href="#nix-is-json-on-steroids"><code>nix</code> is &quot;<code>json</code> on steroids&quot;</a></h2>
+<h2 id="nix-is-json-on-steroids"><a class="header" href="#nix-is-json-on-steroids"><code>nix</code> is "<code>json</code> on steroids"</a></h2>
 <p>In configuration management, you have a choice: data vs. language.</p>
-<p>On stackoverflow, you'll be taught the &quot;data&quot; stance, because it's simple.</p>
-<p>And all of a sudden you hit reality. Outside of a &quot;lab&quot; environment, you suddenly
+<p>On stackoverflow, you'll be taught the "data" stance, because it's simple.</p>
+<p>And all of a sudden you hit reality. Outside of a "lab" environment, you suddenly
 need to manage a varying degree of complexity.</p>
 <p>So you need configuration combinators, or in other words a full blown language
 to efficiently render your configurations.</p>
@@ -1232,27 +1232,27 @@ but it has superpowers. Read on!</p>
 <h2 id="nix-superpowers"><a class="header" href="#nix-superpowers"><code>nix</code>' superpowers</a></h2>
 <p>You know the concept of string interpolation.</p>
 <p>Every time <code>nix</code> interpolates an identifier, there is something that
-you don't immediately see: it keeps a so called &quot;string context&quot; right
+you don't immediately see: it keeps a so called "string context" right
 at the site of interpolation. That string context holds a directed acyclic
 graph of all the dependencies that are required to make that string.</p>
-<p>&quot;Well, it's just a string; what on earth should I need to make a string?&quot;, you may say.</p>
-<p>There is a special category of strings, so called &quot;Nix store paths&quot;
+<p>"Well, it's just a string; what on earth should I need to make a string?", you may say.</p>
+<p>There is a special category of strings, so called "Nix store paths"
 (strings that start with <code>/nix/store/...</code>). These store paths represent
 build artifacts that are content addressed ahead-of-time through
 the inputs of an otherwise pure build function, called <a href="https://nixos.org/manual/nix/stable/expressions/derivations.html"><code>derivation</code></a>.</p>
-<p>When you finally reify (i.e. &quot;build&quot;) your string interpolation, then all these Nix store
+<p>When you finally reify (i.e. "build") your string interpolation, then all these Nix store
 paths get build as well.</p>
 <p>This might be a bit of a mind-boggling angle, but after a while, you may realize:</p>
 <ul>
 <li>Nix is a massive build pipeline that tracks all things to their source.</li>
 <li>In their capacity as <em>pure</em> build functions, <a href="https://nixos.org/manual/nix/stable/expressions/derivations.html"><code>derviation</code>s</a> build <em>reproducibly</em>.</li>
 <li>Reproducible builds are the future of software supply chain security, among other things.</li>
-<li>You'll start asking: &quot;who the heck invented all that insecure nonsense of opaque binary registries?
-Shouldn't have those smart people have known better?&quot;</li>
+<li>You'll start asking: "who the heck invented all that insecure nonsense of opaque binary registries?
+Shouldn't have those smart people have known better?"</li>
 <li>And from this realization, there's no coming back.</li>
 <li>And you'll have joined the <a href="https://discourse.nixos.org/t/nixos-foundation-participating-in-eus-next-generation-internet-initiative/2011">European Union</a>, <a href="https://discourse.nixos.org/t/mercury-bank-nix-engineers/13784">banks</a> and <a href="https://github.com/input-output-hk/cardano-world">blockchain companies</a> who also realized:
 we need to fix our utterly broken and insecure build systems!</li>
-<li>By that time, you'll have already assimilated the legendary <a href="http://users.ece.cmu.edu/~ganger/712.fall02/papers/p761-thompson.pdf">Ken Thompson's &quot;Reflections on Trusting Trust&quot;</a>.</li>
+<li>By that time, you'll have already assimilated the legendary <a href="http://users.ece.cmu.edu/~ganger/712.fall02/papers/p761-thompson.pdf">Ken Thompson's "Reflections on Trusting Trust"</a>.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="why-std"><a class="header" href="#why-std">Why std?</a></h1>
 <h2 id="problem"><a class="header" href="#problem">Problem</a></h2>
@@ -1268,7 +1268,7 @@ build and configuration language.</p>
 <p>Lack of typing adds to the problem by forcing <code>nix</code>-practitioners to go out of their way (e.g. via <a href="https://github.com/divnix/yants"><code>divnix/yants</code></a>) to
 add some internal boundaries and contracts to an ever morphing global context.</p>
 <p>As a consequence, few actually <em>do</em> that. And contracts across internal code boundaries are either absent or rudimentary or — yet again —
-&quot;elegant and novel&quot;. Neither of which satisfactorily settles the issue.</p>
+"elegant and novel". Neither of which satisfactorily settles the issue.</p>
 <h2 id="solution"><a class="header" href="#solution">Solution</a></h2>
 <p><code>std</code> doesn't add language-level typing. But a well-balanced folder layout cut at 3 layers of conceptual
 nesting provides the fundamentals for establishing internal boundaries.</p>
@@ -1333,9 +1333,9 @@ important architectural decision made along with its context and consequences.</
 <!-- write an answer to this question below -->
 <p>Repository navigation is among the first activities to build a mental model of any given repository.
 The Nix Ecosystem has come up with some weak conventions: these are variations that are mainly informed by the <code>nixpkgs</code> repository, itself.
-Despite that, users find it difficult to quickly &quot;wrap their head&quot; around a new project.
+Despite that, users find it difficult to quickly "wrap their head" around a new project.
 This is often times a result of an organically grown file organization that has trouble keeping up with growing project semantics.
-As a result, onboading onto a &quot;new&quot; nix project even within the same organizational context, sometimes can be a very frustrating and time-consuming activity.</p>
+As a result, onboading onto a "new" nix project even within the same organizational context, sometimes can be a very frustrating and time-consuming activity.</p>
 <h2 id="decision"><a class="header" href="#decision">Decision</a></h2>
 <blockquote>
 <p>What is the change that we're proposing and/or doing?</p>
@@ -1347,9 +1347,9 @@ As a result, onboading onto a &quot;new&quot; nix project even within the same o
 <p>Hence, 3 levels of organization are adopted.
 These levels correspond to the abstract organizational concepts of:</p>
 <ul>
-<li>consistent collection of functionality (&quot;what makes sense to group together?&quot;)</li>
-<li>repository output type (&quot;what types of gitops artifacts are produced?&quot;)</li>
-<li>named outputs (&quot;what are the actual outputs?&quot;)</li>
+<li>consistent collection of functionality ("what makes sense to group together?")</li>
+<li>repository output type ("what types of gitops artifacts are produced?")</li>
+<li>named outputs ("what are the actual outputs?")</li>
 </ul>
 <h2 id="consequences"><a class="header" href="#consequences">Consequences</a></h2>
 <blockquote>
@@ -1360,7 +1360,7 @@ These levels correspond to the abstract organizational concepts of:</p>
 <p>That same prototypical mental model also speeds up scaffolding of new content and code.</p>
 <p>At the expense of nested folders, it may still be further expanded, if additional organization is required.
 All the while that the primary meta-information about a project is properly communicated through these first three levels via the file system api, itself (think <code>ls</code> / <code>rg</code> / <code>fd</code>).</p>
-<p>On the other hand, this rigidity is sometimes overkill and users may resort to filler names such as &quot;<code>default</code>&quot;, because a given semantic only produces singletons.
+<p>On the other hand, this rigidity is sometimes overkill and users may resort to filler names such as "<code>default</code>", because a given semantic only produces singletons.
 This is acceptable, however, because this parallellity in addressing even these singleton values trades for very easy expansion or refactoring, as the meta-models of code organization already align.</p>
 <hr />
 <h1 id="2-restrict-the-calling-interface"><a class="header" href="#2-restrict-the-calling-interface">2. Restrict the calling interface</a></h1>
@@ -1376,7 +1376,7 @@ This is acceptable, however, because this parallellity in addressing even these 
 Over time, the <code>callPackage</code> idiom was developed that destructures arbitrary attributes of an 80k <em>upstream</em> attributeset provided by <code>nixpkgs</code>.
 A complicating side condition is added, where overlays modify that original upstream packages set in arbitrary ways.
 This is not a problem for people, who know nixpkgs by heart and it is not a problem for the author either.
-It is a problem for the future code reader, Nix expert or less so, who needs to grasp the essence of &quot;what's going on&quot; under a productivity side condition.</p>
+It is a problem for the future code reader, Nix expert or less so, who needs to grasp the essence of "what's going on" under a productivity side condition.</p>
 <p>Local reasoning is a tried and tested strategy to help mitigate those issues.</p>
 <p>In a variant of this problem, we observe only somewhat convergent, but still largely diverging styles of passing arguments in general across the repository context.</p>
 <h2 id="decision-1"><a class="header" href="#decision-1">Decision</a></h2>
@@ -1387,13 +1387,13 @@ It is a problem for the future code reader, Nix expert or less so, who needs to 
 <p>Encourage local reasoning by always fully qualifing identifiers within the scope of a single file.</p>
 <p>In order to do so, the entry level nix files of this framework have exactly one possible interface: <code>{inputs, cell}</code>.</p>
 <p><code>inputs</code> represent the global inputs, whereas <code>cell</code> keeps reference to the local context.
-<em>A Cell is the first ordering priciple for &quot;consistent collection of functionality&quot;.</em></p>
+<em>A Cell is the first ordering priciple for "consistent collection of functionality".</em></p>
 <h2 id="consequences-1"><a class="header" href="#consequences-1">Consequences</a></h2>
 <blockquote>
 <p>What becomes easier or more difficult to do because of this change?</p>
 </blockquote>
 <!-- write an answer to this question below -->
-<p>This restricts up to the prescribed 3 layers of organization the notion of &quot;how files can communicate with each other&quot;.</p>
+<p>This restricts up to the prescribed 3 layers of organization the notion of "how files can communicate with each other".</p>
 <p>That inter-files-interface is the <em>only</em> global context to really grasp, and it is structurally aligned across all Standard projects.</p>
 <p>By virtue of this meta model of a global context and inter-file-communications, for a somewhat familiarized code reader the barriers to local reasoning are greatly reduced.</p>
 <p>The two context references are well known (flake inputs &amp; cell-local blocks) and easily discoverable.</p>
@@ -1418,12 +1418,12 @@ It is a problem for the future code reader, Nix expert or less so, who needs to 
 <p>What is the change that we're proposing and/or doing?</p>
 </blockquote>
 <!-- write an answer to this question below -->
-<p>De-systemize everything to the &quot;current&quot; system and effectively hiding the explict manipulation from plain sight in most cases.</p>
+<p>De-systemize everything to the "current" system and effectively hiding the explict manipulation from plain sight in most cases.</p>
 <p>An attribute set, that differentiates for systems on any given level of its tree, is <code>deSystemized</code>.</p>
-<p>This means that all child attributes of the &quot;current&quot; system are lifted onto the &quot;system&quot;-level as siblings to the system attributes.</p>
+<p>This means that all child attributes of the "current" system are lifted onto the "system"-level as siblings to the system attributes.</p>
 <p>That also means, if explicit reference to <code>system</code> is necessary, it is still there among the siblings.</p>
-<p>The &quot;current&quot; system is brought into scope automatically, however.</p>
-<p>What &quot;current&quot; means, is an early selector (&quot;select early and forget&quot;), usually determined by the user's operating system.</p>
+<p>The "current" system is brought into scope automatically, however.</p>
+<p>What "current" means, is an early selector ("select early and forget"), usually determined by the user's operating system.</p>
 <h2 id="consequences-2"><a class="header" href="#consequences-2">Consequences</a></h2>
 <blockquote>
 <p>What becomes easier or more difficult to do because of this change?</p>
@@ -1431,7 +1431,7 @@ It is a problem for the future code reader, Nix expert or less so, who needs to 
 <!-- write an answer to this question below -->
 <p>The explicit handling of <code>system</code> in foreign contexts, where <code>system</code> is not a primary concern is largely eliminated.</p>
 <p>This makes using this framework a little easier for everybody, including packaging experts.</p>
-<p>Since <code>nixpkgs</code>, itself, exposes <code>nixpkgs.system</code> and packaging without <code>nixpkgs</code> is hardly imaginably, power-users still enjoy easy access to the &quot;current&quot; system, in case it's needed.</p>
+<p>Since <code>nixpkgs</code>, itself, exposes <code>nixpkgs.system</code> and packaging without <code>nixpkgs</code> is hardly imaginably, power-users still enjoy easy access to the "current" system, in case it's needed.</p>
 <hr />
 <h1 id="4-early-select-system-for-conceptual-untangling"><a class="header" href="#4-early-select-system-for-conceptual-untangling">4. Early select system for conceptual untangling</a></h1>
 <p>Date: 2022-04-01</p>
@@ -1443,11 +1443,11 @@ It is a problem for the future code reader, Nix expert or less so, who needs to 
 </blockquote>
 <!-- write an answer to this question below -->
 <p>Building on the previous ADR, we saw why we hide <code>system</code> from plain sight.</p>
-<p>In that ADR, we mention &quot;select early and forget&quot; as a strategy to scope the current system consistently across the project.</p>
+<p>In that ADR, we mention "select early and forget" as a strategy to scope the current system consistently across the project.</p>
 <p>The current best practices for flakes postulate <code>system</code> as the second level selector of an output attribute.</p>
 <p>For current flakes, type primes over system.</p>
-<p>However, this design choice makes the lema &quot;select early and forget&quot; across multiple code-paths a pain to work with.</p>
-<p>This handling is exacerbated by the distinction between &quot;systemized&quot; and &quot;non-systemized&quot; (e.g. <code>lib</code>) output attributes.</p>
+<p>However, this design choice makes the lema "select early and forget" across multiple code-paths a pain to work with.</p>
+<p>This handling is exacerbated by the distinction between "systemized" and "non-systemized" (e.g. <code>lib</code>) output attributes.</p>
 <p>In the overall set of optimization goals of this framework, this distinction is of extraordinarily poor value, more so, that function
 calls are memoized during a single evaluation, which renders the system selector computationally irrelevant where not used.</p>
 <h2 id="decision-3"><a class="header" href="#decision-3">Decision</a></h2>
@@ -1464,7 +1464,7 @@ calls are memoized during a single evaluation, which renders the system selector
 <p>What becomes easier or more difficult to do because of this change?</p>
 </blockquote>
 <!-- write an answer to this question below -->
-<p>The motto &quot;select early and forget&quot; makes various code-paths easier to reason about and maintain.</p>
+<p>The motto "select early and forget" makes various code-paths easier to reason about and maintain.</p>
 <p>The Nix CLI completion won't respond gracefully to these changes.
 However, the Nix CLI is explicitly <em>not</em> a primary target of this framework.
 The reason for this is that the use cases for the Nix CLI are somewhat skewed towards the packager use case, but in any case are (currently) not purpose built for the DevOps use case.</p>
@@ -1496,7 +1496,7 @@ However, no project that requires source distributions of one of the 80k+ packag
 </blockquote>
 <!-- write an answer to this question below -->
 <p>Users of Standard access packages as <code>nixpkgs.&lt;package-name&gt;</code>.</p>
-<p>Users that want to interact with nixos, do so by loading <code>nixos = import (inputs.nixpkgs + &quot;/nixos&quot;);</code> or similar.
+<p>Users that want to interact with nixos, do so by loading <code>nixos = import (inputs.nixpkgs + "/nixos");</code> or similar.
 The close coupling of the Nix Package Collection and NixOS now is broken.
 This suites well the DevOps use case, which is not <em>primarily</em> concerned with the unseparable union of the Nix Packages Collection and NixOS.
 It rather presents a plethora of use cases that content with the Nix Package Collection, alone, and where NixOS would present as a distraction.
@@ -1566,8 +1566,8 @@ Alongside, we explore ways how teams can structure their collaboration on packag
 <p>Production is a place, where she cannot allow an attacker to gain access to.</p>
 <p>Therefore,</p>
 <ul>
-<li>she clears and protects the perimeter via &quot;perimeter security&quot; tactics,</li>
-<li>she secures transport via &quot;zero trust&quot;,</li>
+<li>she clears and protects the perimeter via "perimeter security" tactics,</li>
+<li>she secures transport via "zero trust",</li>
 <li>she encrypts secrets at rest and in flight,</li>
 <li>but, what if the very artifact that is being deployed is a trojan horse?</li>
 </ul>
@@ -1598,10 +1598,10 @@ Alongside, we explore ways how teams can structure their collaboration on packag
     operable --&gt; image
     image --&gt; scheduler
 
-    click packaging href &quot;#packaging-layer&quot; &quot;Jump to the packaging layer section&quot;
-    click operable href &quot;#operable-layer&quot; &quot;Jump to the operable layer section&quot;
-    click image href &quot;#oci-image-layer&quot; &quot;Jump to the OCI image layer section&quot;
-    click scheduler href &quot;#scheduler-chart-layer&quot; &quot;Jump to the scheduler chart layer section&quot;
+    click packaging href "#packaging-layer" "Jump to the packaging layer section"
+    click operable href "#operable-layer" "Jump to the operable layer section"
+    click image href "#oci-image-layer" "Jump to the OCI image layer section"
+    click scheduler href "#scheduler-chart-layer" "Jump to the scheduler chart layer section"
 </code></pre>
 <h3 id="packaging-layer"><a class="header" href="#packaging-layer">Packaging Layer</a></h3>
 <p>This layer builds the pristine executable application as written by the developer with the building tools of the developer.</p>
@@ -1671,10 +1671,10 @@ But don't worry, we'll also walk you through the diagram.</p>
     building --&gt; deployment
     deployment --&gt; probing
 
-    click linting href &quot;#linting-phase&quot; &quot;Jump to the linting phase section&quot;
-    click building href &quot;#building-phase&quot; &quot;Jump to the building phase section&quot;
-    click deployment href &quot;#deployment-phase&quot; &quot;Jump to the deployment phase section&quot;
-    click probing href &quot;#probing-attestation-phase&quot; &quot;Jump to the probing &amp; attestation phase section&quot;
+    click linting href "#linting-phase" "Jump to the linting phase section"
+    click building href "#building-phase" "Jump to the building phase section"
+    click deployment href "#deployment-phase" "Jump to the deployment phase section"
+    click probing href "#probing-attestation-phase" "Jump to the probing &amp; attestation phase section"
 </code></pre>
 <p>To automate these, we make use of the [Standard Registry][glossary-registry] that holds all data needed to build the pipeline.
 Its is data JSON-serializable so that any CI tool or helper library can auto-generate the pipeline from it.</p>
@@ -1708,7 +1708,7 @@ However, orchestrated workflows, as opposed to the pull-based choreographed ones
 <h3 id="probing--attestation-phase"><a class="header" href="#probing--attestation-phase">Probing &amp; Attestation Phase</a></h3>
 <p>The probing and attestation phase is highly situation specific.
 It cannot be adequately represented through Standard and requires an entirely different control loop.</p>
-<p>During this phase a mix of short- &amp; long-lived testing suites are run against a particular target environment, usually called &quot;testing&quot; or &quot;staging&quot;.</p>
+<p>During this phase a mix of short- &amp; long-lived testing suites are run against a particular target environment, usually called "testing" or "staging".</p>
 <p>Some of these suites can be automated in proper test scheduling frameworks, others are inherently manual.</p>
 <p>Test suites may include the likes of:</p>
 <ul>
@@ -1750,7 +1750,7 @@ git init &amp;&amp; git add .
 # enter the devshell and effectuate repo configuration
 direnv allow
 
-git add . &amp;&amp; git commit -m &quot;feat: initial commit&quot;
+git add . &amp;&amp; git commit -m "feat: initial commit"
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="standard-and-nix-and-rust-oh-my"><a class="header" href="#standard-and-nix-and-rust-oh-my">Standard, and Nix and Rust, oh my!</a></h1>
 <p>This template uses <a href="https://nixos.org">Nix</a> to create a sane development shell for
@@ -1779,7 +1779,7 @@ direnv allow || nix develop
 cargo init # pass --lib for library projects
 cargo build # to generate Cargo.lock
 
-git add . &amp;&amp; git commit -m &quot;init&quot;
+git add . &amp;&amp; git commit -m "init"
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tuicli"><a class="header" href="#tuicli">TUI/CLI</a></h1>
 <h4 id="tuicli-1"><a class="header" href="#tuicli-1">TUI/CLI:</a></h4>
@@ -1813,7 +1813,7 @@ Flags:
   -h, --help      help for std
   -v, --version   version for std
 
-Use &quot;std [command] --help&quot; for more information about a command.
+Use "std [command] --help" for more information about a command.
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="conventions-in-std"><a class="header" href="#conventions-in-std">Conventions in <code>std</code></a></h1>
 <p>In principle, we all want to be able to read code with local reasoning.</p>
@@ -1851,7 +1851,7 @@ This is the main mechanism by which code organization and separation of concern 
 <h2 id="the-desytemized-inputs"><a class="header" href="#the-desytemized-inputs">The <code>deSytemize</code>d inputs</a></h2>
 <p>All inputs are scoped for the <em>current</em> system, that is derived from the <code>systems</code> input list to <code>std.grow</code>.
 That means contrary to the usual nix-UX, in most cases, you don't need to worry about <code>system</code>.</p>
-<p>The current system will be &quot;lifted up&quot; one level, while still providing full access to all <code>systems</code> for
+<p>The current system will be "lifted up" one level, while still providing full access to all <code>systems</code> for
 cross-compilation scenarios.</p>
 <pre><code class="language-nix"># inputs.a.packages.${system}
 {
@@ -1871,7 +1871,7 @@ of the time.</p>
 them seems counter-intuitive. But due to the fact that function calls are memoized, there
 is never a penalty in actually scoping them. So for the sake of uniformity, we scope them
 anyways.</p>
-<p>The outputs therefore abide by the following &quot;schema&quot;:</p>
+<p>The outputs therefore abide by the following "schema":</p>
 <pre><code class="language-nix">{
   ${system}.${cell}.${block}.${target} = {};
 }
@@ -1882,24 +1882,24 @@ anyways.</p>
   ansi = import ./ansi.nix;
   pad = s: let
     n = 17;
-    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (n - (l.stringLength s)));
+    prefix = l.concatStringsSep "" (l.genList (_: " ") (n - (l.stringLength s)));
   in
     prefix + s;
   indent = s: let
     n = 5;
-    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
-    lines = l.splitString &quot;\n&quot; s;
+    prefix = l.concatStringsSep "" (l.genList (_: " ") n);
+    lines = l.splitString "\n" s;
   in
-    &quot;  📝 │ &quot; + (l.concatStringsSep &quot;\n${prefix}│ &quot; lines);
+    "  📝 │ " + (l.concatStringsSep "\n${prefix}│ " lines);
   warn = let
     apply =
       l.replaceStrings
-      (map (key: &quot;{${key}}&quot;) (l.attrNames ansi))
+      (map (key: "{${key}}") (l.attrNames ansi))
       (l.attrValues ansi);
   in
     msg:
-      l.trace (apply &quot;🔥 {bold}{196}Standard Deprecation Notices - {220}run `std check' to show!{reset}&quot;)
-      l.traceVerbose (apply &quot;\n{202}${msg}{reset}&quot;);
+      l.trace (apply "🔥 {bold}{196}Standard Deprecation Notices - {220}run `std check' to show!{reset}")
+      l.traceVerbose (apply "\n{202}${msg}{reset}");
 in
   warn ''
     ─────┬─────────────────────────────────────────────────────────────────────────
@@ -1942,7 +1942,7 @@ let
 in
   name: {
     inherit name;
-    type = &quot;arion&quot;;
+    type = "arion";
     actions = {
       currentSystem,
       fragment,
@@ -1951,14 +1951,14 @@ in
       inputs,
     }: let
       pkgs = inputs.nixpkgs.${currentSystem};
-      cmd = &quot;arion --prebuilt-file ${target.config.out.dockerComposeYaml}&quot;;
+      cmd = "arion --prebuilt-file ${target.config.out.dockerComposeYaml}";
     in [
-      (mkCommand currentSystem &quot;up&quot; &quot;arion up&quot; [pkgs.arion] ''${cmd} up &quot;$@&quot; '' {})
-      (mkCommand currentSystem &quot;ps&quot; &quot;exec this arion task to ps&quot; [pkgs.arion] ''${cmd} ps &quot;$@&quot; '' {})
-      (mkCommand currentSystem &quot;stop&quot; &quot;arion stop&quot; [pkgs.arion] ''${cmd} stop &quot;$@&quot; '' {})
-      (mkCommand currentSystem &quot;rm&quot; &quot;arion rm&quot; [pkgs.arion] ''${cmd} rm &quot;$@&quot; '' {})
-      (mkCommand currentSystem &quot;config&quot; &quot;check the docker-compose yaml file&quot; [pkgs.arion] ''${cmd} config &quot;$@&quot; '' {})
-      (mkCommand currentSystem &quot;arion&quot; &quot;pass any command to arion&quot; [pkgs.arion] ''${cmd} &quot;$@&quot; '' {})
+      (mkCommand currentSystem "up" "arion up" [pkgs.arion] ''${cmd} up "$@" '' {})
+      (mkCommand currentSystem "ps" "exec this arion task to ps" [pkgs.arion] ''${cmd} ps "$@" '' {})
+      (mkCommand currentSystem "stop" "arion stop" [pkgs.arion] ''${cmd} stop "$@" '' {})
+      (mkCommand currentSystem "rm" "arion rm" [pkgs.arion] ''${cmd} rm "$@" '' {})
+      (mkCommand currentSystem "config" "check the docker-compose yaml file" [pkgs.arion] ''${cmd} config "$@" '' {})
+      (mkCommand currentSystem "arion" "pass any command to arion" [pkgs.arion] ''${cmd} "$@" '' {})
     ];
   }
 </code></pre>
@@ -1978,7 +1978,7 @@ in
   name: {
     __functor = addSelectorFunctor;
     inherit name;
-    type = &quot;runnables&quot;;
+    type = "runnables";
     actions = {
       currentSystem,
       fragment,
@@ -2018,7 +2018,7 @@ in
   name: {
     __functor = addSelectorFunctor;
     inherit name;
-    type = &quot;installables&quot;;
+    type = "installables";
     actions = {
       currentSystem,
       fragment,
@@ -2030,36 +2030,36 @@ in
     in [
       (actions.build currentSystem target)
       # profile commands require a flake ref
-      (mkCommand currentSystem &quot;install&quot; &quot;install this target&quot; [] ''
+      (mkCommand currentSystem "install" "install this target" [] ''
         # ${target}
         set -x
-        nix profile install &quot;$PRJ_ROOT#&quot;${escapedFragment}
+        nix profile install "$PRJ_ROOT#"${escapedFragment}
       '' {})
-      (mkCommand currentSystem &quot;upgrade&quot; &quot;upgrade this target&quot; [] ''
+      (mkCommand currentSystem "upgrade" "upgrade this target" [] ''
         # ${target}
         set -x
-        nix profile upgrade &quot;$PRJ_ROOT#&quot;${escapedFragment}
+        nix profile upgrade "$PRJ_ROOT#"${escapedFragment}
       '' {})
-      (mkCommand currentSystem &quot;remove&quot; &quot;remove this target&quot; [] ''
+      (mkCommand currentSystem "remove" "remove this target" [] ''
         # ${target}
         set -x
-        nix profile remove &quot;$PRJ_ROOT#&quot;${escapedFragment}
+        nix profile remove "$PRJ_ROOT#"${escapedFragment}
       '' {})
       # TODO: use target. `nix bundle` requires a flake ref, but we may be able to use nix-bundle instead as a workaround
-      (mkCommand currentSystem &quot;bundle&quot; &quot;bundle this target&quot; [] ''
+      (mkCommand currentSystem "bundle" "bundle this target" [] ''
         # ${target}
         set -x
-        nix bundle --bundler github:Ninlives/relocatable.nix --refresh &quot;$PRJ_ROOT#&quot;${escapedFragment}
+        nix bundle --bundler github:Ninlives/relocatable.nix --refresh "$PRJ_ROOT#"${escapedFragment}
       '' {})
-      (mkCommand currentSystem &quot;bundleImage&quot; &quot;bundle this target to image&quot; [] ''
+      (mkCommand currentSystem "bundleImage" "bundle this target to image" [] ''
         # ${target}
         set -x
-        nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh &quot;$PRJ_ROOT#&quot;${escapedFragment}
+        nix bundle --bundler github:NixOS/bundlers#toDockerImage --refresh "$PRJ_ROOT#"${escapedFragment}
       '' {})
-      (mkCommand currentSystem &quot;bundleAppImage&quot; &quot;bundle this target to AppImage&quot; [] ''
+      (mkCommand currentSystem "bundleAppImage" "bundle this target to AppImage" [] ''
         # ${target}
         set -x
-        nix bundle --bundler github:ralismark/nix-appimage --refresh &quot;$PRJ_ROOT#&quot;${escapedFragment}
+        nix bundle --bundler github:ralismark/nix-appimage --refresh "$PRJ_ROOT#"${escapedFragment}
       '' {})
     ];
   }
@@ -2075,7 +2075,7 @@ slow them down.
 */
 name: {
   inherit name;
-  type = &quot;pkgs&quot;;
+  type = "pkgs";
   cli = false; # its special power
 }
 </code></pre>
@@ -2099,7 +2099,7 @@ in
   name: {
     __functor = addSelectorFunctor;
     inherit name;
-    type = &quot;devshells&quot;;
+    type = "devshells";
     actions = {
       currentSystem,
       fragment,
@@ -2110,24 +2110,24 @@ in
       developDrv = devshellDrv target;
     in [
       (actions.build currentSystem target)
-      (mkCommand currentSystem &quot;enter&quot; &quot;enter this devshell&quot; [] ''
-        profile_path=&quot;$PRJ_DATA_HOME/${fragmentRelPath}&quot;
-        mkdir -p &quot;$profile_path&quot;
+      (mkCommand currentSystem "enter" "enter this devshell" [] ''
+        profile_path="$PRJ_DATA_HOME/${fragmentRelPath}"
+        mkdir -p "$profile_path"
         # ${developDrv}
         nix_args=(
-          &quot;${unsafeDiscardStringContext developDrv.drvPath}&quot;
-          &quot;--no-update-lock-file&quot;
-          &quot;--no-write-lock-file&quot;
-          &quot;--no-warn-dirty&quot;
-          &quot;--accept-flake-config&quot;
-          &quot;--no-link&quot;
-          &quot;--build-poll-interval&quot; &quot;0&quot;
-          &quot;--builders-use-substitutes&quot;
+          "${unsafeDiscardStringContext developDrv.drvPath}"
+          "--no-update-lock-file"
+          "--no-write-lock-file"
+          "--no-warn-dirty"
+          "--accept-flake-config"
+          "--no-link"
+          "--build-poll-interval" "0"
+          "--builders-use-substitutes"
         )
-        nix build &quot;''${nix_args[@]}&quot; --profile &quot;$profile_path/shell-profile&quot;
-        _SHELL=&quot;$SHELL&quot;
-        eval &quot;$(nix print-dev-env ${developDrv})&quot;
-        SHELL=&quot;$_SHELL&quot;
+        nix build "''${nix_args[@]}" --profile "$profile_path/shell-profile"
+        _SHELL="$SHELL"
+        eval "$(nix print-dev-env ${developDrv})"
+        SHELL="$_SHELL"
         if ! [[ -v STD_DIRENV ]]; then
           if declare -F __devshell-motd &amp;&gt;/dev/null; then
             __devshell-motd
@@ -2158,7 +2158,7 @@ let
 in
   name: {
     inherit name;
-    type = &quot;nixago&quot;;
+    type = "nixago";
     actions = {
       currentSystem,
       fragment,
@@ -2168,11 +2168,11 @@ in
     }: let
       pkgs = inputs.nixpkgs.${currentSystem};
     in [
-      (mkCommand currentSystem &quot;populate&quot; &quot;populate this nixago file into the repo&quot; [] ''
+      (mkCommand currentSystem "populate" "populate this nixago file into the repo" [] ''
         ${target.install}/bin/nixago_shell_hook
       '' {})
-      (mkCommand currentSystem &quot;explore&quot; &quot;interactively explore the nixago file&quot; [pkgs.bat] ''
-        bat &quot;${target.configFile}&quot;
+      (mkCommand currentSystem "explore" "interactively explore the nixago file" [pkgs.bat] ''
+        bat "${target.configFile}"
       '' {})
     ];
   }
@@ -2199,7 +2199,7 @@ in
   name: {
     __functor = addSelectorFunctor;
     inherit name;
-    type = &quot;containers&quot;;
+    type = "containers";
     actions = {
       currentSystem,
       fragment,
@@ -2212,7 +2212,7 @@ in
       proviso = ./containers-proviso.sh;
 
       tags' =
-        builtins.toFile &quot;${target.name}-tags.json&quot; (builtins.concatStringsSep &quot;\n&quot; target.image.tags);
+        builtins.toFile "${target.name}-tags.json" (builtins.concatStringsSep "\n" target.image.tags);
       copyFn = ''
         copy() {
           local uri prev_tag
@@ -2221,41 +2221,41 @@ in
 
           for tag in $(&lt;${tags'}); do
             if ! [[ -v prev_tag ]]; then
-              skopeo --insecure-policy copy nix:${target} &quot;$uri:$tag&quot; &quot;$@&quot;
+              skopeo --insecure-policy copy nix:${target} "$uri:$tag" "$@"
             else
               # speedup: copy from the previous tag to avoid superflous network bandwidth
-              skopeo --insecure-policy copy &quot;$uri:$prev_tag&quot; &quot;$uri:$tag&quot; &quot;$@&quot;
+              skopeo --insecure-policy copy "$uri:$prev_tag" "$uri:$tag" "$@"
             fi
-            echo &quot;Done: $uri:$tag&quot;
+            echo "Done: $uri:$tag"
 
-            prev_tag=&quot;$tag&quot;
+            prev_tag="$tag"
           done
         }
       '';
     in [
       (actions.build currentSystem target)
-      (mkCommand currentSystem &quot;print-image&quot; &quot;print out the image.repo with all tags&quot; [] ''
+      (mkCommand currentSystem "print-image" "print out the image.repo with all tags" [] ''
         echo
         for tag in $(&lt;${tags'}); do
-          echo &quot;${target.image.repo}:$tag&quot;
+          echo "${target.image.repo}:$tag"
         done
       '' {})
-      (mkCommand currentSystem &quot;publish&quot; &quot;copy the image to its remote registry&quot; [skopeo-nix2container] ''
+      (mkCommand currentSystem "publish" "copy the image to its remote registry" [skopeo-nix2container] ''
           ${copyFn}
           copy docker://${target.image.repo}
         '' {
           meta.image = target.image.name;
           inherit proviso;
         })
-      (mkCommand currentSystem &quot;load&quot; &quot;load image to the local docker daemon&quot; [skopeo-nix2container] ''
+      (mkCommand currentSystem "load" "load image to the local docker daemon" [skopeo-nix2container] ''
         ${copyFn}
         if command -v podman &amp;&gt; /dev/null; then
-           echo &quot;Podman detected: copy to local podman&quot;
-           copy containers-storage:${target.image.repo} &quot;$@&quot;
+           echo "Podman detected: copy to local podman"
+           copy containers-storage:${target.image.repo} "$@"
         fi
         if command -v docker &amp;&gt; /dev/null; then
-           echo &quot;Docker detected: copy to local docker&quot;
-           copy docker-daemon:${target.image.repo} &quot;$@&quot;
+           echo "Docker detected: copy to local docker"
+           copy docker-daemon:${target.image.repo} "$@"
         fi
       '' {})
     ];
@@ -2273,7 +2273,7 @@ Use the Terra Blocktype for terraform configurations managed by terranix.
 Important! You need to specify the state repo on the blocktype, e.g.:
 
 [
-  (terra &quot;infra&quot; &quot;git@github.com:myorg/myrepo.git&quot;)
+  (terra "infra" "git@github.com:myorg/myrepo.git")
 ]
 
 Available actions:
@@ -2291,7 +2291,7 @@ in
   name: repo: {
     inherit name;
     __functor = self: selectors: self // selectors;
-    type = &quot;terra&quot;;
+    type = "terra";
     actions = {
       currentSystem,
       fragment,
@@ -2303,17 +2303,17 @@ in
       pkgs = inputs.nixpkgs.${currentSystem};
 
       repoFolder = with pkgs.lib;
-        concatStringsSep &quot;/&quot; ([&quot;./nix&quot;] ++ (init (splitString &quot;/&quot; fragmentRelPath)));
+        concatStringsSep "/" (["./nix"] ++ (init (splitString "/" fragmentRelPath)));
 
       git = {
         inherit repo;
-        # repo = &quot;git@github.com:myorg/myrepo.git&quot;;
-        ref = &quot;main&quot;;
-        state = fragmentRelPath + &quot;/state.json&quot;;
+        # repo = "git@github.com:myorg/myrepo.git";
+        ref = "main";
+        state = fragmentRelPath + "/state.json";
       };
 
       terraEval = import (terranix + /core/default.nix);
-      terraformConfiguration = builtins.toFile &quot;config.tf.json&quot; (builtins.toJSON
+      terraformConfiguration = builtins.toFile "config.tf.json" (builtins.toJSON
         (terraEval {
           inherit pkgs; # only effectively required for `pkgs.lib`
           terranix_config = {
@@ -2327,38 +2327,38 @@ in
       setup = ''
         export TF_IN_AUTOMATION=1
         # export TF_INPUT=0
-        export TF_DATA_DIR=&quot;$PRJ_DATA_HOME/${fragmentRelPath}&quot;
-        export TF_PLUGIN_CACHE_DIR=&quot;$PRJ_CACHE_HOME/tf-plugin-cache&quot;
-        mkdir -p &quot;$TF_DATA_DIR&quot;
-        mkdir -p &quot;$TF_PLUGIN_CACHE_DIR&quot;
-        dir=&quot;$PRJ_ROOT/${repoFolder}/.tf&quot;
-        mkdir -p &quot;$PRJ_ROOT/${repoFolder}/.tf&quot;
-        cat &lt;&lt; MESSAGE &gt; &quot;$PRJ_ROOT/${repoFolder}/.tf/readme.md&quot;
+        export TF_DATA_DIR="$PRJ_DATA_HOME/${fragmentRelPath}"
+        export TF_PLUGIN_CACHE_DIR="$PRJ_CACHE_HOME/tf-plugin-cache"
+        mkdir -p "$TF_DATA_DIR"
+        mkdir -p "$TF_PLUGIN_CACHE_DIR"
+        dir="$PRJ_ROOT/${repoFolder}/.tf"
+        mkdir -p "$PRJ_ROOT/${repoFolder}/.tf"
+        cat &lt;&lt; MESSAGE &gt; "$PRJ_ROOT/${repoFolder}/.tf/readme.md"
         This is a tf staging area.
         It is motivated by the terraform CLI requiring to be executed in a staging area.
         MESSAGE
 
-        if [[ -e &quot;$dir/config.tf.json&quot; ]]; then rm -f &quot;$dir/config.tf.json&quot;; fi
-        jq '.' ${terraformConfiguration} &gt; &quot;$dir/config.tf.json&quot;
+        if [[ -e "$dir/config.tf.json" ]]; then rm -f "$dir/config.tf.json"; fi
+        jq '.' ${terraformConfiguration} &gt; "$dir/config.tf.json"
       '';
 
       wrap = cmd: ''
         ${setup}
         terraform-backend-git git \
-           --dir &quot;$dir&quot; \
+           --dir "$dir" \
            --repository ${git.repo} \
            --ref ${git.ref} \
            --state ${git.state} \
-           terraform ${cmd} &quot;$@&quot;;
+           terraform ${cmd} "$@";
       '';
     in [
-      (mkCommand currentSystem &quot;init&quot; &quot;tf init&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;init&quot;) {})
-      (mkCommand currentSystem &quot;plan&quot; &quot;tf plan&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;plan&quot;) {})
-      (mkCommand currentSystem &quot;apply&quot; &quot;tf apply&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;apply&quot;) {})
-      (mkCommand currentSystem &quot;state&quot; &quot;tf state&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;state&quot;) {})
-      (mkCommand currentSystem &quot;refresh&quot; &quot;tf refresh&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;refresh&quot;) {})
-      (mkCommand currentSystem &quot;destroy&quot; &quot;tf destroy&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;destroy&quot;) {})
-      (mkCommand currentSystem &quot;terraform&quot; &quot;pass any command to terraform&quot; [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap &quot;&quot;) {})
+      (mkCommand currentSystem "init" "tf init" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "init") {})
+      (mkCommand currentSystem "plan" "tf plan" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "plan") {})
+      (mkCommand currentSystem "apply" "tf apply" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "apply") {})
+      (mkCommand currentSystem "state" "tf state" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "state") {})
+      (mkCommand currentSystem "refresh" "tf refresh" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "refresh") {})
+      (mkCommand currentSystem "destroy" "tf destroy" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "destroy") {})
+      (mkCommand currentSystem "terraform" "pass any command to terraform" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "") {})
     ];
   }
 </code></pre>
@@ -2384,7 +2384,7 @@ let
 in
   name: {
     inherit name;
-    type = &quot;data&quot;;
+    type = "data";
     actions = {
       currentSystem,
       fragment,
@@ -2397,7 +2397,7 @@ in
 
       # if target ? __std_data_wrapper, then we need to unpack from `.data`
       json = triv.writeTextFile {
-        name = &quot;data.json&quot;;
+        name = "data.json";
         text = toJSON (
           if target ? __std_data_wrapper
           then target.data
@@ -2405,9 +2405,9 @@ in
         );
       };
     in [
-      (mkCommand currentSystem &quot;write&quot; &quot;write to file&quot; [] &quot;echo ${json}&quot; {})
-      (mkCommand currentSystem &quot;explore&quot; &quot;interactively explore&quot; [pkgs.fx] (
-        concatStringsSep &quot;\t&quot; [&quot;fx&quot; json]
+      (mkCommand currentSystem "write" "write to file" [] "echo ${json}" {})
+      (mkCommand currentSystem "explore" "interactively explore" [pkgs.fx] (
+        concatStringsSep "\t" ["fx" json]
       ) {})
     ];
   }
@@ -2425,7 +2425,7 @@ Consequently, there are no actions available for functions.
 */
 name: {
   inherit name;
-  type = &quot;functions&quot;;
+  type = "functions";
 }
 </code></pre>
 <h2 id="anything"><a class="header" href="#anything">Anything</a></h2>
@@ -2438,7 +2438,7 @@ It doesn't have actions.
 */
 name: {
   inherit name;
-  type = &quot;anything&quot;;
+  type = "anything";
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><div class="sidetoc"><nav class="pagetoc"></nav></div>
@@ -2547,7 +2547,7 @@ No description
     /* ... */
     nixago = [
       (cell.nixago.foo {
-        data.qux = &quot;xyz&quot;;
+        data.qux = "xyz";
         packages = [ pkgs.additional-package ];
       })
       cell.nixago.bar
@@ -2588,7 +2588,7 @@ No description
   inherit (inputs.std.lib) ops;
 in {
   # microvm &lt;module&gt;
-  myhost = ops.mkMicrovm ({ pkgs, lib, ... }: { networking.hostName = &quot;microvms-host&quot;;});
+  myhost = ops.mkMicrovm ({ pkgs, lib, ... }: { networking.hostName = "microvms-host";});
 }
 </code></pre>
 <hr />
@@ -2616,7 +2616,7 @@ No description
   gid: The group ID to run the container as.
   perms: A list of permissions to set for the container.
   labels: An attribute set of labels to set for the container. The keys are
-  automatically prefixed with &quot;org.opencontainers.image&quot;.
+  automatically prefixed with "org.opencontainers.image".
   config: Additional options to pass to nix2container.buildImage's config.
   options: Additional options to pass to nix2container.buildImage.
 
@@ -2679,7 +2679,7 @@ No description
   gid: The group ID to run the container as.
   perms: A list of permissions to set for the container.
   labels: An attribute set of labels to set for the container. The keys are
-  automatically prefixed with &quot;org.opencontainers.image&quot;.
+  automatically prefixed with "org.opencontainers.image".
   debug: Whether to include debug tools in the container (coreutils).
   config: Additional options to pass to nix2container.buildImage's config.
   options: Additional options to pass to nix2container.
@@ -2716,12 +2716,12 @@ No description
 <h6 id="nix-based-extension"><a class="header" href="#nix-based-extension">Nix-based extension</a></h6>
 <pre><code class="language-nix">rec {
   upstream = n2c.pullImage {
-    imageName = &quot;docker.io/my-upstream-image&quot;;
-    imageDigest = &quot;sha256:fffff.....&quot;;
-    sha256 = &quot;sha256-ffffff...&quot;;
+    imageName = "docker.io/my-upstream-image";
+    imageDigest = "sha256:fffff.....";
+    sha256 = "sha256-ffffff...";
   };
   modified = n2c.buildImage {
-    name = &quot;docker.io/my-modified-image&quot;;
+    name = "docker.io/my-modified-image";
     fromImage = upstream;
     contents = [nixpkgs.bashInteractive];
   };
@@ -2783,8 +2783,8 @@ No description
   inherit (inputs) nixpkgs;
 in {
   data = {};
-  output = &quot;adrgen.config.yml&quot;;
-  format = &quot;yaml&quot;;
+  output = "adrgen.config.yml";
+  format = "yaml";
   commands = [{package = nixpkgs.adrgen;}];
 }
 </code></pre>
@@ -2821,14 +2821,14 @@ in {
   inherit (inputs) nixpkgs;
 in {
   data = {};
-  format = &quot;yaml&quot;;
-  output = &quot;.conform.yaml&quot;;
+  format = "yaml";
+  output = ".conform.yaml";
   packages = [nixpkgs.conform];
   apply = d: {
     policies =
       []
       ++ (l.optional (d ? commit) {
-        type = &quot;commit&quot;;
+        type = "commit";
         spec =
           d.commit
           // l.optionalAttrs (d ? cells) {
@@ -2842,7 +2842,7 @@ in {
           };
       })
       ++ (l.optional (d ? license) {
-        type = &quot;license&quot;;
+        type = "license";
         spec = d.license;
       });
   };
@@ -2867,13 +2867,13 @@ No description
   inherit (inputs) nixpkgs;
 in {
   data = {};
-  output = &quot;.editorconfig&quot;;
+  output = ".editorconfig";
   engine = request: let
     inherit (request) data output;
     name = l.baseNameOf output;
     value = {
       globalSection = {root = data.root or true;};
-      sections = l.removeAttrs data [&quot;root&quot;];
+      sections = l.removeAttrs data ["root"];
     };
   in
     nixpkgs.writeText name (l.generators.toINIWithGlobalSection {} value);
@@ -2898,9 +2898,9 @@ Please see the App’s Homepage for the configuration schema.</p>
 <h6 id="definition-3"><a class="header" href="#definition-3">Definition:</a></h6>
 <pre><code class="language-nix">{
   data = {};
-  output = &quot;.github/settings.yml&quot;;
-  format = &quot;yaml&quot;;
-  hook.mode = &quot;copy&quot;; # let the Github Settings action pick it up outside of devshell
+  output = ".github/settings.yml";
+  format = "yaml";
+  hook.mode = "copy"; # let the Github Settings action pick it up outside of devshell
 }
 </code></pre>
 </div>
@@ -2936,7 +2936,7 @@ in
         data = {
           tasks = {
             fmt = {
-              description = &quot;Formats all changed source files&quot;;
+              description = "Formats all changed source files";
               content = ''
                 treefmt $(git diff --name-only --cached)
               '';
@@ -2952,10 +2952,10 @@ in
 <pre><code class="language-nix">{
 # ...
   hello = {
-    description = &quot;Prints hello world&quot;;
+    description = "Prints hello world";
     interpreter = nixpkgs.python3;
     content = ''
-      print(&quot;Hello, world!&quot;)
+      print("Hello, world!")
     '';
   };
 }
@@ -2971,7 +2971,7 @@ in {
   apply = d: let
     # Transforms interpreter attribute if present
     # nixpkgs.pkgname -&gt; nixpkgs.pkgname + '/bin/&lt;name&gt;'
-    getExe = x: &quot;${l.getBin x}/bin/${x.meta.mainProgram or (l.getName x)}&quot;;
+    getExe = x: "${l.getBin x}/bin/${x.meta.mainProgram or (l.getName x)}";
     final =
       d
       // {
@@ -2982,19 +2982,19 @@ in {
           d.tasks;
       };
   in {
-    data = final; # CUE expects structure to be wrapped with &quot;data&quot;
+    data = final; # CUE expects structure to be wrapped with "data"
   };
-  format = &quot;text&quot;;
-  output = &quot;Justfile&quot;;
+  format = "text";
+  output = "Justfile";
   packages = [nixpkgs.just];
   hook = {
-    mode = &quot;copy&quot;;
+    mode = "copy";
   };
   engine = inputs.nixago.engines.cue {
     files = [./just.cue];
     flags = {
-      expression = &quot;rendered&quot;;
-      out = &quot;text&quot;;
+      expression = "rendered";
+      out = "text";
     };
     postHook = ''
       ${l.getExe nixpkgs.just} --unstable --fmt -f $out
@@ -3021,34 +3021,34 @@ No description
   lib = nixpkgs.lib // builtins;
 
   mkScript = stage:
-    nixpkgs.writeScript &quot;lefthook-${stage}&quot; ''
+    nixpkgs.writeScript "lefthook-${stage}" ''
       #!${nixpkgs.runtimeShell}
-      [ &quot;$LEFTHOOK&quot; == &quot;0&quot; ] || ${lib.getExe nixpkgs.lefthook} run &quot;${stage}&quot; &quot;$@&quot;
+      [ "$LEFTHOOK" == "0" ] || ${lib.getExe nixpkgs.lefthook} run "${stage}" "$@"
     '';
 
   toStagesConfig = config:
     lib.removeAttrs config [
-      &quot;colors&quot;
-      &quot;extends&quot;
-      &quot;skip_output&quot;
-      &quot;source_dir&quot;
-      &quot;source_dir_local&quot;
+      "colors"
+      "extends"
+      "skip_output"
+      "source_dir"
+      "source_dir_local"
     ];
 in {
   data = {};
-  format = &quot;yaml&quot;;
-  output = &quot;lefthook.yml&quot;;
+  format = "yaml";
+  output = "lefthook.yml";
   packages = [nixpkgs.lefthook];
   # Add an extra hook for adding required stages whenever the file changes
   hook.extra = config:
     lib.pipe config [
       toStagesConfig
       lib.attrNames
-      (lib.map (stage: ''ln -sf &quot;${mkScript stage}&quot; &quot;.git/hooks/${stage}&quot;''))
+      (lib.map (stage: ''ln -sf "${mkScript stage}" ".git/hooks/${stage}"''))
       (stages:
-        lib.optional (stages != []) &quot;mkdir -p .git/hooks&quot;
+        lib.optional (stages != []) "mkdir -p .git/hooks"
         ++ stages)
-      (lib.concatStringsSep &quot;\n&quot;)
+      (lib.concatStringsSep "\n")
     ];
 }
 </code></pre>
@@ -3072,26 +3072,26 @@ Solution Architect extra happy: <a href="https://github.com/joelcourtney/mdbook-
   inherit (inputs) nixpkgs;
 in {
   data = {};
-  output = &quot;book.toml&quot;;
-  format = &quot;toml&quot;;
+  output = "book.toml";
+  format = "toml";
   hook.extra = d: let
-    sentinel = &quot;nixago-auto-created: mdbook-build-folder&quot;;
-    file = &quot;.gitignore&quot;;
+    sentinel = "nixago-auto-created: mdbook-build-folder";
+    file = ".gitignore";
     str = ''
       # ${sentinel}
-      ${d.build.build-dir or &quot;book&quot;}/**
+      ${d.build.build-dir or "book"}/**
     '';
   in ''
     # Configure gitignore
     create() {
-      echo -n &quot;${str}&quot; &gt; &quot;${file}&quot;
+      echo -n "${str}" &gt; "${file}"
     }
     append() {
-      echo -en &quot;\n${str}&quot; &gt;&gt; &quot;${file}&quot;
+      echo -en "\n${str}" &gt;&gt; "${file}"
     }
-    if ! test -f &quot;${file}&quot;; then
+    if ! test -f "${file}"; then
       create
-    elif ! grep -qF &quot;${sentinel}&quot; &quot;${file}&quot;; then
+    elif ! grep -qF "${sentinel}" "${file}"; then
       append
     fi
   '';
@@ -3116,8 +3116,8 @@ No description
   inherit (inputs) nixpkgs;
 in {
   data = {};
-  output = &quot;treefmt.toml&quot;;
-  format = &quot;toml&quot;;
+  output = "treefmt.toml";
+  format = "toml";
   commands = [{package = nixpkgs.treefmt;}];
 }
 </code></pre>
@@ -3174,7 +3174,7 @@ in
     # `default` is a special target in newer nix versions
     # see: harvesting below
     default = {
-      name = &quot;My Devshell&quot;;
+      name = "My Devshell";
       # make `std` available in the numtide/devshell
       imports = [ std.devshellProfiles.default ];
     };
@@ -3182,7 +3182,7 @@ in
 </code></pre>
 <pre><code class="language-nix"># ./flake.nix
 {
-  inputs.std.url = &quot;github:divnix/std&quot;;
+  inputs.std.url = "github:divnix/std";
 
   outputs = inputs:
     inputs.std.growOn {
@@ -3190,13 +3190,13 @@ in
       cellsFrom = ./nix;
       cellBlocks = [
         /* ... */
-        (inputs.std.blockTypes.devshells &quot;shells&quot;)
+        (inputs.std.blockTypes.devshells "shells")
       ];
     }
     # soil for compatiblity ...
     {
       # ... with `nix develop` - `default` is a special target for `nix develop`
-      devShells = inputs.std.harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
+      devShells = inputs.std.harvest inputs.self ["local" "shells"];
     };
 }
 </code></pre>
@@ -3226,24 +3226,24 @@ No description
   ansi = import ./ansi.nix;
   pad = s: let
     n = 17;
-    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (n - (l.stringLength s)));
+    prefix = l.concatStringsSep "" (l.genList (_: " ") (n - (l.stringLength s)));
   in
     prefix + s;
   indent = s: let
     n = 5;
-    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
-    lines = l.splitString &quot;\n&quot; s;
+    prefix = l.concatStringsSep "" (l.genList (_: " ") n);
+    lines = l.splitString "\n" s;
   in
-    &quot;  📝 │ &quot; + (l.concatStringsSep &quot;\n${prefix}│ &quot; lines);
+    "  📝 │ " + (l.concatStringsSep "\n${prefix}│ " lines);
   warn = let
     apply =
       l.replaceStrings
-      (map (key: &quot;{${key}}&quot;) (l.attrNames ansi))
+      (map (key: "{${key}}") (l.attrNames ansi))
       (l.attrValues ansi);
   in
     msg:
-      l.trace (apply &quot;🔥 {bold}{196}Standard Deprecation Notices - {220}run `std check' to show!{reset}&quot;)
-      l.traceVerbose (apply &quot;\n{202}${msg}{reset}&quot;);
+      l.trace (apply "🔥 {bold}{196}Standard Deprecation Notices - {220}run `std check' to show!{reset}")
+      l.traceVerbose (apply "\n{202}${msg}{reset}");
 in
   warn ''
     ─────┬─────────────────────────────────────────────────────────────────────────
@@ -3270,38 +3270,38 @@ No description
   l = inputs.nixpkgs.lib // builtins;
 
   # other than `divnix/blank`
-  isBlank = input: inputs.${input}.narHash == &quot;sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=&quot;;
+  isBlank = input: inputs.${input}.narHash == "sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=";
 
   ansi = import ./ansi.nix;
 
   pad = n: s: let
-    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
+    prefix = l.concatStringsSep "" (l.genList (_: " ") n);
   in
     prefix + s;
 
   indent = s: let
     n = 5;
-    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
-    lines = l.splitString &quot;\n&quot; s;
+    prefix = l.concatStringsSep "" (l.genList (_: " ") n);
+    lines = l.splitString "\n" s;
   in
-    l.concatStringsSep &quot;\n${prefix}│ &quot; lines;
+    l.concatStringsSep "\n${prefix}│ " lines;
 
   warn = let
     apply =
       l.replaceStrings
-      (map (key: &quot;{${key}}&quot;) (l.attrNames ansi))
+      (map (key: "{${key}}") (l.attrNames ansi))
       (l.attrValues ansi);
   in
-    msg: l.trace (apply &quot;🚀 {bold}{200}Standard Input Overloading{reset}${msg}&quot;) &quot;&quot;;
+    msg: l.trace (apply "🚀 {bold}{200}Standard Input Overloading{reset}${msg}") "";
 
   body = ''
     In order to use ${target}, add to {bold}flake.nix{un-bold}:
 
-      inputs.std.inputs.${input}.url = &quot;${url}&quot;;
+      inputs.std.inputs.${input}.url = "${url}";
   '';
 
   inputs' = let
-    names = l.attrNames (l.removeAttrs inputs [&quot;self&quot; &quot;cells&quot; &quot;blank&quot; &quot;nixpkgs&quot;]);
+    names = l.attrNames (l.removeAttrs inputs ["self" "cells" "blank" "nixpkgs"]);
     nameLengths = map l.stringLength names;
     maxNameLength =
       l.foldl'
@@ -3314,15 +3314,15 @@ No description
 
     lines =
       l.map (
-        name: &quot;- ${name}${
+        name: "- ${name}${
           if isBlank name
-          then pad (maxNameLength - (l.stringLength name)) &quot; | blanked out&quot;
-          else &quot;&quot;
-        }&quot;
+          then pad (maxNameLength - (l.stringLength name)) " | blanked out"
+          else ""
+        }"
       )
       names;
   in
-    &quot;Declared Inputs:\n&quot; + (l.concatStringsSep &quot;\n&quot; lines);
+    "Declared Inputs:\n" + (l.concatStringsSep "\n" lines);
 in
   assert l.assertMsg (! (isBlank input)) (warn ''
 
@@ -3385,7 +3385,7 @@ git init &amp;&amp; git add .
 # enter the devshell and effectuate repo configuration
 direnv allow
 
-git add . &amp;&amp; git commit -m &quot;feat: initial commit&quot;
+git add . &amp;&amp; git commit -m "feat: initial commit"
 </code></pre>
 </div>
 </div>
@@ -3424,7 +3424,7 @@ direnv allow || nix develop
 cargo init # pass --lib for library projects
 cargo build # to generate Cargo.lock
 
-git add . &amp;&amp; git commit -m &quot;init&quot;
+git add . &amp;&amp; git commit -m "init"
 </code></pre>
 </div>
 </div>

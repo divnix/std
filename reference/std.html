@@ -225,7 +225,7 @@ in
     # `default` is a special target in newer nix versions
     # see: harvesting below
     default = {
-      name = &quot;My Devshell&quot;;
+      name = "My Devshell";
       # make `std` available in the numtide/devshell
       imports = [ std.devshellProfiles.default ];
     };
@@ -233,7 +233,7 @@ in
 </code></pre>
 <pre><code class="language-nix"># ./flake.nix
 {
-  inputs.std.url = &quot;github:divnix/std&quot;;
+  inputs.std.url = "github:divnix/std";
 
   outputs = inputs:
     inputs.std.growOn {
@@ -241,13 +241,13 @@ in
       cellsFrom = ./nix;
       cellBlocks = [
         /* ... */
-        (inputs.std.blockTypes.devshells &quot;shells&quot;)
+        (inputs.std.blockTypes.devshells "shells")
       ];
     }
     # soil for compatiblity ...
     {
       # ... with `nix develop` - `default` is a special target for `nix develop`
-      devShells = inputs.std.harvest inputs.self [&quot;local&quot; &quot;shells&quot;];
+      devShells = inputs.std.harvest inputs.self ["local" "shells"];
     };
 }
 </code></pre>
@@ -277,24 +277,24 @@ No description
   ansi = import ./ansi.nix;
   pad = s: let
     n = 17;
-    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (n - (l.stringLength s)));
+    prefix = l.concatStringsSep "" (l.genList (_: " ") (n - (l.stringLength s)));
   in
     prefix + s;
   indent = s: let
     n = 5;
-    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
-    lines = l.splitString &quot;\n&quot; s;
+    prefix = l.concatStringsSep "" (l.genList (_: " ") n);
+    lines = l.splitString "\n" s;
   in
-    &quot;  📝 │ &quot; + (l.concatStringsSep &quot;\n${prefix}│ &quot; lines);
+    "  📝 │ " + (l.concatStringsSep "\n${prefix}│ " lines);
   warn = let
     apply =
       l.replaceStrings
-      (map (key: &quot;{${key}}&quot;) (l.attrNames ansi))
+      (map (key: "{${key}}") (l.attrNames ansi))
       (l.attrValues ansi);
   in
     msg:
-      l.trace (apply &quot;🔥 {bold}{196}Standard Deprecation Notices - {220}run `std check' to show!{reset}&quot;)
-      l.traceVerbose (apply &quot;\n{202}${msg}{reset}&quot;);
+      l.trace (apply "🔥 {bold}{196}Standard Deprecation Notices - {220}run `std check' to show!{reset}")
+      l.traceVerbose (apply "\n{202}${msg}{reset}");
 in
   warn ''
     ─────┬─────────────────────────────────────────────────────────────────────────
@@ -321,38 +321,38 @@ No description
   l = inputs.nixpkgs.lib // builtins;
 
   # other than `divnix/blank`
-  isBlank = input: inputs.${input}.narHash == &quot;sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=&quot;;
+  isBlank = input: inputs.${input}.narHash == "sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=";
 
   ansi = import ./ansi.nix;
 
   pad = n: s: let
-    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
+    prefix = l.concatStringsSep "" (l.genList (_: " ") n);
   in
     prefix + s;
 
   indent = s: let
     n = 5;
-    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
-    lines = l.splitString &quot;\n&quot; s;
+    prefix = l.concatStringsSep "" (l.genList (_: " ") n);
+    lines = l.splitString "\n" s;
   in
-    l.concatStringsSep &quot;\n${prefix}│ &quot; lines;
+    l.concatStringsSep "\n${prefix}│ " lines;
 
   warn = let
     apply =
       l.replaceStrings
-      (map (key: &quot;{${key}}&quot;) (l.attrNames ansi))
+      (map (key: "{${key}}") (l.attrNames ansi))
       (l.attrValues ansi);
   in
-    msg: l.trace (apply &quot;🚀 {bold}{200}Standard Input Overloading{reset}${msg}&quot;) &quot;&quot;;
+    msg: l.trace (apply "🚀 {bold}{200}Standard Input Overloading{reset}${msg}") "";
 
   body = ''
     In order to use ${target}, add to {bold}flake.nix{un-bold}:
 
-      inputs.std.inputs.${input}.url = &quot;${url}&quot;;
+      inputs.std.inputs.${input}.url = "${url}";
   '';
 
   inputs' = let
-    names = l.attrNames (l.removeAttrs inputs [&quot;self&quot; &quot;cells&quot; &quot;blank&quot; &quot;nixpkgs&quot;]);
+    names = l.attrNames (l.removeAttrs inputs ["self" "cells" "blank" "nixpkgs"]);
     nameLengths = map l.stringLength names;
     maxNameLength =
       l.foldl'
@@ -365,15 +365,15 @@ No description
 
     lines =
       l.map (
-        name: &quot;- ${name}${
+        name: "- ${name}${
           if isBlank name
-          then pad (maxNameLength - (l.stringLength name)) &quot; | blanked out&quot;
-          else &quot;&quot;
-        }&quot;
+          then pad (maxNameLength - (l.stringLength name)) " | blanked out"
+          else ""
+        }"
       )
       names;
   in
-    &quot;Declared Inputs:\n&quot; + (l.concatStringsSep &quot;\n&quot; lines);
+    "Declared Inputs:\n" + (l.concatStringsSep "\n" lines);
 in
   assert l.assertMsg (! (isBlank input)) (warn ''
 
@@ -436,7 +436,7 @@ git init &amp;&amp; git add .
 # enter the devshell and effectuate repo configuration
 direnv allow
 
-git add . &amp;&amp; git commit -m &quot;feat: initial commit&quot;
+git add . &amp;&amp; git commit -m "feat: initial commit"
 </code></pre>
 </div>
 </div>
@@ -475,7 +475,7 @@ direnv allow || nix develop
 cargo init # pass --lib for library projects
 cargo build # to generate Cargo.lock
 
-git add . &amp;&amp; git commit -m &quot;init&quot;
+git add . &amp;&amp; git commit -m "init"
 </code></pre>
 </div>
 </div>

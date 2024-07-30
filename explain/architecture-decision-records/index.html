@@ -192,9 +192,9 @@ important architectural decision made along with its context and consequences.</
 <!-- write an answer to this question below -->
 <p>Repository navigation is among the first activities to build a mental model of any given repository.
 The Nix Ecosystem has come up with some weak conventions: these are variations that are mainly informed by the <code>nixpkgs</code> repository, itself.
-Despite that, users find it difficult to quickly &quot;wrap their head&quot; around a new project.
+Despite that, users find it difficult to quickly "wrap their head" around a new project.
 This is often times a result of an organically grown file organization that has trouble keeping up with growing project semantics.
-As a result, onboading onto a &quot;new&quot; nix project even within the same organizational context, sometimes can be a very frustrating and time-consuming activity.</p>
+As a result, onboading onto a "new" nix project even within the same organizational context, sometimes can be a very frustrating and time-consuming activity.</p>
 <h2 id="decision"><a class="header" href="#decision">Decision</a></h2>
 <blockquote>
 <p>What is the change that we're proposing and/or doing?</p>
@@ -206,9 +206,9 @@ As a result, onboading onto a &quot;new&quot; nix project even within the same o
 <p>Hence, 3 levels of organization are adopted.
 These levels correspond to the abstract organizational concepts of:</p>
 <ul>
-<li>consistent collection of functionality (&quot;what makes sense to group together?&quot;)</li>
-<li>repository output type (&quot;what types of gitops artifacts are produced?&quot;)</li>
-<li>named outputs (&quot;what are the actual outputs?&quot;)</li>
+<li>consistent collection of functionality ("what makes sense to group together?")</li>
+<li>repository output type ("what types of gitops artifacts are produced?")</li>
+<li>named outputs ("what are the actual outputs?")</li>
 </ul>
 <h2 id="consequences"><a class="header" href="#consequences">Consequences</a></h2>
 <blockquote>
@@ -219,7 +219,7 @@ These levels correspond to the abstract organizational concepts of:</p>
 <p>That same prototypical mental model also speeds up scaffolding of new content and code.</p>
 <p>At the expense of nested folders, it may still be further expanded, if additional organization is required.
 All the while that the primary meta-information about a project is properly communicated through these first three levels via the file system api, itself (think <code>ls</code> / <code>rg</code> / <code>fd</code>).</p>
-<p>On the other hand, this rigidity is sometimes overkill and users may resort to filler names such as &quot;<code>default</code>&quot;, because a given semantic only produces singletons.
+<p>On the other hand, this rigidity is sometimes overkill and users may resort to filler names such as "<code>default</code>", because a given semantic only produces singletons.
 This is acceptable, however, because this parallellity in addressing even these singleton values trades for very easy expansion or refactoring, as the meta-models of code organization already align.</p>
 <hr />
 <h1 id="2-restrict-the-calling-interface"><a class="header" href="#2-restrict-the-calling-interface">2. Restrict the calling interface</a></h1>
@@ -235,7 +235,7 @@ This is acceptable, however, because this parallellity in addressing even these 
 Over time, the <code>callPackage</code> idiom was developed that destructures arbitrary attributes of an 80k <em>upstream</em> attributeset provided by <code>nixpkgs</code>.
 A complicating side condition is added, where overlays modify that original upstream packages set in arbitrary ways.
 This is not a problem for people, who know nixpkgs by heart and it is not a problem for the author either.
-It is a problem for the future code reader, Nix expert or less so, who needs to grasp the essence of &quot;what's going on&quot; under a productivity side condition.</p>
+It is a problem for the future code reader, Nix expert or less so, who needs to grasp the essence of "what's going on" under a productivity side condition.</p>
 <p>Local reasoning is a tried and tested strategy to help mitigate those issues.</p>
 <p>In a variant of this problem, we observe only somewhat convergent, but still largely diverging styles of passing arguments in general across the repository context.</p>
 <h2 id="decision-1"><a class="header" href="#decision-1">Decision</a></h2>
@@ -246,13 +246,13 @@ It is a problem for the future code reader, Nix expert or less so, who needs to 
 <p>Encourage local reasoning by always fully qualifing identifiers within the scope of a single file.</p>
 <p>In order to do so, the entry level nix files of this framework have exactly one possible interface: <code>{inputs, cell}</code>.</p>
 <p><code>inputs</code> represent the global inputs, whereas <code>cell</code> keeps reference to the local context.
-<em>A Cell is the first ordering priciple for &quot;consistent collection of functionality&quot;.</em></p>
+<em>A Cell is the first ordering priciple for "consistent collection of functionality".</em></p>
 <h2 id="consequences-1"><a class="header" href="#consequences-1">Consequences</a></h2>
 <blockquote>
 <p>What becomes easier or more difficult to do because of this change?</p>
 </blockquote>
 <!-- write an answer to this question below -->
-<p>This restricts up to the prescribed 3 layers of organization the notion of &quot;how files can communicate with each other&quot;.</p>
+<p>This restricts up to the prescribed 3 layers of organization the notion of "how files can communicate with each other".</p>
 <p>That inter-files-interface is the <em>only</em> global context to really grasp, and it is structurally aligned across all Standard projects.</p>
 <p>By virtue of this meta model of a global context and inter-file-communications, for a somewhat familiarized code reader the barriers to local reasoning are greatly reduced.</p>
 <p>The two context references are well known (flake inputs &amp; cell-local blocks) and easily discoverable.</p>
@@ -277,12 +277,12 @@ It is a problem for the future code reader, Nix expert or less so, who needs to 
 <p>What is the change that we're proposing and/or doing?</p>
 </blockquote>
 <!-- write an answer to this question below -->
-<p>De-systemize everything to the &quot;current&quot; system and effectively hiding the explict manipulation from plain sight in most cases.</p>
+<p>De-systemize everything to the "current" system and effectively hiding the explict manipulation from plain sight in most cases.</p>
 <p>An attribute set, that differentiates for systems on any given level of its tree, is <code>deSystemized</code>.</p>
-<p>This means that all child attributes of the &quot;current&quot; system are lifted onto the &quot;system&quot;-level as siblings to the system attributes.</p>
+<p>This means that all child attributes of the "current" system are lifted onto the "system"-level as siblings to the system attributes.</p>
 <p>That also means, if explicit reference to <code>system</code> is necessary, it is still there among the siblings.</p>
-<p>The &quot;current&quot; system is brought into scope automatically, however.</p>
-<p>What &quot;current&quot; means, is an early selector (&quot;select early and forget&quot;), usually determined by the user's operating system.</p>
+<p>The "current" system is brought into scope automatically, however.</p>
+<p>What "current" means, is an early selector ("select early and forget"), usually determined by the user's operating system.</p>
 <h2 id="consequences-2"><a class="header" href="#consequences-2">Consequences</a></h2>
 <blockquote>
 <p>What becomes easier or more difficult to do because of this change?</p>
@@ -290,7 +290,7 @@ It is a problem for the future code reader, Nix expert or less so, who needs to 
 <!-- write an answer to this question below -->
 <p>The explicit handling of <code>system</code> in foreign contexts, where <code>system</code> is not a primary concern is largely eliminated.</p>
 <p>This makes using this framework a little easier for everybody, including packaging experts.</p>
-<p>Since <code>nixpkgs</code>, itself, exposes <code>nixpkgs.system</code> and packaging without <code>nixpkgs</code> is hardly imaginably, power-users still enjoy easy access to the &quot;current&quot; system, in case it's needed.</p>
+<p>Since <code>nixpkgs</code>, itself, exposes <code>nixpkgs.system</code> and packaging without <code>nixpkgs</code> is hardly imaginably, power-users still enjoy easy access to the "current" system, in case it's needed.</p>
 <hr />
 <h1 id="4-early-select-system-for-conceptual-untangling"><a class="header" href="#4-early-select-system-for-conceptual-untangling">4. Early select system for conceptual untangling</a></h1>
 <p>Date: 2022-04-01</p>
@@ -302,11 +302,11 @@ It is a problem for the future code reader, Nix expert or less so, who needs to 
 </blockquote>
 <!-- write an answer to this question below -->
 <p>Building on the previous ADR, we saw why we hide <code>system</code> from plain sight.</p>
-<p>In that ADR, we mention &quot;select early and forget&quot; as a strategy to scope the current system consistently across the project.</p>
+<p>In that ADR, we mention "select early and forget" as a strategy to scope the current system consistently across the project.</p>
 <p>The current best practices for flakes postulate <code>system</code> as the second level selector of an output attribute.</p>
 <p>For current flakes, type primes over system.</p>
-<p>However, this design choice makes the lema &quot;select early and forget&quot; across multiple code-paths a pain to work with.</p>
-<p>This handling is exacerbated by the distinction between &quot;systemized&quot; and &quot;non-systemized&quot; (e.g. <code>lib</code>) output attributes.</p>
+<p>However, this design choice makes the lema "select early and forget" across multiple code-paths a pain to work with.</p>
+<p>This handling is exacerbated by the distinction between "systemized" and "non-systemized" (e.g. <code>lib</code>) output attributes.</p>
 <p>In the overall set of optimization goals of this framework, this distinction is of extraordinarily poor value, more so, that function
 calls are memoized during a single evaluation, which renders the system selector computationally irrelevant where not used.</p>
 <h2 id="decision-3"><a class="header" href="#decision-3">Decision</a></h2>
@@ -323,7 +323,7 @@ calls are memoized during a single evaluation, which renders the system selector
 <p>What becomes easier or more difficult to do because of this change?</p>
 </blockquote>
 <!-- write an answer to this question below -->
-<p>The motto &quot;select early and forget&quot; makes various code-paths easier to reason about and maintain.</p>
+<p>The motto "select early and forget" makes various code-paths easier to reason about and maintain.</p>
 <p>The Nix CLI completion won't respond gracefully to these changes.
 However, the Nix CLI is explicitly <em>not</em> a primary target of this framework.
 The reason for this is that the use cases for the Nix CLI are somewhat skewed towards the packager use case, but in any case are (currently) not purpose built for the DevOps use case.</p>
@@ -355,7 +355,7 @@ However, no project that requires source distributions of one of the 80k+ packag
 </blockquote>
 <!-- write an answer to this question below -->
 <p>Users of Standard access packages as <code>nixpkgs.&lt;package-name&gt;</code>.</p>
-<p>Users that want to interact with nixos, do so by loading <code>nixos = import (inputs.nixpkgs + &quot;/nixos&quot;);</code> or similar.
+<p>Users that want to interact with nixos, do so by loading <code>nixos = import (inputs.nixpkgs + "/nixos");</code> or similar.
 The close coupling of the Nix Package Collection and NixOS now is broken.
 This suites well the DevOps use case, which is not <em>primarily</em> concerned with the unseparable union of the Nix Packages Collection and NixOS.
 It rather presents a plethora of use cases that content with the Nix Package Collection, alone, and where NixOS would present as a distraction.

@@ -186,7 +186,7 @@ to avoid unnecessary rebuilds and increase your cache hits.</p>
   inherit (inputs) std;
 in {
   backend = nixpkgs.mkYarnPackage {
-    name = &quot;backend&quot;;
+    name = "backend";
     src = std.incl (inputs.self + /src/backend) [
       (inputs.self + /src/backend/app.js)
       (inputs.self + /src/backend/config/config.js)

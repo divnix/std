@@ -180,24 +180,24 @@
   ansi = import ./ansi.nix;
   pad = s: let
     n = 17;
-    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) (n - (l.stringLength s)));
+    prefix = l.concatStringsSep "" (l.genList (_: " ") (n - (l.stringLength s)));
   in
     prefix + s;
   indent = s: let
     n = 5;
-    prefix = l.concatStringsSep &quot;&quot; (l.genList (_: &quot; &quot;) n);
-    lines = l.splitString &quot;\n&quot; s;
+    prefix = l.concatStringsSep "" (l.genList (_: " ") n);
+    lines = l.splitString "\n" s;
   in
-    &quot;  📝 │ &quot; + (l.concatStringsSep &quot;\n${prefix}│ &quot; lines);
+    "  📝 │ " + (l.concatStringsSep "\n${prefix}│ " lines);
   warn = let
     apply =
       l.replaceStrings
-      (map (key: &quot;{${key}}&quot;) (l.attrNames ansi))
+      (map (key: "{${key}}") (l.attrNames ansi))
       (l.attrValues ansi);
   in
     msg:
-      l.trace (apply &quot;🔥 {bold}{196}Standard Deprecation Notices - {220}run `std check' to show!{reset}&quot;)
-      l.traceVerbose (apply &quot;\n{202}${msg}{reset}&quot;);
+      l.trace (apply "🔥 {bold}{196}Standard Deprecation Notices - {220}run `std check' to show!{reset}")
+      l.traceVerbose (apply "\n{202}${msg}{reset}");
 in
   warn ''
     ─────┬─────────────────────────────────────────────────────────────────────────
