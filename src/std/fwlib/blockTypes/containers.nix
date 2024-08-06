@@ -72,7 +72,7 @@ in
 
           # Conditionally output the name and digest for GitHub Actions
           if [ -n "$GITHUB_OUTPUT" ]; then
-            echo 'out={"name": "${target.image.repo}", "digest": "'$DIGEST'"}' >> "$GITHUB_OUTPUT"
+            echo 'out={"name": "${target.image.repo}", "digest": "'"$DIGEST"'"}' >> "$GITHUB_OUTPUT"
           fi
         '' {
           meta.image = target.image.name;
