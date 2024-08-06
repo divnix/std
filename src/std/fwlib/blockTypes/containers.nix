@@ -67,9 +67,14 @@ in
           # Get the digest of the published image
           DIGEST=$(skopeo inspect --raw docker://${target.image.repo}:${builtins.head target.image.tags} | jq -r '.manifests[0].digest')
 
+          echo "$DIGEST"
+          echo "$GITHUB_OUTPUT"
+
           # Conditionally output the name and digest for GitHub Actions
           if [ -n "$GITHUB_OUTPUT" ]; then
+            echo "name=${target.image.repo}"
             echo "name=${target.image.repo}" >> "$GITHUB_OUTPUT"
+            echo "digest=$DIGEST"
             echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
           fi
         '' {
