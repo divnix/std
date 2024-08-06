@@ -65,7 +65,7 @@ in
           copy docker://${target.image.repo}
 
           # Get the digest of the published image
-          DIGEST=$(skopeo inspect --raw docker://${target.image.repo}:${builtins.head target.image.tags} | jq -r '.manifests[0].digest')
+          DIGEST=$(skopeo inspect --raw docker://${target.image.repo}:${builtins.head target.image.tags} | jq -r '.config.digest')
 
           echo "$DIGEST"
           echo "$GITHUB_OUTPUT"
