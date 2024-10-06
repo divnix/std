@@ -70,7 +70,7 @@ in
         render
         if ! plan_results=$(nomad plan -force-color "$job_path"); then
           echo "$plan_results"
-          run() { echo "$plan_results" | grep 'nomad job run -check-index'; }
+          run() { eval "$(echo "$plan_results" | grep 'nomad job run -check-index')"; }
           ${askUserToProceedSnippet "deploy" "run"}
         else
           echo "Job hasn't changed since last deployment, nothing to deploy"
