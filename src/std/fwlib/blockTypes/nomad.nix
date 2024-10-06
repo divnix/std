@@ -47,6 +47,7 @@ in
         declare job_path="$PRJ_DATA_HOME/${job_path}"
         render() {
           echo "Rendering to $job_path..."
+          mkdir -p "${dirOf fragmentRelPath}"
           rm -rf "$job_path"
           ln -s "${jobWithGitRevision target}" "$job_path"
           if status=$(nomad validate "$job_path"); then
