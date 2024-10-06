@@ -49,7 +49,7 @@ in
         render() {
           echo "Rendering to $job_path..."
           echo "Building folder"
-          mkdir -p "${dirOf fragmentRelPath}"
+          mkdir -p "$PRJ_DATA_HOME/${dirOf fragmentRelPath}"
           rm -rf "$job_path"
           ln -s "${jobWithGitRevision target}" "$job_path"
           if status=$(nomad validate "$job_path"); then
