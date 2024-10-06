@@ -44,11 +44,9 @@ in
       in
         builtins.toFile "${job_name}.json" (builtins.unsafeDiscardStringContext (builtins.toJSON {inherit job;}));
       render = ''
-        set -x
         declare job_path="$PRJ_DATA_HOME/${job_path}"
         render() {
           echo "Rendering to $job_path..."
-          echo "Building folder"
           mkdir -p "$PRJ_DATA_HOME/${dirOf fragmentRelPath}"
           rm -rf "$job_path"
           ln -s "${jobWithGitRevision target}" "$job_path"
