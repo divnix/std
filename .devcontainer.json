@@ -1,6 +1,6 @@
 {
-    "image": "std-vscode",
-    "settings": {
-        "terminal.integrated.shell.linux": "/bin/bash"
-    }
+  "image": "std-vscode",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  }
 }

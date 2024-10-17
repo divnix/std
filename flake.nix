@@ -5,7 +5,7 @@
 {
   description = "The Nix Flakes framework for perfectionists with deadlines";
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/release-23.11";
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
   inputs.lib.url = "github:nix-community/nixpkgs.lib";
   inputs = {
     paisano.url = "github:paisano-nix/core/0.2.0";

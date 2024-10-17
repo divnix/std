@@ -10,6 +10,9 @@ in {
   ];
 
   data = {
+    global.excludes = [
+      "**/flake.lock" # just for treefmt cries that formatter is not configured
+    ];
     formatter = {
       nix = {
         command = lib.getExe nixpkgs.alejandra;
