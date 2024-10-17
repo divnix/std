@@ -5,7 +5,7 @@ let
   mkScript = stage:
     nixpkgs.writeScript "lefthook-${stage}" ''
       #!${nixpkgs.runtimeShell}
-      [ "$LEFTHOOK" == "0" ] || ${lib.getExe nixpkgs.lefthook} run "${stage}" "$@"
+      [ "$LEFTHOOK" == "0" ] || ${lib.getExe nixpkgs.lefthook} run --no-auto-install "${stage}" "$@"
     '';
 
   toStagesConfig = config:
