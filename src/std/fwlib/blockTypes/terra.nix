@@ -21,11 +21,11 @@ Available actions:
 */
 let
   inherit (root) mkCommand;
-  inherit (super) addSelectorFunctor;
+  inherit (super) addSelectorFunctor postDiffToGitHubSnippet;
 in
   name: repo: {
     inherit name;
-    __functor = self: selectors: self // selectors;
+    __functor = addSelectorFunctor;
     type = "terra";
     actions = {
       currentSystem,
@@ -60,15 +60,16 @@ in
         .config);
 
       setup = ''
+        export TF_VAR_fragment=${pkgs.lib.strings.escapeShellArg fragment}
+        export TF_VAR_fragmentRelPath=${fragmentRelPath}
         export TF_IN_AUTOMATION=1
-        # export TF_INPUT=0
         export TF_DATA_DIR="$PRJ_DATA_HOME/${fragmentRelPath}"
         export TF_PLUGIN_CACHE_DIR="$PRJ_CACHE_HOME/tf-plugin-cache"
         mkdir -p "$TF_DATA_DIR"
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
-        dir="$PRJ_ROOT/${repoFolder}/.tf"
-        mkdir -p "$PRJ_ROOT/${repoFolder}/.tf"
-        cat << MESSAGE > "$PRJ_ROOT/${repoFolder}/.tf/readme.md"
+        dir="$PRJ_ROOT/.cache/${fragmentRelPath}/.tf"
+        mkdir -p "$dir"
+        cat << MESSAGE > "$dir/readme.md"
         This is a tf staging area.
         It is motivated by the terraform CLI requiring to be executed in a staging area.
         MESSAGE
@@ -76,16 +77,30 @@ in
         if [[ -e "$dir/config.tf.json" ]]; then rm -f "$dir/config.tf.json"; fi
         jq '.' ${terraformConfiguration} > "$dir/config.tf.json"
       '';
-
-      wrap = cmd: ''
-        ${setup}
-        terraform-backend-git git \
-           --dir "$dir" \
-           --repository ${git.repo} \
-           --ref ${git.ref} \
-           --state ${git.state} \
-           terraform ${cmd} "$@";
-      '';
+      wrap = cmd:
+        setup
+        + (
+          (pkgs.lib.optionalString (cmd == "plan")) (
+            postDiffToGitHubSnippet fragmentRelPath cmd ''
+              terraform-backend-git git \
+                 --dir "$dir" \
+                 --repository ${git.repo} \
+                 --ref ${git.ref} \
+                 --state ${git.state} \
+                 terraform plan \
+                   -lock=false \
+                   -no-color
+            ''
+          )
+        )
+        + ''
+          terraform-backend-git git \
+             --dir "$dir" \
+             --repository ${git.repo} \
+             --ref ${git.ref} \
+             --state ${git.state} \
+             terraform ${cmd} "$@";
+        '';
     in [
       (mkCommand currentSystem "init" "tf init" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "init") {})
       (mkCommand currentSystem "plan" "tf plan" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "plan") {})
