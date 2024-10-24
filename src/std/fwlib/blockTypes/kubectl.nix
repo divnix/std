@@ -137,7 +137,7 @@ in
         } "$manifest_path/";
         }
 
-        ${postDiffToGitHubSnippet fragmentRelPath "kubectl" "diff"}
+        ${postDiffToGitHubSnippet "${fragmentRelPath}:diff" "$(diff || true)" "<code>std ${fragmentRelPath}:diff</code>"}
 
         KUBECTL_EXTERNAL_DIFF="icdiff -N -r"
         export KUBECTL_EXTERNAL_DIFF
