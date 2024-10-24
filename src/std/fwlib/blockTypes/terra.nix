@@ -37,12 +37,8 @@ in
       inherit (inputs) terranix;
       pkgs = inputs.nixpkgs.${currentSystem};
 
-      repoFolder = with pkgs.lib;
-        concatStringsSep "/" (["./nix"] ++ (init (splitString "/" fragmentRelPath)));
-
       git = {
         inherit repo;
-        # repo = "git@github.com:myorg/myrepo.git";
         ref = "main";
         state = fragmentRelPath + "/state.json";
       };
@@ -67,7 +63,7 @@ in
         export TF_PLUGIN_CACHE_DIR="$PRJ_CACHE_HOME/tf-plugin-cache"
         mkdir -p "$TF_DATA_DIR"
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
-        dir="$PRJ_ROOT/.cache/${fragmentRelPath}/.tf"
+        dir="$PRJ_ROOT/.tf/${fragmentRelPath}/.tf"
         mkdir -p "$dir"
         cat << MESSAGE > "$dir/readme.md"
         This is a tf staging area.
@@ -81,20 +77,21 @@ in
         ${setup}
 
         # Run the command and capture output
-        export TF_CLI_ARGS_plan="-lock=false -no-color"
         terraform-backend-git git \
-          --dir "$dir" \
-          --repository ${git.repo} \
-          --ref ${git.ref} \
-          --state ${git.state} \
-          terraform ${cmd} "$@" \
-          ${pkgs.lib.optionalString (cmd == "plan") "| tee \"$PRJ_CACHE_HOME/tf.console.txt\""}
+           --dir "$dir" \
+           --repository ${git.repo} \
+           --ref ${git.ref} \
+           --state ${git.state} \
+           terraform ${cmd} "$@" \
+           ${pkgs.lib.optionalString (cmd == "plan") ''
+             -lock=false -no-color | tee "$PRJ_CACHE_HOME/tf.console.txt"
+           ''}
 
         # Pass output to the snippet
         ${pkgs.lib.optionalString (cmd == "plan") ''
           output=$(cat "$PRJ_CACHE_HOME/tf.console.txt")
           summary_plan=$(tac "$PRJ_CACHE_HOME/tf.console.txt" | grep -m 1 -E '^(Error:|Plan:|Apply complete!|No changes.|Success)' | tac || echo "View output.")
-          summary="\`std ${fragmentRelPath}:${cmd}\`: $summary_plan" 
+          summary="<code>std ${fragmentRelPath}:${cmd}</code>: $summary_plan" 
           ${postDiffToGitHubSnippet "${fragmentRelPath}:${cmd}" "$output" "$summary"}
         ''}
       '';
