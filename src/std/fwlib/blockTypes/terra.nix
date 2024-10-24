@@ -77,30 +77,28 @@ in
         if [[ -e "$dir/config.tf.json" ]]; then rm -f "$dir/config.tf.json"; fi
         jq '.' ${terraformConfiguration} > "$dir/config.tf.json"
       '';
-      wrap = cmd:
-        setup
-        + (
-          (pkgs.lib.optionalString (cmd == "plan")) (
-            postDiffToGitHubSnippet fragmentRelPath cmd ''
-              terraform-backend-git git \
-                 --dir "$dir" \
-                 --repository ${git.repo} \
-                 --ref ${git.ref} \
-                 --state ${git.state} \
-                 terraform plan \
-                   -lock=false \
-                   -no-color
-            ''
-          )
-        )
-        + ''
-          terraform-backend-git git \
-             --dir "$dir" \
-             --repository ${git.repo} \
-             --ref ${git.ref} \
-             --state ${git.state} \
-             terraform ${cmd} "$@";
-        '';
+      wrap = cmd: ''
+        ${setup}
+
+        # Run the command and capture output
+        export TF_CLI_ARGS_plan="-lock=false -no-color"
+        terraform-backend-git git \
+          --dir "$dir" \
+          --repository ${git.repo} \
+          --ref ${git.ref} \
+          --state ${git.state} \
+          terraform ${cmd} "$@" \
+          ${pkgs.lib.optionalString (cmd == "plan") "| tee \"$PRJ_CACHE_HOME/tf.console.txt\""}
+
+        # Pass output to the snippet
+        ${pkgs.lib.optionalString (cmd == "plan") ''
+          output=$(cat "$PRJ_CACHE_HOME/tf.console.txt")
+          summary_plan=$(tac "$PRJ_CACHE_HOME/tf.console.txt" | grep -m 1 -E '^(Error:|Plan:|Apply complete!|No changes.|Success)' | tac || echo "View output.")
+          summary="\`std ${fragmentRelPath}:${cmd}\`: $summary_plan" 
+          ${postDiffToGitHubSnippet "${fragmentRelPath}:${cmd}" "$output" "$summary"}
+        ''}
+      '';
+      
     in [
       (mkCommand currentSystem "init" "tf init" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "init") {})
       (mkCommand currentSystem "plan" "tf plan" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "plan") {})

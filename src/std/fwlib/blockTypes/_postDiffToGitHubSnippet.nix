@@ -1,5 +1,4 @@
-_: path: cmd: script: ''
-
+_: marker: diff_output: summary: ''
   if [[ -v CI ]] && [[ -v BRANCH ]] && [[ -v OWNER_AND_REPO ]] && command -v gh > /dev/null ; then
 
     OWNER_REPO_NAME=$(gh repo view "$OWNER_AND_REPO" --json nameWithOwner --jq '.nameWithOwner')
@@ -8,26 +7,24 @@ _: path: cmd: script: ''
       exit 0
     fi
 
-    set +e # diff exits 1 if diff existed
-    DIFF_OUTPUT=$(${script})
-    set -e
-
-    if [[ -z "$DIFF_OUTPUT" ]]; then
+    # Proceed only if there is output
+    if [[ -z "${diff_output}" ]]; then
       exit 0
     fi
 
     CENTRAL_COMMENT_HEADER="<!-- Unified Diff Comment -->"
-    ENTRY_START_MARKER="<!-- Start Diff for ${path}:${cmd} -->"
-    ENTRY_END_MARKER="<!-- End Diff for ${path}:${cmd} -->"
+    ENTRY_START_MARKER="<!-- Start Diff for ${marker} -->"
+    ENTRY_END_MARKER="<!-- End Diff for ${marker} -->"
 
+    # Use the provided summary
     DIFF_ENTRY=$(cat <<EOF
 
 $ENTRY_START_MARKER
 <details>
-<summary>//${path}:${cmd}</summary>
+<summary>${summary}</summary>
 
 \`\`\`diff
-$DIFF_OUTPUT
+${diff_output}
 \`\`\`
 
 </details>
@@ -51,7 +48,7 @@ EOF
       UPDATED_BODY="$UPDATED_BODY
 $DIFF_ENTRY"
 
-      echo "Make an edit post ..."
+      echo "Updating existing comment..."
       gh api --method PATCH "repos/$OWNER_REPO_NAME/issues/comments/$EXISTING_COMMENT_ID" -f body="$UPDATED_BODY" --jq '.html_url'
 
     else
@@ -63,7 +60,7 @@ This PR includes the following diffs:
 $DIFF_ENTRY
 EOF
       )
-      echo "Make a first post ..."
+      echo "Creating new comment..."
       gh pr comment "$PR_NUMBER" --repo "$OWNER_REPO_NAME" --body "$NEW_COMMENT"
     fi
 
