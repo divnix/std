@@ -27,7 +27,7 @@ jobs:
       - uses: nixbuild/nix-quick-install-action@v25
       - name: Update subflake references
         run: ./.github/workflows/update-subflake.sh
-      - uses: DeterminateSystems/magic-nix-cache-action@main
+      # - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/discover@main
         id: discovery
 
@@ -41,7 +41,7 @@ jobs:
     runs-on: ${{ inputs.runs-on }}
     steps:
       - uses: nixbuild/nix-quick-install-action@v25
-      - uses: DeterminateSystems/magic-nix-cache-action@main
+      # - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@main
 
   shells:
@@ -54,7 +54,7 @@ jobs:
     runs-on: ${{ inputs.runs-on }}
     steps:
       - uses: nixbuild/nix-quick-install-action@v25
-      - uses: DeterminateSystems/magic-nix-cache-action@main
+      # - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@main
 
   tests:
@@ -70,5 +70,5 @@ jobs:
       - uses: actions/checkout@v3
       - name: Update subflake references
         run: ./.github/workflows/update-subflake.sh
-      - uses: DeterminateSystems/magic-nix-cache-action@main
+      # - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@main
