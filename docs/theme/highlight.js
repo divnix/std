@@ -81,11 +81,11 @@ var hljs = (function () {
               ? e
               : n
             : "start" === n[0].event
-            ? e
-            : n
+              ? e
+              : n
           : e.length
-          ? e
-          : n;
+            ? e
+            : n;
       }
       function c(e) {
         s +=
@@ -281,7 +281,7 @@ var hljs = (function () {
                 0 !== e.index && n.ignoreMatch();
               },
             },
-            e
+            e,
           )
         );
       },
@@ -348,10 +348,10 @@ var hljs = (function () {
     return n
       ? +n
       : (function (e) {
-          return N.includes(e.toLowerCase());
-        })(e)
-      ? 0
-      : 1;
+            return N.includes(e.toLowerCase());
+          })(e)
+        ? 0
+        : 1;
   }
   const R = t,
     y = r,
@@ -464,7 +464,7 @@ var hljs = (function () {
                 r.endSameAsBegin &&
                 (r.endRe = RegExp(
                   t.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"),
-                  "m"
+                  "m",
                 )),
               r.skip
                 ? (A += t)
@@ -481,7 +481,7 @@ var hljs = (function () {
               i +
               '" for mode "' +
               (y.className || "<unnamed>") +
-              '"'
+              '"',
           );
           throw ((e.mode = y), e);
         }
@@ -529,7 +529,7 @@ var hljs = (function () {
         if ("illegal" === r.type && "" === i) return 1;
         if (B > 1e5 && B > 3 * r.index)
           throw Error(
-            "potential infinite loop, way more iterations than matches"
+            "potential infinite loop, way more iterations than matches",
           );
         return (A += i), i.length;
       }
@@ -543,7 +543,7 @@ var hljs = (function () {
           function n(n, t) {
             return RegExp(
               d(n),
-              "m" + (e.case_insensitive ? "i" : "") + (t ? "g" : "")
+              "m" + (e.case_insensitive ? "i" : "") + (t ? "g" : ""),
             );
           }
           class t {
@@ -593,7 +593,7 @@ var hljs = (function () {
                   }
                   return a;
                 })(e),
-                !0
+                !0,
               )),
                 (this.lastIndex = 0);
             }
@@ -649,7 +649,7 @@ var hljs = (function () {
           }
           if (e.contains && e.contains.includes("self"))
             throw Error(
-              "ERR: contains `self` is not supported at the top-level of a language.  See documentation."
+              "ERR: contains `self` is not supported at the top-level of a language.  See documentation.",
             );
           return (function t(s, o) {
             const l = s;
@@ -683,7 +683,7 @@ var hljs = (function () {
               s.lexemes && c)
             )
               throw Error(
-                "ERR: Prefer `keywords.$pattern` to `mode.lexemes`, BOTH are not allowed. (see mode reference) "
+                "ERR: Prefer `keywords.$pattern` to `mode.lexemes`, BOTH are not allowed. (see mode reference) ",
               );
             return (
               (l.keywordPatternRe = n(s.lexemes || c || /\w+/, !0)),
@@ -718,15 +718,15 @@ var hljs = (function () {
                       e.cached_variants
                         ? e.cached_variants
                         : (function e(n) {
-                            return !!n && (n.endsWithParent || e(n.starts));
-                          })(e)
-                        ? r(e, { starts: e.starts ? r(e.starts) : null })
-                        : Object.isFrozen(e)
-                        ? r(e)
-                        : e
+                              return !!n && (n.endsWithParent || e(n.starts));
+                            })(e)
+                          ? r(e, { starts: e.starts ? r(e.starts) : null })
+                          : Object.isFrozen(e)
+                            ? r(e)
+                            : e
                     );
                   })("self" === e ? s : e);
-                })
+                }),
               )),
               s.contains.forEach(function (e) {
                 t(e, l);
@@ -736,7 +736,7 @@ var hljs = (function () {
                 const n = new a();
                 return (
                   e.contains.forEach((e) =>
-                    n.addRule(e.begin, { rule: e, type: "begin" })
+                    n.addRule(e.begin, { rule: e, type: "begin" }),
                   ),
                   e.terminator_end &&
                     n.addRule(e.terminator_end, { type: "end" }),
@@ -847,8 +847,8 @@ var hljs = (function () {
                 ? "<br>"
                 : e
               : f.tabReplace
-              ? e.replace(/\t/g, f.tabReplace)
-              : e
+                ? e.replace(/\t/g, f.tabReplace)
+                : e,
           )
         : e;
     }
@@ -865,7 +865,7 @@ var hljs = (function () {
               (console.warn(g.replace("{}", t[1])),
               console.warn(
                 "Falling back to no-highlight mode for this block.",
-                e
+                e,
               )),
             r ? t[1] : "no-highlight"
           );
@@ -957,8 +957,8 @@ var hljs = (function () {
             (console.error(
               "Language definition for '{}' could not be registered.".replace(
                 "{}",
-                e
-              )
+                e,
+              ),
             ),
             !l)
           )
@@ -979,7 +979,7 @@ var hljs = (function () {
         var n = T(e);
         if (n) return n;
         throw Error(
-          "The '{}' language is required, but not loaded.".replace("{}", e)
+          "The '{}' language is required, but not loaded.".replace("{}", e),
         );
       },
       autoDetection: I,
@@ -1127,7 +1127,7 @@ hljs.registerLanguage(
         ],
       };
     };
-  })()
+  })(),
 );
 hljs.registerLanguage(
   "markdown",
@@ -1252,7 +1252,7 @@ hljs.registerLanguage(
         }
       );
     };
-  })()
+  })(),
 );
 hljs.registerLanguage(
   "perl",
@@ -1347,7 +1347,7 @@ hljs.registerLanguage(
         { name: "Perl", aliases: ["pl", "pm"], keywords: n, contains: a }
       );
     };
-  })()
+  })(),
 );
 hljs.registerLanguage(
   "plaintext",
@@ -1360,7 +1360,7 @@ hljs.registerLanguage(
         disableAutodetect: !0,
       };
     };
-  })()
+  })(),
 );
 hljs.registerLanguage(
   "ini",
@@ -1427,7 +1427,7 @@ hljs.registerLanguage(
               "(\\s*\\.\\s*",
               g,
               ")*",
-              n("(?=", /\s*=\s*[^#\s]/, ")")
+              n("(?=", /\s*=\s*[^#\s]/, ")"),
             ),
             className: "attr",
             starts: { end: /$/, contains: [i, c, r, t, l, s] },
@@ -1435,7 +1435,7 @@ hljs.registerLanguage(
         ],
       };
     };
-  })()
+  })(),
 );
 hljs.registerLanguage(
   "json",
@@ -1481,7 +1481,7 @@ hljs.registerLanguage(
         { name: "JSON", contains: t, keywords: e, illegal: "\\S" }
       );
     };
-  })()
+  })(),
 );
 hljs.registerLanguage(
   "ruby",
@@ -1626,7 +1626,7 @@ hljs.registerLanguage(
         contains: r.concat(g).concat(d),
       };
     };
-  })()
+  })(),
 );
 hljs.registerLanguage(
   "yaml",
@@ -1737,7 +1737,7 @@ hljs.registerLanguage(
         }
       );
     };
-  })()
+  })(),
 );
 hljs.registerLanguage(
   "haskell",
@@ -1837,7 +1837,7 @@ hljs.registerLanguage(
         ],
       };
     };
-  })()
+  })(),
 );
 hljs.registerLanguage(
   "nix",
@@ -1876,7 +1876,7 @@ hljs.registerLanguage(
         { name: "Nix", aliases: ["nixos"], keywords: n, contains: s }
       );
     };
-  })()
+  })(),
 );
 hljs.registerLanguage(
   "bash",
@@ -1953,7 +1953,7 @@ hljs.registerLanguage(
         ],
       };
     };
-  })()
+  })(),
 );
 hljs.registerLanguage(
   "shell",
@@ -1972,7 +1972,7 @@ hljs.registerLanguage(
         ],
       };
     };
-  })()
+  })(),
 );
 hljs.registerLanguage(
   "python",
@@ -2092,5 +2092,5 @@ hljs.registerLanguage(
         }
       );
     };
-  })()
+  })(),
 );

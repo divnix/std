@@ -10,6 +10,9 @@ in {
   ];
 
   data = {
+    global.excludes = [
+      "**/flake.lock" # just for treefmt cries that formatter is not configured
+    ];
     formatter = {
       nix = {
         command = lib.getExe nixpkgs.alejandra;
@@ -17,7 +20,7 @@ in {
       };
       prettier = {
         command = lib.getExe nixpkgs.nodePackages.prettier;
-        options = ["--plugin" "${nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules/prettier-plugin-toml/lib/api.js" "--write"];
+        options = ["--plugin" "${nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules/prettier-plugin-toml/lib/index.cjs" "--write"];
         includes = [
           "*.css"
           "*.html"

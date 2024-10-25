@@ -21,7 +21,7 @@ in
   }
   (std.grow {
     inherit inputs;
-    cellsFrom = incl ./src ["std" "lib" "data"];
+    cellsFrom = incl ./src ["std" "lib" "data" "mdbook"];
     cellBlocks = with std.blockTypes; [
       ## For downstream use
 

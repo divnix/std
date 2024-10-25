@@ -2,7 +2,7 @@
   inputs,
   cell,
 }: let
-  inherit (inputs) nixpkgs;
+  inherit (inputs) nixpkgs dmerge;
   inherit (inputs.std.data) configs;
   inherit (inputs.std.lib.dev) mkNixago;
 in {
@@ -15,7 +15,10 @@ in {
   };
   treefmt = (mkNixago configs.treefmt) {
     data = {
-      global.excludes = ["src/std/templates/**"];
+      global.excludes = dmerge.append [
+        "CHANGELOG.md" # significantly reformats the file structure
+        "src/std/templates/**"
+      ];
       formatter = {
         go = {
           command = "gofmt";
