@@ -11,7 +11,7 @@ jobs:
   mac:
     uses: ./.github/workflows/std.yml
     with:
-      runs-on: macOS-12
+      runs-on: macOS-13
     secrets: inherit
 
   linux:
