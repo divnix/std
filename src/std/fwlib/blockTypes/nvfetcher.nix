@@ -40,7 +40,7 @@ in
            --changelog "$tmpfile" \
            --filter "^$targetname$"
 
-        sed -i -e "s|^|- \`$(date --iso-8601=m)\` |" "$tmpfile"
+        sed -i '''' -e "s|^|- \`$(date --iso-8601=m)\` |" "$tmpfile"
         cat "$tmpfile" >> "$updates"
       '' {})
     ];
