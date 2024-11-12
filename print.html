@@ -2286,11 +2286,11 @@ Available actions:
 */
 let
   inherit (root) mkCommand;
-  inherit (super) addSelectorFunctor;
+  inherit (super) addSelectorFunctor postDiffToGitHubSnippet;
 in
   name: repo: {
     inherit name;
-    __functor = self: selectors: self // selectors;
+    __functor = addSelectorFunctor;
     type = "terra";
     actions = {
       currentSystem,
@@ -2302,12 +2302,8 @@ in
       inherit (inputs) terranix;
       pkgs = inputs.nixpkgs.${currentSystem};
 
-      repoFolder = with pkgs.lib;
-        concatStringsSep "/" (["./nix"] ++ (init (splitString "/" fragmentRelPath)));
-
       git = {
         inherit repo;
-        # repo = "git@github.com:myorg/myrepo.git";
         ref = "main";
         state = fragmentRelPath + "/state.json";
       };
@@ -2325,15 +2321,16 @@ in
         .config);
 
       setup = ''
+        export TF_VAR_fragment=${pkgs.lib.strings.escapeShellArg fragment}
+        export TF_VAR_fragmentRelPath=${fragmentRelPath}
         export TF_IN_AUTOMATION=1
-        # export TF_INPUT=0
         export TF_DATA_DIR="$PRJ_DATA_HOME/${fragmentRelPath}"
         export TF_PLUGIN_CACHE_DIR="$PRJ_CACHE_HOME/tf-plugin-cache"
         mkdir -p "$TF_DATA_DIR"
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
-        dir="$PRJ_ROOT/${repoFolder}/.tf"
-        mkdir -p "$PRJ_ROOT/${repoFolder}/.tf"
-        cat &lt;&lt; MESSAGE &gt; "$PRJ_ROOT/${repoFolder}/.tf/readme.md"
+        dir="$PRJ_ROOT/.tf/${fragmentRelPath}/.tf"
+        mkdir -p "$dir"
+        cat &lt;&lt; MESSAGE &gt; "$dir/readme.md"
         This is a tf staging area.
         It is motivated by the terraform CLI requiring to be executed in a staging area.
         MESSAGE
@@ -2341,16 +2338,29 @@ in
         if [[ -e "$dir/config.tf.json" ]]; then rm -f "$dir/config.tf.json"; fi
         jq '.' ${terraformConfiguration} &gt; "$dir/config.tf.json"
       '';
-
       wrap = cmd: ''
         ${setup}
+
+        # Run the command and capture output
         terraform-backend-git git \
            --dir "$dir" \
            --repository ${git.repo} \
            --ref ${git.ref} \
            --state ${git.state} \
-           terraform ${cmd} "$@";
+           terraform ${cmd} "$@" \
+           ${pkgs.lib.optionalString (cmd == "plan") ''
+             -lock=false -no-color | tee "$PRJ_CACHE_HOME/tf.console.txt"
+           ''}
+
+        # Pass output to the snippet
+        ${pkgs.lib.optionalString (cmd == "plan") ''
+          output=$(cat "$PRJ_CACHE_HOME/tf.console.txt")
+          summary_plan=$(tac "$PRJ_CACHE_HOME/tf.console.txt" | grep -m 1 -E '^(Error:|Plan:|Apply complete!|No changes.|Success)' | tac || echo "View output.")
+          summary="&lt;code&gt;std ${fragmentRelPath}:${cmd}&lt;/code&gt;: $summary_plan" 
+          ${postDiffToGitHubSnippet "${fragmentRelPath}:${cmd}" "$output" "$summary"}
+        ''}
       '';
+      
     in [
       (mkCommand currentSystem "init" "tf init" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "init") {})
       (mkCommand currentSystem "plan" "tf plan" [pkgs.jq pkgs.terraform pkgs.terraform-backend-git] (wrap "plan") {})
@@ -2462,7 +2472,7 @@ Available actions:
 */
 let
   inherit (root) mkCommand;
-  inherit (super) addSelectorFunctor askUserToProceedSnippet;
+  inherit (super) addSelectorFunctor askUserToProceedSnippet postDiffToGitHubSnippet;
 in
   name: {
     __functor = addSelectorFunctor;
@@ -2583,34 +2593,11 @@ in
         } "$manifest_path/";
         }
 
-        # GitHub case
-        if [[ -v CI ]] &amp;&amp; [[ -v BRANCH ]] &amp;&amp; [[ -v OWNER_AND_REPO ]] &amp;&amp; command gh &gt; /dev/null ; then
+        ${postDiffToGitHubSnippet "${fragmentRelPath}:diff" "$(diff || true)" "&lt;code&gt;std ${fragmentRelPath}:diff&lt;/code&gt;"}
 
-          set +e # diff exits 1 if diff existed
-          read -r -d "" DIFFSTREAM &lt;&lt;DIFF
-        ## Standard DiffPost
-
-        This PR would generate the following \`kubectl\` diff:
-
-        &lt;details&gt;&lt;summary&gt;Preview&lt;/summary&gt;
-
-        \`\`\`diff
-        $(diff)
-        \`\`\`
-
-        &lt;/details&gt;
-        DIFF
-          set -e # we're past the invocation of diff
-
-          if ! gh pr --repo "$OWNER_AND_REPO" comment "$BRANCH" --edit-last -b "$DIFFSTREAM"; then
-            echo "Make a first post ..."
-            gh pr --repo "$OWNER_AND_REPO" comment "$BRANCH" -b "$DIFFSTREAM"
-          fi
-        else
-          KUBECTL_EXTERNAL_DIFF="icdiff -N -r"
-          export KUBECTL_EXTERNAL_DIFF
-          diff
-        fi
+        KUBECTL_EXTERNAL_DIFF="icdiff -N -r"
+        export KUBECTL_EXTERNAL_DIFF
+        diff
       '' {})
       (mkCommand currentSystem "apply" "Apply the manifests to K8s" [pkgs.kubectl pkgs.icdiff] ''
         ${build}
@@ -2970,7 +2957,7 @@ in
            --changelog "$tmpfile" \
            --filter "^$targetname$"
 
-        sed -i -e "s|^|- \`$(date --iso-8601=m)\` |" "$tmpfile"
+        sed -i '''' -e "s|^|- \`$(date --iso-8601=m)\` |" "$tmpfile"
         cat "$tmpfile" &gt;&gt; "$updates"
       '' {})
     ];
