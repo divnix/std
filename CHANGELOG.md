@@ -2,6 +2,24 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.33.4](https://github.com/divnix/std/compare/58e6300b8a525059b33e97e475322c00115f7ee9..v0.33.4) - 2025-01-28
+#### Bug Fixes
+- release nixpkgs following of mdbook-paisano-preprocessor build - ([2586356](https://github.com/divnix/std/commit/2586356f9c4765bd4b1c92eea6ae8f75d0000925)) - David
+- use treefmt v1 (rust version) if available - ([febf2ee](https://github.com/divnix/std/commit/febf2ee06d6a5beeff1e1807e1348f497fffb14e)) - David
+- update flake & subflakes lockfiles, fix test - ([1d129b2](https://github.com/divnix/std/commit/1d129b2dd011f6468441b0a4a0c459431cb0502d)) - Sam Lehman
+#### Continuous Integration
+- bump macos - ([e2b20a9](https://github.com/divnix/std/commit/e2b20a91d37989f85d6852ebf3f55b4b9dff3cfb)) - Juanjo Presa
+#### Documentation
+- fix typo in comment description for blockTypes.nvfetcher - ([f8f6f70](https://github.com/divnix/std/commit/f8f6f70cdc9234d36d3d445d99a60b9267644df8)) - Sam Lehman
+- Add missing blockTypes - ([bfa03fe](https://github.com/divnix/std/commit/bfa03fedb0178ad7bd1532c786e95418f86a66fe)) - Sam Lehman
+#### Miscellaneous Chores
+- update local flakes - ([bf29488](https://github.com/divnix/std/commit/bf294883e7303168b01e75a175503004ce6b6f68)) - Juanjo Presa
+- disable magic cache as it's unreliable - ([73a10ef](https://github.com/divnix/std/commit/73a10ef4db9fecdbe13b775e0bf175cf6c900bbf)) - David
+- remove confusing workflow name - ([68f78ab](https://github.com/divnix/std/commit/68f78ab1ec08640aa12f7de9540bfb9451da7a8e)) - David
+- sync with release - ([58e6300](https://github.com/divnix/std/commit/58e6300b8a525059b33e97e475322c00115f7ee9)) - David
+
+- - -
+
 ## [v0.33.3](https://github.com/divnix/std/compare/v0.33.2..v0.33.3) - 2024-07-26
 
 - - -
