@@ -17,7 +17,7 @@ in {
       };
       prettier = {
         command = lib.getExe nixpkgs.nodePackages.prettier;
-        options = ["--plugin" "${nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules/prettier-plugin-toml/lib/api.js" "--write"];
+        options = ["--plugin" "${nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules/prettier-plugin-toml/lib/index.js" "--write"];
         includes = [
           "*.css"
           "*.html"
