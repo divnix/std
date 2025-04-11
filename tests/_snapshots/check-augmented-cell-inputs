@@ -12,7 +12,7 @@
   makes = "/nix/store/71rzg7vs53gmxqph64d9zqf4ns928c6c-source";
   microvm = "/nix/store/v5za7dzczgcvfvqgcm80qari3msyhw6b-source";
   n2c = "/nix/store/rgd4s5ylv38p94wi6vays6wc1a0l5iyf-source";
-  namaka = "/nix/store/xgzvi3baaaz9lpymfv6f1fgxfmy0ygvv-source";
+  namaka = "/nix/store/prb836vl3r64l97045clfli0d5m5fyap-source";
   nixago = "/nix/store/cys15p6lyyhj85bk4bckn82waih2l945-source";
   nixpkgs = "/nix/store/g8zzlf6drg73c987ii390yicq4c0j778-source";
   paisano = "/nix/store/4v8nn2z2vl74yz1557n1dha3l7rzzbgs-source";

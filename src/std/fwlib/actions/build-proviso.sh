@@ -1,11 +1,11 @@
 declare action="$1"
 declare targetDrv
 
-eval "$(jq -r '@sh "targetDrv=\(.targetDrv)"' <<< "$action" )"
+eval "$(jq -r '@sh "targetDrv=\(.targetDrv)"' <<<"$action")"
 
 mapfile -t uncached < <(
-  command nix-store --realise --dry-run "$targetDrv" 2>&1 1>/dev/null \
-  | command sed -nr '
+  command nix-store --realise --dry-run "$targetDrv" 2>&1 1>/dev/null |
+    command sed -nE '
     # If the line "will be built" is matched ...
     /will be built/ {
         # Create a label to iterate over dervivations
@@ -28,18 +28,17 @@ mapfile -t uncached < <(
   '
 )
 
-if [[ ${#uncached[@]} -eq 0 ]];
-then
+if [[ ${#uncached[@]} -eq 0 ]]; then
   exit 1
 fi
 
 if ! (
-  command nix show-derivation ''${uncached[@]} 2> /dev/null \
-  | command jq --exit-status \
-  ' with_entries(
+  command nix show-derivation ''${uncached[@]} 2>/dev/null |
+    command jq --exit-status \
+      ' with_entries(
       select(.value|.env.preferLocalBuild != "1")
     ) | any
-  ' 1> /dev/null
+  ' 1>/dev/null
 ); then
   exit 1
 fi

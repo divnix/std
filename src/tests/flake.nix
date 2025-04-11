@@ -13,7 +13,7 @@
     terranix.inputs.terranix-examples.follows = "";
     terranix.inputs.bats-support.follows = "";
     terranix.inputs.bats-assert.follows = "";
-    namaka.url = "github:nix-community/namaka/v0.2.0";
+    namaka.url = "github:nix-community/namaka/ecefdd6d1e0e075403a69202c2695f966ea2f412";
     namaka.inputs.haumea.follows = "std/haumea";
     namaka.inputs.nixpkgs.follows = "std/nixpkgs";
     makes.url = "github:fluidattacks/makes";

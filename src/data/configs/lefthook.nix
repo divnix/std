@@ -17,7 +17,7 @@ in {
     pre-commit = {
       commands = {
         treefmt = {
-          run = "${lib.getExe nixpkgs.treefmt} --fail-on-change {staged_files}";
+          run = "${lib.getExe nixpkgs.treefmt1 or nixpkgs.treefmt} --fail-on-change {staged_files}";
           skip = ["merge" "rebase"];
         };
       };
