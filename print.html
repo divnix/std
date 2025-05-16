@@ -2624,8 +2624,10 @@ in
         } "$manifest_path/";
         }
 
+        set +o errexit
         diff
         ret=$?
+        set -o errexit
         if [[ $ret == 0 ]] || [[ $ret == 1 ]]; then
           ${askUserToProceedSnippet "apply" "run"}
         fi
