@@ -151,13 +151,11 @@ in
         export KUBECTL_EXTERNAL_DIFF
 
         diff() {
-          set +o errexit
           kubectl diff --server-side=true --field-manager="std-action-$(whoami)" ${
           if usesKustomize
           then "--kustomize"
           else "--recursive --filename"
         } "$manifest_path/";
-          set -o errexit
 
           return $?;
         }
@@ -170,8 +168,10 @@ in
         } "$manifest_path/";
         }
 
+        set +o errexit
         diff
         ret=$?
+        set -o errexit
         if [[ $ret == 0 ]] || [[ $ret == 1 ]]; then
           ${askUserToProceedSnippet "apply" "run"}
         fi
