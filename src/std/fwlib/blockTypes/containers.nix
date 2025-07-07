@@ -62,7 +62,7 @@ in
       '' {})
       (mkCommand currentSystem "publish" "copy the image to its remote registry" [skopeo-nix2container] ''
           ${copyFn}
-          copy docker://${target.image.repo}
+          copy docker://${target.image.repo} "$@"
         '' {
           meta.image = target.image.name;
           inherit proviso;
