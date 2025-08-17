@@ -24,7 +24,7 @@ jobs:
     runs-on: ${{ inputs.runs-on }}
     steps:
       - uses: actions/checkout@v3
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: nixbuild/nix-quick-install-action@v32
       - name: Update subflake references
         run: ./.github/workflows/update-subflake.sh
       # - uses: DeterminateSystems/magic-nix-cache-action@main
@@ -40,7 +40,7 @@ jobs:
     name: ${{ matrix.target.jobName }}
     runs-on: ${{ inputs.runs-on }}
     steps:
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: nixbuild/nix-quick-install-action@v32
       # - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@main
 
@@ -53,7 +53,7 @@ jobs:
     name: ${{ matrix.target.jobName }}
     runs-on: ${{ inputs.runs-on }}
     steps:
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: nixbuild/nix-quick-install-action@v32
       # - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: divnix/std-action/run@main
 
@@ -66,7 +66,7 @@ jobs:
     name: ${{ matrix.target.jobName }}
     runs-on: ${{ inputs.runs-on }}
     steps:
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: nixbuild/nix-quick-install-action@v32
       - uses: actions/checkout@v3
       - name: Update subflake references
         run: ./.github/workflows/update-subflake.sh
