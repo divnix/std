@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: nixbuild/nix-quick-install-action@v25
+      - uses: DeterminateSystems/nix-installer-action@main
 
       - name: Update subflake references
         run: ./.github/workflows/update-subflake.sh
