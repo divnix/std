@@ -6,7 +6,6 @@ in {
   packages = [
     nixpkgs.alejandra
     nixpkgs.nodePackages.prettier
-    nixpkgs.nodePackages.prettier-plugin-toml
     nixpkgs.shfmt
     mdbook-paisano-preprocessor
   ];
