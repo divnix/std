@@ -1,4 +1,6 @@
-### `mkMakes`
+### `mkMakes` (DEPRECATED)
+
+> **⚠️ DEPRECATION WARNING**: This function is deprecated as of 2024 and scheduled for removal on 2025-06-01. The [`fluidattacks/makes`][makes] project has been deprecated in favor of Nix Flakes. Please migrate your makes tasks to use native Nix derivations or other Standard-supported alternatives.
 
 ... provides an interface to `makes` tasks
 
