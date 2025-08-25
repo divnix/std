@@ -15,9 +15,6 @@ jobs:
 
       - uses: nixbuild/nix-quick-install-action@v25
 
-      - name: Update subflake references
-        run: ./.github/workflows/update-subflake.sh
-
       - run: nix develop .#book -c mdbook build ./.
 
       - name: Deploy
