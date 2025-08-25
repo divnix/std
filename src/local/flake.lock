@@ -1,0 +1,172 @@
+{
+  "nodes": {
+    "devshell": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1713532798,
+        "narHash": "sha256-wtPqNqbOlNQjpn2zH4MUO42P9Sn24RP1FwT9FSHSWpo=",
+        "owner": "numtide",
+        "repo": "devshell",
+        "rev": "2d45b54ca4a183f2fdcf4b19c895b64fbaf2ad19",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "devshell",
+        "type": "github"
+      }
+    },
+    "n2c": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1712990762,
+        "narHash": "sha256-hO9W3w7NcnYeX8u8cleHiSpK2YJo7ecarFTUlbybl7k=",
+        "owner": "nlewo",
+        "repo": "nix2container",
+        "rev": "20aad300c925639d5d6781f3d9d4e4ceded8a8c6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nlewo",
+        "repo": "nix2container",
+        "type": "github"
+      }
+    },
+    "nixago": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "nixago-exts": [
+          "blank"
+        ]
+      },
+      "locked": {
+        "lastModified": 1683210100,
+        "narHash": "sha256-bhGDOlkWtlhVECpoOog4fWiFJmLCpVEg09a2L4dYfTM=",
+        "owner": "nix-community",
+        "repo": "nixago",
+        "rev": "9cab4dde31ec2f2c05d702ea8648ce580664e906",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixago",
+        "type": "github"
+      }
+    },
+    "namaka": {
+      "inputs": {
+        "haumea": [
+          "haumea"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1685518550,
+        "narHash": "sha256-XK6X0F9mGpUgHjHIZhY2xirnhIoP7SgzZjyhrhrYgEA=",
+        "owner": "nix-community",
+        "repo": "namaka",
+        "rev": "3df46a5e5e8133b8015e70b4e2c25d30ef8bfada",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "v0.2.0",
+        "repo": "namaka",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1701436327,
+        "narHash": "sha256-tRHbnoNI8SIM5O5xuxOmtSLnswEByzmnQcGGyNRjxsE=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "91050ea1e57e50388fa87a3302ba12d188ef723a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "release-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "blank": {
+      "locked": {
+        "lastModified": 1625557891,
+        "narHash": "sha256-O8/MWsPBGhhyPoPLHZAuoZiiHo9q6FLlEeIDEXuj6T4=",
+        "owner": "divnix",
+        "repo": "blank",
+        "rev": "5a5d2684073d9f563072ed07c871d577a6c614a8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "divnix",
+        "repo": "blank",
+        "type": "github"
+      }
+    },
+    "haumea": {
+      "inputs": {
+        "nixpkgs": [
+          "lib"
+        ]
+      },
+      "locked": {
+        "lastModified": 1685133229,
+        "narHash": "sha256-FePm/Gi9PBSNwiDFq3N+DWdfxFq0UKsVVTJS3cQPn94=",
+        "owner": "nix-community",
+        "repo": "haumea",
+        "rev": "34dd58385092a23018748b50f9b23de6266dffc2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "v0.2.2",
+        "repo": "haumea",
+        "type": "github"
+      }
+    },
+    "lib": {
+      "locked": {
+        "lastModified": 1701433070,
+        "narHash": "sha256-Gf8HHbfWqkCjlWvqYtHTEEb8ZNpaHlxuOjOiACqQb7g=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "f5a84c108df8296c1b2baea73f4e5a8e2234b300",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "devshell": "devshell",
+        "n2c": "n2c", 
+        "nixago": "nixago",
+        "namaka": "namaka",
+        "nixpkgs": "nixpkgs",
+        "blank": "blank",
+        "haumea": "haumea",
+        "lib": "lib"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

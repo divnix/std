@@ -5,6 +5,8 @@
 
 .std
 /**/flake.lock
+!src/local/flake.lock
+!src/tests/flake.lock
 result
 
 # prj-spec dirs
