@@ -37,16 +37,32 @@
   };
   /*
   Auxiliar inputs used in builtin libraries or for the dev environment.
+  Previously these were "blank" and injected via sub-flakes, but now included directly
+  to avoid self-referential sub-flake issues with Nix 2.18+.
   */
   inputs = {
-    # Placeholder inputs that can be overloaded via follows
-    n2c.follows = "blank";
-    devshell.follows = "blank";
-    nixago.follows = "blank";
+    # Development tools
+    devshell.url = "github:numtide/devshell";
+    devshell.inputs.nixpkgs.follows = "nixpkgs";
+    
+    nixago.url = "github:nix-community/nixago";
+    nixago.inputs.nixpkgs.follows = "nixpkgs";
+    nixago.inputs.nixago-exts.follows = "blank";
+    
+    n2c.url = "github:nlewo/nix2container";
+    n2c.inputs.nixpkgs.follows = "nixpkgs";
+    
+    # Testing and infrastructure tools
+    namaka.url = "github:nix-community/namaka/v0.2.0";
+    namaka.inputs.haumea.follows = "haumea";
+    namaka.inputs.nixpkgs.follows = "nixpkgs";
+    
+    # Additional tools (keep as blank for now, can be enabled if needed)
     terranix.follows = "blank";
     microvm.follows = "blank";
     makes.follows = "blank";
     arion.follows = "blank";
+    flake-parts.follows = "blank";
   };
 
   outputs = inputs: let
