@@ -149,13 +149,6 @@ After making code changes, ALWAYS test these complete workflows:
    # Should work without errors - takes 5-15 minutes first time
    ```
 
-4. **Subflake lock file updates** (for maintainers):
-   ```bash
-   # When updating Standard framework itself:
-   ./.github/workflows/update-subflake.sh
-   # This updates src/local/flake.lock and src/tests/flake.lock
-   ```
-
 ## Common Tasks
 
 ### Repository Structure

@@ -4,10 +4,13 @@
 # SPDX-License-Identifier: Unlicense
 {
   description = "The Nix Flakes framework for perfectionists with deadlines";
-  # override downstream with inputs.std.inputs.nixpkgs.follows = ...
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/release-23.11";
-  inputs.lib.url = "github:nix-community/nixpkgs.lib";
+  
   inputs = {
+    # Core dependencies
+    nixpkgs.url = "github:nixos/nixpkgs/release-23.11";  # override downstream with inputs.std.inputs.nixpkgs.follows = ...
+    lib.url = "github:nix-community/nixpkgs.lib";
+    
+    # Framework dependencies
     paisano.url = "github:paisano-nix/core/0.2.0";
     paisano.inputs.nixpkgs.follows = "nixpkgs";
     paisano.inputs.yants.follows = "yants";
@@ -15,33 +18,29 @@
       url = "github:paisano-nix/tui/v0.5.0";
       flake = false; # we're after the source code, only
     };
-  };
-  inputs.blank.url = "github:divnix/blank";
-  inputs.yants = {
-    url = "github:divnix/yants";
-    inputs.nixpkgs.follows = "lib";
-  };
-  inputs.dmerge = {
-    url = "github:divnix/dmerge/0.2.1";
-    inputs.haumea.follows = "haumea";
-    inputs.yants.follows = "yants";
-    inputs.nixlib.follows = "lib";
-  };
-  inputs.haumea = {
-    url = "github:nix-community/haumea/v0.2.2";
-    inputs.nixpkgs.follows = "lib";
-  };
-  inputs.incl = {
-    url = "github:divnix/incl";
-    inputs.nixlib.follows = "lib";
-  };
-  /*
-  Auxiliar inputs used in builtin libraries or for the dev environment.
-  Previously these were "blank" and injected via sub-flakes, but now included directly
-  to avoid self-referential sub-flake issues with Nix 2.18+.
-  */
-  inputs = {
-    # Development tools
+    
+    blank.url = "github:divnix/blank";
+    yants = {
+      url = "github:divnix/yants";
+      inputs.nixpkgs.follows = "lib";
+    };
+    dmerge = {
+      url = "github:divnix/dmerge/0.2.1";
+      inputs.haumea.follows = "haumea";
+      inputs.yants.follows = "yants";
+      inputs.nixlib.follows = "lib";
+    };
+    haumea = {
+      url = "github:nix-community/haumea/v0.2.2";
+      inputs.nixpkgs.follows = "lib";
+    };
+    incl = {
+      url = "github:divnix/incl";
+      inputs.nixlib.follows = "lib";
+    };
+    
+    # Development tools (previously "blank" and injected via sub-flakes, now included directly
+    # to avoid self-referential sub-flake issues with Nix 2.18+)
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     
