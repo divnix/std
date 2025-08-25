@@ -70,7 +70,7 @@
       inherit (fwlib') blockTypes actions dataWith flakeModule grow growOn findTargets;
     };
   in
-    assert inputs.nixpkgs.lib.assertMsg ((builtins.compareVersions builtins.nixVersion "2.18") >= 0) "The truth is: you'll need a newer nix version to use Standard (minimum: v2.18).";
+    assert inputs.nixpkgs.lib.assertMsg ((builtins.compareVersions builtins.nixVersion "2.23") >= 0) "The truth is: you'll need a newer nix version to use Standard (minimum: v2.23).";
       (import ./dogfood.nix (inputs
         // {
           std = std // {inherit (inputs.self) narHash;};
