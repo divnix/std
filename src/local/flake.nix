@@ -17,7 +17,7 @@
     # The only purpose of this is to construe the correct follows spec in flake.lock.
     # `std` will be fully shadowed below
     std = {
-      url = "path:../../";
+      url = "../../";
       inputs.devshell.follows = "devshell";
       inputs.nixago.follows = "nixago";
       inputs.n2c.follows = "n2c";
