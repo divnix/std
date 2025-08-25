@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Unlicense
 {
   description = "The Nix Flakes framework for perfectionists with deadlines";
+  inputs.self.shallow = true;
   # override downstream with inputs.std.inputs.nixpkgs.follows = ...
   inputs.nixpkgs.url = "github:nixos/nixpkgs/release-23.11";
   inputs.lib.url = "github:nix-community/nixpkgs.lib";
@@ -70,7 +71,7 @@
       inherit (fwlib') blockTypes actions dataWith flakeModule grow growOn findTargets;
     };
   in
-    assert inputs.nixpkgs.lib.assertMsg ((builtins.compareVersions builtins.nixVersion "2.13") >= 0) "The truth is: you'll need a newer nix version to use Standard (minimum: v2.13).";
+    assert inputs.nixpkgs.lib.assertMsg ((builtins.compareVersions builtins.nixVersion "2.23") >= 0) "The truth is: you'll need a newer nix version to use Standard (minimum: v2.23).";
       (import ./dogfood.nix (inputs
         // {
           std = std // {inherit (inputs.self) narHash;};
